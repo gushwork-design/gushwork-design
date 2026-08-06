@@ -4,6 +4,22 @@
 <title>Meta Ads — Gushwork dashboard system</title>
 <link rel="stylesheet" href="../foundation/tokens.css">
 <style>  *,*::before,*::after{box-sizing:border-box}
+
+  /* ── Vertical responsiveness ──────────────────────────────────────────────
+     The measured Figma values are the UPPER BOUND of each clamp, so a tall
+     viewport renders the component exactly as drawn and a short one compresses
+     rather than pushing everything below the fold. Horizontal values are never
+     clamped — those are the measured widths and stay exact. */
+  :root{
+    --v-rhythm: clamp(16px, 3.2vh, 40px);   /* slot padding + section gap · measured 40 */
+    --v-kpi:    clamp(140px, 21vh, 198px);  /* kpi-card height        · measured 198 */
+    --v-kpigap: clamp(12px, 8vh, 80px);     /* kpi header→value gap   · measured 80 */
+    --v-plot:   clamp(120px, 21vh, 200px);  /* chart plot height */
+    --v-hdr:    clamp(16px, 3.2vh, 40px);   /* header top padding     · measured 40 */
+    --v-railpad:clamp(12px, 2.4vh, 24px);   /* rail vertical padding  · measured 24 */
+    --v-railgap:clamp(14px, 4vh, 40px);     /* title→nav gap          · measured 40 */
+    --v-grpgap: clamp(8px, 2.4vh, 24px);    /* between nav groups     · measured 24 */
+  }
   /* The page itself never scrolls. dashboard-build is a fixed shell whose Slot
      scrolls — so the rail and the sticky header stay put. Measured height is 888;
      here it is locked to the viewport instead so the app fills the window. */
@@ -18,15 +34,20 @@
 
   /* side-panel — no fill, r20, pad 16/24, space-between. Never scrolls with the page. */
   .rail{width:260px;flex:none;border-radius:var(--gw-radius-20);background:transparent;
-        padding:var(--gw-space-24) var(--gw-space-16);display:flex;flex-direction:column;
-        justify-content:space-between;min-height:0;overflow-y:auto}
-  .rail__container{display:flex;flex-direction:column;gap:var(--gw-space-40);width:100%}
-  .rail__title{height:32px;display:flex;align-items:center;gap:var(--gw-space-8)}
+        padding:var(--v-railpad) var(--gw-space-16);display:flex;flex-direction:column;
+        justify-content:space-between;min-height:0;overflow:hidden}
+  /* Only the nav list scrolls when it cannot fit. The user-card sits outside it and
+     stays pinned, so the rail as a whole never appears to scroll away. */
+  .rail__container{display:flex;flex-direction:column;gap:var(--v-railgap);width:100%;
+                   min-height:0;overflow-y:auto}
+  .rail__container{scrollbar-width:none;-ms-overflow-style:none}
+  .rail__container::-webkit-scrollbar{width:0;height:0;display:none}
+  .rail__title{height:32px;flex:none;display:flex;align-items:center;gap:var(--gw-space-8)}
   .logotile{width:32px;height:32px;flex:none;border-radius:var(--gw-radius-8);
             background:var(--gw-color-black);padding:var(--gw-space-8);display:flex}
   .logotile img{width:100%;height:100%;object-fit:contain}
   .rail__name{font:600 18px/1 var(--gw-font-display);color:var(--gw-color-black)}
-  .groups{display:flex;flex-direction:column;gap:var(--gw-space-24)}
+  .groups{display:flex;flex-direction:column;gap:var(--v-grpgap)}
   .li{display:flex;align-items:center;gap:var(--gw-space-8);height:32px;width:228px;
       padding:var(--gw-space-8);border-radius:var(--gw-radius-8);font:var(--gw-text-button-14);
       color:var(--gw-color-neutral-900);text-decoration:none;cursor:pointer}
@@ -57,7 +78,7 @@
         background:var(--gw-color-white);display:flex;flex-direction:column;overflow:hidden}
 
   /* section/header — sticky, pad 40/40/20, title h5, 1px neutral-50 rule */
-  .hdr{padding:var(--gw-space-40) var(--gw-space-40) var(--gw-space-20);display:flex;
+  .hdr{padding:var(--v-hdr) var(--gw-space-40) var(--gw-space-20);display:flex;
        flex-direction:column;gap:var(--gw-space-20);flex:none;
        border-bottom:1px solid var(--gw-color-neutral-50);background:var(--gw-color-white)}
   .hdr h1{margin:0;font:var(--gw-text-h5);letter-spacing:var(--gw-text-h5-tracking);
@@ -83,7 +104,7 @@
 
   /* Slot — the ONLY scrolling region. Sections only, gap 40, pad 40. */
   .slot{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;
-        gap:var(--gw-space-40);padding:var(--gw-space-40)}
+        gap:var(--v-rhythm);padding:var(--v-rhythm) var(--gw-space-40)}
   /* Sections must keep their natural height. As flex items in a fixed-height slot they
      default to flex-shrink:1 and get COMPRESSED instead of letting the slot scroll —
      which silently collapsed graph bodies to a sliver. */
@@ -111,9 +132,10 @@
   .cl--side .kpi{min-width:0}
 
   /* kpi-card — 286x198 intrinsic, DARK neutral-900, gap 80 */
-  .kpi{flex:1;min-width:286px;height:198px;border-radius:var(--gw-radius-12);
+  .kpi{flex:1;min-width:286px;height:var(--v-kpi);border-radius:var(--gw-radius-12);
        padding:var(--gw-space-20);background:var(--gw-color-neutral-900);
-       display:flex;flex-direction:column;gap:var(--gw-space-80);overflow:hidden}
+       display:flex;flex-direction:column;justify-content:space-between;
+       gap:var(--v-kpigap);overflow:hidden}
   .kpi__hd{display:flex;align-items:center;justify-content:space-between;width:100%}
   .kpi__t{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
           color:var(--gw-color-neutral-300)}
@@ -141,7 +163,7 @@
   /* section shell — Container / With Dropdown / table */
   .sec{border-radius:var(--gw-radius-12);padding:var(--gw-space-12);
        background:var(--gw-color-neutral-25);display:flex;flex-direction:column;
-       gap:var(--gw-space-16);overflow:hidden}
+       gap:clamp(8px,1.6vh,16px);overflow:hidden}
   .sec__hd{display:flex;align-items:center;justify-content:space-between;
            padding:var(--gw-space-4);width:100%;gap:var(--gw-space-12)}
   .sec__ttl{display:flex;align-items:center;gap:var(--gw-space-8);min-width:0}
@@ -161,8 +183,9 @@
           color:var(--gw-color-neutral-500);padding:var(--gw-space-4)}
 
   /* progress-bar */
-  .pb{border-radius:var(--gw-radius-16);padding:var(--gw-space-20);
-      background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:var(--gw-space-16)}
+  .pb{border-radius:var(--gw-radius-16);padding:clamp(12px,2vh,20px);
+      background:var(--gw-color-neutral-25);display:flex;flex-direction:column;
+      gap:clamp(8px,1.6vh,16px)}
   .pb__hd{display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)}
   .pb__ico{width:20px;height:20px;border-radius:var(--gw-radius-4);padding:var(--gw-space-4);
            background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500);
@@ -180,17 +203,18 @@
 
   /* Graph */
   .gr__row{display:flex;gap:var(--gw-space-12)}
-  .gr__y{display:flex;flex-direction:column;gap:var(--gw-space-20);flex:none;
+  .gr__y{display:flex;flex-direction:column;gap:clamp(10px,2vh,20px);flex:none;
          font:500 12px/1 var(--gw-font-body);letter-spacing:-.2px;color:var(--gw-color-neutral-600)}
-  .gr__y--line{justify-content:space-between;gap:0;height:200px}
+  .gr__y--line{justify-content:space-between;gap:0;height:var(--v-plot)}
   .gr__area{flex:1;display:flex;flex-direction:column;gap:var(--gw-space-16);min-width:0}
-  .gr__plot{display:flex;flex-direction:column;gap:var(--gw-space-20);padding-block:16px}
+  .gr__plot{display:flex;flex-direction:column;gap:clamp(10px,2vh,20px);
+            padding-block:clamp(8px,1.6vh,16px)}
   .gr__x{display:flex;justify-content:space-between;font:500 12px/1 var(--gw-font-body);
          letter-spacing:-.2px;color:var(--gw-color-neutral-600)}
   .gbar{height:10px;background:var(--gw-color-primary-500);border-radius:0 2px 2px 0;position:relative}
   .gbar span{position:absolute;left:calc(100% + 4px);top:-2px;white-space:nowrap;
              font:500 10px/1 var(--gw-font-body);letter-spacing:-.2px;color:var(--gw-color-black)}
-  .gline{position:relative;height:200px}
+  .gline{position:relative;height:var(--v-plot)}
   .gline svg{width:100%;height:100%;display:block}
 
   /* table */
