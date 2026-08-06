@@ -51,9 +51,9 @@
   .uc__av{width:42.667px;height:32px;flex:none;border-radius:53.333px;
           background:var(--gw-color-neutral-50);
           border:.333px solid var(--gw-color-neutral-100);
-          overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
-  .uc__av i{width:16px;height:22px;background:var(--gw-color-neutral-900);
-            border-radius:6px 6px 0 0;display:block}
+          overflow:hidden;position:relative}
+  .uc__av img{position:absolute;left:7.11px;top:3.56px;
+              width:25.448px;height:57.753px}
   .uc__n{display:flex;flex-direction:column;gap:var(--gw-space-4)}
   .uc__n b{font:var(--gw-text-button-12);color:var(--gw-color-black)}
   .uc__n span{font:var(--gw-text-button-10);color:var(--gw-color-neutral-400)}
@@ -91,7 +91,7 @@
   .refresh svg{width:16px;height:16px}
 
   /* Slot — Sections only, gap 40, pad 40 */
-  .slot{flex:1;overflow-y:auto;display:flex;flex-direction:column;
+  .slot{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;
         gap:var(--gw-space-40);padding:var(--gw-space-40)}
 
   /* kpi-card — measured: 286x198, r12, pad 20, gap 80, DARK */
@@ -131,6 +131,14 @@
             background:var(--gw-color-primary-500);color:var(--gw-color-white);
             display:flex;align-items:center;justify-content:flex-end;
             padding-right:var(--gw-space-12);font:var(--gw-text-body-14-med)}
+
+
+  .sec__ico{width:20px;height:20px;border-radius:var(--gw-radius-4);padding:4px;flex:none;
+            background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500);
+            display:flex;align-items:center;justify-content:center}
+  .sec__ico svg{width:12px;height:12px}
+  .sec__t{font:var(--gw-text-body-14-sem)}
+  .sec__caret{margin-left:auto;width:14px;height:14px;color:var(--gw-color-neutral-400)}
 
   /* UNMEASURED — flagged on the page itself */
   .unmeasured{position:relative;outline:1px dashed var(--gw-color-red-300);
@@ -185,7 +193,7 @@
     </div>
     <div class="ucwrap"><div class="usercard">
       <span class="uc__l">
-        <span class="uc__av"><i></i></span>
+        <span class="uc__av"><img src="../assets/avatar/admin-character.svg" alt=""></span>
         <span class="uc__n"><b>Utsav Singh</b><span>Admin</span></span>
       </span>
       <span class="uc__m"><svg><use href="#i-dots-v"/></svg></span>
@@ -242,6 +250,65 @@
         <div class="pb__track"><div class="pb__fill">81%</div></div>
       </section>
 
+
+      <!-- section/Container · State=Default -->
+      <section class="unmeasured" data-note="section/Container not measured"
+               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12);display:flex;flex-direction:column;gap:var(--gw-space-16)">
+        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
+          <span class="sec__ico"><svg><use href="#i-chart-line"/></svg></span>
+          <span class="sec__t">CPL by campaign</span>
+          <svg class="sec__caret"><use href="#i-caret-fill"/></svg>
+        </div>
+        <div style="border-radius:var(--gw-radius-8);border:1px dashed var(--gw-color-neutral-250);height:120px;display:flex;align-items:center;justify-content:center;font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-500);background:var(--gw-color-white)">
+          SLOT — accepts any content
+        </div>
+      </section>
+
+      <!-- section/Container · State=Collapsed -->
+      <section class="unmeasured" data-note="collapsed state not measured"
+               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12)">
+        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
+          <span class="sec__ico"><svg><use href="#i-chart-line"/></svg></span>
+          <span class="sec__t">Keyword movement — collapsed</span>
+          <svg class="sec__caret"><use href="#i-caret-fill"/></svg>
+        </div>
+      </section>
+
+      <!-- section/With Dropdown -->
+      <section class="unmeasured" data-note="section/With Dropdown not measured"
+               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12);display:flex;flex-direction:column;gap:var(--gw-space-16)">
+        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
+          <span class="dd" style="width:auto;gap:var(--gw-space-8)">Last 30 days<svg><use href="#i-caret-fill"/></svg></span>
+          <svg class="sec__caret"><use href="#i-caret-fill"/></svg>
+        </div>
+        <div style="border-radius:var(--gw-radius-8);background:var(--gw-color-white);padding:var(--gw-space-16);display:flex;gap:var(--gw-space-8);align-items:center">
+          <div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Impressions</span><span style="font:var(--gw-text-body-20-sem)">1.3M</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Clicks</span><span style="font:var(--gw-text-body-20-sem)">94.2K</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">CTR</span><span style="font:var(--gw-text-body-20-sem)">7.2%</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Leads</span><span style="font:var(--gw-text-body-20-sem)">1,284</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">CPL</span><span style="font:var(--gw-text-body-20-sem)">$41</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Spend</span><span style="font:var(--gw-text-body-20-sem)">$52K</span></div>
+        </div>
+      </section>
+
+      <!-- section/section-element/Graph -->
+      <section class="unmeasured" data-note="Graph not measured"
+               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12);display:flex;flex-direction:column;gap:var(--gw-space-16)">
+        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
+          <span class="sec__ico"><svg><use href="#i-chart-line"/></svg></span>
+          <span class="sec__t">Leads over time — Type=Line</span>
+          <svg class="sec__caret"><use href="#i-caret-fill"/></svg>
+        </div>
+        <div style="border-radius:var(--gw-radius-8);background:var(--gw-color-white);padding:var(--gw-space-20);display:flex;gap:var(--gw-space-12)">
+          <div style="display:flex;flex-direction:column;justify-content:space-between;font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-500);height:180px">
+            <span>1.0</span><span>0.8</span><span>0.6</span><span>0.4</span><span>0.2</span><span>0</span>
+          </div>
+          <div style="flex:1;height:180px;position:relative;border-left:1px solid var(--gw-color-neutral-100);border-bottom:1px solid var(--gw-color-neutral-100)">
+            <svg viewBox="0 0 600 180" preserveAspectRatio="none" style="width:100%;height:100%">
+              <polyline points="0,150 100,120 200,130 300,80 400,90 500,40 600,25" fill="none"
+                        stroke="var(--gw-color-primary-500)" stroke-width="2"/>
+              <polyline points="0,165 100,155 200,140 300,145 400,120 500,110 600,95" fill="none"
+                        stroke="var(--gw-color-neutral-300)" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
       <!-- section/table -->
       <section class="unmeasured" data-note="section/table + table-row not measured"
                style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12)">
@@ -260,5 +327,16 @@
     </div>
   </main>
 </div>
+<script>
+/* #full expands the fixed 888 shell so every section is visible in one capture.
+   The default view stays at the true 1440x888 with a scrolling slot. */
+if (location.hash === '#full') {
+  document.documentElement.setAttribute('data-full','');
+  const s=document.querySelector('.shell'), r=document.querySelector('.rail'),
+        m=document.querySelector('.main'), sl=document.querySelector('.slot');
+  s.style.height='auto'; r.style.height='auto'; r.style.minHeight='880px';
+  m.style.height='auto'; sl.style.overflow='visible';
+}
+</script>
 </body>
 </html>
