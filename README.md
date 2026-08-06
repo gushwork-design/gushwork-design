@@ -65,6 +65,7 @@ gushwork-design/
 ├── skills/
 │   ├── gushwork-web/SKILL.md
 │   └── gushwork-dashboard/SKILL.md
+├── notices/          declared elements and deviations, one file per piece of work
 └── exports/
     ├── web/          page-shell · folds · fold-elements · atoms · cards · button · avatar · images
     └── dashboard/    dashboard-build · sections · section-elements · button · avatar · controls · toast · build-rules
@@ -113,9 +114,14 @@ is worse than building the chip and saying so. Three conditions: compose from wh
 first, use tokens only (a new element may combine existing values in a new shape but never
 introduce a new one), and comment it in the code as pending review.
 
-Either way the skill **tells you**, in a visible block, with a ready-to-paste Slack message
-so the gap reaches whoever owns the library. Format in
+Either way the skill **tells you** — a four-line notice linking to a full record in
+[`notices/`](notices/), plus a four-line Slack message carrying that link. Short enough to
+read on a phone, complete enough to review. Format in
 [`foundation/new-component-notice.md`](foundation/new-component-notice.md).
+
+Each notice ends with a **"Worth a decision"** section naming the one or two items that are
+real judgement calls rather than routine adaptations — see
+[the Meta Ads notice](notices/2026-08-06-meta-ads.md) for a worked example.
 
 The point isn't to prevent drift — it's to make drift **visible**. An undeclared component is
 worse than a refusal, because it looks official.

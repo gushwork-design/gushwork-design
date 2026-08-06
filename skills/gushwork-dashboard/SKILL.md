@@ -277,16 +277,18 @@ Three conditions, all required:
 **If you created or modified any element, you must tell the user before you finish.** Not
 buried in a summary — a clear block at the end of your reply.
 
-Follow the template in **`foundation/new-component-notice.md`**. It contains the exact
-notice format and a ready-to-send Slack message, so the user's job is: copy the block, click
-the link, paste, send.
+**Short message, linked detail.** Write the full record to `notices/YYYY-MM-DD-<slug>.md`,
+commit it, then give a **four-line** notice that links to it. Format and the Slack message:
+**`foundation/new-component-notice.md`**. Nobody reads a twenty-line Slack message on a
+phone.
 
-The notice must state:
+The notice file must state: what was **created** and why the library had no equivalent, what
+was **modified** with the exact measured value you deviated from, the **tokens** used so
+review can confirm nothing was invented, and **where** each lives.
 
-- **Created** — each new element, what it does, why the library had no equivalent
-- **Modified** — any measured component you deviated from, and the exact deviation
-- **Tokens used** — so review can confirm nothing was invented
-- **Where** — file and section, so it can be found
+It must also carry a **"Worth a decision"** section naming the one or two items that are
+genuine judgement calls rather than obvious adaptations. That section is what makes it a
+review rather than a list.
 
 **Never let a created element pass silently.** The whole point of a governed system is that
 drift is visible. An undeclared component is worse than a refusal, because it looks

@@ -231,9 +231,9 @@ Three conditions, all required:
 
 ### Then notify — every time
 
-**If you created or modified any element, say so before you finish**, in a visible block at
-the end of your reply. Follow `foundation/new-component-notice.md`: it has the exact notice
-format and a ready-to-paste Slack message, so the user's job is copy, click, paste, send.
+**If you created or modified any element, say so before you finish.** Write the full record
+to `notices/YYYY-MM-DD-<slug>.md`, commit it, then give a **four-line** notice linking to it.
+Format: `foundation/new-component-notice.md`.
 
 **Never let a created element pass silently.** An undeclared component is worse than a
 refusal, because it looks official.
