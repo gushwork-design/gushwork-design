@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gushwork Design System — component sheet</title>
+<link rel="stylesheet" href="../foundation/tokens.css">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--gw-color-neutral-25);color:var(--gw-color-black);
+       font:var(--gw-text-body-14-reg)}
+  h1,h2,h3,h4{margin:0}
+
+  /* ---- sheet chrome: mirrors Figma's page > frame > Info+Component layout ---- */
+  .page{padding:var(--gw-space-40) var(--gw-space-40) var(--gw-space-80)}
+  .page__title{font:var(--gw-text-h4);letter-spacing:var(--gw-text-h4-tracking);
+               margin-bottom:var(--gw-space-8)}
+  .page__sub{font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-500);
+             margin-bottom:var(--gw-space-32)}
+  .subpage{font:var(--gw-text-h7);color:var(--gw-color-neutral-700);
+           margin:var(--gw-space-48) 0 var(--gw-space-20)}
+
+  /* Figma frame = Info Frame (310) + Component Frame */
+  .frame{display:grid;grid-template-columns:310px 1fr;gap:var(--gw-space-16);
+         background:var(--gw-color-white);border-radius:var(--gw-radius-20);
+         padding:var(--gw-space-16);margin-bottom:var(--gw-space-16);
+         box-shadow:var(--gw-shadow-s2)}
+  .info{background:var(--gw-color-neutral-25);border-radius:var(--gw-radius-12);
+        padding:var(--gw-space-16);display:flex;flex-direction:column;gap:var(--gw-space-12)}
+  .info h3{font:var(--gw-text-h7)}
+  .info p{margin:0;font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-600)}
+  .info dl{margin:0;font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500)}
+  .info dt{text-transform:uppercase;letter-spacing:.06em;margin-top:var(--gw-space-8)}
+  .info dd{margin:2px 0 0;color:var(--gw-color-neutral-700);font:var(--gw-text-body-10-reg)}
+  .comp{background:var(--gw-color-neutral-25);border-radius:var(--gw-radius-12);
+        padding:var(--gw-space-24);overflow-x:auto}
+  .row{display:flex;gap:var(--gw-space-16);align-items:center;flex-wrap:wrap;
+       margin-bottom:var(--gw-space-16)}
+  .row:last-child{margin-bottom:0}
+  .lbl{font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-400);
+       text-transform:uppercase;letter-spacing:.06em;width:100%}
+
+  /* provenance badges — the whole point of this sheet */
+  .prov{display:inline-flex;align-items:center;gap:var(--gw-space-4);
+        padding:2px var(--gw-space-8);border-radius:var(--gw-radius-4);
+        font:var(--gw-text-body-10-sem);width:fit-content}
+  .prov--measured{background:var(--gw-color-green-alpha-10);color:var(--gw-color-green-700)}
+  .prov--partial{background:var(--gw-color-yellow-alpha-10);color:var(--gw-color-yellow-700)}
+  .prov--struct{background:var(--gw-color-red-alpha-10);color:var(--gw-color-red-700)}
+  .prov--absent{background:var(--gw-color-neutral-50);color:var(--gw-color-neutral-600)}
+
+  .todo{border:1px dashed var(--gw-color-neutral-250);border-radius:var(--gw-radius-8);
+        padding:var(--gw-space-20);font:var(--gw-text-body-12-reg);
+        color:var(--gw-color-neutral-500);background:var(--gw-color-white)}
+
+  /* ================= REAL COMPONENTS ================= */
+
+  /* Button — web. radius 8 S/M, 12 L. heights 36/44/56. */
+  .btn{display:inline-flex;align-items:center;justify-content:center;
+       gap:var(--gw-space-8);border:0;cursor:pointer;white-space:nowrap;
+       box-shadow:var(--gw-shadow-s2);text-decoration:none}
+  .btn svg{width:18px;height:18px;flex:none}
+  .btn--sm{height:36px;padding:0 12px;border-radius:var(--gw-radius-8);font:var(--gw-text-button-14)}
+  .btn--md{height:44px;padding:0 20px;border-radius:var(--gw-radius-8);font:var(--gw-text-button-16)}
+  .btn--lg{height:56px;padding:0 24px;border-radius:var(--gw-radius-12);font:var(--gw-text-button-18)}
+  .btn--blue{background:var(--gw-color-primary-500);color:var(--gw-color-white)}
+  .btn--blue:hover{background:var(--gw-color-primary-600)}
+  .btn--black{background:var(--gw-color-black);color:var(--gw-color-white)}
+  .btn--black:hover{background:var(--gw-color-neutral-900)}
+  .btn--white{background:var(--gw-color-white);color:var(--gw-color-black)}
+  .btn--ob{background:transparent;color:var(--gw-color-black);
+           box-shadow:inset 0 0 0 2px var(--gw-color-neutral-100)}
+  .btn--ow{background:transparent;color:var(--gw-color-white);
+           box-shadow:inset 0 0 0 2px var(--gw-color-neutral-alpha-50-white)}
+  .btn--tb{background:transparent;color:var(--gw-color-black);box-shadow:none}
+  .btn--disabled{background:var(--gw-color-neutral-200);color:var(--gw-color-white);
+                 cursor:not-allowed}
+  .btn--icon{padding:0;width:44px}
+  .onblue{background:var(--gw-color-primary-500);padding:var(--gw-space-20);
+          border-radius:var(--gw-radius-12)}
+  .ondark{background:var(--gw-color-secondary-500);padding:var(--gw-space-20);
+          border-radius:var(--gw-radius-12)}
+
+  /* Button — dashboard. Primary/Outline/Ghost, never blue. */
+  .dbtn{display:inline-flex;align-items:center;justify-content:center;gap:var(--gw-space-8);
+        border:0;cursor:pointer;border-radius:var(--gw-radius-8);font:var(--gw-text-button-12)}
+  .dbtn--sm{height:28px;padding:0 12px}
+  .dbtn--md{height:44px;padding:0 16px;font:var(--gw-text-button-14)}
+  .dbtn--primary{background:var(--gw-color-black);color:var(--gw-color-white)}
+  .dbtn--outline{background:transparent;color:var(--gw-color-black);
+                 box-shadow:inset 0 0 0 1px var(--gw-color-neutral-200)}
+  .dbtn--ghost{background:transparent;color:var(--gw-color-neutral-700)}
+
+  /* eyebrow — white pill, .5px outside stroke, h24 */
+  .eyebrow{display:inline-flex;align-items:center;gap:var(--gw-space-4);height:24px;
+           padding:0 8px;border-radius:var(--gw-radius-full);
+           background:var(--gw-color-white);box-shadow:0 0 0 .5px var(--gw-color-neutral-100);
+           font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-700)}
+  .eyebrow--blue{color:var(--gw-color-primary-500)}
+  .eyebrow i{width:12px;height:12px;border-radius:var(--gw-radius-full);
+             background:currentColor;flex:none}
+
+  /* Badge — SPEC-DERIVED, not measured */
+  .badge{display:inline-flex;align-items:center;gap:2px;border-radius:var(--gw-radius-4);
+         font:var(--gw-text-body-12-med);height:24px;padding:0 8px}
+  .badge--lg{height:32px;padding:0 12px;gap:var(--gw-space-4);font:var(--gw-text-body-14-med)}
+  .badge--neutral{background:var(--gw-color-neutral-100);color:var(--gw-color-neutral-600)}
+  .badge--red{background:var(--gw-color-red-100);color:var(--gw-color-red-500)}
+  .badge--green{background:var(--gw-color-green-100);color:var(--gw-color-green-500)}
+  .badge--yellow{background:var(--gw-color-yellow-50);color:var(--gw-color-yellow-500)}
+  .badge--blue{background:var(--gw-color-primary-100);color:var(--gw-color-primary-500)}
+  .badge--black{background:var(--gw-color-neutral-900);color:var(--gw-color-white)}
+
+  /* controls/tab + controls/dropdown — measured off section/header */
+  .tabs{display:inline-flex;gap:var(--gw-space-8);background:var(--gw-color-neutral-50);
+        border-radius:var(--gw-radius-8);padding:var(--gw-space-4)}
+  .tab{padding:var(--gw-space-4) var(--gw-space-8);border-radius:var(--gw-radius-4);
+       font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-900);cursor:pointer}
+  .tab--sel{background:var(--gw-color-white);box-shadow:var(--gw-shadow-s3)}
+  .dd{display:inline-flex;align-items:center;justify-content:space-between;width:120px;
+      padding:var(--gw-space-8);border-radius:var(--gw-radius-8);
+      background:var(--gw-color-neutral-50);font:var(--gw-text-body-12-med);
+      color:var(--gw-color-neutral-900);cursor:pointer}
+  .dd svg{width:12px;height:12px;color:var(--gw-color-neutral-500)}
+
+  /* progress-bar — measured */
+  .pb{width:100%;max-width:620px;background:var(--gw-color-neutral-25);
+      border-radius:var(--gw-radius-16);padding:var(--gw-space-20);
+      display:flex;flex-direction:column;gap:var(--gw-space-16)}
+  .pb__hd{display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)}
+  .pb__ico{width:20px;height:20px;border-radius:var(--gw-radius-4);padding:var(--gw-space-4);
+           background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500);
+           display:flex;align-items:center;justify-content:center;flex:none}
+  .pb__ico svg{width:12px;height:12px}
+  .pb__lbl{font:var(--gw-text-body-14-sem);color:var(--gw-color-neutral-800);
+           letter-spacing:-.2px}
+  .pb__ct{margin-left:auto;font:var(--gw-text-body-14-med);
+          color:var(--gw-color-neutral-500);letter-spacing:-.2px}
+  .pb__track{height:32px;border-radius:var(--gw-radius-8);
+             background:var(--gw-color-neutral-100);overflow:hidden}
+  .pb__fill{height:100%;width:81%;border-radius:var(--gw-radius-8);
+            background:var(--gw-color-primary-500);color:var(--gw-color-white);
+            display:flex;align-items:center;justify-content:flex-end;
+            padding-right:var(--gw-space-12);font:var(--gw-text-body-14-med)}
+
+  /* logo + icons */
+  .logo{height:32px}
+  .icoset{display:flex;gap:var(--gw-space-24);flex-wrap:wrap}
+  .ico{display:flex;flex-direction:column;align-items:center;gap:var(--gw-space-4);
+       font:var(--gw-text-body-10-reg);color:var(--gw-color-neutral-500)}
+  .ico svg{width:24px;height:24px;color:var(--gw-color-neutral-900)}
+</style>
+</head>
+<body>
+
+<!-- inline symbol defs so currentColor works (an <img> cannot inherit it) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-caret-down" viewBox="0 0 24 24"><path d="M20.031 9.53104L12.531 17.031C12.4614 17.1008 12.3787 17.1561 12.2876 17.1938C12.1966 17.2316 12.099 17.251 12.0004 17.251C11.9019 17.251 11.8043 17.2316 11.7132 17.1938C11.6222 17.1561 11.5394 17.1008 11.4698 17.031L3.96979 9.53104C3.82906 9.39031 3.75 9.19944 3.75 9.00042C3.75 8.80139 3.82906 8.61052 3.96979 8.46979C4.11052 8.32906 4.30139 8.25 4.50042 8.25C4.69944 8.25 4.89031 8.32906 5.03104 8.46979L12.0004 15.4401L18.9698 8.46979C19.0395 8.40011 19.1222 8.34483 19.2132 8.30712C19.3043 8.26941 19.4019 8.25 19.5004 8.25C19.599 8.25 19.6965 8.26941 19.7876 8.30712C19.8786 8.34483 19.9614 8.40011 20.031 8.46979C20.1007 8.53947 20.156 8.6222 20.1937 8.71324C20.2314 8.80429 20.2508 8.90187 20.2508 9.00042C20.2508 9.09896 20.2314 9.19654 20.1937 9.28759C20.156 9.37863 20.1007 9.46136 20.031 9.53104Z" fill="currentColor"/></symbol>
+  <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M18.7504 6V15.75C18.7504 15.9489 18.6714 16.1397 18.5307 16.2803C18.3901 16.421 18.1993 16.5 18.0004 16.5C17.8015 16.5 17.6107 16.421 17.4701 16.2803C17.3294 16.1397 17.2504 15.9489 17.2504 15.75V7.81031L6.53104 18.5306C6.39031 18.6714 6.19944 18.7504 6.00042 18.7504C5.80139 18.7504 5.61052 18.6714 5.46979 18.5306C5.32906 18.3899 5.25 18.199 5.25 18C5.25 17.801 5.32906 17.6101 5.46979 17.4694L16.1901 6.75H8.25042C8.0515 6.75 7.86074 6.67098 7.72009 6.53033C7.57943 6.38968 7.50042 6.19891 7.50042 6C7.50042 5.80109 7.57943 5.61032 7.72009 5.46967C7.86074 5.32902 8.0515 5.25 8.25042 5.25H18.0004C18.1993 5.25 18.3901 5.32902 18.5307 5.46967C18.6714 5.61032 18.7504 5.80109 18.7504 6Z" fill="currentColor"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><path d="M20.8004 7.79565C21.8412 9.97234 22.0387 12.4574 21.355 14.7712C20.6713 17.085 19.1547 19.0635 17.098 20.3249C15.0413 21.5862 12.5902 22.0411 10.2179 21.6016C7.84557 21.162 5.72013 19.8594 4.25179 17.9449C2.78344 16.0305 2.0763 13.64 2.26682 11.2348C2.45735 8.82963 3.53204 6.58029 5.28348 4.9209C7.03492 3.2615 9.33895 2.30969 11.7509 2.24917C14.1628 2.18864 16.5117 3.02369 18.3442 4.59315L20.4695 2.4669C20.6102 2.32617 20.8011 2.2471 21.0001 2.2471C21.1991 2.2471 21.39 2.32617 21.5307 2.4669C21.6715 2.60763 21.7505 2.7985 21.7505 2.99752C21.7505 3.19654 21.6715 3.38742 21.5307 3.52815L12.5307 12.5281C12.39 12.6689 12.1991 12.7479 12.0001 12.7479C11.8011 12.7479 11.6102 12.6689 11.4695 12.5281C11.3288 12.3874 11.2497 12.1965 11.2497 11.9975C11.2497 11.7985 11.3288 11.6076 11.4695 11.4669L14.0682 8.86815C13.3639 8.40235 12.5231 8.18789 11.6817 8.25947C10.8404 8.33105 10.0478 8.68449 9.43231 9.26257C8.81683 9.84065 8.41446 10.6095 8.29034 11.4448C8.16622 12.28 8.32762 13.1326 8.7484 13.8647C9.16919 14.5968 9.82473 15.1654 10.6089 15.4786C11.3931 15.7917 12.26 15.831 13.0693 15.5902C13.8786 15.3493 14.5829 14.8424 15.0683 14.1514C15.5536 13.4604 15.7915 12.6259 15.7435 11.7828C15.738 11.6843 15.7519 11.5857 15.7845 11.4926C15.8171 11.3995 15.8677 11.3137 15.9334 11.2401C15.9991 11.1666 16.0787 11.1067 16.1676 11.0639C16.2564 11.0211 16.3529 10.9962 16.4514 10.9906C16.6503 10.9795 16.8455 11.0477 16.994 11.1805C17.0676 11.2462 17.1275 11.3258 17.1703 11.4147C17.2131 11.5035 17.238 11.6 17.2435 11.6985C17.3119 12.8917 16.9711 14.0725 16.2774 15.0458C15.5838 16.0191 14.5788 16.7266 13.4285 17.0513C12.2783 17.376 11.0517 17.2986 9.95148 16.8317C8.85123 16.3649 7.94322 15.5366 7.3775 14.4838C6.81178 13.431 6.62223 12.2166 6.84017 11.0415C7.05811 9.86633 7.67049 8.80072 8.57611 8.02077C9.48173 7.24081 10.6264 6.79321 11.8208 6.75194C13.0153 6.71066 14.1881 7.07819 15.1454 7.79377L17.2782 5.66096C15.7152 4.36327 13.7279 3.6888 11.6979 3.76709C9.66793 3.84539 7.73844 4.67092 6.28003 6.08515C4.82163 7.49937 3.93715 9.40256 3.79646 11.4292C3.65578 13.4558 4.26881 15.4629 5.51782 17.0651C6.76683 18.6673 8.56375 19.7515 10.5634 20.1095C12.5631 20.4675 14.6246 20.0741 16.3519 19.0049C18.0792 17.9356 19.3506 16.2658 19.9218 14.3163C20.493 12.3667 20.3238 10.2749 19.4467 8.44252C19.3609 8.263 19.3499 8.05676 19.4162 7.86917C19.4825 7.68157 19.6206 7.52799 19.8001 7.44221C19.9796 7.35643 20.1859 7.34547 20.3735 7.41176C20.5611 7.47804 20.7146 7.61613 20.8004 7.79565Z" fill="currentColor"/></symbol>
+  <symbol id="i-arrow-clockwise" viewBox="0 0 24 24"><path d="M22.5 5.25013V9.75013C22.5 9.94905 22.421 10.1398 22.2803 10.2805C22.1397 10.4211 21.9489 10.5001 21.75 10.5001H17.25C17.0511 10.5001 16.8603 10.4211 16.7197 10.2805C16.579 10.1398 16.5 9.94905 16.5 9.75013C16.5 9.55122 16.579 9.36046 16.7197 9.2198C16.8603 9.07915 17.0511 9.00013 17.25 9.00013H19.8188L17.3259 6.71638L17.3025 6.69388C16.2601 5.65184 14.9337 4.94006 13.4891 4.64746C12.0445 4.35485 10.5457 4.4944 9.17991 5.04866C7.81414 5.60293 6.64197 6.54734 5.80982 7.76391C4.97768 8.98048 4.52245 10.4153 4.501 11.8891C4.47956 13.3629 4.89286 14.8103 5.68926 16.0506C6.48566 17.2908 7.62986 18.269 8.97892 18.8627C10.328 19.4565 11.8221 19.6396 13.2746 19.3891C14.7271 19.1387 16.0736 18.4658 17.1459 17.4545C17.2905 17.3178 17.4835 17.244 17.6825 17.2496C17.8814 17.2551 18.07 17.3395 18.2067 17.484C18.3435 17.6286 18.4172 17.8216 18.4117 18.0205C18.4061 18.2195 18.3218 18.4081 18.1772 18.5448C16.5098 20.1261 14.298 21.0053 12 21.0001H11.8763C10.4023 20.9799 8.95579 20.598 7.66398 19.8879C6.37216 19.1777 5.27455 18.1612 4.46762 16.9275C3.6607 15.6938 3.16915 14.2808 3.0362 12.8127C2.90324 11.3446 3.13294 9.86628 3.70511 8.50772C4.27728 7.14916 5.1744 5.95194 6.31762 5.02128C7.46085 4.09063 8.81517 3.45504 10.2616 3.17038C11.7079 2.88571 13.2021 2.96069 14.6127 3.38871C16.0234 3.81674 17.3073 4.58471 18.3516 5.62513L21 8.04388V5.25013C21 5.05122 21.079 4.86046 21.2197 4.7198C21.3603 4.57915 21.5511 4.50013 21.75 4.50013C21.9489 4.50013 22.1397 4.57915 22.2803 4.7198C22.421 4.86046 22.5 5.05122 22.5 5.25013Z" fill="currentColor"/></symbol>
+</svg>
+
+<div class="page">
+  <h1 class="page__title">Gushwork Design System — component sheet</h1>
+  <p class="page__sub">
+    Structured to mirror the Figma file's own page tree. Each frame is laid out the way Figma
+    lays one out — Info Frame (310px) beside the Component Frame. Figma file
+    <code>VKcb4fgVyOHKfQonMgN772</code>.
+  </p>
+
+  <div class="row" style="gap:var(--gw-space-8)">
+    <span class="prov prov--measured">measured</span>
+    <span class="prov prov--partial">partly measured</span>
+    <span class="prov prov--struct">structure only — appearance NOT measured</span>
+    <span class="prov prov--absent">not in the file</span>
+  </div>
+  <p class="page__sub" style="margin-top:var(--gw-space-12)">
+    Only the green ones are safe to build from. Anything red is drawn from a structure tree
+    with no measured radius, fill or type — the sheet deliberately does not fake them.
+  </p>
+
+  <!-- ════════════ 01 · CORE ════════════ -->
+  <h2 class="subpage">01 · Core → ↳ building-blocks</h2>
+
+  <div class="frame">
+    <div class="info">
+      <h3>Icons — Phosphor</h3>
+      <span class="prov prov--partial">4 of 11 harvested</span>
+      <p>1,248 component sets, 48 variants each — <code>Weight</code> × <code>Size</code>.
+         Exported at Regular/24 with fills rewritten to <code>currentColor</code>.</p>
+      <dl>
+        <dt>Weight</dt><dd>Thin · Light · Regular · Bold · Fill · Duotone</dd>
+        <dt>Size</dt><dd>12 · 16 · 20 · 24 · 28 · 32 · 36 · 40</dd>
+        <dt>Rule</dt><dd>Regular inline · Bold in buttons · Fill for filled glyphs. Colour via currentColor only.</dd>
+        <dt>Constraint</dt><dd>Must be inlined. An &lt;img&gt; cannot inherit currentColor.</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">Harvested</div>
+      <div class="row icoset">
+        <span class="ico"><svg><use href="#i-caret-down"/></svg>CaretDown</span>
+        <span class="ico"><svg><use href="#i-arrow-up-right"/></svg>ArrowUpRight</span>
+        <span class="ico"><svg><use href="#i-target"/></svg>Target</span>
+        <span class="ico"><svg><use href="#i-arrow-clockwise"/></svg>ArrowClockwise</span>
+      </div>
+      <div class="lbl">currentColor inheritance</div>
+      <div class="row">
+        <span class="ico" style="color:var(--gw-color-primary-500)"><svg style="color:inherit"><use href="#i-target"/></svg>blue</span>
+        <span class="ico" style="color:var(--gw-color-red-500)"><svg style="color:inherit"><use href="#i-target"/></svg>red</span>
+        <span class="ico" style="color:var(--gw-color-green-600)"><svg style="color:inherit"><use href="#i-target"/></svg>green</span>
+      </div>
+      <div class="lbl">Not yet harvested — do not substitute a text glyph</div>
+      <div class="todo">ChartLine · DotsThree · DotsThreeOutlineVertical · ArrowsDownUp ·
+        Plus · Star · ArrowCounterClockwise</div>
+    </div>
+  </div>
+
+  <h2 class="subpage">01 · Core → ↳ shared-components</h2>
+
+  <div class="frame">
+    <div class="info">
+      <h3>gushwork-logo</h3>
+      <span class="prov prov--measured">measured</span>
+      <p>Icon plus wordmark, or icon alone. 40 variants.</p>
+      <dl>
+        <dt>Size</dt><dd>16 px · 20 px · 24 px · 40 px · 80 px <em>(note the space)</em></dd>
+        <dt>Type</dt><dd>Original · White · Dark · Blue Icon + White text</dd>
+        <dt>Only Symbol</dt><dd>yes · no</dd>
+        <dt>Colours</dt><dd>symbol #0070FF = primary-500 · wordmark #111827 = secondary-500</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">Type=Original · Only Symbol=no / yes</div>
+      <div class="row">
+        <img class="logo" src="../assets/logo/gushwork-logo-original.svg" alt="Gushwork">
+        <img class="logo" src="../assets/logo/gushwork-symbol-original.svg" alt="Gushwork symbol">
+      </div>
+      <div class="lbl">Type=Dark</div>
+      <div class="row"><img class="logo" src="../assets/logo/gushwork-logo-dark.svg" alt="Gushwork"></div>
+      <div class="lbl">Type=White — on secondary-500</div>
+      <div class="row ondark"><img class="logo" src="../assets/logo/gushwork-logo-white.svg" alt="Gushwork"></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="info">
+      <h3>Badge</h3>
+      <span class="prov prov--struct">structure only</span>
+      <p>Genuinely shared across both surfaces — web cards and tables, dashboard KPI cards.
+         108 variants.</p>
+      <dl>
+        <dt>Theme</dt><dd>Light · Dark</dd>
+        <dt>Color</dt><dd>Neutral · Red · Green · Yellow · Blue · Black</dd>
+        <dt>Icon</dt><dd>no · leading · trailing</dd>
+        <dt>Size</dt><dd>Small · Medium · Large</dd>
+        <dt>Caution</dt><dd>Fills below are from the master spec, NOT measured off the node.
+          Verify before shipping.</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">Light theme · Small — spec-derived, unverified</div>
+      <div class="row">
+        <span class="badge badge--neutral">Neutral</span>
+        <span class="badge badge--red">Failed</span>
+        <span class="badge badge--green">Active</span>
+        <span class="badge badge--yellow">Pending</span>
+        <span class="badge badge--blue">New</span>
+        <span class="badge badge--black">Premium</span>
+      </div>
+      <div class="lbl">Large</div>
+      <div class="row">
+        <span class="badge badge--lg badge--green">Live</span>
+        <span class="badge badge--lg badge--neutral">Draft</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ 02 · WEB ════════════ -->
+  <h2 class="subpage">02 · Web → ↳ web/ pattern-library — Button</h2>
+
+  <div class="frame">
+    <div class="info">
+      <h3>Button (web)</h3>
+      <span class="prov prov--measured">measured</span>
+      <p>The marketing button. A different component from the dashboard one, by design.
+         220 of 288 variants.</p>
+      <dl>
+        <dt>Style</dt><dd>Blue · Black · White · Outlined/ black · Outlined / white ·
+          Text/ black · Special/ With People · Special/ Glowing</dd>
+        <dt>Radius</dt><dd>8px Small &amp; Medium · 12px Large — not pills</dd>
+        <dt>Height</dt><dd>36 · 44 · 56</dd>
+        <dt>Rule</dt><dd>Brand page → Black primary. Ads page → Blue. On blue → White.
+          On black → Blue.</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">Small 36 · r8 &nbsp;|&nbsp; Medium 44 · r8 &nbsp;|&nbsp; Large 56 · r12</div>
+      <div class="row">
+        <a class="btn btn--sm btn--blue">Book a Demo<svg><use href="#i-arrow-up-right"/></svg></a>
+        <a class="btn btn--md btn--blue">Book a Demo<svg><use href="#i-arrow-up-right"/></svg></a>
+        <a class="btn btn--lg btn--blue">Book a Demo<svg><use href="#i-arrow-up-right"/></svg></a>
+      </div>
+      <div class="lbl">Style — Blue · Black · Outlined/ black · Text/ black · Disabled</div>
+      <div class="row">
+        <a class="btn btn--md btn--blue">Book a Demo</a>
+        <a class="btn btn--md btn--black">Book a Demo</a>
+        <a class="btn btn--md btn--ob">Calculate ROI with Gushwork</a>
+        <a class="btn btn--md btn--tb">Learn more</a>
+        <span class="btn btn--md btn--disabled">Unavailable</span>
+      </div>
+      <div class="lbl">On a blue surface — primary White, secondary Outlined / white</div>
+      <div class="row onblue">
+        <a class="btn btn--md btn--white">Book a Demo</a>
+        <a class="btn btn--md btn--ow">Calculate ROI with Gushwork</a>
+      </div>
+      <div class="lbl">On black — primary Blue</div>
+      <div class="row ondark"><a class="btn btn--md btn--blue">Book a Demo</a></div>
+      <div class="lbl">Icon Placement — Leading · Trailing · Icon Only</div>
+      <div class="row">
+        <a class="btn btn--md btn--black"><svg><use href="#i-arrow-up-right"/></svg>Book a Demo</a>
+        <a class="btn btn--md btn--black">Book a Demo<svg><use href="#i-arrow-up-right"/></svg></a>
+        <a class="btn btn--md btn--black btn--icon"><svg><use href="#i-arrow-up-right"/></svg></a>
+      </div>
+      <div class="lbl">Special/ With People · Special/ Glowing — Large + Trailing only</div>
+      <div class="todo">Both exist at <code>Size=Large, Icon Placement=Trailing</code> only.
+        With People carries a real avatar-photo stack; Glowing uses the two-layer
+        <code>--gw-shadow-button</code>. Photo assets not harvested — not faked here.</div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="info">
+      <h3>eyebrow</h3>
+      <span class="prov prov--measured">measured</span>
+      <p>Small pill label above a section heading. 6 variants. Use an eyebrow, never a
+         coloured dot.</p>
+      <dl>
+        <dt>Type</dt><dd>Default · Trustpilot</dd>
+        <dt>Color</dt><dd>Default (neutral-700) · Blue — <strong>blue only when asked</strong></dd>
+        <dt>Geometry</dt><dd>h24 · r-full · 0.5px outside neutral-100 stroke · pad 4/8</dd>
+        <dt>Gap</dt><dd>No on-blue or on-black variant exists. Don't invent one.</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">Color=Default — the default</div>
+      <div class="row">
+        <span class="eyebrow"><i></i>AI search visibility</span>
+        <span class="eyebrow">Outcomes</span>
+      </div>
+      <div class="lbl">Color=Blue — only when asked</div>
+      <div class="row"><span class="eyebrow eyebrow--blue"><i></i>Referred by Jacob</span></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="info">
+      <h3>navbar · footer · page-build · 12 folds · cards · inputs · client/avatar · images</h3>
+      <span class="prov prov--struct">structure only</span>
+      <p>Variant matrices, node IDs and usage rules are documented in
+         <code>exports/web/</code>. Their appearance has not been measured.</p>
+      <dl>
+        <dt>Known</dt><dd>navbar 8 variants · page-build 8 with Type Brand|Ads · 12 folds ·
+          6 card types · 7 input components</dd>
+        <dt>Missing</dt><dd>radius, per-variant fill, padding, type token per element</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="todo">
+        <strong>Deliberately not drawn.</strong> Rendering these from the structure tree alone
+        is what produced the wrong output earlier in this project — pill buttons, a
+        black-text logo, Unicode characters standing in for icons. Each needs a
+        <code>get_design_context</code> pull before it can appear on this sheet.
+        <br><br>
+        Measured so far: content column <strong>1240</strong> in a 1440 page, 100px margins;
+        navbar bar height 60; navbar fill neutral-25.
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ 03 · DASHBOARD ════════════ -->
+  <h2 class="subpage">03 · Dashboard → ↳ dashboard/ component+pattern-library</h2>
+
+  <div class="frame">
+    <div class="info">
+      <h3>Button (dashboard)</h3>
+      <span class="prov prov--partial">dimensions measured, radius not</span>
+      <p>A different component from the web button, by design. 108 variants.</p>
+      <dl>
+        <dt>Style</dt><dd>Primary (black) · Outline · Ghost</dd>
+        <dt>Never</dt><dd><strong>No blue fill on a dashboard</strong> — ruled 6 Aug 2026</dd>
+        <dt>Size</dt><dd>Small 88×28 · Medium 115×44 · Large 134×48</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">Primary · Outline · Ghost</div>
+      <div class="row">
+        <button class="dbtn dbtn--md dbtn--primary">Add campaign</button>
+        <button class="dbtn dbtn--md dbtn--outline">Export</button>
+        <button class="dbtn dbtn--md dbtn--ghost">Cancel</button>
+      </div>
+      <div class="lbl">Small — the dashboard default</div>
+      <div class="row">
+        <button class="dbtn dbtn--sm dbtn--primary">Save</button>
+        <button class="dbtn dbtn--sm dbtn--outline">Export</button>
+        <button class="dbtn dbtn--sm dbtn--ghost">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="info">
+      <h3>controls/tab · controls/dropdown</h3>
+      <span class="prov prov--measured">measured</span>
+      <p>Read off <code>section/header</code> (<code>2140:16372</code>).</p>
+      <dl>
+        <dt>tab</dt><dd>neutral-50 container r8 pad4; selected = white pill r4 + shadow S3</dd>
+        <dt>dropdown</dt><dd>neutral-50 fill, r8, pad8, w120, no border; CaretDown 12px</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">controls/tab · Size=Small, Show=Selected</div>
+      <div class="row">
+        <div class="tabs">
+          <span class="tab tab--sel">All leads</span>
+          <span class="tab">Qualified</span>
+          <span class="tab">Contacted</span>
+          <span class="tab">Won</span>
+        </div>
+      </div>
+      <div class="lbl">controls/dropdown · Size=Small, State=Closed</div>
+      <div class="row">
+        <span class="dd">All campaigns<svg><use href="#i-caret-down"/></svg></span>
+        <span class="dd">All status<svg><use href="#i-caret-down"/></svg></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="info">
+      <h3>section/progress-bar</h3>
+      <span class="prov prov--measured">measured</span>
+      <p>The one Section whose fill is brand blue. A data fill, not a button fill — it does
+         not breach the no-blue rule.</p>
+      <dl>
+        <dt>Container</dt><dd>neutral-25 · r16 · pad20 · gap16</dd>
+        <dt>Icon tile</dt><dd>primary-alpha-10 · r4 · pad4 · glyph 12px</dd>
+        <dt>Label</dt><dd>body-14-sem · neutral-800 — not black</dd>
+        <dt>Track / fill</dt><dd>neutral-100 / primary-500 · h32 · r8</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="pb">
+        <div class="pb__hd">
+          <span class="pb__ico"><svg><use href="#i-target"/></svg></span>
+          <span class="pb__lbl">Daily call goal</span>
+          <span class="pb__ct">97/120 calls</span>
+        </div>
+        <div class="pb__track"><div class="pb__fill">81%</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="info">
+      <h3>dashboard-build · section/header · card-layout · table · With Dropdown · Graph ·
+          kpi-card · analytics-card · table-row · user-card · list-item · Avatar · toast</h3>
+      <span class="prov prov--struct">structure only</span>
+      <p>Documented in <code>exports/dashboard/</code>. Appearance not measured, except
+         <code>section/header</code>'s own geometry.</p>
+      <dl>
+        <dt>Measured</dt><dd>header 1164×164, pad 40/40/20/40, title Heading/h5 32px
+          Vert Grotesk; rail 260 · r20; refresh button 28×28 r8 border-2 neutral-100</dd>
+        <dt>Missing</dt><dd>kpi-card and analytics-card Mode fills, table-row states,
+          Graph rendering, toast, Avatar artwork</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="todo">
+        <strong>Deliberately not drawn.</strong> The dashboard Avatar in particular is an
+        illustrated character — coloured body rect, head rect, face-cutout vector — across
+        <code>Style</code> × <code>Color</code> × <code>Admin</code>, with only one
+        <code>Admin=true</code> variant. It cannot be approximated with a circle and initials;
+        a master spec that describes it that way is describing a component that is not in
+        this file.
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ ABSENT ════════════ -->
+  <h2 class="subpage">Not in the file — do not build</h2>
+  <div class="frame">
+    <div class="info">
+      <h3>Components that do not exist</h3>
+      <span class="prov prov--absent">absent</span>
+      <p>Documented in the Figma-agent master specification but not present in
+         <code>VKcb4fgVyOHKfQonMgN772</code>. Ruled 6 Aug 2026.</p>
+    </div>
+    <div class="comp">
+      <div class="todo">
+        Modal · Empty State · Dropdown Menu · Notification Badge · Segmented Control ·
+        Breadcrumbs · Date Picker · Pagination (standalone)
+        <br><br>
+        That spec's structural claims were checkable in nine places and wrong in nine. If a
+        request needs one of these, fall back — don't build it.
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
