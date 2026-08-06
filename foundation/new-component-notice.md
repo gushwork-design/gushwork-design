@@ -1,7 +1,7 @@
 # Declaring a new or modified element
 
 When you build something the library does not have, or deviate from a measured component,
-you say so in the same reply. **Short message, linked detail.** This file is the format.
+you say so in the same reply — as **one message block the user copies straight into Slack.**
 
 Both skills reference this. Neither restates it.
 
@@ -12,17 +12,20 @@ worse than a refusal — it inherits the credibility of everything around it whi
 reviewed it.
 
 So the trade is: you may build the missing thing, and in exchange you always declare it, in
-a form short enough that someone actually reads it.
+a form short enough that someone actually reads it and sends it on.
 
-## Two artefacts, and the split matters
+## One block. Not two.
+
+Do not write a summary for the user and a separate message for Slack. **The message to Utsav
+is the only artefact.** The user's job is copy, click, paste, send — four actions, no editing,
+no deciding what to include.
+
+Everything long goes in a file and gets linked.
 
 | | Where | Length |
 |---|---|---|
-| **The detail** | a file in `notices/` | as long as it needs to be |
-| **The message** | your reply, and Slack | **four lines** |
-
-Nobody reads a twenty-line Slack message on a phone. Write the full record to a file, commit
-it, and link to it.
+| **The detail** | `notices/YYYY-MM-DD-<slug>.md`, committed | as long as it needs to be |
+| **The message** | one fenced block in your reply | **four lines** |
 
 ## 1. Write the detail file
 
@@ -45,44 +48,47 @@ Why, and whether the measured value is still reachable (e.g. it is the clamp max
 The one or two items that are genuine judgement calls rather than obvious adaptations.
 
 ## Tokens
-Every token used. No new colour, type, radius, shadow or spacing value was introduced.
+Every token used. Confirm no new colour, type, radius, shadow or spacing value was
+introduced. List any value in use that has no token — that is a gap to report, not an
+invention.
 ```
 
-The **"Worth a decision"** section is the most valuable part. Most entries are routine
-adaptations; one or two are you overriding a measured value because it produces a bad result.
-Say which is which — it is the difference between a list and a review.
+The **"Worth a decision"** section is the point. Most entries are routine adaptations; one or
+two are you overriding a measured value because it produced a bad result. Saying which is
+which turns a list into a review.
 
-## 2. The notice in your reply — four lines
-
-```
-⚠︎ Built 1 new element + 6 deviations from measured components.
-   All token-safe — nothing new in the palette, type ramp, radii, shadows or spacing.
-   Detail: notices/2026-08-06-meta-ads.md
-   Worth your eye: the card-layout KPI width cap.
-→ Slack Utsav: https://gushwork.slack.com/team/U06UAR183TR
-```
-
-If nothing was created or modified, **omit it entirely.** Never print an empty notice — it
-trains people to ignore the real ones.
-
-## 3. The Slack message — four lines, one link
-
-Give it as a single fenced block so it copies in one action.
-
-```
-Hi Utsav — built 1 new element + 6 deviations while making the Meta Ads dashboard.
-All token-safe, nothing new added to the palette or type ramp.
-Detail: https://github.com/utsav-gushwork/gushwork-design/blob/main/notices/2026-08-06-meta-ads.md
-Worth your eye: the card-layout KPI cap — I overrode a measured split.
-```
-
-The link must be a **committed** file on `main`, so push the notice before sending. An
+Commit and push the file **before** you give the message — the link must resolve. An
 uncommitted path is a dead link.
+
+## 2. Give exactly this, and nothing more
+
+One short lead-in line, one fenced block, one link:
+
+> Built 1 new element and 8 deviations — copy this to Utsav:
+>
+> ```
+> Hi Utsav — built 1 new element + 8 deviations while making the Meta Ads dashboard.
+> All token-safe, nothing new added to the palette or type ramp.
+> Detail: https://github.com/utsav-gushwork/gushwork-design/blob/main/notices/2026-08-06-meta-ads.md
+> Worth your eye: the card-layout KPI cap — I overrode a measured split.
+> ```
+>
+> → https://gushwork.slack.com/team/U06UAR183TR
+
+The four lines are always the same shape:
+
+1. **What** — counts, and what you were building
+2. **Token safety** — one clause, so the reviewer knows the palette is intact
+3. **The link**
+4. **The one thing worth their attention** — never a list
+
+If nothing was created or modified, **say nothing.** Never print an empty notice; it trains
+people to ignore the real ones.
 
 ## Getting it to Slack
 
-**Works today, no setup:** the block above copies in one action, and
-`https://gushwork.slack.com/team/U06UAR183TR` opens the DM. Copy, click, paste, send.
+**Works today, no setup:** the block copies in one action and
+`https://gushwork.slack.com/team/U06UAR183TR` opens the DM.
 
 **Be straight about the limit.** Slack has no URL parameter that pre-fills DM text —
 `?text=` works for some share flows but not direct messages. Do not promise single-click

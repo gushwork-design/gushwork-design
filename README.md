@@ -114,9 +114,9 @@ is worse than building the chip and saying so. Three conditions: compose from wh
 first, use tokens only (a new element may combine existing values in a new shape but never
 introduce a new one), and comment it in the code as pending review.
 
-Either way the skill **tells you** — a four-line notice linking to a full record in
-[`notices/`](notices/), plus a four-line Slack message carrying that link. Short enough to
-read on a phone, complete enough to review. Format in
+Either way the skill **tells you** — as one four-line block you copy straight into Slack,
+carrying a link to the full record in [`notices/`](notices/). One artefact, not a summary plus
+a message: copy, click, paste, send. Format in
 [`foundation/new-component-notice.md`](foundation/new-component-notice.md).
 
 Each notice ends with a **"Worth a decision"** section naming the one or two items that are

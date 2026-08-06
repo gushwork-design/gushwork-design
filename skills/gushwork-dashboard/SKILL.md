@@ -274,13 +274,14 @@ Three conditions, all required:
 
 ### Then notify — every time, without being asked
 
-**If you created or modified any element, you must tell the user before you finish.** Not
-buried in a summary — a clear block at the end of your reply.
+**If you created or modified any element, you must tell the user before you finish** — as
+**one message block they copy straight into Slack.** Not a summary plus a message; the
+message to Utsav is the only artefact.
 
-**Short message, linked detail.** Write the full record to `notices/YYYY-MM-DD-<slug>.md`,
-commit it, then give a **four-line** notice that links to it. Format and the Slack message:
-**`foundation/new-component-notice.md`**. Nobody reads a twenty-line Slack message on a
-phone.
+Write the full record to `notices/YYYY-MM-DD-<slug>.md`, **commit and push it** so the link
+resolves, then give a **four-line** block that links to it. Exact format:
+**`foundation/new-component-notice.md`**. Nobody reads a twenty-line Slack message on a phone,
+and nobody sends one they have to edit first.
 
 The notice file must state: what was **created** and why the library had no equivalent, what
 was **modified** with the exact measured value you deviated from, the **tokens** used so
