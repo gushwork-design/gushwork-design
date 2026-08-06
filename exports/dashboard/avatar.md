@@ -36,6 +36,71 @@ The declared matrix is `3 × 5 × 2` = 30 combinations, but **only 16 exist**: 1
 | `1658:24072` / `24076` / `24080` | `Style=1/2/3, Color=Orange, Admin=false` |
 | `1658:24084` | `Style=1, Color=Blue, Admin=true` — **the only admin variant** |
 
+## Appearance — from the component set (`1658:24024` standard, `1658:24084` admin)
+
+**The frame is a landscape stadium, not a rounded square.** An earlier pass here described
+`body rect 42×64 r4 + head rect 24×24 r4` — that is the artwork *inside* the frame, not the
+component. The component itself is:
+
+| Part | Value |
+|---|---|
+| frame | **64 × 48** · **`--gw-radius-80`** (clamps to a stadium on a 48-tall box) · `overflow: hidden` |
+| border | **0.5px `--gw-color-neutral-100`** |
+| fill | per `Color` — see the table below |
+
+### The character, positioned inside that clip
+
+| Part | Standard (`Style=1, Color=Blue`) |
+|---|---|
+| body | 42 × 64 · `--gw-radius-4` · `--gw-color-primary-300` · centred · **`top: 35.5`** |
+| head | 24 × 24 · `--gw-radius-4` · `--gw-color-primary-300` · **`left: calc(50% + 9px)`** · `top: 9.5` |
+| face | 14.114 × 10.713 · **rotated 24.01°** · `left: 30.5` · `top: 20.5` |
+
+**The body starts at y=35.5 in a 48-tall box**, so only its top ~12px is visible — the clip
+is what produces the head-and-shoulders read. **The head is offset 9px right of centre**,
+not centred. Neither is guessable; both are load-bearing to the character's look.
+
+Admin (`1658:24084`) replaces all three with a single 38.172 × 86.63 group at
+`left: 15.5, top: 7.5`, on a `--gw-color-neutral-50` fill.
+
+### Committed assets
+
+The face and the admin character are drawn vectors and cannot be approximated:
+
+| File | Use |
+|---|---|
+| `assets/avatar/face-vector-4.svg` | the `Vector 4` face, used by `Style=1` and `Style=2` |
+| `assets/avatar/admin-character.svg` | the whole admin figure |
+
+`Style=3` uses a different face (`Vector 6`) — **not yet harvested**.
+
+### Fills per `Color` — two anomalies
+
+| `Color` | Body | Background | Token reading |
+|---|---|---|---|
+| Blue | `#66A9FF` | `#E5F1FF` | body `primary-300`, bg **`primary-50`** |
+| Red | `#FB7185` | `#FFF1F2` | body `red-300`, bg `red-25` |
+| Yellow | `#FBBF24` | `#FFFBEB` | body `yellow-300`, bg `yellow-25` |
+| Green | `#4ADE80` | `#F0FDF4` | body `green-300`, bg `green-25` |
+| Orange | `#FB923C` | `#F1F2F3` | body `orange-300`, bg **`neutral-50`** |
+
+Bodies are consistently the `-300` step. Backgrounds are not: **Blue uses `-50` where Red,
+Yellow and Green use `-25`, and Orange abandons its own hue entirely for `neutral-50`.**
+Both look unintended. Flagged, not normalised — the variants render what they render.
+
+## Three avatar components, all stadiums
+
+Worth stating plainly, because a circle is the natural assumption and it is wrong in all
+three cases:
+
+| Component | Size | Radius |
+|---|---|---|
+| `Avatar` (dashboard) | 64 × 48 | 80 |
+| `client/avatar` (web) | 64 × 48 `large` | 100 |
+| the avatar inside `user-card` | 42.667 × 32 | 53.333 |
+
+Every one is a landscape pill at roughly 4:3. None is square, none is round.
+
 ## Rules
 
 **Scope: dashboard / product only** — it represents app users.
