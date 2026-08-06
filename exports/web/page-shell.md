@@ -159,6 +159,41 @@ Group `1951:8085` · set `1706:1799` · **8 variants**.
 
 **`Ads` has no menu states** — Desktop `Default` and Phone `Collapsed` only.
 
+### Appearance — from design context (`1706:1677`, Desktop/Default/Brand)
+
+| Part | Value |
+|---|---|
+| bar | `--gw-color-neutral-25` fill · **1px bottom border `--gw-color-neutral-100`** · h 60 · w 1440 |
+| inner | `max-width: 1240` · `justify-content: space-between` · flex-1 |
+| logo | `gushwork-logo` `Size=24 px, Type=Original, Only Symbol=no` · h 24 · internal gap **4.8px** |
+| nav group | gap `--gw-space-32` |
+| nav item | **a `Button` instance**, not a text link — h 36 · `8px 12px` · `--gw-radius-8` · `--gw-text-button-14` · `--gw-color-black` |
+| caret | 16px, inside the nav-item button |
+| CTA | `Button` · `--gw-color-black` fill · h 36 · `8px 12px` · `--gw-radius-8` · gap `--gw-space-8` · label white `--gw-text-button-14` · `ArrowUpRight` **16px** |
+
+Five things here are easy to get wrong and were wrong in an earlier pass of this repo:
+
+1. **The bar has a bottom border.** `1px solid --gw-color-neutral-100`. Not just a fill.
+2. **Nav items are `Button` instances**, styled as `Text/ black` at `Small` — they carry the
+   button's own 36px height, 8/12 padding and `--gw-radius-8`. Rendering them as bare
+   `<a>` text loses the hit area and the hover surface.
+3. **The CTA's trailing icon is 16px, not 18.** 18px is the standalone button's icon size;
+   the navbar instance overrides it.
+4. **The logo's internal gap is 4.8px** at `Size=24 px` — a scaled value, not a spacing
+   token. The master spec says `itemSpacing: 6`, which is the value at a different size.
+5. **`Who It’s For` uses a curly apostrophe** (U+2019), not `'`. It is a fixed nav label —
+   copy it exactly.
+
+### Anomaly — Platform and Solutions use different carets
+
+`Platform` instances **`CaretDown`** (`112:4354`). `Solutions` instances **`CaretUp`**
+(`112:4312`). Both sit in the same closed `State=Default` navbar, so both should point the
+same way.
+
+This is almost certainly a Figma slip — a caret left flipped after checking the open state.
+**Render both as `CaretDown` when closed**, and flag it rather than reproducing it. Recorded
+here so the next reader doesn't "fix" the export to match the file.
+
 ### Nav items — fixed set, don't add ad hoc
 
 | Item | Type |

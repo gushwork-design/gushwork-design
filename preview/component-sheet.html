@@ -122,6 +122,30 @@
       color:var(--gw-color-neutral-900);cursor:pointer}
   .dd svg{width:12px;height:12px;color:var(--gw-color-neutral-500)}
 
+
+  /* navbar/navbar — measured 1706:1677 */
+  .nav{background:var(--gw-color-neutral-25);border-bottom:1px solid var(--gw-color-neutral-100);
+       height:60px;display:flex;align-items:center;justify-content:center;width:100%}
+  .nav__in{flex:1;max-width:1240px;display:flex;align-items:center;justify-content:space-between}
+  .nav__logo{height:24px;display:flex;align-items:center;gap:4.8px}
+  .nav__logo img{height:24px}
+  .nav__right{display:flex;align-items:center;gap:var(--gw-space-32)}
+  .nav__links{display:flex;align-items:center;height:60px}
+  /* nav items are Button instances (Text/ black, Small) — not bare links */
+  .nav__item{display:flex;align-items:center;justify-content:center;gap:var(--gw-space-8);
+             height:36px;padding:8px 12px;border-radius:var(--gw-radius-8);
+             font:var(--gw-text-button-14);color:var(--gw-color-black);
+             text-decoration:none;cursor:pointer}
+  .nav__item:hover{background:var(--gw-color-neutral-50)}
+  .nav__item svg{width:16px;height:16px}
+  .nav__cta{display:flex;align-items:center;justify-content:center;gap:var(--gw-space-8);
+            height:36px;padding:8px 12px;border-radius:var(--gw-radius-8);
+            background:var(--gw-color-black);color:var(--gw-color-white);
+            font:var(--gw-text-button-14);text-decoration:none}
+  .nav__cta svg{width:16px;height:16px}
+  .nav--ads .nav__links{display:none}
+  .nav--ads .nav__cta{background:var(--gw-color-primary-500)}
+
   /* progress-bar — measured */
   .pb{width:100%;max-width:620px;background:var(--gw-color-neutral-25);
       border-radius:var(--gw-radius-16);padding:var(--gw-space-20);
@@ -354,25 +378,65 @@
 
   <div class="frame">
     <div class="info">
-      <h3>navbar · footer · page-build · 12 folds · cards · inputs · client/avatar · images</h3>
-      <span class="prov prov--struct">structure only</span>
-      <p>Variant matrices, node IDs and usage rules are documented in
-         <code>exports/web/</code>. Their appearance has not been measured.</p>
+      <h3>navbar/navbar</h3>
+      <span class="prov prov--measured">measured</span>
+      <p>First element of every page. 8 variants.</p>
       <dl>
-        <dt>Known</dt><dd>navbar 8 variants · page-build 8 with Type Brand|Ads · 12 folds ·
-          6 card types · 7 input components</dd>
-        <dt>Missing</dt><dd>radius, per-variant fill, padding, type token per element</dd>
+        <dt>Breakpoint</dt><dd>Desktop · Phone</dd>
+        <dt>State</dt><dd>Default · Expanded · Collapsed · Menu · Platform Submenu · Solutions Submenu</dd>
+        <dt>Type</dt><dd>Brand (full nav, black CTA) · Ads (logo + blue CTA only)</dd>
+        <dt>Bar</dt><dd>h60 · neutral-25 · <strong>1px bottom border neutral-100</strong> · inner max-w 1240</dd>
+        <dt>Nav items</dt><dd><strong>Button instances</strong> (Text/ black, Small) — h36, pad 8/12, r8. Not bare links.</dd>
+        <dt>CTA icon</dt><dd>ArrowUpRight at <strong>16px</strong>, not the standalone 18px</dd>
+        <dt>Anomaly</dt><dd>Platform uses CaretDown, Solutions uses CaretUp in the same closed state. A Figma slip — render both down.</dd>
       </dl>
     </div>
     <div class="comp">
-      <div class="todo">
-        <strong>Deliberately not drawn.</strong> Rendering these from the structure tree alone
-        is what produced the wrong output earlier in this project — pill buttons, a
-        black-text logo, Unicode characters standing in for icons. Each needs a
-        <code>get_design_context</code> pull before it can appear on this sheet.
-        <br><br>
-        Measured so far: content column <strong>1240</strong> in a 1440 page, 100px margins;
-        navbar bar height 60; navbar fill neutral-25.
+      <div class="lbl">Type=Brand · Breakpoint=Desktop · State=Default</div>
+      <div class="row" style="display:block">
+        <div class="nav"><div class="nav__in">
+          <span class="nav__logo"><img src="../assets/logo/gushwork-logo-original.svg" alt="Gushwork"></span>
+          <span class="nav__right">
+            <span class="nav__links">
+              <a class="nav__item">Who It’s For</a>
+              <a class="nav__item">Platform<svg><use href="#i-caret-down"/></svg></a>
+              <a class="nav__item">Solutions<svg><use href="#i-caret-down"/></svg></a>
+              <a class="nav__item">Customers</a>
+              <a class="nav__item">Pricing</a>
+            </span>
+            <a class="nav__cta">Book a Demo<svg><use href="#i-arrow-up-right"/></svg></a>
+          </span>
+        </div></div>
+      </div>
+      <div class="lbl">Type=Ads — no nav links, blue CTA</div>
+      <div class="row" style="display:block">
+        <div class="nav nav--ads"><div class="nav__in">
+          <span class="nav__logo"><img src="../assets/logo/gushwork-logo-original.svg" alt="Gushwork"></span>
+          <span class="nav__right">
+            <span class="nav__links"></span>
+            <a class="nav__cta">Book a Demo<svg><use href="#i-arrow-up-right"/></svg></a>
+          </span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="info">
+      <h3>footer · page-build · 12 folds · cards · inputs · client/avatar · images</h3>
+      <span class="prov prov--struct">structure only</span>
+      <p>Variant matrices, node IDs and usage rules are in <code>exports/web/</code>.
+         Appearance not yet measured.</p>
+      <dl>
+        <dt>Remaining</dt><dd>footer · page-build · 12 folds · 6 card types · 7 inputs ·
+          client/avatar · images</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="todo"><strong>Deliberately not drawn.</strong> Each needs one
+        <code>get_design_context</code> pull before it can appear here. Measuring navbar
+        alone corrected five things a structure-only rendering had wrong — including a
+        missing bottom border and nav items that are Button instances, not text links.
       </div>
     </div>
   </div>
