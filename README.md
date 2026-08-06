@@ -12,14 +12,55 @@ and a hard stop rather than an invented component when something genuinely doesn
 
 ## Install
 
+`claude plugin install` resolves a plugin **name from a marketplace** — it does not take a git
+URL. This repo is its own single-plugin marketplace, so add it once, then install:
+
 ```bash
-claude plugin install https://github.com/utsav-gushwork/gushwork-design.git
+claude plugin marketplace add utsav-gushwork/gushwork-design
 ```
+
+```bash
+claude plugin install gushwork-design@gushwork
+```
+
+New to it? Read [`ONBOARDING.md`](ONBOARDING.md) first — five minutes, and it covers the four
+ways output goes off-system.
 
 Then just describe what you're building. The skills trigger on the work, not on being named:
 
 - *"Build a pricing page for Gushwork"* → `gushwork-web`
 - *"Add a KPI row to the leads dashboard"* → `gushwork-dashboard`
+
+## Changing the system — how an edit reaches everyone
+
+A design system change has two halves, and only one of them ships.
+
+**Editing Figma changes nothing for anyone.** The repo is what the plugin serves. Nothing
+watches Figma, so a colour changed there and not here means every session keeps emitting the
+old value with full confidence — the most expensive failure mode in the system, because it is
+silent. Measure it into `exports/` or `tokens.css` in the same sitting.
+
+The chain, end to end:
+
+| Step | Who | What |
+|---|---|---|
+| 1 | maintainer | change it in Figma |
+| 2 | maintainer | measure it into `exports/` or re-pull `tokens.css` — see [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+| 3 | maintainer | bump `version` in **both** `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` |
+| 4 | maintainer | commit and push to `main` |
+| 5 | maintainer | say so in Slack — there is no push notification |
+| 6 | everyone | `claude plugin marketplace update gushwork && claude plugin update gushwork-design`, then **restart** |
+
+Two things worth knowing:
+
+- **`plugin.json` is the version people see.** `claude plugin list` reads it, not the
+  marketplace entry. Bump both or the two disagree and nobody can tell what they're running.
+- **There is no auto-update, and no way to force one.** A teammate who never runs step 6 runs
+  last month's system indefinitely, with no warning. So keep step 5 real, and keep changes
+  batched rather than trickling — one announced version beats five silent ones.
+
+Verdicts from a [`notices/`](notices/) review are exactly what feeds step 1. That is the loop
+closing: a deviation someone hit in a real build becomes a measured value everyone gets.
 
 ## Two surfaces, two skills
 

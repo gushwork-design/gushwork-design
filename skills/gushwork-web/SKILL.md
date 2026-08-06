@@ -18,8 +18,19 @@ Announce at the start: "Using the Gushwork web skill."
 | Voice, casing, banned words, CTA copy | `foundation/voice.md` |
 | Badge, Gushwork logo, Phosphor icons | `foundation/shared-components.md` |
 | Declaring anything you had to build yourself | `foundation/new-component-notice.md` |
+| **What to emit — React or static HTML** | `foundation/output-targets.md` |
 
 **Never restate a token value or a voice rule here or in your output.** Reference the token.
+
+**You do not need Figma to build.** Everything measured is in `exports/`. Figma is a maintainer
+activity — see `CONTRIBUTING.md`. A value missing from `exports/` is a gap to report, not a
+reason to go measuring.
+
+**Be honest about this surface's state.** Button, eyebrow, navbar, footer and `client/avatar`
+are measured. The rest — folds, card types, inputs, images — are transcribed from Figma
+annotations and **not** yet verified against the rendered components, which is how the dashboard
+surface got a dozen values wrong before it was measured. Treat an unmeasured value as a good
+first draft and say so rather than presenting it as a spec.
 
 Three tiers, because "never invent a number" is unfollowable for page layout and a rule
 that can't be followed gets ignored where it matters:

@@ -18,6 +18,7 @@ Announce at the start: "Using the Gushwork dashboard skill."
 | Voice, casing, banned words, CTA copy | `foundation/voice.md` |
 | Badge, Gushwork logo, Phosphor icons | `foundation/shared-components.md` |
 | Declaring anything you had to build yourself | `foundation/new-component-notice.md` |
+| **What to emit — React or static HTML** | `foundation/output-targets.md` |
 | Shell, scrolling, fill and responsive detail | `exports/dashboard/build-rules.md` |
 
 **Never restate a token value or a voice rule here or in your output.** Reference the token.
@@ -46,33 +47,24 @@ Skipping a step here is what produced every rebuild. **1 and 2 come before any m
 5. **Build the shell first and verify it alone.** `dashboard-build`, locked to the viewport,
    one scroller. Confirm the rail does not scroll before you put anything in the slot.
 6. **Fill the slot section by section**, each a Section from `sections.md`.
-7. **Verify numerically, not by eye** — geometry against Figma's `x/y/w/h`, colour by
-   sampling the render. See *Measuring a component* below.
+7. **Verify numerically, not by eye** — the measured widths in `exports/` against
+   `getBoundingClientRect()`, colour by sampling the render. Eyeballing approved a rail that
+   was 9px out per nav group, three times running.
 8. **Notify if you created or changed anything** — one four-line Slack block. Never silently.
 
-## Measuring a component — read the set, never an instance
+## You do not need Figma to build
 
-Every value in `exports/dashboard/` is measured off Figma. When you add or correct one:
+Everything measured is in `exports/`. **Do not open Figma to build a screen.** It is slower and
+it is a trap: an instance read misreports type weight — instances inside `dashboard-build`
+return `Inter:Bold` for text the component set defines as `Medium` or `Semi_Bold`, which shipped
+a wrong nav rail twice.
 
-**Pull `get_design_context` on the component set, or on a variant symbol inside it — never
-on an instance.** An instance read misreports type weight: instances inside
-`dashboard-build` return `Inter:Bold` for text that the component set defines as
-`Inter:Medium` or `Inter:Semi_Bold`. This shipped a wrong rail twice.
+Figma is a **maintainer** activity — adding a component, correcting a measurement, re-pulling
+tokens. That procedure lives in `CONTRIBUTING.md`, and it is not part of building.
 
-How to tell them apart in `get_metadata`: a `<symbol>` is a definition, an `<instance>` is a
-use. Set nodes list `<symbol>` children, one per variant.
-
-Two further checks worth doing every time, because each has caught a real error here:
-
-- **Compare box geometry numerically**, not by screenshot. Read Figma's `x/y/w/h` from
-  `get_metadata` and assert against `getBoundingClientRect()`. Eyeballing passed a rail that
-  was 9px out per group.
-- **Sample the render for colour.** `get_screenshot` then read the pixel. Annotation text
-  does not carry fills, and inference is unreliable — a nav icon that "should" be muted grey
-  is actually the same `neutral-900` as its label.
-
-If an annotation and the component disagree, the component wins and the disagreement is a
-finding. `dashboard-build`'s annotation claims `gap:8` where the coordinates prove 0.
+If a value you need isn't in `exports/`, that is a **gap to report**, not a reason to go
+measuring. Use tier 3 above — choose sensibly, say in one line that you chose it — and put it
+in the notice.
 
 ## Before building a dashboard — ask, don't assume
 
