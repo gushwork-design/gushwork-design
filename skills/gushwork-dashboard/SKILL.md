@@ -17,6 +17,8 @@ Announce at the start: "Using the Gushwork dashboard skill."
 | Every colour, size, radius, shadow, type style | `foundation/tokens.css` |
 | Voice, casing, banned words, CTA copy | `foundation/voice.md` |
 | Badge, Gushwork logo, Phosphor icons | `foundation/shared-components.md` |
+| Declaring anything you had to build yourself | `foundation/new-component-notice.md` |
+| Shell, scrolling, fill and responsive detail | `exports/dashboard/build-rules.md` |
 
 **Never restate a token value or a voice rule here or in your output.** Reference the token.
 
@@ -97,6 +99,30 @@ wide (the 1164 container less its 40px slot padding). At `KPI cards=3` that is t
 356 and six analytics at 174. The 286 and 160 in `section-elements.md` are the components'
 own widths — a floor, not a fixed size. A row of cards that stops short of the section edge
 is wrong.
+
+## Build rules — the five non-negotiables
+
+Full detail, tables and reasoning: `exports/dashboard/build-rules.md`. Reference
+implementation: `preview/meta-ads-app.html`.
+
+1. **Exactly one region scrolls — the Slot.** `html, body { overflow: hidden }`, shell locked
+   to the viewport, rail `overflow: hidden` with only its nav list scrolling so the user-card
+   stays pinned. If the document scrolls, the rail scrolls away with it.
+2. **`.slot > * { flex: 0 0 auto }`.** Sections are flex items in a fixed-height column and
+   will otherwise be *compressed* instead of the slot scrolling — this collapsed a 228px
+   chart body to 56px.
+3. **Horizontal measured values are exact; never clamp them.** 260 rail, 1084 section, the
+   `card-layout` splits, table data columns. On wide screens change the **column count**, not
+   the sizes. Cards *fill* their section — 286 and 160 are floors.
+4. **Vertical measured values are the ceiling of a clamp.** A tall viewport renders the
+   component exactly as drawn; a short one compresses rather than pushing content below the
+   fold.
+5. **Align charts by grid, not by matching gaps.** Each bar label shares a grid row with its
+   bar. Two independent columns accumulate ~2px of drift per row — measured at 14px.
+
+And one habit: **anything not measured gets a comment saying so** — the fluid shell, hidden
+scrollbars, every clamp minimum. A later reader must never mistake a judgement call for a
+Figma value.
 
 ## The composition ladder — compose downward, never sideways
 
@@ -215,43 +241,56 @@ Encoded so you don't silently invent an answer:
 If a request needs a value or variant that doesn't exist, say so. Don't interpolate a
 radius, invent a Mode, or guess a timeout.
 
-## Components that do NOT exist — fall back, don't build
+## When the library is missing something
 
-A Figma-agent-generated specification circulating alongside this system documents dashboard
-components that are **not in the file**:
+Two different situations. Do not confuse them.
 
-`Modal` · `Empty State` · `Dropdown Menu` · `Notification Badge` · `Segmented Control` ·
-`Breadcrumbs` · `Date Picker` · `Pagination` (as a standalone component)
+### Fall back — a whole deliverable or surface the system does not cover
 
-The same spec describes a 240px collapsible sidebar, a 56px app top bar, an initials-based
-avatar, and a **`Blue` dashboard button**. **None of those is in this file.** The rail is
-260px, the page header is 1164×164 with a 32px Vert Grotesk title, the avatar is an
-illustrated character, and blue button fills are banned — ruled 6 Aug 2026.
+A slide deck, a flyer, a standalone tool, a marketing page (that is `gushwork-web`), or a
+surface with no Sections at all. **Do not build these.** Tell the user plainly that it is
+not in the Gushwork design system yet and point them at Utsav on Slack to get it added:
+`https://gushwork.slack.com/team/U06UAR183TR`. Say it in your own words.
 
-Its structural claims were checkable in nine places and wrong in all nine. **Treat it as a
-lead, never as authority.** If a request needs one of the above, use the out-of-scope
-fallback below.
+### Build it — a small element missing from an otherwise buildable screen
 
-Full detail: `RECONCILIATION.md`.
+A dashboard that needs a stat tile, a segmented toggle, an empty state, a stepper, a
+date-range picker — something the Sections almost cover but not quite. **Build it, then
+declare it.** Refusing to render a whole screen over one missing chip is worse than
+building the chip and saying so.
 
-## When the request is out of scope
+Three conditions, all required:
 
-**Always try to fulfil the request by composing existing components first.** Most requests
-that sound novel are a `section/Container` with the right contents, or a Section you
-haven't considered. Check `sections.md` and `section-elements.md` before concluding
-anything is missing.
+1. **Compose from what exists first.** Most "missing" things are a `section/Container` with
+   the right contents, or a Section you have not considered. Check `sections.md` and
+   `section-elements.md` before concluding anything is absent.
+2. **Build it from tokens only.** Colour, type, radius, shadow and spacing come from
+   `foundation/tokens.css`. A new element may combine existing values in a new shape; it
+   may never introduce a new value. If it needs a value with no token, that is a finding —
+   report it, do not invent the value.
+3. **Mark it in the code.** A comment at the element saying it is new, what it was needed
+   for, and that it is pending library review. Anyone reading the file later must be able to
+   tell your element from a measured one.
 
-Fall back **only** when the request genuinely needs a component, surface, or deliverable
-type that isn't in this skill yet — a slide deck, a flyer, a standalone tool, or a
-component with no match in the exports.
+### Then notify — every time, without being asked
 
-When you do fall back, tell the user plainly that the thing they've asked for isn't in the
-Gushwork design system yet, and point them at Utsav on Slack to get it added:
-`https://gushwork.slack.com/team/U06UAR183TR`. Say it in your own words — don't paste the
-same sentence every time.
+**If you created or modified any element, you must tell the user before you finish.** Not
+buried in a summary — a clear block at the end of your reply.
 
-**Never invent a component or guess at a brand rule to fill a gap.** Falling back is
-always better than producing something off-system.
+Follow the template in **`foundation/new-component-notice.md`**. It contains the exact
+notice format and a ready-to-send Slack message, so the user's job is: copy the block, click
+the link, paste, send.
+
+The notice must state:
+
+- **Created** — each new element, what it does, why the library had no equivalent
+- **Modified** — any measured component you deviated from, and the exact deviation
+- **Tokens used** — so review can confirm nothing was invented
+- **Where** — file and section, so it can be found
+
+**Never let a created element pass silently.** The whole point of a governed system is that
+drift is visible. An undeclared component is worse than a refusal, because it looks
+official.
 
 ## Source of truth
 

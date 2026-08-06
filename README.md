@@ -44,6 +44,7 @@ Both skills point at these. Neither restates them, and neither should.
 | [`foundation/tokens.css`](foundation/tokens.css) | 188 custom properties — colour, type, spacing, radii, shadows — pulled from the Figma **variables** |
 | [`foundation/voice.md`](foundation/voice.md) | Voice, casing, punctuation, the primary-CTA ruling, banned words |
 | [`foundation/shared-components.md`](foundation/shared-components.md) | The atoms genuinely shared across both surfaces — Badge, Gushwork logo, Phosphor icons |
+| [`foundation/new-component-notice.md`](foundation/new-component-notice.md) | How a skill declares anything it had to build itself, and routes it to review |
 
 ## Rules in the skill, structure in the exports
 
@@ -59,13 +60,14 @@ gushwork-design/
 ├── foundation/
 │   ├── tokens.css
 │   ├── voice.md
-│   └── shared-components.md
+│   ├── shared-components.md
+│   └── new-component-notice.md
 ├── skills/
 │   ├── gushwork-web/SKILL.md
 │   └── gushwork-dashboard/SKILL.md
 └── exports/
     ├── web/          page-shell · folds · fold-elements · atoms · cards · button · avatar · images
-    └── dashboard/    dashboard-build · sections · section-elements · button · avatar · controls · toast
+    └── dashboard/    dashboard-build · sections · section-elements · button · avatar · controls · toast · build-rules
 ```
 
 ## The composition ladder
@@ -96,15 +98,30 @@ them.
 **Badge is genuinely shared**, same component on both surfaces — web cards and tables,
 dashboard KPI cards.
 
-## Out of scope is a first-class answer
+## When the library is missing something
 
-Both skills compose from existing components first. When a request genuinely needs a
-component, surface, or deliverable that isn't in the system yet — slides, flyers, a tool, a
-component with no match — the skill says so and points at Utsav on Slack rather than
-inventing something plausible. Falling back beats shipping off-system.
+Both skills compose from existing components first. What happens next depends on the size of
+the gap.
 
-Slides, flyers, and tools are planned; the structure above is built to absorb them as
-additional skills without touching the foundation.
+**A whole deliverable or surface** — slides, a flyer, a tool, a page type with no folds —
+**falls back.** The skill says it isn't in the system yet and points at Utsav on Slack rather
+than inventing something plausible.
+
+**A small element inside an otherwise buildable screen** — a stat tile, a segmented toggle,
+an empty state — **gets built, then declared.** Refusing a whole screen over one missing chip
+is worse than building the chip and saying so. Three conditions: compose from what exists
+first, use tokens only (a new element may combine existing values in a new shape but never
+introduce a new one), and comment it in the code as pending review.
+
+Either way the skill **tells you**, in a visible block, with a ready-to-paste Slack message
+so the gap reaches whoever owns the library. Format in
+[`foundation/new-component-notice.md`](foundation/new-component-notice.md).
+
+The point isn't to prevent drift — it's to make drift **visible**. An undeclared component is
+worse than a refusal, because it looks official.
+
+Slides, flyers, and tools are planned; the structure above absorbs them as additional skills
+without touching the foundation.
 
 ## Two sources, and where they disagree
 

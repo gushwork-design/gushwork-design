@@ -17,6 +17,7 @@ Announce at the start: "Using the Gushwork web skill."
 | Every colour, size, radius, shadow, type style | `foundation/tokens.css` |
 | Voice, casing, banned words, CTA copy | `foundation/voice.md` |
 | Badge, Gushwork logo, Phosphor icons | `foundation/shared-components.md` |
+| Declaring anything you had to build yourself | `foundation/new-component-notice.md` |
 
 **Never restate a token value or a voice rule here or in your output.** Reference the token.
 
@@ -196,20 +197,46 @@ Encoded so you don't silently invent an answer:
 If a request needs a value or variant that doesn't exist, say so. Don't interpolate a
 radius, invent a variant, or guess a behaviour.
 
-## Components that do NOT exist — fall back, don't build
+## When the library is missing something
 
-A Figma-agent-generated specification circulating alongside this system documents components
-that are **not in the file**. They read as plausible and they are not there:
+Two situations, handled differently.
 
-`Modal` · `Empty State` · `Dropdown Menu` · `Notification Badge` · `Segmented Control` ·
-`Breadcrumbs` · `Date Picker` · `Pagination` (as a standalone component)
+### Fall back — a whole deliverable or surface
 
-That spec's structural claims were checkable in nine places and wrong in all nine — it
-describes a conventional SaaS kit, not this one. **Treat it as a lead, never as authority.**
-If a request needs one of the above, use the out-of-scope fallback below. Building it is
-exactly the invent-a-component failure this skill exists to prevent.
+A slide deck, a flyer, a standalone tool, a dashboard (that is `gushwork-dashboard`), or a
+page type with no folds at all. **Do not build these.** Say plainly it is not in the system
+yet and point at Utsav on Slack: `https://gushwork.slack.com/team/U06UAR183TR`.
 
-Full detail: `RECONCILIATION.md`.
+Also fall back for the components a circulating Figma-agent specification documents that are
+**not in this file**: `Modal`, `Empty State`, `Dropdown Menu`, `Notification Badge`,
+`Segmented Control`, `Breadcrumbs`, `Date Picker`, standalone `Pagination`. That spec's
+structural claims were checkable in nine places and wrong in all nine. Treat it as a lead,
+never as authority — see `RECONCILIATION.md`.
+
+### Build it — a small element missing from an otherwise buildable page
+
+A fold that needs a stat strip, a pill group, a small callout — something the folds almost
+cover. **Build it, then declare it.** Refusing a whole page over one missing chip is worse
+than building the chip and saying so.
+
+Three conditions, all required:
+
+1. **Compose from what exists first.** Most "missing" things are `fold/ other` with the
+   right contents, or a fold you have not considered. Check `folds.md` and `atoms.md`.
+2. **Tokens only.** A new element may combine existing values in a new shape; it may never
+   introduce a new colour, type style, radius, shadow or spacing value. If it needs one,
+   that is a finding to report.
+3. **Mark it in the code** — a comment saying it is new, what it was for, and that it is
+   pending library review.
+
+### Then notify — every time
+
+**If you created or modified any element, say so before you finish**, in a visible block at
+the end of your reply. Follow `foundation/new-component-notice.md`: it has the exact notice
+format and a ready-to-paste Slack message, so the user's job is copy, click, paste, send.
+
+**Never let a created element pass silently.** An undeclared component is worse than a
+refusal, because it looks official.
 
 ## When the request is out of scope
 
