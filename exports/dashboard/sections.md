@@ -249,3 +249,80 @@ inside a Section.
 `kpi-card` and the section dropdown use **Badge** — colour signals per
 `foundation/shared-components.md`. Pagination and sort buttons follow the dashboard
 button rule (black / outline / ghost, never blue).
+
+
+## `section/Container` — appearance from the set (`2134:14477`)
+
+| Node | Variant |
+|---|---|
+| `2134:14476` | `State=Default` |
+| `2134:14475` | `State=Collapsed` |
+
+| Part | Value |
+|---|---|
+| shell | **1084 wide** · `--gw-radius-12` · padding `--gw-space-12` · gap `--gw-space-16` · fill **`--gw-color-neutral-25`** |
+| header | padding `--gw-space-4` · space-between · full width |
+| icon tile | `--gw-color-primary-alpha-10` · `--gw-radius-4` · padding `--gw-space-4` · `ChartLine` at **12px** |
+| title | **Inter Semi Bold 14**, `--gw-color-neutral-800`, tracking `-0.2px`, line-height 1 |
+| caret | `CaretDown` at **12px** |
+| body (Default only) | **`--gw-color-white`** · **1px border `--gw-color-neutral-50`** · `--gw-radius-8` · padding `--gw-space-16` |
+| Slot | `--gw-radius-8` · padding 10 · gap `--gw-space-40` |
+
+**The caret flips, it does not rotate 180°.** `State=Default` renders `CaretDown` with a
+vertical flip (`scaleY(-1)`) so it points **up**; `State=Collapsed` renders it unflipped,
+pointing down. Drawing both pointing down — as an earlier pass did — inverts the affordance.
+
+**The inner container is a white card with a `neutral-50` hairline**, sitting on the
+`neutral-25` shell. Two greys, one inside the other.
+
+The title's line-height is 1, so `--gw-text-body-14-sem` (which is 14/21) is close but not
+exact. Use the token and accept the 21px leading, or set `line-height: 1` explicitly and say
+you did.
+
+## `section/section-element/Graph` — `Type=Bar` measured (`2143:681`)
+
+| Part | Value |
+|---|---|
+| frame | **1060 × 280** · fill `--gw-color-white` · `overflow: hidden` |
+| y-axis labels | Inter Medium 12 · `--gw-color-neutral-600` · tracking `-0.2px` · gap `--gw-space-20` |
+| chart area | gap `--gw-space-16` · 6 horizontal grid lines · padding-block 16 |
+| bar | **height 10** · fill `--gw-color-primary-500` · **radius 2 on the trailing end only** |
+| bar value | Inter Medium 10 · `--gw-color-black` or `neutral-900` · sits just past the bar's end |
+| x-axis | Inter Medium 12 · `--gw-color-neutral-600` · space-between · each label 32 wide |
+
+Bars are brand blue — a data fill, not a button fill, so the no-blue rule does not apply.
+`Type=Line` and `Type=Grouped Bar` are **not yet measured**.
+
+## `section/With Dropdown` — appearance from the component (`2140:16131`)
+
+| Part | Value |
+|---|---|
+| shell | **1084 wide** · `--gw-radius-12` · pad `--gw-space-12` · gap `--gw-space-16` · fill `--gw-color-neutral-25` |
+| header | pad `--gw-space-4` · space-between · holds the section dropdown + a collapse caret |
+| collapse caret | `CaretDown` **12px, flipped `scaleY(-1)`** — points up when expanded |
+| body | gap `--gw-space-12` |
+| data container | **`--gw-color-white`** · `--gw-radius-8` · pad 16 · inner row 1036 wide, gap `--gw-space-8` |
+| data cell | min-width 100 · pad `4px 8px` · gap `--gw-space-4` |
+| cell label | Inter Medium 10, uppercase, line-height 1.6 · `--gw-color-neutral-600` |
+| cell value | **Vert Grotesk Display Medium 18**, line-height 1.2 · `--gw-color-neutral-900` |
+| separators | 1px vertical rules **between** cells, full cell height |
+| sub-section title | Inter Medium 10, uppercase, lh 1.6 · `--gw-color-neutral-500` · pad `--gw-space-4` |
+
+### The section dropdown inside the header (`2142:583`)
+
+466 wide. Trigger is `--gw-color-white`, `--gw-radius-8`, pad `--gw-space-8`, min-width 140,
+space-between, with `CaretDown` at 12px.
+
+| Part | Value |
+|---|---|
+| option label | **Inter Semi Bold 14** · `--gw-color-neutral-800` · tracking `-0.2px` |
+| neutral badge | `--gw-color-neutral-100` fill · `--gw-color-neutral-600` text · `--gw-radius-4` · pad `4px 8px` |
+| status badge | `--gw-color-green-alpha-10` fill · **`--gw-color-green-500`** text |
+
+**The dropdown carries two badges inline in its trigger** — a neutral one for the option's
+own label and a green status one. The green badge here uses `green-500` text, where
+`kpi-card`'s inline badge uses `green-300`. Three different green-badge treatments now exist
+across the system: this one, kpi-card's, and the standalone Badge's `green-100`/`green-500`.
+
+**Cell values are the display face at Medium 18** — a fourth display size in use (18, 20, 32
+and the rail's 18), none of which has a token. The heading ramp starts at 22.

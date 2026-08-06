@@ -133,12 +133,98 @@
             padding-right:var(--gw-space-12);font:var(--gw-text-body-14-med)}
 
 
+  
+
+  /* analytics-card — measured 2134:14583. 160 wide, value is the DISPLAY face at Medium 20. */
+  .ana{flex:none;width:160px;border-radius:var(--gw-radius-12);padding:var(--gw-space-12);
+       background:var(--gw-color-neutral-25);display:flex;flex-direction:column;
+       gap:var(--gw-space-20);overflow:hidden}
+  .ana__l{font:500 10px/1 var(--gw-font-body);text-transform:uppercase;
+          color:var(--gw-color-neutral-600)}
+  .ana__stack{display:flex;flex-direction:column;gap:var(--gw-space-4);width:100%}
+  /* NO TOKEN: display face at 20/500. The heading ramp starts at 22. */
+  .ana__v{font:500 20px/1 var(--gw-font-display);color:var(--gw-color-black)}
+  .ana__c{font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-600)}
+
+  /* section shell — Container / With Dropdown / table all share this */
+  .sec{border-radius:var(--gw-radius-12);padding:var(--gw-space-12);
+       background:var(--gw-color-neutral-25);display:flex;flex-direction:column;
+       gap:var(--gw-space-16);overflow:hidden}
+  .sec__hd{display:flex;align-items:center;justify-content:space-between;
+           padding:var(--gw-space-4);width:100%}
+  .sec__ttl{display:flex;align-items:center;gap:var(--gw-space-8)}
   .sec__ico{width:20px;height:20px;border-radius:var(--gw-radius-4);padding:4px;flex:none;
             background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500);
             display:flex;align-items:center;justify-content:center}
   .sec__ico svg{width:12px;height:12px}
-  .sec__t{font:var(--gw-text-body-14-sem)}
-  .sec__caret{margin-left:auto;width:14px;height:14px;color:var(--gw-color-neutral-400)}
+  .sec__t{font:600 14px/1 var(--gw-font-body);letter-spacing:-.2px;
+          color:var(--gw-color-neutral-800)}
+  .sec__caret{width:12px;height:12px;color:var(--gw-color-neutral-400)}
+  .sec__caret--up{transform:scaleY(-1)}
+  /* the inner body is a WHITE card with a neutral-50 hairline on the neutral-25 shell */
+  .sec__body{background:var(--gw-color-white);border:1px solid var(--gw-color-neutral-50);
+             border-radius:var(--gw-radius-8);padding:var(--gw-space-16);width:100%}
+
+  /* data cells — With Dropdown */
+  .cells{display:flex;align-items:center;gap:var(--gw-space-8)}
+  .cell{min-width:100px;padding:var(--gw-space-4) var(--gw-space-8);display:flex;
+        flex-direction:column;gap:var(--gw-space-4);white-space:nowrap}
+  .cell__l{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
+           color:var(--gw-color-neutral-600)}
+  /* NO TOKEN: display face at 18/500 */
+  .cell__v{font:500 18px/1.2 var(--gw-font-display);color:var(--gw-color-neutral-900)}
+  .cell__sep{width:1px;align-self:stretch;background:var(--gw-color-neutral-100)}
+  .subttl{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
+          color:var(--gw-color-neutral-500);padding:var(--gw-space-4)}
+  /* the section dropdown in the header */
+  .secdd{background:var(--gw-color-white);border-radius:var(--gw-radius-8);
+         padding:var(--gw-space-8);min-width:140px;display:flex;align-items:center;
+         justify-content:space-between;gap:var(--gw-space-8)}
+  .secdd__l{font:600 14px/1 var(--gw-font-body);letter-spacing:-.2px;
+            color:var(--gw-color-neutral-800)}
+  .secdd__b{display:inline-flex;align-items:center;padding:4px var(--gw-space-8);
+            border-radius:var(--gw-radius-4);font:var(--gw-text-body-12-med)}
+  .secdd__b--n{background:var(--gw-color-neutral-100);color:var(--gw-color-neutral-600)}
+  .secdd__b--g{background:var(--gw-color-green-alpha-10);color:var(--gw-color-green-500)}
+
+  /* table-row — measured 2192:539 */
+  .dt{width:100%;border-collapse:collapse;background:var(--gw-color-white)}
+  .dt th,.dt td{text-align:left;padding:12px 24px;
+                border-bottom:1px solid var(--gw-color-neutral-200);
+                font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-600);
+                letter-spacing:-.028px}
+
+  /* Graph Type=Bar — measured 2143:681 */
+  .bars{display:flex;gap:var(--gw-space-12);background:var(--gw-color-white)}
+  .bars__y{display:flex;flex-direction:column;gap:var(--gw-space-20);
+           font:500 12px/1 var(--gw-font-body);letter-spacing:-.2px;
+           color:var(--gw-color-neutral-600)}
+  .bars__area{flex:1;display:flex;flex-direction:column;gap:var(--gw-space-16)}
+  .bars__plot{display:flex;flex-direction:column;gap:var(--gw-space-20);padding-block:16px}
+  .bar{height:10px;background:var(--gw-color-primary-500);
+       border-radius:0 2px 2px 0;position:relative}
+  .bar span{position:absolute;left:calc(100% + 4px);top:-2px;
+            font:500 10px/1 var(--gw-font-body);letter-spacing:-.2px;
+            color:var(--gw-color-black)}
+  .bars__x{display:flex;justify-content:space-between;
+           font:500 12px/1 var(--gw-font-body);letter-spacing:-.2px;
+           color:var(--gw-color-neutral-600)}
+
+  /* toast — measured set 1579:614 */
+  .toast{width:360px;border-radius:var(--gw-radius-8);padding:8px 16px;
+         display:flex;align-items:flex-start;gap:var(--gw-space-8);border:1px solid;
+         overflow:hidden}
+  .toast__i{padding-block:2px;display:flex}
+  .toast__i svg{width:20px;height:20px}
+  .toast__m{flex:1;font:var(--gw-text-body-16-med);color:var(--gw-color-neutral-900)}
+  .toast__x{padding-block:2px;display:flex;color:var(--gw-color-neutral-600)}
+  .toast__x svg{width:16px;height:16px}
+  .toast--err{background:var(--gw-color-red-25);border-color:var(--gw-color-red-100)}
+  .toast--warn{background:var(--gw-color-yellow-25);border-color:var(--gw-color-yellow-100)}
+  .toast--ok{background:var(--gw-color-green-25);border-color:var(--gw-color-green-100)}
+  .toast--info{background:var(--gw-color-primary-25);border-color:var(--gw-color-primary-100)}
+  .toast--dark{background:var(--gw-color-neutral-900);border-color:var(--gw-color-neutral-800)}
+  .toast--dark .toast__m{color:var(--gw-color-neutral-200)}
 
   /* UNMEASURED — flagged on the page itself */
   .unmeasured{position:relative;outline:1px dashed var(--gw-color-red-300);
@@ -146,17 +232,7 @@
   .unmeasured::after{content:attr(data-note);position:absolute;top:-9px;right:8px;
       background:var(--gw-color-red-500);color:#fff;font:600 9px/1 var(--gw-font-body);
       padding:3px 6px;border-radius:3px;letter-spacing:.04em;text-transform:uppercase}
-  .ana{flex:none;border-radius:var(--gw-radius-12);padding:var(--gw-space-12);
-       background:var(--gw-color-neutral-25);display:flex;flex-direction:column;
-       gap:var(--gw-space-4)}
-  .ana__l{font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);
-          text-transform:uppercase;letter-spacing:.04em}
-  .ana__v{font:var(--gw-text-body-20-sem)}
-  table.dt{width:100%;border-collapse:collapse}
-  .dt th,.dt td{text-align:left;padding:var(--gw-space-12) var(--gw-space-24);
-                border-top:1px solid var(--gw-color-neutral-100)}
-  .dt th{font:var(--gw-text-body-14-sem);color:var(--gw-color-neutral-600)}
-  .dt td{font:var(--gw-text-body-14-reg)}
+    table.dt{width:100%;border-collapse:collapse}
   .badge{display:inline-flex;align-items:center;padding:4px var(--gw-space-8);
          border-radius:var(--gw-radius-4);font:var(--gw-text-body-12-med)}
   .badge--g{background:var(--gw-color-green-alpha-10);color:var(--gw-color-green-700)}
@@ -175,6 +251,13 @@
   <symbol id="i-refresh-bold" viewBox="0 0 256 256"><path d="M244,56v48a12,12,0,0,1-12,12H184a12,12,0,1,1,0-24H201.1l-19-17.38c-.13-.12-.26-.24-.38-.37A76,76,0,1,0,127,204h1a75.53,75.53,0,0,0,52.15-20.72,12,12,0,0,1,16.49,17.45A99.45,99.45,0,0,1,128,228h-1.37A100,100,0,1,1,198.51,57.06L220,76.72V56a12,12,0,0,1,24,0Z" fill="currentColor"/></symbol>
   <symbol id="i-up-bold" viewBox="0 0 256 256"><path d="M204,64V168a12,12,0,0,1-24,0V93L72.49,200.49a12,12,0,0,1-17-17L163,76H88a12,12,0,0,1,0-24H192A12,12,0,0,1,204,64Z" fill="currentColor"/></symbol>
   <symbol id="i-down-bold" viewBox="0 0 256 256"><path d="M204,88V192a12,12,0,0,1-12,12H88a12,12,0,0,1,0-24h75L55.51,72.48a12,12,0,0,1,17-17L180,163V88a12,12,0,0,1,24,0Z" fill="currentColor"/></symbol>
+
+  <symbol id="i-warning-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm-8-80V80a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,172Z" fill="currentColor"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 256 256"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z" fill="currentColor"/></symbol>
+  <symbol id="i-info" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z" fill="currentColor"/></symbol>
+  <symbol id="i-x" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z" fill="currentColor"/></symbol>
+  <symbol id="i-star" viewBox="0 0 256 256"><path d="M239.18,97.26A16.38,16.38,0,0,0,224.92,86l-59-4.76L143.14,26.15a16.36,16.36,0,0,0-30.27,0L90.11,81.23,31.08,86a16.46,16.46,0,0,0-9.37,28.86l45,38.83L53,211.75a16.38,16.38,0,0,0,24.5,17.82L128,198.49l50.53,31.08A16.4,16.4,0,0,0,203,211.75l-13.76-58.07,45-38.83A16.43,16.43,0,0,0,239.18,97.26Zm-15.34,5.47-48.7,42a8,8,0,0,0-2.56,7.91l14.88,62.8a.37.37,0,0,1-.17.48c-.18.14-.23.11-.38,0l-54.72-33.65a8,8,0,0,0-8.38,0L69.09,215.94c-.15.09-.19.12-.38,0a.37.37,0,0,1-.17-.48l14.88-62.8a8,8,0,0,0-2.56-7.91l-48.7-42c-.12-.1-.23-.19-.13-.5s.18-.27.33-.29l63.92-5.16A8,8,0,0,0,103,91.86l24.62-59.61c.08-.17.11-.25.35-.25s.27.08.35.25L153,91.86a8,8,0,0,0,6.75,4.92l63.92,5.16c.15,0,.24,0,.33.29S224,102.63,223.84,102.73Z" fill="currentColor"/></symbol>
+  <symbol id="i-dots-three" viewBox="0 0 256 256"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z" fill="currentColor"/></symbol>
 </svg>
 
 <div class="shell">
@@ -234,9 +317,8 @@
         <span class="kpib kpib--neg">4.0%<svg><use href="#i-down-bold"/></svg></span></div>
         <span class="kpi__cap">Down week on week</span></div></div>
         </div>
-        <div class="unmeasured" data-note="analytics-card not measured"
-             style="display:grid;grid-template-columns:repeat(6,1fr);gap:var(--gw-space-8)">
-          <div class="ana"><span class="ana__l">Sessions</span><span class="ana__v">94.2K</span></div><div class="ana"><span class="ana__l">AI referrals</span><span class="ana__v">12.8K</span></div><div class="ana"><span class="ana__l">Impressions</span><span class="ana__v">1.3M</span></div><div class="ana"><span class="ana__l">Avg. position</span><span class="ana__v">4.1</span></div><div class="ana"><span class="ana__l">Published</span><span class="ana__v">218</span></div><div class="ana"><span class="ana__l">Win rate</span><span class="ana__v">9.4%</span></div>
+        <div style="display:flex;gap:var(--gw-space-8)">
+          <div class="ana"><span class="ana__l">Sessions</span><div class="ana__stack"><span class="ana__v">94.2K</span><span class="ana__c">vs last period</span></div></div><div class="ana"><span class="ana__l">AI referrals</span><div class="ana__stack"><span class="ana__v">12.8K</span><span class="ana__c">vs last period</span></div></div><div class="ana"><span class="ana__l">Impressions</span><div class="ana__stack"><span class="ana__v">1.3M</span><span class="ana__c">vs last period</span></div></div><div class="ana"><span class="ana__l">Avg. position</span><div class="ana__stack"><span class="ana__v">4.1</span><span class="ana__c">vs last period</span></div></div><div class="ana"><span class="ana__l">Published</span><div class="ana__stack"><span class="ana__v">218</span><span class="ana__c">vs last period</span></div></div><div class="ana"><span class="ana__l">Win rate</span><div class="ana__stack"><span class="ana__v">9.4%</span><span class="ana__c">vs last period</span></div></div>
         </div>
       </section>
 
@@ -251,79 +333,91 @@
       </section>
 
 
+
       <!-- section/Container · State=Default -->
-      <section class="unmeasured" data-note="section/Container not measured"
-               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12);display:flex;flex-direction:column;gap:var(--gw-space-16)">
-        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
-          <span class="sec__ico"><svg><use href="#i-chart-line"/></svg></span>
-          <span class="sec__t">CPL by campaign</span>
-          <svg class="sec__caret"><use href="#i-caret-fill"/></svg>
+      <section class="sec">
+        <div class="sec__hd">
+          <span class="sec__ttl"><span class="sec__ico"><svg><use href="#i-chart-line"/></svg></span>
+            <span class="sec__t">CPL by campaign</span></span>
+          <svg class="sec__caret sec__caret--up"><use href="#i-caret-fill"/></svg>
         </div>
-        <div style="border-radius:var(--gw-radius-8);border:1px dashed var(--gw-color-neutral-250);height:120px;display:flex;align-items:center;justify-content:center;font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-500);background:var(--gw-color-white)">
-          SLOT — accepts any content
+        <div class="sec__body">
+          <div class="bars">
+            <div class="bars__y"><span>FLI Prospecting</span><span>Chilly campaign Core</span><span>FLI Retargeting Core</span><span>Say Primer (2 March)</span><span>FLI TOF</span><span>FLI Audience Testing</span><span>FLI Testing Sched</span></div>
+            <div class="bars__area">
+              <div class="bars__plot"><div class="bar" style="width:62%"><span>$148</span></div><div class="bar" style="width:70%"><span>$164</span></div><div class="bar" style="width:95%"><span>$225</span></div><div class="bar" style="width:54%"><span>$128</span></div><div class="bar" style="width:80%"><span>$190</span></div><div class="bar" style="width:44%"><span>$104</span></div><div class="bar" style="width:66%"><span>$155</span></div></div>
+              <div class="bars__x"><span>$0</span><span>$50</span><span>$100</span><span>$150</span><span>$200</span><span>$250</span></div>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- section/Container · State=Collapsed -->
-      <section class="unmeasured" data-note="collapsed state not measured"
-               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12)">
-        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
-          <span class="sec__ico"><svg><use href="#i-chart-line"/></svg></span>
-          <span class="sec__t">Keyword movement — collapsed</span>
+      <section class="sec">
+        <div class="sec__hd">
+          <span class="sec__ttl"><span class="sec__ico"><svg><use href="#i-chart-line"/></svg></span>
+            <span class="sec__t">Keyword movement</span></span>
           <svg class="sec__caret"><use href="#i-caret-fill"/></svg>
         </div>
       </section>
 
       <!-- section/With Dropdown -->
-      <section class="unmeasured" data-note="section/With Dropdown not measured"
-               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12);display:flex;flex-direction:column;gap:var(--gw-space-16)">
-        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
-          <span class="dd" style="width:auto;gap:var(--gw-space-8)">Last 30 days<svg><use href="#i-caret-fill"/></svg></span>
-          <svg class="sec__caret"><use href="#i-caret-fill"/></svg>
+      <section class="sec">
+        <div class="sec__hd">
+          <span class="secdd" style="width:466px">
+            <span style="display:flex;align-items:center;gap:var(--gw-space-8)">
+              <span class="secdd__l">AI search — category terms</span>
+              <span class="secdd__b secdd__b--n">Campaign</span>
+              <span class="secdd__b secdd__b--g">Active</span>
+            </span>
+            <svg class="sec__caret"><use href="#i-caret-fill"/></svg>
+          </span>
+          <svg class="sec__caret sec__caret--up"><use href="#i-caret-fill"/></svg>
         </div>
-        <div style="border-radius:var(--gw-radius-8);background:var(--gw-color-white);padding:var(--gw-space-16);display:flex;gap:var(--gw-space-8);align-items:center">
-          <div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Impressions</span><span style="font:var(--gw-text-body-20-sem)">1.3M</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Clicks</span><span style="font:var(--gw-text-body-20-sem)">94.2K</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">CTR</span><span style="font:var(--gw-text-body-20-sem)">7.2%</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Leads</span><span style="font:var(--gw-text-body-20-sem)">1,284</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">CPL</span><span style="font:var(--gw-text-body-20-sem)">$41</span></div><span style="width:1px;height:34px;background:var(--gw-color-neutral-100)"></span><div style="width:100px;display:flex;flex-direction:column;gap:var(--gw-space-4);padding:4px 8px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Spend</span><span style="font:var(--gw-text-body-20-sem)">$52K</span></div>
-        </div>
-      </section>
-
-      <!-- section/section-element/Graph -->
-      <section class="unmeasured" data-note="Graph not measured"
-               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12);display:flex;flex-direction:column;gap:var(--gw-space-16)">
-        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
-          <span class="sec__ico"><svg><use href="#i-chart-line"/></svg></span>
-          <span class="sec__t">Leads over time — Type=Line</span>
-          <svg class="sec__caret"><use href="#i-caret-fill"/></svg>
-        </div>
-        <div style="border-radius:var(--gw-radius-8);background:var(--gw-color-white);padding:var(--gw-space-20);display:flex;gap:var(--gw-space-12)">
-          <div style="display:flex;flex-direction:column;justify-content:space-between;font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-500);height:180px">
-            <span>1.0</span><span>0.8</span><span>0.6</span><span>0.4</span><span>0.2</span><span>0</span>
-          </div>
-          <div style="flex:1;height:180px;position:relative;border-left:1px solid var(--gw-color-neutral-100);border-bottom:1px solid var(--gw-color-neutral-100)">
-            <svg viewBox="0 0 600 180" preserveAspectRatio="none" style="width:100%;height:100%">
-              <polyline points="0,150 100,120 200,130 300,80 400,90 500,40 600,25" fill="none"
-                        stroke="var(--gw-color-primary-500)" stroke-width="2"/>
-              <polyline points="0,165 100,155 200,140 300,145 400,120 500,110 600,95" fill="none"
-                        stroke="var(--gw-color-neutral-300)" stroke-width="2"/>
-            </svg>
+        <div style="display:flex;flex-direction:column;gap:var(--gw-space-12);width:100%">
+          <div class="sec__body"><div class="cells"><div class="cell"><span class="cell__l">Impressions</span><span class="cell__v">1.3M</span></div><span class="cell__sep"></span><div class="cell"><span class="cell__l">Clicks</span><span class="cell__v">94.2K</span></div><span class="cell__sep"></span><div class="cell"><span class="cell__l">CTR</span><span class="cell__v">7.2%</span></div><span class="cell__sep"></span><div class="cell"><span class="cell__l">Leads</span><span class="cell__v">1,284</span></div><span class="cell__sep"></span><div class="cell"><span class="cell__l">CPL</span><span class="cell__v">$41</span></div><span class="cell__sep"></span><div class="cell"><span class="cell__l">Spend</span><span class="cell__v">$52K</span></div></div></div>
+          <div style="display:flex;flex-direction:column;gap:var(--gw-space-8);width:100%">
+            <span class="subttl">By ad set</span>
+            <div class="sec__body"><div class="cells"><div class="cell"><span class="cell__l">Prospecting</span><span class="cell__v">612</span></div><span class="cell__sep"></span><div class="cell"><span class="cell__l">Retargeting</span><span class="cell__v">388</span></div><span class="cell__sep"></span><div class="cell"><span class="cell__l">Lookalike</span><span class="cell__v">284</span></div></div></div>
           </div>
         </div>
       </section>
 
       <!-- section/table -->
-      <section class="unmeasured" data-note="section/table + table-row not measured"
-               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12)">
-        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
-          <span style="width:20px;height:20px;border-radius:var(--gw-radius-4);background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500);display:flex;align-items:center;justify-content:center;padding:4px"><svg style="width:12px;height:12px"><use href="#i-chart-line"/></svg></span>
-          <span style="font:var(--gw-text-body-14-sem)">Leads by campaign</span>
-          <svg style="margin-left:auto;width:14px;height:14px;color:var(--gw-color-neutral-400)"><use href="#i-caret-fill"/></svg>
+      <section class="sec">
+        <div class="sec__hd">
+          <span class="sec__ttl"><span class="sec__ico"><svg><use href="#i-chart-line"/></svg></span>
+            <span class="sec__t">Leads by campaign</span></span>
+          <svg class="sec__caret sec__caret--up"><use href="#i-caret-fill"/></svg>
         </div>
-        <div style="margin-top:var(--gw-space-16);border-radius:var(--gw-radius-12);background:var(--gw-color-white);overflow:hidden">
+        <div style="border-radius:var(--gw-radius-12);background:var(--gw-color-white);overflow:hidden;width:100%">
+          <div style="display:flex;align-items:center;gap:var(--gw-space-12);padding:16px 24px">
+            <span style="font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-600)">Sort by</span>
+            <span class="dd" style="width:100px">Cost<svg><use href="#i-caret-fill"/></svg></span>
+          </div>
           <table class="dt">
-            <tr><th>Campaign</th><th>Leads</th><th>Cost per lead</th><th>Spend</th><th>Status</th></tr>
-            <tr><td>AI search — category terms</td><td>412</td><td>$38.10</td><td>$15,697</td><td><span class="badge badge--g">Active</span></td></tr><tr><td>Comparison pages</td><td>288</td><td>$41.55</td><td>$11,966</td><td><span class="badge badge--g">Active</span></td></tr><tr><td>Founder-led content</td><td>201</td><td>$44.90</td><td>$9,025</td><td><span class="badge badge--n">Paused</span></td></tr>
+            <tr><th style="width:200px">Campaign</th><th style="width:120px">Leads</th><th style="width:120px">Cost per lead</th><th style="width:120px">Spend</th><th style="width:120px">Status</th><th style="width:16px"></th></tr>
+            <tr><td>AI search — category terms</td><td>412</td><td>$38.10</td><td>$15,697</td><td>Active</td><td><svg style="width:16px;height:16px;color:var(--gw-color-neutral-600)"><use href="#i-dots-three"/></svg></td></tr><tr><td>Comparison pages</td><td>288</td><td>$41.55</td><td>$11,966</td><td>Active</td><td><svg style="width:16px;height:16px;color:var(--gw-color-neutral-600)"><use href="#i-dots-three"/></svg></td></tr><tr><td>Founder-led content</td><td>201</td><td>$44.90</td><td>$9,025</td><td>Paused</td><td><svg style="width:16px;height:16px;color:var(--gw-color-neutral-600)"><use href="#i-dots-three"/></svg></td></tr>
           </table>
+          <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:16px 24px">
+            <span style="font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-600)">Showing per page</span>
+            <span class="dd" style="width:70px">10<svg><use href="#i-caret-fill"/></svg></span>
+          </div>
         </div>
       </section>
+
+      <!-- toast — all four States, Light and Dark -->
+      <section class="sec">
+        <div class="sec__hd"><span class="sec__ttl"><span class="sec__t">Toast — Mode × State</span></span></div>
+        <div style="display:flex;gap:var(--gw-space-12);flex-wrap:wrap">
+          <span class="toast toast--err"><span class="toast__i" style="color:var(--gw-color-red-500)"><svg><use href="#i-warning-circle"/></svg></span><span class="toast__m">Failed to save changes</span><span class="toast__x"><svg><use href="#i-x"/></svg></span></span>
+          <span class="toast toast--warn"><span class="toast__i" style="color:var(--gw-color-yellow-500)"><svg><use href="#i-warning-circle"/></svg></span><span class="toast__m">API rate limit approaching</span><span class="toast__x"><svg><use href="#i-x"/></svg></span></span>
+          <span class="toast toast--ok"><span class="toast__i" style="color:var(--gw-color-green-500)"><svg><use href="#i-check-circle"/></svg></span><span class="toast__m">Campaign published</span><span class="toast__x"><svg><use href="#i-x"/></svg></span></span>
+          <span class="toast toast--info"><span class="toast__i" style="color:var(--gw-color-primary-500)"><svg><use href="#i-info"/></svg></span><span class="toast__m">Sync runs hourly</span><span class="toast__x"><svg><use href="#i-x"/></svg></span></span>
+          <span class="toast toast--dark"><span class="toast__i" style="color:var(--gw-color-green-300)"><svg><use href="#i-check-circle"/></svg></span><span class="toast__m">Mode=Dark — one surface, state carried by the icon</span><span class="toast__x" style="color:var(--gw-color-neutral-400)"><svg><use href="#i-x"/></svg></span></span>
+        </div>
+      </section>
+
     </div>
   </main>
 </div>

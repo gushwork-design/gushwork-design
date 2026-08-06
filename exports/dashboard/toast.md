@@ -1,90 +1,40 @@
 # Toast
 
-Figma: group `toast` (`1553:14919`), set `1579:614`.
-
-A brief, non-intrusive feedback message that appears temporarily to confirm an action or
-report a status, without disrupting the user's flow.
-
-## Variant properties — 8 variants (4 × 2), complete
+Set `1579:614` · **8 variants** · 360 wide.
 
 | Property | Values |
 |---|---|
-| `State` | `Error`, `Warning`, `Success`, `Info` |
 | `Mode` | `Light`, `Dark` |
+| `State` | `Error`, `Warning`, `Success`, `Info` |
 
-| Node | Variant | Node | Variant |
+**The properties are `Mode` × `State`.** An earlier version of this file called the second
+one `Type` and listed a `CTA` boolean — neither exists.
+
+## Appearance — from the set
+
+Shared: 360 wide · `--gw-radius-8` · padding `16px 8px` · gap `--gw-space-8` ·
+**1px border** · `align-items: flex-start` · `overflow: hidden`.
+
+| `State` | Light fill | Light border | Icon |
 |---|---|---|---|
-| `1579:534` | `Mode=Light, State=Error` | `1579:574` | `Mode=Dark, State=Error` |
-| `1579:544` | `Mode=Light, State=Warning` | `1579:584` | `Mode=Dark, State=Warning` |
-| `1579:554` | `Mode=Light, State=Success` | `1579:594` | `Mode=Dark, State=Success` |
-| `1579:564` | `Mode=Light, State=Info` | `1579:604` | `Mode=Dark, State=Info` |
+| `Error` | `--gw-color-red-25` | `--gw-color-red-100` | `WarningCircle` |
+| `Warning` | `--gw-color-yellow-25` | `--gw-color-yellow-100` | `WarningCircle` |
+| `Success` | `--gw-color-green-25` | `--gw-color-green-100` | `CheckCircle` |
+| `Info` | `--gw-color-primary-25` | `--gw-color-primary-100` | `Info` |
 
-All 360×40.
+**`Mode=Dark` collapses all four to one treatment** — fill `--gw-color-neutral-900`, border
+`--gw-color-neutral-800`. The state is then carried by the icon alone, not the surface.
 
-## Status — same colour-signal language as Badges and input states
+| Part | Value |
+|---|---|
+| message | **`--gw-text-body-16-med`** · `--gw-color-neutral-900` light / `--gw-color-neutral-200` dark |
+| status icon | **20px**, in a `padding-block: 2px` wrapper |
+| close | `X` (`112:1590`) at **16px**, same 2px wrapper |
 
-| State | Colour | Meaning | Icon |
-|---|---|---|---|
-| `Error` | Red | A hard failure | `WarningCircle` |
-| `Warning` | Yellow | A soft caution | `WarningCircle` |
-| `Success` | Green | A completed action | `CheckCircle` |
-| `Info` | Blue | Neutral information | `Info` |
+**`Error` and `Warning` share the same `WarningCircle` glyph** (`112:446`) — only the fill
+colour separates them. Don't look for a distinct error icon.
 
-`Error` and `Warning` share the `WarningCircle` icon and are distinguished by colour
-alone. Colour tokens are in `foundation/tokens.css`; the signal vocabulary is defined
-once in `foundation/shared-components.md` under Badge and inherited here.
+## Auto-dismiss is still undefined
 
-**Note:** `Info` is the one place blue is a defined signal on the dashboard. The
-dashboard ban on blue applies to *button fills*, not to status colour.
-
-## Colour treatment
-
-Each status has a `Light` and a `Dark` version. **Match it to the dashboard surface** —
-light toast on light surfaces, dark on dark. Same discipline as Badge.
-
-## Placement
-
-Fixed **40px from the bottom, horizontally centred** on screen.
-
-## Dismiss
-
-Each toast has a close (`×`).
-
-## Structure
-
-```
-toast (360×40)
-├── FRAME (icon wrapper) — 20×24
-│   └── INSTANCE [Status Icon] (20×20)
-│       • WarningCircle  (Error, Warning)
-│       • CheckCircle    (Success)
-│       • Info           (Info)
-├── FRAME (hidden/secondary content) — 149×40  [HIDDEN]
-│   ├── INSTANCE "UserCircle" (20×20)
-│   ├── TEXT (63×16)
-│   └── TEXT (149×20)
-├── TEXT "label" (276×24)        ← the toast message
-└── FRAME (close button wrapper) — 16×24
-    └── INSTANCE "X" (16×16)
-```
-
-**Keep it to one line of message.** The label slot is 276×24 — a single line at 16px.
-Longer copy will clip. If the message needs two lines, it isn't a toast.
-
-The 149×40 secondary-content frame is hidden in every variant. It holds a `UserCircle`
-avatar and two text nodes, suggesting an unshipped attributed-notification variant. Leave
-it hidden.
-
-## Unresolved in the source
-
-The rules text (`2146:17848`) contains two open author queries that have never been
-answered, so these behaviours are **undefined**:
-
-1. `[confirm surface-match + default]` — against the light/dark colour-treatment rule.
-   Which `Mode` is the default when the surface is ambiguous is not stated.
-2. `[confirm: also auto-dismiss after a timeout, or manual close only?]` — **whether
-   toasts auto-dismiss is not defined.** The component ships a close button; no timeout
-   is specified anywhere.
-
-Do not invent a timeout value. If a request needs auto-dismiss timing, that is a ruling
-to ask for, not a default to pick.
+Nothing in the component specifies a timeout, and there is no CTA or action slot. Do not
+invent either.

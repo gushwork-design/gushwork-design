@@ -117,24 +117,31 @@ COMPONENT (286×198, r:12, VERTICAL, gap:80, pad:20)
 
 ## `analytics-card` — the compact metric card
 
-`section/section-element/analytics-card` · set `2134:14584` · **2 variants** · 160×94, r:12.
+Set `2134:14584` · **2 variants** · **160 wide**, r12.
 
-| Property | Values |
+| Node | Variant |
 |---|---|
-| `Mode` | `light` (`2134:14583`), `dark` (`2134:14582`) |
+| `2134:14583` | `Mode=light` |
+| `2134:14582` | `Mode=dark` |
 
-Use for secondary metrics beside a KPI. `Mode` matches the Section. No icon, no badge —
-a simplified kpi-card.
+### Appearance — from the set
 
-```
-COMPONENT (160×94, r:12, VERTICAL, gap:20, pad:12)
-├── TEXT card title (10px, uppercase)
-└── FRAME "metrics" (VERTICAL, gap:4)
-    ├── TEXT value (20px)
-    └── TEXT caption (12px)
-```
+| Part | `Mode=light` | `Mode=dark` |
+|---|---|---|
+| fill | `--gw-color-neutral-25` | **`--gw-color-neutral-800`** |
+| title | Inter Medium 10, uppercase, lh 1 · `--gw-color-neutral-600` | · `--gw-color-neutral-400` |
+| value | **Vert Grotesk Display Medium 20** · `--gw-color-black` | · `--gw-color-white` |
+| caption | `--gw-text-body-12-med` · `--gw-color-neutral-600` | · `--gw-color-neutral-400` |
 
----
+Padding `--gw-space-12`, gap `--gw-space-20`, inner stack gap `--gw-space-4`, `overflow: hidden`.
+
+**The value is the display face at Medium 20 — not Inter, and not Semibold.** There is no
+token for it; the heading ramp has no 20px step (h7 is 22 Medium). Tokenless, flagged.
+
+**`Mode=dark` is `neutral-800`, not the `neutral-900` that kpi-card uses.** The two cards sit
+side by side in `card-layout` and their dark treatments differ by one step.
+
+Ships `card title` / `lorem ipsum` — replace both.
 
 ## `table` — the assembled data table
 
@@ -200,6 +207,25 @@ Six columns, gap 40, padding 12/24. Widths: `col-price` 200, `col-sales` /
 ends with a `DotsThree` overflow menu.
 
 ---
+
+### `table-row` appearance — from the set (`2192:539`, `Type=Data, State=Default`)
+
+| Part | Value |
+|---|---|
+| row | **1084 wide** · fill `--gw-color-white` · **1px bottom border `--gw-color-neutral-200`** |
+| padding | `12px 24px` · gap `--gw-space-12` |
+| columns | inner group gap **40** · `col-price` 200 wide, the other five **120** each |
+| cell text | **`--gw-text-body-14-med`** · **`--gw-color-neutral-600`** |
+| rating cell | 16px star + value, gap `--gw-space-4` |
+| overflow | `DotsThree` (`112:10164`) at **16px**, outside the column group |
+
+**Data cells are `neutral-600`, not near-black.** The row reads quieter than a typical table.
+
+**The bottom border is `neutral-200`** — a step darker than the `neutral-100` used for
+hairlines elsewhere in the dashboard.
+
+The star glyph resolves to `112:17221`, one of the three sets still named
+`component_set-element` in Figma, so it cannot be found by icon name.
 
 ## `dropdown` — the in-section filter
 
