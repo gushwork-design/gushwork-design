@@ -89,10 +89,36 @@ primary or secondary CTA.
 | `Large` | Only when asked. |
 | `Small` | Navbars, and other elements per the design direction. |
 
+## Appearance — from design context, not the annotation
+
+**`border-radius` is `--gw-radius-12` on every size and style.** These are *not* pills.
+The value is a raw 12px in Figma and is not variable-bound, so it will not show up in a
+`get_variable_defs` call — it has to be read from the component.
+
+| `Size` | Height | Width `None` | Width `Trailing`/`Leading` | `Icon Only` | Label token |
+|---|---|---|---|---|---|
+| `Small` | 36 | 99 | 123 | 36 × 36 | `--gw-text-button-14` |
+| `Medium` | 44 | 126 | 151 | 44 × 44 | `--gw-text-button-16` |
+| `Large` | 56 | 144 | 166 | **58 × 58** | `--gw-text-button-18` |
+
+Gap between label and icon is `--gw-space-8` (`--gw-space-12` on the Special styles).
+`Large` carries padding `16px 20px 16px 24px` — **asymmetric**, more on the leading side.
+Shadow is `--gw-shadow-s2`. Widths are the component's intrinsic sizes; a button that
+hugs its label will differ, but the heights are fixed.
+
+**`Icon Only` at `Large` is 58×58, not 56×56** — the one size that doesn't match its row.
+
+**Do not copy the dashboard button's dimensions.** Those are 88×28 / 115×44 / 134×48 and
+belong to a different component — see `exports/dashboard/button.md`.
+
 ## Icon Placement
 
 `None`, `Leading`, `Trailing`, or `Icon Only`. Icons are Phosphor instances — use `Bold`
 weight inside buttons. See `foundation/shared-components.md`.
+
+**The trailing icon is `ArrowUpRight`** (Figma `112:4802`), committed at
+`assets/icons/arrow-up-right.svg`. It is 18px inside a `Large` button. The `Leading` and
+`Icon Only` default glyph is a plus.
 
 ## Label copy
 

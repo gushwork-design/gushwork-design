@@ -108,6 +108,25 @@ in-between size.
 **`Only Symbol = yes`** gives the icon-only mark with no wordmark. Use where space is
 tight or the wordmark would be redundant.
 
+### Committed assets — use these, never redraw the mark
+
+| File | Variant |
+|---|---|
+| `assets/logo/gushwork-logo-original.svg` | `Type=Original` lockup — blue symbol + dark wordmark |
+| `assets/logo/gushwork-logo-white.svg` | `Type=White` lockup |
+| `assets/logo/gushwork-logo-dark.svg` | `Type=Dark` lockup |
+| `assets/logo/gushwork-symbol-original.svg` | `Only Symbol=yes`, blue |
+
+Exported from Figma at `Size=80 px` and stripped of the swatch-frame chrome Figma bakes
+into a node export. They carry a `viewBox` and no fixed width/height, so scale them with
+CSS to the `Size` step you need.
+
+**The wordmark's dark is `#111827`, which is not a token.** It is not
+`--gw-color-neutral-900` (`#262a2e`) and not `--gw-color-black` (`#0d0d0d`) — it is a
+third near-black that exists only inside the logo artwork. Don't "fix" it to a token, and
+don't reuse it as a text colour. The blue symbol is `#0070ff`, which *is*
+`--gw-color-primary-500`.
+
 ### Dashboard — `gushwork-logo-(internal-use)`
 
 A fixed **32×32** tile, radius 8, padding 8, wrapping
@@ -148,6 +167,28 @@ components actually instance icons, and are the defaults to follow:
 - **`Bold`** inside buttons and for the small icon tiles in dashboard section headers.
 - **`Fill`** for filled glyphs — a badge glyph, a caret in a dropdown trigger.
 - Colour via `currentColor` only. Never hardcode an icon fill.
+
+### Committed icon assets
+
+Icons live in `assets/icons/`, exported from Figma at `Weight=Regular, Size=24`, chrome
+stripped, with the baked `#0D0D0D` fill rewritten to `fill="currentColor"` so they inherit
+text colour. Size them in CSS; the `viewBox` is `0 0 24 24`.
+
+| File | Figma set | Used by |
+|---|---|---|
+| `caret-down.svg` | `112:4354` | dropdown triggers, section collapse, nav dropdowns |
+| `arrow-up-right.svg` | `112:4802` | button `Trailing` icon, the CTA arrow |
+
+**This is a partial harvest.** The following are instanced by components but not yet
+exported — treat a missing file as a finding, not a licence to substitute a Unicode
+character or draw a shape:
+
+`Target` (`112:13686`) · `ArrowClockwise` (`112:5600`) · `ChartLine` · `DotsThree` ·
+`DotsThreeOutlineVertical` · `ArrowsDownUp` · `Plus` · `Star` · `ArrowCounterClockwise`
+
+**Never substitute a text glyph for an icon.** `⌄` is not `CaretDown`, `⟳` is not
+`ArrowClockwise`, `⋮` is not `DotsThreeOutlineVertical`. If the asset isn't in
+`assets/icons/`, say so.
 - Match `Size` to the surrounding text: `16` beside 14px text, `20` beside 16–18px,
   `32` for the kpi-card header icon.
 

@@ -98,17 +98,27 @@ COMPONENT (1084×116, r:16, VERTICAL, gap:16, pad:20)
 Placeholder count text reads `"97/ 120 calls"` — a stray space after the slash. Write
 `97/120 calls`.
 
-### Colour — the structure blob doesn't state it; verified from the render
+### Appearance — from design context (`2140:16056`), not the annotation
 
-The annotation documents geometry only, so these were read off the component render
-(`2140:16056`) rather than inferred. **This is the one Section whose fill is brand blue.**
+The structure blob documents geometry only. Every value below is the component's real
+bound value. **This is the one Section whose fill is brand blue.**
 
 | Part | Value |
 |---|---|
-| `fill` | `--gw-color-primary-500` — the brand blue |
-| `track` (unfilled remainder) | `--gw-color-neutral-100` |
-| percentage text, inside the fill | `--gw-color-white`, right-aligned at the fill's leading edge |
-| `icon` tile | light blue tile, `--gw-color-primary-50`, with the Target glyph in `--gw-color-primary-500` |
+| container | `--gw-color-neutral-25` · `--gw-radius-16` · padding `--gw-space-20` · gap `--gw-space-16` · w 1084 |
+| `header` | padding `--gw-space-4` · `justify-content: space-between` · full width · gap `--gw-space-8` |
+| `icon` tile | `--gw-color-primary-alpha-10` · `--gw-radius-4` · padding `--gw-space-4` |
+| Target glyph | **12px**, not 20 — the 20px tile is 12px glyph + 4px padding |
+| label | `--gw-text-body-14-sem` · `--gw-color-neutral-800` · tracking `-0.2px` |
+| count | `--gw-text-body-14-med` · `--gw-color-neutral-500` · tracking `-0.2px` |
+| `track` | `--gw-color-neutral-100` · h 32 · `--gw-radius-8` · full width |
+| `fill` | `--gw-color-primary-500` · h 32 · `--gw-radius-8` |
+| percentage | `--gw-text-body-14-med` · `--gw-color-white`, inset from the fill's leading edge |
+
+Icon: `Target` — Figma node `112:13686`, committed at `assets/icons/target.svg`.
+
+**The label is `neutral-800` semibold, not black**, and the icon tile is the 10%-alpha blue,
+not `primary-50`. Both are easy to get wrong by eye.
 
 **This is not a blue button fill and does not violate the no-blue-fill rule** — that ban
 covers button fills only. Blue stays valid as a data and signal colour, which is what this
