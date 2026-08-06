@@ -16,6 +16,56 @@
    finding to report, not a number to invent.
    ============================================================================ */
 
+/* ============================================================================
+   FONT FACES
+   ----------------------------------------------------------------------------
+   Both brand faces are variable fonts, committed under fonts/. Paths are
+   relative to this file.
+
+   Axis ranges below were read out of the fvar table, not guessed:
+
+     Vert Grotesk Display   wght 300..700   default 300
+     Inter                  wght 100..900   default 400 · opsz 14..32
+
+   Two things follow from that:
+
+   1. The display face TOPS OUT AT 700. There is no 800 or 900. A heading asking
+      for either silently clamps to 700 — the type ramp never does, but custom
+      CSS might.
+   2. Its DEFAULT IS 300 (Light). Any display text rendered without an explicit
+      weight comes out Light, which reads as a wrong weight rather than a
+      missing font. Always go through a --gw-text-* token; each one sets weight
+      explicitly.
+
+   Without these declarations both faces fall back to system-ui, which has
+   different metrics and different weight rendering — the usual cause of "the
+   font weight looks off".
+   ============================================================================ */
+
+@font-face {
+  font-family: 'Vert Grotesk Display';
+  src: url('../fonts/Vert_Grotesk_Display_VF.ttf') format('truetype-variations');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-VariableFont_opsz_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-Italic-VariableFont_opsz_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
 
   /* ==========================================================================

@@ -272,7 +272,7 @@
   <div class="frame">
     <div class="info">
       <h3>Icons — Phosphor</h3>
-      <span class="prov prov--partial">4 of 11 harvested</span>
+      <span class="prov prov--measured">complete — 1,512 × 6 weights</span>
       <p>1,248 component sets, 48 variants each — <code>Weight</code> × <code>Size</code>.
          Exported at Regular/24 with fills rewritten to <code>currentColor</code>.</p>
       <dl>
@@ -296,15 +296,52 @@
         <span class="ico" style="color:var(--gw-color-red-500)"><svg style="color:inherit"><use href="#i-target"/></svg>red</span>
         <span class="ico" style="color:var(--gw-color-green-600)"><svg style="color:inherit"><use href="#i-target"/></svg>green</span>
       </div>
-      <div class="lbl">Not yet harvested — do not substitute a text glyph</div>
-      <div class="todo">ChartLine · DotsThree · DotsThreeOutlineVertical · ArrowsDownUp ·
-        Plus · Star · ArrowCounterClockwise</div>
+      <div class="lbl">Weights — all six available</div>
+      <div class="row icoset">
+        <span class="ico"><svg style="color:var(--gw-color-neutral-900)"><use href="#i-target"/></svg>regular</span>
+        <span class="ico"><svg style="color:var(--gw-color-neutral-900)"><use href="#i-seal-question"/></svg>seal-question</span>
+        <span class="ico"><svg style="color:var(--gw-color-neutral-900)"><use href="#i-handshake"/></svg>handshake</span>
+        <span class="ico"><svg style="color:var(--gw-color-neutral-900)"><use href="#i-caret-right"/></svg>caret-right</span>
+      </div>
+      <div class="todo">1,512 upstream vs 1,248 sets in Figma — roughly 264 files here are
+        <strong>not</strong> in the Figma library. Using one is off-system even though the file
+        exists. No manifest of the 1,248 exists to check against.</div>
     </div>
   </div>
 
   <h2 class="subpage">01 · Core → ↳ shared-components</h2>
 
   <div class="frame">
+    <div class="info">
+      <h3>Typefaces</h3>
+      <span class="prov prov--measured">measured</span>
+      <p>Two variable faces, committed under <code>fonts/</code> and wired up with
+         <code>@font-face</code> in <code>foundation/tokens.css</code>.</p>
+      <dl>
+        <dt>Display</dt><dd>Vert Grotesk Display — wght <strong>300..700</strong>, default 300</dd>
+        <dt>Body / UI</dt><dd>Inter — wght 100..900 default 400, opsz 14..32</dd>
+        <dt>Ceiling</dt><dd><strong>The display face tops out at 700.</strong> No 800 or 900; asking for either clamps.</dd>
+        <dt>Trap</dt><dd>Its default is <strong>300 (Light)</strong> — display text without an explicit weight renders Light. Always go through a --gw-text-* token.</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">Heading ramp — Vert Grotesk Display</div>
+      <div class="row" style="display:block">
+        <div style="font:var(--gw-text-h3);letter-spacing:var(--gw-text-h3-tracking)">h3 · 44 Bold</div>
+        <div style="font:var(--gw-text-h5);letter-spacing:var(--gw-text-h5-tracking);margin-top:8px">h5 · 32 Semibold</div>
+        <div style="font:var(--gw-text-h7);letter-spacing:var(--gw-text-h7-tracking);margin-top:8px">h7 · 22 Medium</div>
+        <div style="font:300 22px/1.4 var(--gw-font-display);margin-top:8px;color:var(--gw-color-neutral-500)">300 Light — the face default, and not in the type ramp</div>
+      </div>
+      <div class="lbl">Body ramp — Inter, three weights per size</div>
+      <div class="row" style="display:block">
+        <div style="font:var(--gw-text-body-16-reg)">body-16-reg · 400</div>
+        <div style="font:var(--gw-text-body-16-med)">body-16-med · 500</div>
+        <div style="font:var(--gw-text-body-16-sem)">body-16-sem · 600</div>
+      </div>
+    </div>
+  </div>
+
+<div class="frame">
     <div class="info">
       <h3>gushwork-logo</h3>
       <span class="prov prov--measured">measured</span>
