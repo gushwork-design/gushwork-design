@@ -50,7 +50,7 @@ Identical across both measured variants except the badge:
 
 | Part | Value |
 |---|---|
-| card | **286 × 198** · `--gw-radius-12` · padding `--gw-space-20` · **gap `--gw-space-80`** |
+| card | **286 × 198** intrinsic · `--gw-radius-12` · padding `--gw-space-20` · **gap `--gw-space-80`** |
 | fill | `--gw-color-neutral-900` |
 | title | `Inter Medium 10px`, **uppercase**, line-height 1.6, `--gw-color-neutral-300` |
 | header icon | `Money` (`112:6455`) at 16px, top-right |
@@ -59,6 +59,10 @@ Identical across both measured variants except the badge:
 
 The 80px gap between header and value block is what makes the card 198 tall. It is a
 spacer, not a design accident — don't collapse it.
+
+**286 is the intrinsic width, not a fixed one.** Inside `section/card-layout` the cards
+stretch to fill the 1084-wide section — 356 each at `KPI cards=3`. Treat 286 as a minimum.
+The same applies to `analytics-card`: 160 intrinsic, 174 when six fill the row.
 
 **The inline badge differs per Type, and not symmetrically:**
 

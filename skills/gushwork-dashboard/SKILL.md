@@ -54,6 +54,50 @@ Two further checks worth doing every time, because each has caught a real error 
 If an annotation and the component disagree, the component wins and the disagreement is a
 finding. `dashboard-build`'s annotation claims `gap:8` where the coordinates prove 0.
 
+## Before building a dashboard — ask, don't assume
+
+A dashboard is a set of decisions about what matters. Guessing produces a screen that looks
+right and answers nothing. **Unless the request already answers them, ask these first:**
+
+1. **What are the KPIs?** Which one to three numbers is this screen accountable for? Those
+   become the kpi-cards. Everything else is a supporting metric.
+2. **What should someone see first?** The top of the slot is the most valuable space in the
+   product. What belongs there decides the section order.
+3. **What will they do with it?** Monitoring, diagnosing, or acting. Monitoring wants
+   headline numbers and a trend. Diagnosing wants breakdowns and filters. Acting wants a
+   table with row actions. The answer changes which Sections you reach for.
+4. **How often does it change, and who looks at it?** Drives whether the header needs a
+   refresh indicator, filters, or a date range at all.
+
+Ask them in one short message and wait. Two or three questions answered beats a screen
+rebuilt three times.
+
+**If the user supplies a reference — a screenshot, a URL, an existing tool — read it for
+CONTENT, never for layout.** Their KPIs, labels and data are the useful part. Their card
+arrangement, colour choices and type scale are not, and importing them produces something
+that looks Gushwork-ish while being off-system. Map the content onto the Sections below and
+say what you changed.
+
+## Choosing a `section/card-layout` variant
+
+`KPI cards` is a real decision, not a default. **Pick by how many numbers genuinely lead.**
+
+| Variant | Use when | Layout |
+|---|---|---|
+| `KPI cards=1` | One north-star metric. The strongest choice — one big number, six supports. | 1 KPI left + 6 analytics right |
+| `KPI cards=2` | A natural pair — volume and cost, leads and conversion. | 2 KPIs left + 6 analytics right |
+| `KPI cards=3` | Three genuinely co-equal headlines. | 3 KPIs on top + 6 analytics below |
+
+**Reaching for `3` every time is the common failure.** If two of the three are supporting
+detail, they belong in the analytics row and the variant is `1`. There is no variant above 3
+— a fourth headline metric means the page is trying to do two jobs.
+
+**Cards fill the section, they do not sit at their intrinsic width.** `card-layout` is 1084
+wide (the 1164 container less its 40px slot padding). At `KPI cards=3` that is three cards at
+356 and six analytics at 174. The 286 and 160 in `section-elements.md` are the components'
+own widths — a floor, not a fixed size. A row of cards that stops short of the section edge
+is wrong.
+
 ## The composition ladder — compose downward, never sideways
 
 ```
