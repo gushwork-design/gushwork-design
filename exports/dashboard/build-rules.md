@@ -69,6 +69,20 @@ height is correct there.
 | ≥ 1800 | analytics grid 3 → 6 columns at `KPI cards=1`; 2×3 → 3 at `=2`. Cap the KPI area (480 at `=1`, 820 at `=2`) — left to the 36.9% split a single kpi-card reaches 715px, a near-empty box around a 32px number. |
 | ≥ 2200 | `=2` grid → 6 columns; slot padding-inline → `clamp(40px, 4vw, 96px)` |
 
+### Multi-page apps — the rail is chrome, not page content
+
+`dashboard-build` describes **one** page and the library has no pattern for moving between
+pages inside one shell. Real products have several. Declared as a created element in
+`notices/2026-08-06-meta-ads.md`; until it is in Figma, build it this way.
+
+- **The rail persists; the header and slot swap.** Nav rows are `list-item` and the active
+  row uses its measured `selected` state (`--gw-color-neutral-50`). No new visual element —
+  what is new is that the rail became persistent chrome rather than page content.
+- **One page is one Section stack.** Do not let pages share a slot or stack scroll positions.
+- **Every page keeps its own `section/header`.** The title changes with the page; the rail
+  does not.
+- **`list-item` group headers stay put across pages.** They label the nav, not the page.
+
 ### Choices that are not measured — say so in the code
 
 Figma has no spec for these. Each is a product decision and must be commented as such so a

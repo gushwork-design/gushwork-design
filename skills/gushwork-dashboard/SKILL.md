@@ -32,6 +32,24 @@ that can't be followed gets ignored where it matters:
 3. **A layout dimension with no documented figure**: choose sensibly, but **say in one line
    that you chose it.** Don't pass your own number off as coming from the system.
 
+## The build sequence — in this order, every time
+
+Skipping a step here is what produced every rebuild. **1 and 2 come before any markup.**
+
+1. **Read.** `tokens.css`, `build-rules.md`, `sections.md`, `section-elements.md`. Do not
+   start from memory of what a Gushwork dashboard looks like.
+2. **Ask the four questions below and wait.** A dashboard is a set of decisions about what
+   matters; guessing produces a screen that looks right and answers nothing.
+3. **Name the KPIs and the sections, in order, before building.** One line each. Cheap to
+   correct now, expensive after markup.
+4. **Pick the `card-layout` variant** from how many numbers genuinely lead — not by habit.
+5. **Build the shell first and verify it alone.** `dashboard-build`, locked to the viewport,
+   one scroller. Confirm the rail does not scroll before you put anything in the slot.
+6. **Fill the slot section by section**, each a Section from `sections.md`.
+7. **Verify numerically, not by eye** — geometry against Figma's `x/y/w/h`, colour by
+   sampling the render. See *Measuring a component* below.
+8. **Notify if you created or changed anything** — one four-line Slack block. Never silently.
+
 ## Measuring a component — read the set, never an instance
 
 Every value in `exports/dashboard/` is measured off Figma. When you add or correct one:
@@ -220,6 +238,19 @@ marketing CTAs and does not apply here. Sentence case still does.
 Replace every placeholder. The components ship `List Item 1`, `Card title`,
 `Column Header`, `Entry name`, `Dropdown option 01`, `Bruce Wayne`. None of it is real
 copy.
+
+### Invented numbers must be visibly marked
+
+Most requests arrive without data. You will fill a dashboard with plausible figures, and a
+plausible figure in a real-looking dashboard **is indistinguishable from a measurement** —
+someone will screenshot it into a deck.
+
+So when the numbers are yours: put `Sample data` in a Badge in the `section/header`, and say
+in one line which numbers are illustrative. Remove it the moment real data lands. This costs
+nothing and prevents the one failure that outlives the build.
+
+Never invent a number that implies a business outcome — revenue, conversion rate, pipeline —
+without that marker.
 
 ## Known gaps in the source — do not paper over these
 
