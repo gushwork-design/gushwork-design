@@ -27,15 +27,17 @@
   .rail__name{font:600 18px/1 var(--gw-font-display);color:var(--gw-color-black)}
   .groups{display:flex;flex-direction:column;gap:var(--gw-space-24)}
   /* list-item — measured 2102:14027: pad 8, gap 8, r8, icon 16 Regular, label Inter BOLD 14 */
-  .li{display:flex;align-items:center;gap:var(--gw-space-8);height:32px;
+  .li{display:flex;align-items:center;gap:var(--gw-space-8);height:32px;width:228px;
       padding:var(--gw-space-8);border-radius:var(--gw-radius-8);
-      font:700 14px/1 var(--gw-font-body);color:var(--gw-color-neutral-900);
+      font:var(--gw-text-button-14);color:var(--gw-color-neutral-900);
       text-decoration:none;cursor:pointer}
   .li svg{width:16px;height:16px;flex:none;color:currentColor}
   .li:hover{background:var(--gw-color-neutral-25)}
-  .li--group{height:auto;padding:var(--gw-space-4) var(--gw-space-8);border-radius:var(--gw-radius-8);
-             font:700 10px/15px var(--gw-font-body);text-transform:uppercase;
-             color:var(--gw-color-neutral-400);display:flex;align-items:center}
+  .li--sel{background:var(--gw-color-neutral-50)}
+  .li--group{height:auto;width:228px;padding:var(--gw-space-4) var(--gw-space-8);
+             border-radius:var(--gw-radius-8);font:var(--gw-text-body-10-sem);
+             text-transform:uppercase;color:var(--gw-color-neutral-400);
+             display:flex;align-items:center}
   /* user-card — measured 2102:14040: 228x48, pad 8/4, r12, name Inter BOLD 12 */
   .ucwrap{border-top:1px solid var(--gw-color-neutral-alpha-10-black);
           padding:var(--gw-space-8) 0;width:228px;height:64px}
@@ -174,7 +176,7 @@
         <span class="rail__name">Gushwork</span>
       </div>
       <div class="groups">
-      <div><div class="li li--group">Overview</div><a class="li"><svg><use href="#i-circles-four"/></svg>Inbound leads</a><a class="li"><svg><use href="#i-chart-line"/></svg>Performance</a><a class="li"><svg><use href="#i-users"/></svg>Attribution</a></div>
+      <div><div class="li li--group">Overview</div><a class="li li--sel"><svg><use href="#i-circles-four"/></svg>Inbound leads</a><a class="li"><svg><use href="#i-chart-line"/></svg>Performance</a><a class="li"><svg><use href="#i-users"/></svg>Attribution</a></div>
       <div><div class="li li--group">Content</div><a class="li"><svg><use href="#i-circles-four"/></svg>Published</a><a class="li"><svg><use href="#i-circles-four"/></svg>In review</a><a class="li"><svg><use href="#i-chart-line"/></svg>Keywords</a></div>
       <div><div class="li li--group">Account</div><a class="li"><svg><use href="#i-money"/></svg>Billing</a><a class="li"><svg><use href="#i-circles-four"/></svg>Settings</a></div>
       </div>

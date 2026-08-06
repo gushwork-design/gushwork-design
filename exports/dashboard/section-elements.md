@@ -255,33 +255,41 @@ headers + 35 day cells, each 24×24, r:4.
 
 ## `list-item`
 
-Two shapes from one component: the uppercase group label, and the nav row.
+Set `2102:13507` · **4 variants**. Two shapes from one component: the uppercase group
+label, and the nav row in three states.
 
-### Appearance — from design context (`2102:14027`) and sampled from the render
+| Node | Variant | Fill | Padding | Size |
+|---|---|---|---|---|
+| `2102:13505` | `Property 1=default, Label=no` | none | `8px` | 228 × 32 |
+| `2102:13506` | `Property 1=hover, Label=no` | `--gw-color-neutral-25` | `8px` | 228 × 32 |
+| `2102:13504` | `Property 1=selected, Label=no` | `--gw-color-neutral-50` | `8px` | 228 × 32 |
+| `2102:13521` | `Property 1=Variant4, Label=yes` | none | `4px 8px` | 228 × **23** |
 
-| | Group label | Nav row |
-|---|---|---|
-| height | **23** — `4 + 15 + 4` | **32** |
-| padding | `4px 8px` | `8px` |
-| radius | `--gw-radius-8` | `--gw-radius-8` |
-| icon | none | `CirclesFour` (`112:13335`), **`Weight=Regular, Size=16`** |
-| label | **Inter Bold 10**, uppercase, line-height 15 | **Inter Bold 14**, line-height 1 |
-| label colour | `--gw-color-neutral-400` | `--gw-color-neutral-900` |
-| icon colour | — | **`--gw-color-neutral-900`** |
+All four are `--gw-radius-8`, width 228, gap `--gw-space-8`.
 
-Three things that are easy to get wrong, and were:
+### Type — read this off the component set, not off an instance
 
-1. **The icon is `neutral-900` — the same colour as the label, not a muted grey.** Sampled
-   off the render at `#262a2e` for both. Greying the icon to `neutral-500` is a common
-   instinct and it is wrong here; the nav row reads as one solid weight.
-2. **Both label styles are Inter Bold**, not Medium. The whole rail is Bold.
-3. **The group label is 23 tall, not 32.** It is the same component, but its padding and
-   line-height differ. Inheriting the nav row's 32 throws the rail's layout out — see
-   `dashboard-build.md`.
+| | Token | Resolves to | Colour |
+|---|---|---|---|
+| nav row | **`--gw-text-button-14`** | Inter **Medium 500**, 14px, line-height 1 | `--gw-color-neutral-900` |
+| group label | **`--gw-text-body-10-sem`** | Inter **Semi Bold 600**, 10px, line-height 15 | `--gw-color-neutral-400` |
 
-The default `dashboard-build` shows **no selected row** — every `list-item` renders
-identically. Selected and hover states exist on the component but their fills are not
-measured. Don't invent one.
+Icon is `CirclesFour` (`112:13335`) at **`Weight=Regular, Size=16`**, coloured
+`--gw-color-neutral-900` — the same as the label, so the row reads as one solid weight.
+Greying it is wrong.
+
+### Source conflict — the instance and the component set disagree on weight
+
+Pulling design context on the **instance inside `dashboard-build`** (`2102:14027`) reports
+`Inter:Bold` / `font-bold` for both the nav row and the group label. Pulling the
+**component set** (`2102:13507`) reports `Inter:Medium` for the nav row and
+`Inter:Semi_Bold` for the label — and names the underlying style `Button/button-14-med`.
+
+**The component set wins.** It is the definition; the instance read is either an override
+or an artefact of how the instance was resolved. An earlier pass here trusted the instance
+and shipped the whole rail at Bold 700, which is visibly too heavy.
+
+**When an instance and its component set disagree, measure the set.**
 
 ## `user-card` — the user identity row
 
