@@ -34,22 +34,51 @@ A small pill label that sits above a heading.
 - `Default` (black) — **the default.** Use widely.
 - `Blue` — **only when asked.**
 
-Appearance — the annotation names the properties but never says what they look like:
+### Appearance — from design context (`1516:410`)
 
-| Part | Value |
-|---|---|
-| pill | `--gw-color-white`, `--gw-radius-full` (100px), height **24 fixed** |
-| stroke | `--gw-color-neutral-100` at **0.5px, outside** |
-| padding | `4px 8px` · gap `--gw-space-4` |
-| label | `--gw-text-body-12-med` |
-| label colour | `--gw-color-neutral-700` (`Color=Default`) · `--gw-color-primary-500` (`Color=Blue`) |
-| leading icon | optional, 12×12 or 16×16 |
+**There are five props, not three.** The variant matrix is `Type` × `Color` × `State`, plus
+two booleans the annotation never mentions:
 
-**The 0.5px outside stroke is what makes the white pill read on a white fold** — not a
-shadow. An earlier pass here guessed `--gw-shadow-s2`; that was wrong.
+| Prop | Type | Default |
+|---|---|---|
+| `icon` | BOOLEAN | **`true`** — the leading glyph is on by default |
+| `clickable` | BOOLEAN | `false` — adds a trailing caret chip |
 
-**`Color=Default` labels are `neutral-700`, not black.** The pill is white in both colours;
-only the text and glyph change.
+| Part | `Color=Default` | `Color=Blue` |
+|---|---|---|
+| pill | `--gw-color-white` | **`--gw-color-primary-25`** |
+| stroke | `--gw-color-neutral-100` at **0.5px** | **none** |
+| label | `--gw-text-body-12-med` · **`--gw-color-neutral-900`** | `--gw-text-body-12-med` · `--gw-color-primary-500` |
+| leading icon | **`SealQuestion`** (`112:648`) | **`Handshake`** (`112:3301`) |
+
+Shared: height **24 fixed**, `--gw-radius-full` (100px), `padding: 4px 8px`, gap
+`--gw-space-4`. **Icons are 14×14** — not the 12 or 16 the master spec claims.
+
+`State=Hover` widens the gap from `--gw-space-4` to `--gw-space-8`. Nothing else changes.
+
+**`clickable=true`** appends a chip: `padding: --gw-space-4`, **`--gw-radius-60`**, holding
+`CaretRight` (`112:4326`) at **10px**. Chip fill is `--gw-color-neutral-50` at rest and
+`--gw-color-neutral-900` on hover.
+
+**`Type=Trustpilot`** is a different composition: white pill, 0.5px stroke, asymmetric
+`padding: 4px 4px 4px 8px`, label `Rated 4.5 on` + the Trustpilot mark (14.848 × 14) +
+the word `Trustpilot`, and the caret chip is always present.
+
+All three glyphs are in the library: `assets/icons/regular/seal-question.svg`,
+`handshake.svg`, `caret-right.svg`.
+
+### Corrections this measurement forced
+
+1. **The eyebrow has a real leading icon, on by default.** Earlier passes rendered a plain
+   CSS circle. It is `SealQuestion` on Default and `Handshake` on Blue.
+2. **`Color=Default` labels are `neutral-900`, not `neutral-700`.** The master spec says
+   `#535A61`; the component says `#262a2e`. The spec is wrong.
+3. **The Blue pill is `primary-25`, not `primary-50`** — and it carries **no stroke**, unlike
+   Default.
+4. **Icons are 14px.** Not a token step, and not what the spec says.
+5. **Two boolean props exist** — `icon` and `clickable` — neither of which was documented.
+6. The 0.5px stroke is what makes the white pill read on a white fold, not a shadow. An
+   even earlier pass guessed `--gw-shadow-s2`; also wrong.
 
 **There is no on-blue or on-black eyebrow.** All 6 variants are `Type` × `Color` × `State`.
 For a label on a full-bleed coloured fold, report the gap; don't improvise a
