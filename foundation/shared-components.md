@@ -173,17 +173,31 @@ Icons live in `assets/icons/`, exported from Figma at `Weight=Regular, Size=24`,
 stripped, with the baked `#0D0D0D` fill rewritten to `fill="currentColor"` so they inherit
 text colour. Size them in CSS; the `viewBox` is `0 0 24 24`.
 
-| File | Figma set | Used by |
-|---|---|---|
-| `caret-down.svg` | `112:4354` | dropdown triggers, section collapse, nav dropdowns |
-| `arrow-up-right.svg` | `112:4802` | button `Trailing` icon, the CTA arrow |
+| File | Figma set | `Regular, 24` node | Used by |
+|---|---|---|---|
+| `caret-down.svg` | `112:4354` | `1426:26933` | dropdown triggers, section collapse, nav dropdowns |
+| `arrow-up-right.svg` | `112:4802` | `1426:29845` | button `Trailing` icon, the CTA arrow |
+| `target.svg` | `112:13686` | `1426:87560` | `section/progress-bar` header |
+| `arrow-clockwise.svg` | `112:5600` | `1426:35032` | `section/header` refresh control |
 
-**This is a partial harvest.** The following are instanced by components but not yet
-exported — treat a missing file as a finding, not a licence to substitute a Unicode
+**Inline the SVG — don't load it through `<img>`.** An `<img src="…svg">` renders in its own
+document and cannot inherit `currentColor`; the glyph falls back to black regardless of the
+surrounding text colour. Verified. Inline the markup (or use a sprite / icon component) any
+time the icon needs to be anything other than black.
+
+**This is a partial harvest — 4 of 11.** The following are instanced by components but not
+yet exported. Treat a missing file as a finding, not a licence to substitute a Unicode
 character or draw a shape:
 
-`Target` (`112:13686`) · `ArrowClockwise` (`112:5600`) · `ChartLine` · `DotsThree` ·
-`DotsThreeOutlineVertical` · `ArrowsDownUp` · `Plus` · `Star` · `ArrowCounterClockwise`
+`ChartLine` · `DotsThree` · `DotsThreeOutlineVertical` · `ArrowsDownUp` · `Plus` · `Star` ·
+`ArrowCounterClockwise`
+
+Their set node IDs are not yet known. To find one, call `get_design_context` on a component
+that instances it — the response's "Component descriptions" block names each icon with its
+node ID. Then `get_metadata` on that set to get the `Weight=Regular, Size=24` variant, and
+`download_assets` on the variant. **Within a set, `Regular` steps by 2 per size from the
+`Regular, Size=12` base, and `Bold` sits at that base + 42** — but the base itself differs
+per set and is not derivable from the set ID, so the metadata call is unavoidable.
 
 **Never substitute a text glyph for an icon.** `⌄` is not `CaretDown`, `⟳` is not
 `ArrowClockwise`, `⋮` is not `DotsThreeOutlineVertical`. If the asset isn't in
