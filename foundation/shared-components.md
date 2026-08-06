@@ -167,6 +167,31 @@ components actually instance icons, and are the defaults to follow:
 - **`Fill`** for filled glyphs — a badge glyph, a caret in a dropdown trigger.
 - Colour via `currentColor` only. Never hardcode an icon fill.
 
+### Weight per context — verified, not inferred
+
+The weight an instance uses is recoverable from the node id it reports. Inside a set,
+`Regular, Size=32` is `set+1`, then `Thin`, `Light`, `Bold`, `Fill`, `Duotone` at +2 each,
+and every variant's `vector-element` child sits at `variant+1`. Decoding what each measured
+component actually instances:
+
+| Context | Icon | Weight |
+|---|---|---|
+| Button trailing icon — navbar CTA, `Special/*` | `ArrowUpRight` | **Bold** |
+| navbar nav-item caret — Platform, Solutions | `CaretDown` | **Bold** |
+| `section/header` refresh control | `ArrowClockwise` | **Bold** |
+| `controls/dropdown` trigger caret | `CaretDown` | **Fill** |
+| `eyebrow` `Color=Default` leading glyph | `SealQuestion` | **Fill** |
+| `eyebrow` `Color=Blue` leading glyph | `Handshake` | `Regular` |
+| `section/progress-bar` header tile | `Target` | `Regular` |
+
+**Regular is not a safe default inside a component.** Five of the seven contexts above use
+something else. Buttons, nav carets and the refresh control are `Bold`; dropdown triggers
+and the Default eyebrow are `Fill`. An earlier pass rendered all seven as Regular and the
+glyphs came out visibly too light.
+
+The eyebrow is the sharp case: its two colour variants use **different weights** —
+`Fill` on Default, `Regular` on Blue — so you cannot pick one weight per component either.
+
 ### Committed icon assets — the complete library
 
 **All 1,512 Phosphor icons, all six weights, are in `assets/icons/`.** Look one up at
