@@ -126,6 +126,25 @@
   /* the KPI floor must not fight the split when the shell is narrow */
   .cl--side .kpi{min-width:0}
 
+  /* ── Wide screens ────────────────────────────────────────────────────────
+     The analytics grid is 3 columns at 1440. Past ~1800 that leaves a sparse
+     3x2 block beside the KPI, so it opens out. Card widths stay measured
+     minimums; only the column count changes. */
+  @media (min-width:1800px){
+    .cl--side[data-k="1"] .cl__agrid{grid-template-columns:repeat(6,1fr)}
+    .cl--side[data-k="2"] .cl__agrid{grid-template-columns:repeat(3,1fr)}
+    /* A kpi-card is 286–400 as measured. Left to the 36.9% split it reaches 715 on a
+       2400 display — a mostly empty box around a 32px number. Cap it and let the
+       analytics grid absorb the rest. */
+    .cl--side[data-k="1"] .cl__kside{max-width:480px}
+    .cl--side[data-k="2"] .cl__kside{max-width:820px}
+  }
+  @media (min-width:2200px){
+    .cl--side[data-k="2"] .cl__agrid{grid-template-columns:repeat(6,1fr)}
+    /* keep the reading measure sane on very wide displays */
+    .slot{padding-inline:clamp(40px,4vw,96px)}
+  }
+
   /* kpi-card — 286x198 intrinsic, DARK neutral-900, gap 80 */
   .kpi{flex:1;min-width:286px;height:var(--v-kpi);border-radius:var(--gw-radius-12);
        padding:var(--gw-space-20);background:var(--gw-color-neutral-900);
@@ -221,6 +240,9 @@
                 font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-600);
                 letter-spacing:-.028px}
   .dt tr:last-child td{border-bottom:0}
+  /* the action column never grows; the name column absorbs the slack */
+  .dt__act,.dt td:last-child{width:56px}
+  .dt th:first-child,.dt td:first-child{width:auto}
   .tbar{display:flex;align-items:center;gap:var(--gw-space-12);padding:16px 24px}
   .tbar__l{font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-600)}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--gw-space-8);

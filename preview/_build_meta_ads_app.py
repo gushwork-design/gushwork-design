@@ -107,7 +107,11 @@ def with_dropdown(label,items,sub=None):
     return h+'</section>'
 
 def table(title,cols,rows,sort='Spend',actions=('Export','Sync now')):
-    head=''.join(f'<th style="width:{w}">{c}</th>' for c,w in cols)+'<th style="width:16px"></th>'
+    # Leave the FIRST column unsized so it absorbs the slack. If every column has a
+    # width, the browser spreads leftover space across all of them and the 16px action
+    # column inflates — measured at 84px on a 1600 screen.
+    head=''.join(f'<th{"" if i==0 else f' style="width:{w}"'}>{c}</th>'
+                 for i,(c,w) in enumerate(cols))+'<th class="dt__act"></th>'
     body=''.join('<tr>'+''.join(f'<td>{c}</td>' for c in r)
                  +'<td><svg style="width:16px;height:16px;color:var(--gw-color-neutral-600)">'
                   '<use href="#i-dots3"/></svg></td></tr>' for r in rows)
