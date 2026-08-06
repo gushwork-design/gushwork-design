@@ -29,6 +29,36 @@ Figma: group `clients` (`1649:22470`), set `1619:722`.
 **`size` is lowercase here** while every other component in the file uses `Size`. Same
 concept, different key. Copy it as written.
 
+## Appearance — from design context (`1619:711`, `size=large, client=Fraxtional`)
+
+**The rule and the component disagree about the single thing the rule calls "the key rule".**
+
+| Part | Measured value |
+|---|---|
+| box | **64 × 48** at `large` · 56 × 40 `medium` · 48 × 32 `small` — all **4:3 landscape, never square** |
+| radius | **100px** — clamps to half the height, so it renders as a horizontal **stadium/pill** |
+| placeholder fill | `--gw-color-neutral-200` |
+| photo | 72 × 48 inside the 64 × 48 clip, centre-anchored, `object-position: bottom` |
+| transform | the photo carries `rotate(180deg)` + `scaleY(-1)` — a net horizontal mirror |
+
+### The shape conflict — read this before drawing one
+
+The rule (`2003:10788`) says: *"the shape is the key rule — a squircle (rounded-corner
+square, not a full circle)."* The component is a **4:3 landscape box with a 100px radius**,
+which is neither a squircle nor a square. It is a pill.
+
+**Draw what the component does — a horizontal stadium at 4:3.** A rounded square is wrong
+even though the rule asks for one. This is an open finding against the file: either the rule
+text is stale or the component drifted. Do not silently pick the rule.
+
+### Grayscale — weaker than previously recorded
+
+An earlier pass here asserted grayscale was a hard requirement, inferred from the canvas
+render. **The component carries no filter.** If the built-in client photos read as
+desaturated, that is baked into the image assets, not applied by the component. So:
+match the surrounding folds, and don't add a `filter: grayscale()` on the assumption the
+component has one.
+
 ## Rules
 
 **Where to use:** testimonial cards and folds, author bylines, case-study credits — any

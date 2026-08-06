@@ -146,6 +146,56 @@
   .nav--ads .nav__links{display:none}
   .nav--ads .nav__cta{background:var(--gw-color-primary-500)}
 
+
+  /* footer/footer — measured 1720:3798 / 1720:3800 */
+  .ft{background:var(--gw-color-black);border-radius:var(--gw-radius-20) var(--gw-radius-20) 0 0;
+      padding-top:var(--gw-space-80);width:100%;overflow:hidden}
+  .ft__in{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:var(--gw-space-80)}
+  .ft__top{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--gw-space-40)}
+  .ft__cols{display:flex;gap:var(--gw-space-60);align-items:flex-start}
+  .ft__col{display:flex;flex-direction:column;gap:var(--gw-space-20)}
+  .ft__ct{font:var(--gw-text-body-12-sem);color:var(--gw-color-neutral-200);letter-spacing:-.072px}
+  .ft__ls{display:flex;flex-direction:column;gap:var(--gw-space-12)}
+  .ft__l{font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-400);
+         letter-spacing:-.028px;text-decoration:none;white-space:nowrap}
+  .ft__l:hover{color:var(--gw-color-white)}
+  .ft__addr{width:600px;display:flex;flex-direction:column;gap:var(--gw-space-20);
+            font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-600);letter-spacing:-.072px}
+  .ft__addr .r{display:flex;gap:var(--gw-space-40)}
+  .ft__bot{display:flex;flex-direction:column;gap:var(--gw-space-16);position:relative}
+  .ft__rule{height:1px;background:var(--gw-color-neutral-900);width:100%}
+  .ft__bar{display:flex;align-items:center;justify-content:space-between;
+           font:var(--gw-text-body-12-reg);letter-spacing:-.072px}
+  .ft__cr{font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-700)}
+  .ft__legal{display:flex;gap:var(--gw-space-24);color:var(--gw-color-neutral-600)}
+  .ft__soc{position:absolute;right:0;top:-48px;display:flex;gap:var(--gw-space-8)}
+  .ft__soc span{width:28px;height:28px;border-radius:var(--gw-radius-8);
+                display:flex;align-items:center;justify-content:center;
+                background:var(--gw-color-neutral-900);color:var(--gw-color-neutral-400);
+                font:var(--gw-text-body-10-med)}
+  .ft__marquee{display:flex;align-items:center;gap:var(--gw-space-60);
+               margin-top:var(--gw-space-80);white-space:nowrap;overflow:hidden}
+  .ft__mq{display:flex;align-items:flex-end;gap:10px}
+  .ft__mqtxt{font:600 112px/1 var(--gw-font-display);color:var(--gw-color-neutral-900)}
+  .ft__agent{width:112px;height:112px;border-radius:var(--gw-radius-16);
+             display:grid;grid-template-columns:repeat(4,1fr);gap:3.7px;padding:20px;
+             box-sizing:border-box}
+  .ft__agent i{background:var(--gw-color-neutral-900);border-radius:3.7px;display:block}
+  .ft__dot{width:12px;height:12px;border-radius:var(--gw-radius-full);
+           background:var(--gw-color-neutral-900);opacity:.8;flex:none}
+  .ft--ads{border-radius:var(--gw-radius-8) var(--gw-radius-8) 0 0;padding:var(--gw-space-16);
+           display:flex;align-items:center;justify-content:center}
+  .ft--ads .ft__cr{color:var(--gw-color-neutral-600)}
+
+  /* client/avatar — measured 1619:711. A STADIUM, not a squircle. */
+  .cav{background:var(--gw-color-neutral-200);border-radius:100px;overflow:hidden;
+       display:inline-block}
+  .cav--sm{width:48px;height:32px}
+  .cav--md{width:56px;height:40px}
+  .cav--lg{width:64px;height:48px}
+  .sq{width:64px;height:48px;background:var(--gw-color-neutral-200);
+      border-radius:var(--gw-radius-12);display:inline-block}
+
   /* progress-bar — measured */
   .pb{width:100%;max-width:620px;background:var(--gw-color-neutral-25);
       border-radius:var(--gw-radius-16);padding:var(--gw-space-20);
@@ -423,13 +473,101 @@
 
   <div class="frame">
     <div class="info">
-      <h3>footer · page-build · 12 folds · cards · inputs · client/avatar · images</h3>
+      <h3>client/avatar</h3>
+      <span class="prov prov--measured">measured</span>
+      <p>The portrait shape for every client and author avatar. 12 variants.</p>
+      <dl>
+        <dt>size</dt><dd>small 48×32 · medium 56×40 · large 64×48 — <strong>lowercase key</strong></dd>
+        <dt>client</dt><dd>Fraxtional · Source Equipment · Midwest Power Products · other</dd>
+        <dt>Shape</dt><dd><strong>A horizontal stadium.</strong> radius 100px on a 4:3 box. Never square.</dd>
+        <dt>Conflict</dt><dd>The rule calls it "a squircle (rounded-corner square)". The component is a pill. Draw the component.</dd>
+        <dt>Fill</dt><dd>neutral-200 when empty. No CSS grayscale filter on the component.</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">size=small · medium · large — the real shape</div>
+      <div class="row">
+        <span class="cav cav--sm"></span>
+        <span class="cav cav--md"></span>
+        <span class="cav cav--lg"></span>
+      </div>
+      <div class="lbl">What the rule text asks for (a squircle) — and does NOT match the component</div>
+      <div class="row"><span class="sq"></span></div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="info">
+      <h3>footer/footer</h3>
+      <span class="prov prov--measured">measured</span>
+      <p>Last element of every page. 6 variants across Breakpoint × Type × Show CTA.</p>
+      <dl>
+        <dt>Surface</dt><dd>--gw-color-black, <strong>not</strong> neutral-900</dd>
+        <dt>Top corners</dt><dd><strong>r20 on Brand, r8 on Ads</strong> — the variants disagree</dd>
+        <dt>Columns</dt><dd>title body-12-sem neutral-200 · links body-14-med neutral-400</dd>
+        <dt>Marquee</dt><dd>agent-icon 112px + text at 112px Vert Grotesk Semibold, neutral-900</dd>
+        <dt>Findings</dt><dd>© 2025 is stale · "All Rights Reserved" / "Terms Of Use" / capitalize break sentence case · copyright contrast ~2.3:1</dd>
+      </dl>
+    </div>
+    <div class="comp">
+      <div class="lbl">Type=Brand · Show CTA=False — copy shown corrected to sentence case</div>
+      <div class="row" style="display:block">
+        <div class="ft"><div class="ft__in">
+          <div class="ft__top">
+            <div class="ft__cols">
+              <div class="ft__col"><span class="ft__ct">Platform</span><div class="ft__ls">
+                <a class="ft__l">Brand Memory</a><a class="ft__l">Page Creation Engine</a>
+                <a class="ft__l">AI-First CMS</a><a class="ft__l">Leads Dashboard</a>
+                <a class="ft__l">Analytics</a></div></div>
+              <div class="ft__col"><span class="ft__ct">Solutions</span><div class="ft__ls">
+                <a class="ft__l">AI Search Agent</a><a class="ft__l">Lead Conversion</a>
+                <a class="ft__l">Paid Boost</a></div></div>
+              <div class="ft__col"><span class="ft__ct">Company</span><div class="ft__ls">
+                <a class="ft__l">Pricing</a><a class="ft__l">Customers</a>
+                <a class="ft__l">Careers</a><a class="ft__l">Announcements</a>
+                <a class="ft__l">Alternatives</a></div></div>
+            </div>
+            <div class="ft__addr">
+              <div class="r">
+                <span style="flex:1">Regents Inc, 16192 Coastal Hwy,<br>Lewes, DE 19958, United States</span>
+                <span style="width:300px">Delfin Technologies India Pvt Ltd, 578, 9th A Main Rd, Indiranagar, Bengaluru, Karnataka 560038, India</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:var(--gw-space-4)">
+                <span>+1 (888) 451 5522</span><span>growth@gushwork.ai</span>
+              </div>
+            </div>
+          </div>
+          <div class="ft__bot">
+            <div class="ft__soc"><span>in</span><span>X</span><span>yt</span></div>
+            <div class="ft__rule"></div>
+            <div class="ft__bar">
+              <span class="ft__cr">© 2026 Gushwork | All rights reserved</span>
+              <span class="ft__legal"><a class="ft__l" style="font:var(--gw-text-body-12-reg)">Privacy policy</a><a class="ft__l" style="font:var(--gw-text-body-12-reg)">Terms of use</a></span>
+            </div>
+          </div>
+        </div>
+        <div class="ft__marquee">
+          <div class="ft__mq"><div class="ft__agent"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="ft__mqtxt">Agents working 24/7</span></div>
+          <span class="ft__dot"></span>
+          <div class="ft__mq"><div class="ft__agent"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="ft__mqtxt">Agents working 24/7</span></div>
+        </div>
+        </div>
+      </div>
+      <div class="lbl">Type=Ads — one centred line, r8 top corners</div>
+      <div class="row" style="display:block">
+        <div class="ft ft--ads"><span class="ft__cr">© 2026 Gushwork | All rights reserved</span></div>
+      </div>
+    </div>
+  </div>
+
+<div class="frame">
+    <div class="info">
+      <h3>page-build · 12 folds · cards · inputs · images</h3>
       <span class="prov prov--struct">structure only</span>
       <p>Variant matrices, node IDs and usage rules are in <code>exports/web/</code>.
          Appearance not yet measured.</p>
       <dl>
-        <dt>Remaining</dt><dd>footer · page-build · 12 folds · 6 card types · 7 inputs ·
-          client/avatar · images</dd>
+        <dt>Remaining</dt><dd>page-build · 12 folds · 6 card types · 7 inputs · images</dd>
       </dl>
     </div>
     <div class="comp">

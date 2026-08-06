@@ -263,6 +263,60 @@ down the whole nest.**
 
 Boolean `Show Marquee` (`1720:63`) — default `true`.
 
+#### Appearance — from design context (`1720:3798` Brand, `1720:3800` Ads)
+
+| Part | Value |
+|---|---|
+| surface | `--gw-color-black` — **not** `neutral-900` |
+| top corners | **`--gw-radius-20` on Brand · `--gw-radius-8` on Ads** — the two variants disagree |
+| padding | `padding-top: --gw-space-80`, no bottom padding on the Brand variant |
+| inner column | `max-width: 1240` · outer stack gap `--gw-space-80` |
+| link columns | gap `--gw-space-60` between columns · `--gw-space-20` title-to-list · `--gw-space-12` between links |
+| column title | `--gw-text-body-12-sem` · `--gw-color-neutral-200` |
+| link | `--gw-text-body-14-med` · `--gw-color-neutral-400` |
+| address block | width 600 · `--gw-text-body-12-reg` · `--gw-color-neutral-600` |
+| divider | 1px full-width rule above the bottom row |
+| copyright | `--gw-text-body-12-med` · `--gw-color-neutral-700` |
+| legal links | `--gw-text-body-12-reg` · `--gw-color-neutral-600` · gap `--gw-space-24` |
+| socials | 3 buttons, 28 wide, radius **7.226** (not a token), 14px glyphs, absolutely positioned 48px above the bottom row, right-aligned |
+| marquee band | `agent-icon` 112 × 112, radius **14.933** + text at **112px Vert Grotesk Semibold**, `--gw-color-neutral-900`, gap `--gw-space-60`, repeated twice with a 12px dot at 80% opacity between |
+
+`Ads` is the whole footer collapsed to one centred line: `padding: --gw-space-16`, copyright
+only, `--gw-text-body-12-med` in `--gw-color-neutral-600`.
+
+#### Real link content — use this, not placeholders
+
+| Column | Links |
+|---|---|
+| Platform | Brand Memory · Page Creation Engine · AI-First CMS · Leads Dashboard · Analytics |
+| Solutions | AI Search Agent · Lead Conversion · Paid Boost |
+| Company | Pricing · Customers · Careers · Announcements · Alternatives |
+
+Addresses: `Regents Inc, 16192 Coastal Hwy, Lewes, DE 19958, United States` ·
+`Delfin Technologies India Pvt Ltd, 578, 9th A Main Rd, Indiranagar, Bengaluru, Karnataka
+560038, India`. Phone `+1 (888) 451 5522`. Email `growth@gushwork.ai`.
+
+#### Findings — five, all open
+
+1. **Top-corner radius disagrees between variants** — 20px on Brand, 8px on Ads. Same
+   component, same edge. One is wrong.
+2. **The copyright reads `© 2025`.** Stale as of 2026. It is baked into the component, so it
+   will ship stale unless overridden.
+3. **Three strings break sentence case** — `All Rights Reserved`, `Terms Of Use`, and the
+   marquee's CSS `text-transform: capitalize` which renders `Agents Working 24/7`. Per
+   `foundation/voice.md` these should be `All rights reserved`, `Terms of use`, and
+   `Agents working 24/7`. Write them corrected.
+4. **The copyright fails contrast** — `--gw-color-neutral-700` (`#535a61`) on
+   `--gw-color-black` (`#0d0d0d`) is roughly 2.3:1, well under the 4.5:1 floor. The legal
+   links at `neutral-600` are not much better. Flagged, not fixed — changing it is a design
+   decision.
+5. **`Solutions` names differ from the navbar.** The footer says `AI Search Agent`; the
+   navbar submenu says `AI Search`. Same destination, two labels.
+
+Two radii here are non-token values — `7.226` on the social buttons and `14.933` on the
+marquee `agent-icon`. Both look like scaled artefacts rather than intent. Use the nearest
+token (`--gw-radius-8`, `--gw-radius-16`) and note the substitution.
+
 | Breakpoint | Type | Show CTA | Size |
 |---|---|---|---|
 | Phone | Brand | `True` | 375 × 1813 |
