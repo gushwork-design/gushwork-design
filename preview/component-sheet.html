@@ -205,6 +205,31 @@
   .sq{width:64px;height:48px;background:var(--gw-color-neutral-200);
       border-radius:var(--gw-radius-12);display:inline-block}
 
+
+  /* kpi-card — measured 2134:14980 / 2134:14580. Mode=light is a DARK card. */
+  .kpi{width:286px;flex:none;height:198px;border-radius:var(--gw-radius-12);
+       padding:var(--gw-space-20);background:var(--gw-color-neutral-900);
+       display:flex;flex-direction:column;gap:var(--gw-space-80);overflow:hidden}
+  .kpi__hd{display:flex;align-items:center;justify-content:space-between;width:100%}
+  .kpi__t{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
+          color:var(--gw-color-neutral-300)}
+  .kpi__hd svg{width:16px;height:16px;color:var(--gw-color-neutral-300)}
+  .kpi__body{display:flex;flex-direction:column;gap:var(--gw-space-8);width:100%}
+  .kpi__vrow{display:flex;align-items:center;gap:var(--gw-space-8)}
+  .kpi__v{font:var(--gw-text-h5);color:var(--gw-color-white)}
+  .kpi__cap{font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-300);
+            letter-spacing:-.072px}
+  .kpib{display:inline-flex;align-items:center;gap:2px;padding:4px var(--gw-space-8);
+        border-radius:var(--gw-radius-4);font:var(--gw-text-body-12-med);letter-spacing:-.072px}
+  .kpib svg{width:12px;height:12px}
+  .kpib--pos{background:var(--gw-color-green-alpha-10);color:var(--gw-color-green-300)}
+  .kpib--neg{background:var(--gw-color-red-alpha-20);color:var(--gw-color-red-300)}
+  .ana{flex:none;border-radius:var(--gw-radius-12);padding:var(--gw-space-12);
+       background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:var(--gw-space-4)}
+  .ana__l{font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);
+          text-transform:uppercase;letter-spacing:.04em}
+  .ana__v{font:var(--gw-text-body-20-sem)}
+
   /* progress-bar — measured */
   .pb{width:100%;max-width:620px;background:var(--gw-color-neutral-25);
       border-radius:var(--gw-radius-16);padding:var(--gw-space-20);
@@ -251,6 +276,9 @@
   <symbol id="i-arrow-clockwise-bold" viewBox="0 0 256 256"><path d="M244,56v48a12,12,0,0,1-12,12H184a12,12,0,1,1,0-24H201.1l-19-17.38c-.13-.12-.26-.24-.38-.37A76,76,0,1,0,127,204h1a75.53,75.53,0,0,0,52.15-20.72,12,12,0,0,1,16.49,17.45A99.45,99.45,0,0,1,128,228h-1.37A100,100,0,1,1,198.51,57.06L220,76.72V56a12,12,0,0,1,24,0Z" fill="currentColor"/></symbol>
   <symbol id="i-caret-down-fill" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z" fill="currentColor"/></symbol>
   <symbol id="i-seal-question-fill" viewBox="0 0 256 256"><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82ZM128,192a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm8-48.72V144a8,8,0,0,1-16,0v-8a8,8,0,0,1,8-8c13.23,0,24-9,24-20s-10.77-20-24-20-24,9-24,20v4a8,8,0,0,1-16,0v-4c0-19.85,17.94-36,40-36s40,16.15,40,36C168,125.38,154.24,139.93,136,143.28Z" fill="currentColor"/></symbol>
+
+  <symbol id="i-money" viewBox="0 0 256 256"><path d="M128,88a40,40,0,1,0,40,40A40,40,0,0,0,128,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,152ZM240,56H16a8,8,0,0,0-8,8V192a8,8,0,0,0,8,8H240a8,8,0,0,0,8-8V64A8,8,0,0,0,240,56ZM193.65,184H62.35A56.78,56.78,0,0,0,24,145.65v-35.3A56.78,56.78,0,0,0,62.35,72h131.3A56.78,56.78,0,0,0,232,110.35v35.3A56.78,56.78,0,0,0,193.65,184ZM232,93.37A40.81,40.81,0,0,1,210.63,72H232ZM45.37,72A40.81,40.81,0,0,1,24,93.37V72ZM24,162.63A40.81,40.81,0,0,1,45.37,184H24ZM210.63,184A40.81,40.81,0,0,1,232,162.63V184Z" fill="currentColor"/></symbol>
+  <symbol id="i-arrow-down-right-bold" viewBox="0 0 256 256"><path d="M204,88V192a12,12,0,0,1-12,12H88a12,12,0,0,1,0-24h75L55.51,72.48a12,12,0,0,1,17-17L180,163V88a12,12,0,0,1,24,0Z" fill="currentColor"/></symbol>
 </svg>
 
 <div class="page">
@@ -771,16 +799,32 @@
       <p>The KPI + analytics row. Always 6 analytics cards.</p>
       <dl><dt>KPI cards</dt><dd>1 · 2 · 3 — how many headline metrics lead the row</dd><dt>1</dt><dd>1 large KPI left (400 wide) + 6 analytics right</dd><dt>2</dt><dd>2 KPIs left (580) + 6 analytics right</dd><dt>3</dt><dd>3 KPIs stacked on top + 6 analytics below</dd><dt>Size</dt><dd>1084 × 198 (1 and 2) · 1084 × 300 (3)</dd></dl>
     </div>
-    <div class="comp"><div class="lbl">KPI cards=3 — three KPIs over six analytics</div><div class="row" style="display:block"><div style="display:flex;flex-direction:column;gap:8px;width:100%"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><div style="border-radius:var(--gw-radius-12);padding:16px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px"><span style="font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-600)">Qualified leads</span><span class="badge badge--green">↑ 18%</span></span><span style="font:var(--gw-text-h6)">1,284</span></div><div style="border-radius:var(--gw-radius-12);padding:16px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px"><span style="font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-600)">Cost per lead</span><span class="badge badge--neutral">Flat</span></span><span style="font:var(--gw-text-h6)">$41.20</span></div><div style="border-radius:var(--gw-radius-12);padding:16px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px"><span style="font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-600)">Reply rate</span><span class="badge badge--red">↓ 4%</span></span><span style="font:var(--gw-text-h6)">22.6%</span></div></div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px"><div style="border-radius:var(--gw-radius-12);padding:12px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:4px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Sessions</span><span style="font:var(--gw-text-body-20-sem)">94.2K</span></div><div style="border-radius:var(--gw-radius-12);padding:12px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:4px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">AI refs</span><span style="font:var(--gw-text-body-20-sem)">12.8K</span></div><div style="border-radius:var(--gw-radius-12);padding:12px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:4px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Impress.</span><span style="font:var(--gw-text-body-20-sem)">1.3M</span></div><div style="border-radius:var(--gw-radius-12);padding:12px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:4px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Avg pos</span><span style="font:var(--gw-text-body-20-sem)">4.1</span></div><div style="border-radius:var(--gw-radius-12);padding:12px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:4px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Published</span><span style="font:var(--gw-text-body-20-sem)">218</span></div><div style="border-radius:var(--gw-radius-12);padding:12px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:4px"><span style="font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);text-transform:uppercase;letter-spacing:.04em">Win rate</span><span style="font:var(--gw-text-body-20-sem)">9.4%</span></div></div></div></div><div class="todo" style="margin-top:var(--gw-space-16)">kpi-card Mode fills are NOT measured — only 6 of 18 Mode × Type combinations exist. Check before specifying.</div></div>
+    <div class="comp"><div class="lbl">KPI cards=3 — three dark KPI cards over six analytics cards</div><div class="row" style="display:block"><div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;gap:8px"><div class="kpi"><div class="kpi__hd"><span class="kpi__t">Qualified leads</span><svg><use href="#i-money"/></svg></div><div class="kpi__body"><div class="kpi__vrow"><span class="kpi__v">1,284</span><span class="kpib kpib--pos">2.5%<svg><use href="#i-arrow-up-right-bold"/></svg></span></div><span class="kpi__cap">Up from 1,088</span></div></div><div class="kpi"><div class="kpi__hd"><span class="kpi__t">Cost per lead</span><svg><use href="#i-money"/></svg></div><div class="kpi__body"><div class="kpi__vrow"><span class="kpi__v">$41.20</span><span class="kpib kpib--neg">2.5%<svg><use href="#i-arrow-down-right-bold"/></svg></span></div><span class="kpi__cap">Above target</span></div></div><div class="kpi"><div class="kpi__hd"><span class="kpi__t">Reply rate</span><svg><use href="#i-money"/></svg></div><div class="kpi__body"><div class="kpi__vrow"><span class="kpi__v">22.6%</span><span class="kpib kpib--neg">4.0%<svg><use href="#i-arrow-down-right-bold"/></svg></span></div><span class="kpi__cap">Down week on week</span></div></div></div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px"><div class="ana"><span class="ana__l">Sessions</span><span class="ana__v">94.2K</span></div><div class="ana"><span class="ana__l">AI refs</span><span class="ana__v">12.8K</span></div><div class="ana"><span class="ana__l">Impress.</span><span class="ana__v">1.3M</span></div><div class="ana"><span class="ana__l">Avg pos</span><span class="ana__v">4.1</span></div><div class="ana"><span class="ana__l">Published</span><span class="ana__v">218</span></div><div class="ana"><span class="ana__l">Win rate</span><span class="ana__v">9.4%</span></div></div></div></div><div class="todo" style="margin-top:var(--gw-space-16)">KPI cards are 286 wide and fixed — the row is 3 × 286 + gaps, not a fluid grid. The analytics row is not yet measured.</div></div>
   </div>
   <div class="frame">
     <div class="info">
       <h3>kpi-card · analytics-card</h3>
-      <span class="prov prov--struct">structure only</span>
-      <p>The two metric cards a card-layout assembles.</p>
-      <dl><dt>kpi-card Type</dt><dd>Positive (green, up) · Negative (red, down) · Neutral</dd><dt>kpi-card Mode</dt><dd>sets the colour theme — match the surrounding Section</dd><dt>Coverage gap</dt><dd><strong>only 6 of 18 Mode × Type combinations are built</strong></dd><dt>analytics-card</dt><dd>compact secondary metric — no icon, no badge</dd><dt>Badge</dt><dd>kpi-card instances Badge — colours follow the Badge rule</dd></dl>
+      <span class="prov prov--measured">measured</span>
+      <p>The headline-metric card and its compact companion.</p>
+      <dl>
+        <dt>Built</dt><dd><strong>6 of 18</strong> Mode × Type — each Mode pairs with exactly one Type</dd>
+        <dt>Mode</dt><dd><strong>Not a light/dark switch.</strong> Mode=light renders a DARK card. Pick the node, not the name.</dd>
+        <dt>Card</dt><dd>286 × 198 · r12 · pad 20 · <strong>gap 80</strong> · fill neutral-900</dd>
+        <dt>Title</dt><dd>Inter Medium 10px uppercase, lh 1.6, neutral-300</dd>
+        <dt>Value</dt><dd>Heading/h5 — 32px Vert Grotesk Semibold, white</dd>
+        <dt>Badge</dt><dd>Positive green-alpha-<strong>10</strong>/green-300 · Negative red-alpha-<strong>20</strong>/red-300 — the alpha steps disagree</dd>
+        <dt>Arrows</dt><dd>ArrowUpRight / ArrowDownRight, <strong>Bold 12px</strong></dd>
+      </dl>
     </div>
-    <div class="comp"><div class="lbl">kpi-card — Positive · Neutral · Negative</div><div class="row"><div style="width:190px;border-radius:var(--gw-radius-12);padding:16px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px"><span style="font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-600)">Qualified leads</span><span class="badge badge--green">↑ 18%</span></span><span style="font:var(--gw-text-h6)">1,284</span></div><div style="width:190px;border-radius:var(--gw-radius-12);padding:16px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px"><span style="font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-600)">Cost per lead</span><span class="badge badge--neutral">Flat</span></span><span style="font:var(--gw-text-h6)">$41.20</span></div><div style="width:190px;border-radius:var(--gw-radius-12);padding:16px;background:var(--gw-color-neutral-25);display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px"><span style="font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-600)">Reply rate</span><span class="badge badge--red">↓ 4%</span></span><span style="font:var(--gw-text-h6)">22.6%</span></div></div></div>
+    <div class="comp">
+      <div class="lbl">Mode=Mode4, Type=Positive · Mode=light, Type=Negative — both dark</div>
+      <div class="row"><div class="kpi"><div class="kpi__hd"><span class="kpi__t">Qualified leads</span><svg><use href="#i-money"/></svg></div><div class="kpi__body"><div class="kpi__vrow"><span class="kpi__v">1,284</span><span class="kpib kpib--pos">2.5%<svg><use href="#i-arrow-up-right-bold"/></svg></span></div><span class="kpi__cap">Up from 1,088 last month</span></div></div><div class="kpi"><div class="kpi__hd"><span class="kpi__t">Cost per lead</span><svg><use href="#i-money"/></svg></div><div class="kpi__body"><div class="kpi__vrow"><span class="kpi__v">$41.20</span><span class="kpib kpib--neg">2.5%<svg><use href="#i-arrow-down-right-bold"/></svg></span></div><span class="kpi__cap">Above the $38 target</span></div></div></div>
+      <div class="lbl">analytics-card — the compact secondary metric, no icon or badge</div>
+      <div class="row"><div class="ana" style="width:150px"><span class="ana__l">Sessions</span><span class="ana__v">94.2K</span></div><div class="ana" style="width:150px"><span class="ana__l">AI referrals</span><span class="ana__v">12.8K</span></div><div class="ana" style="width:150px"><span class="ana__l">Impressions</span><span class="ana__v">1.3M</span></div></div>
+      <div class="todo" style="margin-top:var(--gw-space-16)">analytics-card is not yet measured —
+        shown here at the card-layout grid's dimensions. The kpi-card's inline badge does NOT
+        match the standalone Badge component's colour mapping; they are separate treatments.</div>
+    </div>
   </div>
   <div class="frame">
     <div class="info">

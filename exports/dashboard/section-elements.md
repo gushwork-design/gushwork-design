@@ -25,6 +25,57 @@ Section, or use `section/Container` for custom content.
 | `Mode` | `dark`, `light`, `Mode3`, `Mode4`, `Mode5`, `Mode6` |
 | `Type` | `Positive`, `Negative`, `Neutral` |
 
+### `Mode` is not a light/dark switch — the names are misleading
+
+Only **6 of the 18** combinations are built, and each `Mode` pairs with exactly one `Type`.
+It is six fixed card styles, not a matrix:
+
+| Variant | Node |
+|---|---|
+| `Mode=light, Type=Negative` | `2134:14580` |
+| `Mode=dark, Type=Negative` | `2134:14579` |
+| `Mode=Mode3, Type=Positive` | `2134:14989` |
+| `Mode=Mode4, Type=Positive` | `2134:14980` |
+| `Mode=Mode5, Type=Neutral` | `2134:15041` |
+| `Mode=Mode6, Type=Neutral` | `2134:15032` |
+
+**`Mode=light` renders a DARK card.** Measured: `2134:14580` (`light`) and `2134:14980`
+(`Mode4`) both fill `--gw-color-neutral-900`, with white values and `neutral-300` labels.
+The word `light` describes nothing about the result. Do not pick a Mode by its name —
+pick the variant node, and check it.
+
+### Appearance — from design context (`2134:14980`, `2134:14580`)
+
+Identical across both measured variants except the badge:
+
+| Part | Value |
+|---|---|
+| card | **286 × 198** · `--gw-radius-12` · padding `--gw-space-20` · **gap `--gw-space-80`** |
+| fill | `--gw-color-neutral-900` |
+| title | `Inter Medium 10px`, **uppercase**, line-height 1.6, `--gw-color-neutral-300` |
+| header icon | `Money` (`112:6455`) at 16px, top-right |
+| value | **`--gw-text-h5`** — 32px Vert Grotesk Semibold, `--gw-color-white` |
+| caption | `--gw-text-body-12-med` · `--gw-color-neutral-300` |
+
+The 80px gap between header and value block is what makes the card 198 tall. It is a
+spacer, not a design accident — don't collapse it.
+
+**The inline badge differs per Type, and not symmetrically:**
+
+| Type | Badge fill | Badge text | Arrow |
+|---|---|---|---|
+| `Positive` | `--gw-color-green-alpha-10` | `--gw-color-green-300` | `ArrowUpRight` **Bold 12** |
+| `Negative` | **`--gw-color-red-alpha-20`** | `--gw-color-red-300` | `ArrowDownRight` **Bold 12** |
+
+**Note the alpha mismatch** — green uses the 10% step, red the 20%. Almost certainly
+unintended; flagged rather than normalised.
+
+These badge colours also **do not match the standalone Badge component's documented
+mapping** (`green-100` fill / `green-500` text). The kpi-card's inline badge is its own
+treatment. Don't substitute one for the other.
+
+Placeholder copy ships as `card title` and `lorem ipsum` — replace both.
+
 **Pick `Type` by the metric's direction:**
 
 | Type | Badge | Arrow |
