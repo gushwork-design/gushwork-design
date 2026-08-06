@@ -6,24 +6,24 @@
 <link rel="stylesheet" href="../foundation/tokens.css">
 <style>
   *,*::before,*::after{box-sizing:border-box}
-  body{margin:0;background:var(--gw-color-neutral-50);font:var(--gw-text-body-14-reg);
+  body{margin:0;background:var(--gw-color-neutral-100);font:var(--gw-text-body-14-reg);
        color:var(--gw-color-black);-webkit-font-smoothing:antialiased}
 
   /* dashboard-build — 1440x888, gap 8, pad 8 (measured 2140:16479) */
-  .shell{width:1440px;height:888px;display:flex;gap:var(--gw-space-8);
+  .shell{width:1440px;height:888px;display:flex;gap:0;
          padding:var(--gw-space-8);margin:0 auto}
 
   /* side-panel — 260 x 880, r20, pad 24/16, inner 228 */
   .rail{width:260px;flex:none;border-radius:var(--gw-radius-20);
-        background:var(--gw-color-white);padding:var(--gw-space-24) var(--gw-space-16);
-        display:flex;flex-direction:column}
+        background:transparent;padding:var(--gw-space-24) var(--gw-space-16);
+        display:flex;flex-direction:column;justify-content:space-between}
   .rail__title{height:32px;display:flex;align-items:center;gap:var(--gw-space-8);
-               margin-bottom:40px}
+               margin-bottom:var(--gw-space-40)}
   .logotile{width:32px;height:32px;flex:none;border-radius:var(--gw-radius-8);
             background:var(--gw-color-black);color:var(--gw-color-white);
             display:flex;align-items:center;justify-content:center;padding:var(--gw-space-8)}
   .logotile img{width:100%;height:100%;object-fit:contain}
-  .rail__name{font:var(--gw-text-body-18-sem)}
+  .rail__name{font:600 18px/1 var(--gw-font-display);color:var(--gw-color-black)}
   .groups{display:flex;flex-direction:column;gap:var(--gw-space-24)}
   /* list-item — measured 2102:14027: pad 8, gap 8, r8, icon 16 Regular, label Inter BOLD 14 */
   .li{display:flex;align-items:center;gap:var(--gw-space-8);height:32px;
@@ -32,13 +32,13 @@
       text-decoration:none;cursor:pointer}
   .li svg{width:16px;height:16px;flex:none;color:var(--gw-color-neutral-500)}
   .li:hover{background:var(--gw-color-neutral-25)}
-  .li--sel{background:var(--gw-color-neutral-50)}
-  .li--sel svg{color:var(--gw-color-neutral-900)}
-  .li--group{height:23px;padding:0 var(--gw-space-8);font:500 10px/1 var(--gw-font-body);
-             text-transform:uppercase;letter-spacing:.06em;color:var(--gw-color-neutral-400);
-             display:flex;align-items:center}
+  .li--group{padding:var(--gw-space-4) var(--gw-space-8);border-radius:var(--gw-radius-8);
+             font:700 10px/15px var(--gw-font-body);text-transform:uppercase;
+             color:var(--gw-color-neutral-400);display:flex;align-items:center}
   /* user-card — measured 2102:14040: 228x48, pad 8/4, r12, name Inter BOLD 12 */
-  .usercard{margin-top:auto;height:48px;display:flex;align-items:center;
+  .ucwrap{border-top:1px solid var(--gw-color-neutral-alpha-10-black);
+          padding:var(--gw-space-8) 0;width:228px}
+  .usercard{height:48px;display:flex;align-items:center;
             justify-content:space-between;padding:var(--gw-space-8) var(--gw-space-4);
             border-radius:var(--gw-radius-12)}
   .usercard:hover{background:var(--gw-color-neutral-25)}
@@ -172,17 +172,17 @@
       <span class="rail__name">Gushwork</span>
     </div>
     <div class="groups">
-      <div><div class="li li--group">Overview</div><a class="li li--sel"><svg><use href="#i-circles-four"/></svg>Inbound leads</a><a class="li"><svg><use href="#i-chart-line"/></svg>Performance</a><a class="li"><svg><use href="#i-users"/></svg>Attribution</a></div>
+      <div><div class="li li--group">Overview</div><a class="li"><svg><use href="#i-circles-four"/></svg>Inbound leads</a><a class="li"><svg><use href="#i-chart-line"/></svg>Performance</a><a class="li"><svg><use href="#i-users"/></svg>Attribution</a></div>
       <div><div class="li li--group">Content</div><a class="li"><svg><use href="#i-circles-four"/></svg>Published</a><a class="li"><svg><use href="#i-circles-four"/></svg>In review</a><a class="li"><svg><use href="#i-chart-line"/></svg>Keywords</a></div>
       <div><div class="li li--group">Account</div><a class="li"><svg><use href="#i-money"/></svg>Billing</a><a class="li"><svg><use href="#i-circles-four"/></svg>Settings</a></div>
     </div>
-    <div class="usercard">
+    <div class="ucwrap"><div class="usercard">
       <span class="uc__l">
         <span class="uc__av"><i></i></span>
         <span class="uc__n"><b>Utsav Singh</b><span>Admin</span></span>
       </span>
       <span class="uc__m"><svg><use href="#i-dots-v"/></svg></span>
-    </div>
+    </div></div>
   </aside>
 
   <!-- dashboard-container · 1164 × 872 -->

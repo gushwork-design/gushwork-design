@@ -57,13 +57,40 @@ COMPONENT (1440×888, HORIZONTAL, gap:8, pad:8)
 
 | Part | Value |
 |---|---|
-| Shell | 1440×888, gap 8, padding 8 |
+| Shell | 1440×888, padding 8, **gap 0** — see below |
 | Nav rail (`side-panel`) | **260** wide × 880, radius 20, padding 24/16 |
 | Nav rail inner width | 228 |
 | Content container | 1164×872, radius 20, padding-bottom 120 |
 | Content slot | vertical, gap 40, padding 40 |
 | Page header | padding 40/40/20/40, gap 20, title 32px |
 | User card row | 228×48, radius 12 |
+
+### Appearance — from design context (`2102:14019`) and the render
+
+**The `side-panel` has no fill.** It is transparent, `--gw-radius-20`, padding
+`16px` horizontal / `24px` vertical, `justify-content: space-between`. An earlier pass
+here drew it as a white card; it is not one. The grey you see behind it is the shell.
+
+| Part | Value |
+|---|---|
+| shell background | **`--gw-color-neutral-100`** (`#e7e8e9`) — sampled from the render |
+| `side-panel` | **no fill** · `--gw-radius-20` · pad 16/24 · space-between |
+| `dashboard-container` | `--gw-color-white` · `--gw-radius-20` |
+| `dashboard-title` | logo tile + **Vert Grotesk Display Semibold 18px**, `--gw-color-black` |
+| logo tile | `--gw-color-black` · `--gw-radius-8` · pad `--gw-space-8` · wraps the 16px White symbol |
+| `container` gap | `--gw-space-40` between title and list-groups |
+| `list-groups` gap | `--gw-space-24` between groups · **0 within a group** |
+| group label | a `list-item` — **Inter Bold 10px**, uppercase, line-height 15, `--gw-color-neutral-400`, pad 4/8 |
+| nav row | `list-item` — pad 8, gap 8, r8, Regular 16 icon, **Inter Bold 14**, `--gw-color-neutral-900` |
+| user-card wrapper | **1px top border `--gw-color-neutral-alpha-10-black`**, pad 8/0, width 228 |
+
+**The annotation's `gap:8` on the shell is wrong.** Figma's own coordinates place
+`side-panel` at x=8 width 260 — ending at 268 — and `dashboard-container` at x=268. They
+are **flush**; there is no gap. An 8px gap makes the container 1156 instead of 1164.
+
+**The default shell shows no selected nav row.** All `list-item`s render identically.
+`list-item` does carry selected and hover states, but their fills are not measured — don't
+invent one.
 
 ## Rules
 
