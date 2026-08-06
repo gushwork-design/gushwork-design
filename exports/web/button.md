@@ -91,22 +91,43 @@ primary or secondary CTA.
 
 ## Appearance — from design context, not the annotation
 
-**`border-radius` is `--gw-radius-12` on every size and style.** These are *not* pills.
-The value is a raw 12px in Figma and is not variable-bound, so it will not show up in a
-`get_variable_defs` call — it has to be read from the component.
+**These are not pills.** Radius is `--gw-radius-8` at `Small` and `Medium`, and
+`--gw-radius-12` at `Large`. Radius is a raw value in Figma, not variable-bound, so it does
+not appear in `get_variable_defs` — it has to be read off the component.
 
-| `Size` | Height | Width `None` | Width `Trailing`/`Leading` | `Icon Only` | Label token |
-|---|---|---|---|---|---|
-| `Small` | 36 | 99 | 123 | 36 × 36 | `--gw-text-button-14` |
-| `Medium` | 44 | 126 | 151 | 44 × 44 | `--gw-text-button-16` |
-| `Large` | 56 | 144 | 166 | **58 × 58** | `--gw-text-button-18` |
+| `Size` | Radius | Height | Padding | Width `None` | Width `Trailing`/`Leading` | `Icon Only` | Label token |
+|---|---|---|---|---|---|---|---|
+| `Small` | `--gw-radius-8` | 36 | `8px 12px` | 99 | 123 | 36 × 36 | `--gw-text-button-14` |
+| `Medium` | `--gw-radius-8` | 44 | `16px 20px` | 126 | 151 | 44 × 44 | `--gw-text-button-16` |
+| `Large` | `--gw-radius-12` | 56 | `16px 24px` | 144 | 166 | **58 × 58** | `--gw-text-button-18` |
 
-Gap between label and icon is `--gw-space-8` (`--gw-space-12` on the Special styles).
-`Large` carries padding `16px 20px 16px 24px` — **asymmetric**, more on the leading side.
-Shadow is `--gw-shadow-s2`. Widths are the component's intrinsic sizes; a button that
-hugs its label will differ, but the heights are fixed.
+Verified per size — `1457:548` (Small Blue) is `rounded-[8px]`, `1480:2412` (Large Special)
+is `rounded-[12px]`. **Don't generalise one variant's radius to the set.**
+
+Gap between label and icon is `--gw-space-8` (`--gw-space-12` on the Special styles). The
+`Special` styles carry padding `16px 20px 16px 24px` — asymmetric, more on the leading side,
+because of the avatar stack. `Icon Only` pads 13px on all sides and hugs.
 
 **`Icon Only` at `Large` is 58×58, not 56×56** — the one size that doesn't match its row.
+
+### Per-style fills
+
+| `Style` | Active | Hover | Disabled |
+|---|---|---|---|
+| `Blue` | `--gw-color-primary-500` | `--gw-color-primary-600` | `--gw-color-neutral-200` |
+| `Black` | `--gw-color-black` | `--gw-color-neutral-900` | `--gw-color-neutral-200` |
+| `White` | `--gw-color-white` | `--gw-color-neutral-50` | `--gw-color-neutral-200` |
+| `Outlined/ black` | none | `--gw-color-neutral-25` | none |
+| `Outlined / white` | none | `--gw-color-neutral-alpha-10-white` | none |
+| `Text/ black` | none | none | none |
+
+Outlined styles stroke `--gw-color-neutral-100` at **2px, inside**. Label is white on
+`Blue`/`Black`, `--gw-color-black` on the outlined and text styles. Disabled is always white
+text on the `neutral-200` fill. Shadow is `--gw-shadow-s2`; `Special/ Glowing` uses the
+two-layer `--gw-shadow-button` instead.
+
+Widths above are the component's intrinsic sizes; a button that hugs a different label will
+differ. The heights and radii are fixed.
 
 **Do not copy the dashboard button's dimensions.** Those are 88×28 / 115×44 / 134×48 and
 belong to a different component — see `exports/dashboard/button.md`.

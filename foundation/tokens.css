@@ -346,7 +346,189 @@
    9. There is a bare top-level `White` variable (#ffffff) alongside
       `Colors/Neutral/white`. Prefer --gw-color-white.
 
-  10. No grid, breakpoint, or motion tokens exist anywhere in the file.
-      Layout widths and transitions in this system are component-level values,
-      documented per component in exports/, not tokens.
+  10. No motion tokens exist anywhere in the file. Transitions are
+      component-level values, documented per component in exports/.
+
+      An earlier revision of this file also claimed no breakpoint tokens
+      existed. That was wrong — there is a whole second collection. See the
+      BREAKPOINT section below.
    ============================================================================ */
+
+/* ============================================================================
+   BREAKPOINT
+   Figma collection: Breakpoint · 34 variables · modes Desktop (default), Phone
+   ----------------------------------------------------------------------------
+   The second variable collection. Unlike Brand, which is single-mode, every
+   variable here has a Desktop and a Phone value — this is the file's
+   responsive system, and it is why components carry a `Breakpoint` variant
+   rather than hard-coded sizes.
+
+   Consume these through the media query, not by picking a side by hand.
+
+   SOURCE NOTE: transcribed from the Gushwork Figma master specification
+   (6 Aug 2026), not read back through the MCP variable API. Values are
+   internally consistent with the components measured in exports/, with one
+   open conflict flagged on --gw-bp-content-width below.
+   ============================================================================ */
+
+:root {
+
+  /* --- Sizing ------------------------------------------------------------- */
+  --gw-bp-page-width:     1440px;
+  --gw-bp-content-width:  1400px;  /* see conflict note */
+  --gw-bp-heading-lg:     1000px;
+  --gw-bp-heading-def:     800px;
+  --gw-bp-heading-sm:      620px;
+  --gw-bp-cta-image-w:     600px;
+  --gw-bp-cta-image-h:     440px;
+  --gw-bp-navbar-h:         60px;
+
+  /* --- Padding ------------------------------------------------------------ */
+  --gw-bp-pad-navbar-h:    100px;
+  --gw-bp-pad-page-h:       20px;
+  --gw-bp-pad-cta-h:        60px;
+  --gw-bp-pad-section-v-lg: 120px;
+  --gw-bp-pad-section-v:   100px;
+  --gw-bp-pad-footer-v:     20px;
+  --gw-bp-pad-card-h:       60px;
+  --gw-bp-pad-card-v:       40px;
+
+  /* --- Spacing ------------------------------------------------------------ */
+  --gw-bp-section-gap-lg:  180px;
+  --gw-bp-section-gap:     160px;
+  --gw-bp-content-gap:      40px;
+  --gw-bp-element-gap:      20px;
+  --gw-bp-heading-gap:      20px;
+  --gw-bp-content-spacing:   0px;
+
+  /* --- Type scale ---------------------------------------------------------
+     A responsive scale separate from the Heading/* text styles. The two do
+     not agree — Heading/h1 is 60px while this h1 is 44px — because these
+     drive fold-level layout while the text styles drive the type ramp. Use
+     the Heading tokens for type; use these only where a component binds
+     them. */
+  --gw-bp-type-display:    112px;
+  --gw-bp-type-hero:        60px;
+  --gw-bp-type-h1:          44px;
+  --gw-bp-type-h2:          26px;
+  --gw-bp-type-subtitle:    18px;
+  --gw-bp-type-body:        16px;
+  --gw-bp-type-button:      14px;
+  --gw-bp-type-caption:     12px;
+
+  /* --- Radius ------------------------------------------------------------- */
+  --gw-bp-radius-large:     20px;
+  --gw-bp-radius-medium:    16px;
+  --gw-bp-radius-small:      8px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    /* Phone mode */
+    --gw-bp-page-width:     375px;
+    --gw-bp-content-width:  343px;
+    --gw-bp-heading-lg:     343px;
+    --gw-bp-heading-def:    343px;
+    --gw-bp-heading-sm:     343px;
+    --gw-bp-cta-image-w:    343px;
+    --gw-bp-cta-image-h:    393px;
+    --gw-bp-navbar-h:        56px;
+
+    --gw-bp-pad-navbar-h:    16px;
+    --gw-bp-pad-page-h:      16px;
+    --gw-bp-pad-cta-h:       16px;
+    --gw-bp-pad-section-v-lg: 60px;
+    --gw-bp-pad-section-v:   60px;
+    --gw-bp-pad-footer-v:    16px;
+    --gw-bp-pad-card-h:      16px;
+    --gw-bp-pad-card-v:      24px;
+
+    --gw-bp-section-gap-lg:  80px;
+    --gw-bp-section-gap:     60px;
+    --gw-bp-content-gap:     20px;
+    --gw-bp-element-gap:     12px;
+    --gw-bp-heading-gap:     12px;
+    --gw-bp-content-spacing: 40px;
+
+    --gw-bp-type-display:    48px;
+    --gw-bp-type-hero:       44px;
+    --gw-bp-type-h1:         38px;
+    --gw-bp-type-h2:         20px;
+    --gw-bp-type-subtitle:   16px;
+    --gw-bp-type-body:       16px;
+    --gw-bp-type-button:     14px;
+    --gw-bp-type-caption:    12px;
+
+    --gw-bp-radius-large:    16px;
+    --gw-bp-radius-medium:   12px;
+    --gw-bp-radius-small:     8px;
+  }
+}
+
+/* ============================================================================
+   CONFLICT — content width has three competing values
+   ----------------------------------------------------------------------------
+   --gw-bp-content-width says 1400. The two worked page-build instances on
+   `↳ web/ template-library` measure a 1240 content column, centred with 100px
+   side margins in a 1440 page. The master spec's prose says "max content
+   width ~1280px centered in 1440".
+
+   1240 is the only one measured off a real composition, so exports/web/
+   page-shell.md documents 1240. Do not treat this token as settled — it needs
+   a ruling. Flagged, not resolved.
+   ============================================================================ */
+
+/* ============================================================================
+   TYPE — Links
+   Figma path Body/link-{size} · Inter Medium, matched to the Body ramp
+   ----------------------------------------------------------------------------
+   Always pair link-{N} with body-{N} of the same size. Links are Medium
+   weight so they read as distinct from Regular body copy.
+
+   SOURCE NOTE: from the master specification, same caveat as BREAKPOINT.
+   ============================================================================ */
+
+:root {
+  --gw-text-link-10: 500 10px/15px  var(--gw-font-body);
+  --gw-text-link-12: 500 12px/16px  var(--gw-font-body);
+  --gw-text-link-14: 500 14px/20px  var(--gw-font-body);
+  --gw-text-link-16: 500 16px/24px  var(--gw-font-body);
+  --gw-text-link-18: 500 18px/1.6   var(--gw-font-body);
+  --gw-text-link-20: 500 20px/1.4   var(--gw-font-body);
+  --gw-text-link-22: 500 22px/1.4   var(--gw-font-body);
+
+  --gw-text-link-10-tracking:  0;
+  --gw-text-link-12-tracking: -0.6%;
+  --gw-text-link-14-tracking: -0.2%;
+  --gw-text-link-16-tracking: -0.2%;
+  --gw-text-link-18-tracking: -0.2%;
+  --gw-text-link-20-tracking: -1.6%;
+  --gw-text-link-22-tracking: -0.6%;
+
+  /* Button ramp — the master spec adds a 20px step the earlier harvest missed */
+  --gw-text-button-20: 500 20px/1 var(--gw-font-body);
+
+  /* Alpha steps the earlier harvest missed */
+  --gw-color-primary-alpha-20:      #0070ff33;
+  --gw-color-primary-alpha-30:      #0070ff4d;
+  --gw-color-orange-alpha-10:       #ea580c1a;
+  --gw-color-orange-alpha-20:       #ea580c33;
+  --gw-color-neutral-alpha-90-white: #ffffffe6;
+
+  /* Radius — the ramp continues in linear 4px steps from 24 to 80 */
+  --gw-radius-2:  2px;
+  --gw-radius-24: 24px;
+  --gw-radius-28: 28px;
+  --gw-radius-32: 32px;
+  --gw-radius-36: 36px;
+  --gw-radius-40: 40px;
+  --gw-radius-44: 44px;
+  --gw-radius-48: 48px;
+  --gw-radius-52: 52px;
+  --gw-radius-56: 56px;
+  --gw-radius-64: 64px;
+  --gw-radius-68: 68px;
+  --gw-radius-72: 72px;
+  --gw-radius-76: 76px;
+  --gw-radius-80: 80px;
+}

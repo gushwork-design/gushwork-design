@@ -34,18 +34,22 @@ A small pill label that sits above a heading.
 - `Default` (black) — **the default.** Use widely.
 - `Blue` — **only when asked.**
 
-Appearance, read off the component render (`1516:410`) — the annotation names the property
-but never says what the two colours look like:
+Appearance — the annotation names the properties but never says what they look like:
 
-| `Color` | Pill | Text | Leading glyph |
-|---|---|---|---|
-| `Default` | `--gw-color-white` | `--gw-color-black` | black filled circle |
-| `Blue` | `--gw-color-primary-50` | `--gw-color-primary-600` | blue |
+| Part | Value |
+|---|---|
+| pill | `--gw-color-white`, `--gw-radius-full` (100px), height **24 fixed** |
+| stroke | `--gw-color-neutral-100` at **0.5px, outside** |
+| padding | `4px 8px` · gap `--gw-space-4` |
+| label | `--gw-text-body-12-med` |
+| label colour | `--gw-color-neutral-700` (`Color=Default`) · `--gw-color-primary-500` (`Color=Blue`) |
+| leading icon | optional, 12×12 or 16×16 |
 
-**The white pill relies on the fold's surface to read as a pill.** On the light-gray folds
-it sits on in Figma that works unassisted; on a pure-white fold it needs `--gw-shadow-s2`
-or a `--gw-color-neutral-100` border to be visible at all. Which of those to use is not
-specified — pick one and say so.
+**The 0.5px outside stroke is what makes the white pill read on a white fold** — not a
+shadow. An earlier pass here guessed `--gw-shadow-s2`; that was wrong.
+
+**`Color=Default` labels are `neutral-700`, not black.** The pill is white in both colours;
+only the text and glyph change.
 
 **There is no on-blue or on-black eyebrow.** All 6 variants are `Type` × `Color` × `State`.
 For a label on a full-bleed coloured fold, report the gap; don't improvise a
