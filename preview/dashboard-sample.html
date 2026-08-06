@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gushwork dashboard — sample</title>
+<link rel="stylesheet" href="../foundation/tokens.css">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--gw-color-neutral-50);font:var(--gw-text-body-14-reg);
+       color:var(--gw-color-black);-webkit-font-smoothing:antialiased}
+
+  /* dashboard-build — 1440x888, gap 8, pad 8 (measured 2140:16479) */
+  .shell{width:1440px;height:888px;display:flex;gap:var(--gw-space-8);
+         padding:var(--gw-space-8);margin:0 auto}
+
+  /* side-panel — 260 x 880, r20, pad 24/16, inner 228 */
+  .rail{width:260px;flex:none;border-radius:var(--gw-radius-20);
+        background:var(--gw-color-white);padding:var(--gw-space-24) var(--gw-space-16);
+        display:flex;flex-direction:column}
+  .rail__title{height:32px;display:flex;align-items:center;gap:var(--gw-space-8);
+               margin-bottom:40px}
+  .logotile{width:32px;height:32px;flex:none;border-radius:var(--gw-radius-8);
+            background:var(--gw-color-black);color:var(--gw-color-white);
+            display:flex;align-items:center;justify-content:center;padding:var(--gw-space-8)}
+  .logotile img{width:100%;height:100%;object-fit:contain}
+  .rail__name{font:var(--gw-text-body-18-sem)}
+  .groups{display:flex;flex-direction:column;gap:var(--gw-space-24)}
+  /* list-item — measured 2102:14027: pad 8, gap 8, r8, icon 16 Regular, label Inter BOLD 14 */
+  .li{display:flex;align-items:center;gap:var(--gw-space-8);height:32px;
+      padding:var(--gw-space-8);border-radius:var(--gw-radius-8);
+      font:700 14px/1 var(--gw-font-body);color:var(--gw-color-neutral-900);
+      text-decoration:none;cursor:pointer}
+  .li svg{width:16px;height:16px;flex:none;color:var(--gw-color-neutral-500)}
+  .li:hover{background:var(--gw-color-neutral-25)}
+  .li--sel{background:var(--gw-color-neutral-50)}
+  .li--sel svg{color:var(--gw-color-neutral-900)}
+  .li--group{height:23px;padding:0 var(--gw-space-8);font:500 10px/1 var(--gw-font-body);
+             text-transform:uppercase;letter-spacing:.06em;color:var(--gw-color-neutral-400);
+             display:flex;align-items:center}
+  /* user-card — measured 2102:14040: 228x48, pad 8/4, r12, name Inter BOLD 12 */
+  .usercard{margin-top:auto;height:48px;display:flex;align-items:center;
+            justify-content:space-between;padding:var(--gw-space-8) var(--gw-space-4);
+            border-radius:var(--gw-radius-12)}
+  .usercard:hover{background:var(--gw-color-neutral-25)}
+  .uc__l{display:flex;align-items:center;gap:var(--gw-space-8)}
+  /* dashboard Avatar inside user-card — 42.667 x 32, r53.333: a landscape pill */
+  .uc__av{width:42.667px;height:32px;flex:none;border-radius:53.333px;
+          background:var(--gw-color-neutral-50);
+          border:.333px solid var(--gw-color-neutral-100);
+          overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+  .uc__av i{width:16px;height:22px;background:var(--gw-color-neutral-900);
+            border-radius:6px 6px 0 0;display:block}
+  .uc__n{display:flex;flex-direction:column;gap:var(--gw-space-4)}
+  .uc__n b{font:700 12px/1 var(--gw-font-body);color:var(--gw-color-black)}
+  .uc__n span{font:700 10px/1 var(--gw-font-body);color:var(--gw-color-neutral-400)}
+  .uc__m{padding:var(--gw-space-4);border-radius:var(--gw-radius-4);
+         color:var(--gw-color-neutral-500);display:flex}
+  .uc__m svg{width:12px;height:12px}
+
+  /* dashboard-container — 1164 x 872, r20 */
+  .main{flex:1;min-width:0;border-radius:var(--gw-radius-20);
+        background:var(--gw-color-white);display:flex;flex-direction:column;overflow:hidden}
+
+  /* section/header — measured 2140:16372: pad 40/40/20, gap 20, title h5, border-b neutral-50 */
+  .hdr{padding:var(--gw-space-40) var(--gw-space-40) var(--gw-space-20);
+       display:flex;flex-direction:column;gap:var(--gw-space-20);
+       border-bottom:1px solid var(--gw-color-neutral-50);flex:none}
+  .hdr h1{margin:0;font:var(--gw-text-h5);letter-spacing:var(--gw-text-h5-tracking);
+          color:var(--gw-color-neutral-900)}
+  .toolbar{display:flex;align-items:center;gap:var(--gw-space-12)}
+  .tabs{display:inline-flex;gap:var(--gw-space-8);background:var(--gw-color-neutral-50);
+        border-radius:var(--gw-radius-8);padding:var(--gw-space-4)}
+  .tab{padding:var(--gw-space-4) var(--gw-space-8);border-radius:var(--gw-radius-4);
+       font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-900);cursor:pointer}
+  .tab--sel{background:var(--gw-color-white);box-shadow:var(--gw-shadow-s3)}
+  .dd{display:inline-flex;align-items:center;justify-content:space-between;width:120px;
+      padding:var(--gw-space-8);border-radius:var(--gw-radius-8);
+      background:var(--gw-color-neutral-50);font:var(--gw-text-body-12-med);
+      color:var(--gw-color-neutral-900);cursor:pointer}
+  .dd svg{width:12px;height:12px;color:var(--gw-color-neutral-500)}
+  .refresh{margin-left:auto;display:flex;align-items:center;gap:var(--gw-space-8)}
+  .refresh span{font:500 10px/1 var(--gw-font-body);color:var(--gw-color-neutral-700)}
+  .refresh button{width:28px;height:28px;border-radius:var(--gw-radius-8);
+                  border:2px solid var(--gw-color-neutral-100);background:transparent;
+                  color:var(--gw-color-neutral-700);cursor:pointer;
+                  display:flex;align-items:center;justify-content:center}
+  .refresh svg{width:16px;height:16px}
+
+  /* Slot — Sections only, gap 40, pad 40 */
+  .slot{flex:1;overflow-y:auto;display:flex;flex-direction:column;
+        gap:var(--gw-space-40);padding:var(--gw-space-40)}
+
+  /* kpi-card — measured: 286x198, r12, pad 20, gap 80, DARK */
+  .kpi{width:286px;flex:none;height:198px;border-radius:var(--gw-radius-12);
+       padding:var(--gw-space-20);background:var(--gw-color-neutral-900);
+       display:flex;flex-direction:column;gap:var(--gw-space-80);overflow:hidden}
+  .kpi__hd{display:flex;align-items:center;justify-content:space-between;width:100%}
+  .kpi__t{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
+          color:var(--gw-color-neutral-300)}
+  .kpi__hd svg{width:16px;height:16px;color:var(--gw-color-neutral-300)}
+  .kpi__body{display:flex;flex-direction:column;gap:var(--gw-space-8);width:100%}
+  .kpi__vrow{display:flex;align-items:center;gap:var(--gw-space-8)}
+  .kpi__v{font:var(--gw-text-h5);color:var(--gw-color-white)}
+  .kpi__cap{font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-300);letter-spacing:-.072px}
+  .kpib{display:inline-flex;align-items:center;gap:2px;padding:4px var(--gw-space-8);
+        border-radius:var(--gw-radius-4);font:var(--gw-text-body-12-med);letter-spacing:-.072px}
+  .kpib svg{width:12px;height:12px}
+  .kpib--pos{background:var(--gw-color-green-alpha-10);color:var(--gw-color-green-300)}
+  .kpib--neg{background:var(--gw-color-red-alpha-20);color:var(--gw-color-red-300)}
+
+  /* section/progress-bar — measured 2140:16056 */
+  .pb{border-radius:var(--gw-radius-16);padding:var(--gw-space-20);
+      background:var(--gw-color-neutral-25);display:flex;flex-direction:column;
+      gap:var(--gw-space-16)}
+  .pb__hd{display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)}
+  .pb__ico{width:20px;height:20px;border-radius:var(--gw-radius-4);padding:var(--gw-space-4);
+           background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500);
+           display:flex;align-items:center;justify-content:center;flex:none}
+  .pb__ico svg{width:12px;height:12px}
+  .pb__l{font:var(--gw-text-body-14-sem);color:var(--gw-color-neutral-800);letter-spacing:-.2px}
+  .pb__c{margin-left:auto;font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-500);
+         letter-spacing:-.2px}
+  .pb__track{height:32px;border-radius:var(--gw-radius-8);
+             background:var(--gw-color-neutral-100);overflow:hidden}
+  .pb__fill{height:100%;width:81%;border-radius:var(--gw-radius-8);
+            background:var(--gw-color-primary-500);color:var(--gw-color-white);
+            display:flex;align-items:center;justify-content:flex-end;
+            padding-right:var(--gw-space-12);font:var(--gw-text-body-14-med)}
+
+  /* UNMEASURED — flagged on the page itself */
+  .unmeasured{position:relative;outline:1px dashed var(--gw-color-red-300);
+              outline-offset:3px;border-radius:var(--gw-radius-12)}
+  .unmeasured::after{content:attr(data-note);position:absolute;top:-9px;right:8px;
+      background:var(--gw-color-red-500);color:#fff;font:600 9px/1 var(--gw-font-body);
+      padding:3px 6px;border-radius:3px;letter-spacing:.04em;text-transform:uppercase}
+  .ana{flex:none;border-radius:var(--gw-radius-12);padding:var(--gw-space-12);
+       background:var(--gw-color-neutral-25);display:flex;flex-direction:column;
+       gap:var(--gw-space-4)}
+  .ana__l{font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);
+          text-transform:uppercase;letter-spacing:.04em}
+  .ana__v{font:var(--gw-text-body-20-sem)}
+  table.dt{width:100%;border-collapse:collapse}
+  .dt th,.dt td{text-align:left;padding:var(--gw-space-12) var(--gw-space-24);
+                border-top:1px solid var(--gw-color-neutral-100)}
+  .dt th{font:var(--gw-text-body-14-sem);color:var(--gw-color-neutral-600)}
+  .dt td{font:var(--gw-text-body-14-reg)}
+  .badge{display:inline-flex;align-items:center;padding:4px var(--gw-space-8);
+         border-radius:var(--gw-radius-4);font:var(--gw-text-body-12-med)}
+  .badge--g{background:var(--gw-color-green-alpha-10);color:var(--gw-color-green-700)}
+  .badge--n{background:var(--gw-color-neutral-100);color:var(--gw-color-neutral-600)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-circles-four" viewBox="0 0 256 256"><path d="M80,40a40,40,0,1,0,40,40A40,40,0,0,0,80,40Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,80,104Zm96,16a40,40,0,1,0-40-40A40,40,0,0,0,176,120Zm0-64a24,24,0,1,1-24,24A24,24,0,0,1,176,56ZM80,136a40,40,0,1,0,40,40A40,40,0,0,0,80,136Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,80,200Zm96-64a40,40,0,1,0,40,40A40,40,0,0,0,176,136Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,176,200Z" fill="currentColor"/></symbol>
+  <symbol id="i-chart-line" viewBox="0 0 256 256"><path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0v94.37L90.73,98a8,8,0,0,1,10.07-.38l58.81,44.11L218.73,90a8,8,0,1,1,10.54,12l-64,56a8,8,0,0,1-10.07.38L96.39,114.29,40,163.63V200H224A8,8,0,0,1,232,208Z" fill="currentColor"/></symbol>
+  <symbol id="i-users" viewBox="0 0 256 256"><path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z" fill="currentColor"/></symbol>
+  <symbol id="i-money" viewBox="0 0 256 256"><path d="M128,88a40,40,0,1,0,40,40A40,40,0,0,0,128,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,152ZM240,56H16a8,8,0,0,0-8,8V192a8,8,0,0,0,8,8H240a8,8,0,0,0,8-8V64A8,8,0,0,0,240,56ZM193.65,184H62.35A56.78,56.78,0,0,0,24,145.65v-35.3A56.78,56.78,0,0,0,62.35,72h131.3A56.78,56.78,0,0,0,232,110.35v35.3A56.78,56.78,0,0,0,193.65,184ZM232,93.37A40.81,40.81,0,0,1,210.63,72H232ZM45.37,72A40.81,40.81,0,0,1,24,93.37V72ZM24,162.63A40.81,40.81,0,0,1,45.37,184H24ZM210.63,184A40.81,40.81,0,0,1,232,162.63V184Z" fill="currentColor"/></symbol>
+  <symbol id="i-target" viewBox="0 0 256 256"><path d="M221.87,83.16A104.1,104.1,0,1,1,195.67,49l22.67-22.68a8,8,0,0,1,11.32,11.32l-96,96a8,8,0,0,1-11.32-11.32l27.72-27.72a40,40,0,1,0,17.87,31.09,8,8,0,1,1,16-.9,56,56,0,1,1-22.38-41.65L184.3,60.39a87.88,87.88,0,1,0,23.13,29.67,8,8,0,0,1,14.44-6.9Z" fill="currentColor"/></symbol>
+  <symbol id="i-dots-v" viewBox="0 0 256 256"><path d="M128,96a32,32,0,1,0,32,32A32,32,0,0,0,128,96Zm0,48a16,16,0,1,1,16-16A16,16,0,0,1,128,144Zm0-64A32,32,0,1,0,96,48,32,32,0,0,0,128,80Zm0-48a16,16,0,1,1-16,16A16,16,0,0,1,128,32Zm0,144a32,32,0,1,0,32,32A32,32,0,0,0,128,176Zm0,48a16,16,0,1,1,16-16A16,16,0,0,1,128,224Z" fill="currentColor"/></symbol>
+  <symbol id="i-caret-fill" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z" fill="currentColor"/></symbol>
+  <symbol id="i-refresh-bold" viewBox="0 0 256 256"><path d="M244,56v48a12,12,0,0,1-12,12H184a12,12,0,1,1,0-24H201.1l-19-17.38c-.13-.12-.26-.24-.38-.37A76,76,0,1,0,127,204h1a75.53,75.53,0,0,0,52.15-20.72,12,12,0,0,1,16.49,17.45A99.45,99.45,0,0,1,128,228h-1.37A100,100,0,1,1,198.51,57.06L220,76.72V56a12,12,0,0,1,24,0Z" fill="currentColor"/></symbol>
+  <symbol id="i-up-bold" viewBox="0 0 256 256"><path d="M204,64V168a12,12,0,0,1-24,0V93L72.49,200.49a12,12,0,0,1-17-17L163,76H88a12,12,0,0,1,0-24H192A12,12,0,0,1,204,64Z" fill="currentColor"/></symbol>
+  <symbol id="i-down-bold" viewBox="0 0 256 256"><path d="M204,88V192a12,12,0,0,1-12,12H88a12,12,0,0,1,0-24h75L55.51,72.48a12,12,0,0,1,17-17L180,163V88a12,12,0,0,1,24,0Z" fill="currentColor"/></symbol>
+</svg>
+
+<div class="shell">
+  <!-- side-panel · 260 × 880 -->
+  <aside class="rail">
+    <div class="rail__title">
+      <span class="logotile"><img src="../assets/logo/gushwork-symbol-white.svg" alt=""></span>
+      <span class="rail__name">Gushwork</span>
+    </div>
+    <div class="groups">
+      <div><div class="li li--group">Overview</div><a class="li li--sel"><svg><use href="#i-circles-four"/></svg>Inbound leads</a><a class="li"><svg><use href="#i-chart-line"/></svg>Performance</a><a class="li"><svg><use href="#i-users"/></svg>Attribution</a></div>
+      <div><div class="li li--group">Content</div><a class="li"><svg><use href="#i-circles-four"/></svg>Published</a><a class="li"><svg><use href="#i-circles-four"/></svg>In review</a><a class="li"><svg><use href="#i-chart-line"/></svg>Keywords</a></div>
+      <div><div class="li li--group">Account</div><a class="li"><svg><use href="#i-money"/></svg>Billing</a><a class="li"><svg><use href="#i-circles-four"/></svg>Settings</a></div>
+    </div>
+    <div class="usercard">
+      <span class="uc__l">
+        <span class="uc__av"><i></i></span>
+        <span class="uc__n"><b>Utsav Singh</b><span>Admin</span></span>
+      </span>
+      <span class="uc__m"><svg><use href="#i-dots-v"/></svg></span>
+    </div>
+  </aside>
+
+  <!-- dashboard-container · 1164 × 872 -->
+  <main class="main">
+    <div class="hdr">
+      <h1>Inbound leads</h1>
+      <div class="toolbar">
+        <span class="tabs"><span class="tab tab--sel">All leads</span><span class="tab">Qualified</span><span class="tab">Contacted</span><span class="tab">Won</span></span>
+        <span class="dd">All campaigns<svg><use href="#i-caret-fill"/></svg></span>
+        <span class="dd">All sources<svg><use href="#i-caret-fill"/></svg></span>
+        <span class="dd">All status<svg><use href="#i-caret-fill"/></svg></span>
+        <span class="refresh"><span>Updated 4s ago</span>
+          <button aria-label="Refresh"><svg><use href="#i-refresh-bold"/></svg></button></span>
+      </div>
+    </div>
+
+    <div class="slot">
+      <!-- section/card-layout · KPI cards=3 -->
+      <section style="display:flex;flex-direction:column;gap:var(--gw-space-8)">
+        <div style="display:flex;gap:var(--gw-space-8)">
+          <div class="kpi">
+        <div class="kpi__hd"><span class="kpi__t">Qualified leads</span><svg><use href="#i-money"/></svg></div>
+        <div class="kpi__body"><div class="kpi__vrow"><span class="kpi__v">1,284</span>
+        <span class="kpib kpib--pos">2.5%<svg><use href="#i-up-bold"/></svg></span></div>
+        <span class="kpi__cap">Up from 1,088 last month</span></div></div>
+          <div class="kpi">
+        <div class="kpi__hd"><span class="kpi__t">Cost per lead</span><svg><use href="#i-money"/></svg></div>
+        <div class="kpi__body"><div class="kpi__vrow"><span class="kpi__v">$41.20</span>
+        <span class="kpib kpib--neg">2.5%<svg><use href="#i-down-bold"/></svg></span></div>
+        <span class="kpi__cap">Above the $38 target</span></div></div>
+          <div class="kpi">
+        <div class="kpi__hd"><span class="kpi__t">Reply rate</span><svg><use href="#i-money"/></svg></div>
+        <div class="kpi__body"><div class="kpi__vrow"><span class="kpi__v">22.6%</span>
+        <span class="kpib kpib--neg">4.0%<svg><use href="#i-down-bold"/></svg></span></div>
+        <span class="kpi__cap">Down week on week</span></div></div>
+        </div>
+        <div class="unmeasured" data-note="analytics-card not measured"
+             style="display:grid;grid-template-columns:repeat(6,1fr);gap:var(--gw-space-8)">
+          <div class="ana"><span class="ana__l">Sessions</span><span class="ana__v">94.2K</span></div><div class="ana"><span class="ana__l">AI referrals</span><span class="ana__v">12.8K</span></div><div class="ana"><span class="ana__l">Impressions</span><span class="ana__v">1.3M</span></div><div class="ana"><span class="ana__l">Avg. position</span><span class="ana__v">4.1</span></div><div class="ana"><span class="ana__l">Published</span><span class="ana__v">218</span></div><div class="ana"><span class="ana__l">Win rate</span><span class="ana__v">9.4%</span></div>
+        </div>
+      </section>
+
+      <!-- section/progress-bar -->
+      <section class="pb">
+        <div class="pb__hd">
+          <span class="pb__ico"><svg><use href="#i-target"/></svg></span>
+          <span class="pb__l">Monthly publishing goal</span>
+          <span class="pb__c">97/120 articles</span>
+        </div>
+        <div class="pb__track"><div class="pb__fill">81%</div></div>
+      </section>
+
+      <!-- section/table -->
+      <section class="unmeasured" data-note="section/table + table-row not measured"
+               style="border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-25);padding:var(--gw-space-12)">
+        <div style="display:flex;align-items:center;gap:var(--gw-space-8);padding:var(--gw-space-4)">
+          <span style="width:20px;height:20px;border-radius:var(--gw-radius-4);background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500);display:flex;align-items:center;justify-content:center;padding:4px"><svg style="width:12px;height:12px"><use href="#i-chart-line"/></svg></span>
+          <span style="font:var(--gw-text-body-14-sem)">Leads by campaign</span>
+          <svg style="margin-left:auto;width:14px;height:14px;color:var(--gw-color-neutral-400)"><use href="#i-caret-fill"/></svg>
+        </div>
+        <div style="margin-top:var(--gw-space-16);border-radius:var(--gw-radius-12);background:var(--gw-color-white);overflow:hidden">
+          <table class="dt">
+            <tr><th>Campaign</th><th>Leads</th><th>Cost per lead</th><th>Spend</th><th>Status</th></tr>
+            <tr><td>AI search — category terms</td><td>412</td><td>$38.10</td><td>$15,697</td><td><span class="badge badge--g">Active</span></td></tr><tr><td>Comparison pages</td><td>288</td><td>$41.55</td><td>$11,966</td><td><span class="badge badge--g">Active</span></td></tr><tr><td>Founder-led content</td><td>201</td><td>$44.90</td><td>$9,025</td><td><span class="badge badge--n">Paused</span></td></tr>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+</body>
+</html>
