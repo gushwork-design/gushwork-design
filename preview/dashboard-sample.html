@@ -11,14 +11,15 @@
 
   /* dashboard-build — 1440x888, gap 8, pad 8 (measured 2140:16479) */
   .shell{width:1440px;height:888px;display:flex;gap:0;
-         padding:var(--gw-space-8);margin:0 auto}
+         padding:var(--gw-space-8) var(--gw-space-8) 0;margin:0 auto;
+         align-items:flex-start}
 
   /* side-panel — 260 x 880, r20, pad 24/16, inner 228 */
-  .rail{width:260px;flex:none;border-radius:var(--gw-radius-20);
+  .rail{width:260px;height:880px;flex:none;border-radius:var(--gw-radius-20);
         background:transparent;padding:var(--gw-space-24) var(--gw-space-16);
         display:flex;flex-direction:column;justify-content:space-between}
-  .rail__title{height:32px;display:flex;align-items:center;gap:var(--gw-space-8);
-               margin-bottom:var(--gw-space-40)}
+  .rail__container{display:flex;flex-direction:column;gap:var(--gw-space-40);width:100%}
+  .rail__title{height:32px;display:flex;align-items:center;gap:var(--gw-space-8)}
   .logotile{width:32px;height:32px;flex:none;border-radius:var(--gw-radius-8);
             background:var(--gw-color-black);color:var(--gw-color-white);
             display:flex;align-items:center;justify-content:center;padding:var(--gw-space-8)}
@@ -32,12 +33,12 @@
       text-decoration:none;cursor:pointer}
   .li svg{width:16px;height:16px;flex:none;color:var(--gw-color-neutral-500)}
   .li:hover{background:var(--gw-color-neutral-25)}
-  .li--group{padding:var(--gw-space-4) var(--gw-space-8);border-radius:var(--gw-radius-8);
+  .li--group{height:auto;padding:var(--gw-space-4) var(--gw-space-8);border-radius:var(--gw-radius-8);
              font:700 10px/15px var(--gw-font-body);text-transform:uppercase;
              color:var(--gw-color-neutral-400);display:flex;align-items:center}
   /* user-card — measured 2102:14040: 228x48, pad 8/4, r12, name Inter BOLD 12 */
   .ucwrap{border-top:1px solid var(--gw-color-neutral-alpha-10-black);
-          padding:var(--gw-space-8) 0;width:228px}
+          padding:var(--gw-space-8) 0;width:228px;height:64px}
   .usercard{height:48px;display:flex;align-items:center;
             justify-content:space-between;padding:var(--gw-space-8) var(--gw-space-4);
             border-radius:var(--gw-radius-12)}
@@ -58,7 +59,7 @@
   .uc__m svg{width:12px;height:12px}
 
   /* dashboard-container — 1164 x 872, r20 */
-  .main{flex:1;min-width:0;border-radius:var(--gw-radius-20);
+  .main{flex:1;height:872px;min-width:0;border-radius:var(--gw-radius-20);
         background:var(--gw-color-white);display:flex;flex-direction:column;overflow:hidden}
 
   /* section/header — measured 2140:16372: pad 40/40/20, gap 20, title h5, border-b neutral-50 */
@@ -167,14 +168,16 @@
 <div class="shell">
   <!-- side-panel · 260 × 880 -->
   <aside class="rail">
-    <div class="rail__title">
+    <div class="rail__container">
+      <div class="rail__title">
       <span class="logotile"><img src="../assets/logo/gushwork-symbol-white.svg" alt=""></span>
-      <span class="rail__name">Gushwork</span>
-    </div>
-    <div class="groups">
+        <span class="rail__name">Gushwork</span>
+      </div>
+      <div class="groups">
       <div><div class="li li--group">Overview</div><a class="li"><svg><use href="#i-circles-four"/></svg>Inbound leads</a><a class="li"><svg><use href="#i-chart-line"/></svg>Performance</a><a class="li"><svg><use href="#i-users"/></svg>Attribution</a></div>
       <div><div class="li li--group">Content</div><a class="li"><svg><use href="#i-circles-four"/></svg>Published</a><a class="li"><svg><use href="#i-circles-four"/></svg>In review</a><a class="li"><svg><use href="#i-chart-line"/></svg>Keywords</a></div>
       <div><div class="li li--group">Account</div><a class="li"><svg><use href="#i-money"/></svg>Billing</a><a class="li"><svg><use href="#i-circles-four"/></svg>Settings</a></div>
+      </div>
     </div>
     <div class="ucwrap"><div class="usercard">
       <span class="uc__l">

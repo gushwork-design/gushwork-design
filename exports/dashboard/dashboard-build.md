@@ -92,6 +92,39 @@ are **flush**; there is no gap. An 8px gap makes the container 1156 instead of 1
 `list-item` does carry selected and hover states, but their fills are not measured — don't
 invent one.
 
+
+### Layout — verified box by box against Figma's coordinates
+
+Nine boxes, all matching. Reproduce these exactly; several are counter-intuitive.
+
+| Box | x | y | w | h |
+|---|---|---|---|---|
+| `side-panel` | 8 | 8 | 260 | **880** |
+| `dashboard-container` | **268** | 8 | 1164 | **872** |
+| `container` (title + groups) | 24 | 32 | 228 | 445 |
+| `dashboard-title` | 24 | 32 | 228 | 32 |
+| `list-groups` | 24 | 104 | 228 | 373 |
+| `list-group` 1 | 24 | 104 | 228 | 119 |
+| `list-group` 2 | 24 | 247 | 228 | 119 |
+| `list-group` 3 | 24 | 390 | 228 | 87 |
+| user-card wrapper | 24 | 800 | 228 | 64 |
+
+Three traps:
+
+1. **The rail is 880 tall; the container is 872.** The rail runs flush to the bottom of the
+   1440×888 shell with no bottom padding, while the container keeps its 8px gap. The shell's
+   padding is effectively `8px 8px 0`.
+2. **`space-between` on the rail has exactly TWO children** — the `container` (which holds
+   the title *and* the list-groups, gap `--gw-space-40`) and the user-card wrapper. Treating
+   title, groups and user-card as three siblings pushes the groups to the vertical centre,
+   which is wrong.
+3. **The group-label row is 23 tall, not 32.** It is a `list-item`, but with `4px 8px`
+   padding and a 15px line-height rather than a nav row's 8px padding — `4 + 15 + 4 = 23`.
+   Inheriting the 32px nav-row height throws every group 9px out and cascades down the rail.
+
+Group heights follow from that: `23 + 3×32 = 119` for a four-row group, `23 + 2×32 = 87`
+for a three-row one, with `--gw-space-24` between groups and **no gap inside one**.
+
 ## Rules
 
 **Use this shell for every dashboard — and only this shell.** Every dashboard page
