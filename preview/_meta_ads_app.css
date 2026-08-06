@@ -225,6 +225,14 @@
             padding-block:clamp(8px,1.6vh,16px)}
   .gr__x{display:flex;justify-content:space-between;font:500 12px/1 var(--gw-font-body);
          letter-spacing:-.2px;color:var(--gw-color-neutral-600)}
+  /* bar chart — per-row grid keeps each label locked to its bar */
+  .bars{display:flex;flex-direction:column;gap:clamp(10px,2vh,20px)}
+  .bars__row{display:grid;grid-template-columns:clamp(140px,16vw,220px) 1fr;
+             align-items:center;gap:var(--gw-space-12)}
+  .bars__lbl{font:500 12px/1.2 var(--gw-font-body);letter-spacing:-.2px;
+             color:var(--gw-color-neutral-600);overflow:hidden;text-overflow:ellipsis;
+             white-space:nowrap}
+  .bars__track{min-width:0;padding-right:52px}
   .gbar{height:10px;background:var(--gw-color-primary-500);border-radius:0 2px 2px 0;position:relative}
   .gbar span{position:absolute;left:calc(100% + 4px);top:-2px;white-space:nowrap;
              font:500 10px/1 var(--gw-font-body);letter-spacing:-.2px;color:var(--gw-color-black)}

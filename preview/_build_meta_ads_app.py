@@ -70,12 +70,16 @@ def sec_collapsed(title,icon='chart'):
             f'<svg class="sec__caret"><use href="#i-caret"/></svg></div></section>')
 
 def graph_bar(rows,xticks):
-    return ('<div class="sec__body"><div class="gr__row"><div class="gr__y">'
-            + ''.join(f'<span>{n}</span>' for n,_,_ in rows)
-            + '</div><div class="gr__area"><div class="gr__plot>'.replace('plot>','plot">')
-            + ''.join(f'<div class="gbar" style="width:{w}%"><span>{v}</span></div>' for _,w,v in rows)
-            + '</div><div class="gr__x">' + ''.join(f'<span>{x}</span>' for x in xticks)
-            + '</div></div></div></div></section>')
+    """Per-row grid so each label shares a row with its bar. A two-column layout
+       (labels | bars) drifts, because a 12px label and a 10px bar in the same gap
+       accumulate error — measured at 14px by the first row."""
+    body=''.join(
+      f'<div class="bars__row"><span class="bars__lbl">{n}</span>'
+      f'<div class="bars__track"><div class="gbar" style="width:{w}%">'
+      f'<span>{v}</span></div></div></div>' for n,w,v in rows)
+    axis=('<div class="bars__row"><span class="bars__lbl"></span>'
+          '<div class="gr__x">'+''.join(f'<span>{x}</span>' for x in xticks)+'</div></div>')
+    return f'<div class="sec__body"><div class="bars">{body}{axis}</div></div></section>'
 
 def graph_line(pts,xticks,yticks):
     poly=' '.join(f'{x},{y}' for x,y in pts)
