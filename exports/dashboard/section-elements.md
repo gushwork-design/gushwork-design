@@ -253,33 +253,35 @@ headers + 35 day cells, each 24×24, r:4.
 
 ---
 
-## `list-item` — a nav/menu row
+## `list-item`
 
-Set `2102:13507` · **4 variants** · 228 wide · instance-swap prop `icon` (default `CirclesFour`).
+Two shapes from one component: the uppercase group label, and the nav row.
 
-| Property | Values |
-|---|---|
-| `Property 1` | `default`, `hover`, `selected`, `Variant4` |
-| `Label` | `no`, `yes` |
+### Appearance — from design context (`2102:14027`) and sampled from the render
 
-| Node | Variant | Size |
+| | Group label | Nav row |
 |---|---|---|
-| `2102:13505` | `Property 1=default, Label=no` | 228×32 |
-| `2102:13506` | `Property 1=hover, Label=no` | 228×32 |
-| `2102:13504` | `Property 1=selected, Label=no` | 228×32 |
-| `2102:13521` | `Property 1=Variant4, Label=yes` | 228×23 |
+| height | **23** — `4 + 15 + 4` | **32** |
+| padding | `4px 8px` | `8px` |
+| radius | `--gw-radius-8` | `--gw-radius-8` |
+| icon | none | `CirclesFour` (`112:13335`), **`Weight=Regular, Size=16`** |
+| label | **Inter Bold 10**, uppercase, line-height 15 | **Inter Bold 14**, line-height 1 |
+| label colour | `--gw-color-neutral-400` | `--gw-color-neutral-900` |
+| icon colour | — | **`--gw-color-neutral-900`** |
 
-`default` / `hover` / `selected` are **interaction states, not a choice** — icon (16px)
-+ text (14px), r:8, gap:8, pad:8.
+Three things that are easy to get wrong, and were:
 
-**Use `Property 1=Variant4, Label=yes` for an uppercase group-header row** within a
-list — text only, 10px uppercase, pad:4/8.
+1. **The icon is `neutral-900` — the same colour as the label, not a muted grey.** Sampled
+   off the render at `#262a2e` for both. Greying the icon to `neutral-500` is a common
+   instinct and it is wrong here; the nav row reads as one solid weight.
+2. **Both label styles are Inter Bold**, not Medium. The whole rail is Bold.
+3. **The group label is 23 tall, not 32.** It is the same component, but its padding and
+   line-height differ. Inheriting the nav row's 32 throws the rail's layout out — see
+   `dashboard-build.md`.
 
-Both the property name (`Property 1`) and the value `Variant4` are Figma
-auto-generated and are the literal keys. They are what `dashboard-build` references, so
-they are load-bearing.
-
----
+The default `dashboard-build` shows **no selected row** — every `list-item` renders
+identically. Selected and hover states exist on the component but their fills are not
+measured. Don't invent one.
 
 ## `user-card` — the user identity row
 
