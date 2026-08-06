@@ -30,6 +30,30 @@ that can't be followed gets ignored where it matters:
 3. **A layout dimension with no documented figure**: choose sensibly, but **say in one line
    that you chose it.** Don't pass your own number off as coming from the system.
 
+## Measuring a component — read the set, never an instance
+
+Every value in `exports/dashboard/` is measured off Figma. When you add or correct one:
+
+**Pull `get_design_context` on the component set, or on a variant symbol inside it — never
+on an instance.** An instance read misreports type weight: instances inside
+`dashboard-build` return `Inter:Bold` for text that the component set defines as
+`Inter:Medium` or `Inter:Semi_Bold`. This shipped a wrong rail twice.
+
+How to tell them apart in `get_metadata`: a `<symbol>` is a definition, an `<instance>` is a
+use. Set nodes list `<symbol>` children, one per variant.
+
+Two further checks worth doing every time, because each has caught a real error here:
+
+- **Compare box geometry numerically**, not by screenshot. Read Figma's `x/y/w/h` from
+  `get_metadata` and assert against `getBoundingClientRect()`. Eyeballing passed a rail that
+  was 9px out per group.
+- **Sample the render for colour.** `get_screenshot` then read the pixel. Annotation text
+  does not carry fills, and inference is unreliable — a nav icon that "should" be muted grey
+  is actually the same `neutral-900` as its label.
+
+If an annotation and the component disagree, the component wins and the disagreement is a
+finding. `dashboard-build`'s annotation claims `gap:8` where the coordinates prove 0.
+
 ## The composition ladder — compose downward, never sideways
 
 ```

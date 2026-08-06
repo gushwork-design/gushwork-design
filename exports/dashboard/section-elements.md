@@ -291,35 +291,34 @@ and shipped the whole rail at Bold 700, which is visibly too heavy.
 
 **When an instance and its component set disagree, measure the set.**
 
-## `user-card` — the user identity row
+## `user-card`
 
-Set `2125:200` · **3 variants** · 228×48, r:12 · boolean prop `Show Menu` (default true).
+Set `2125:200` · **3 variants** · 228 × 48.
 
-| Property | Values |
+| Node | Variant |
 |---|---|
-| `State` | `Default` (`2125:197`), `Hover` (`2125:198`), `Clicked` (`2125:199`) |
+| `2125:197` | `State=Default` |
+| `2125:198` | `State=Hover` |
+| `2125:199` | `State=Clicked` |
 
-```
-State=Default / Hover
-COMPONENT (228×48, r:12, HORIZONTAL, gap:12, pad:8/4)
-├── FRAME "user info" (HORIZONTAL, gap:8)
-│   ├── INSTANCE "Avatar" (Style=1, Color=Blue, Admin=true)
-│   └── FRAME "name block" (VERTICAL, gap:4)
-│       ├── TEXT name (12px)
-│       └── TEXT designation (10px)
-└── FRAME "menu button" (20×20, r:4) → INSTANCE "DotsThreeOutlineVertical"
+Boolean prop `Show Menu` — default `true`. `Clicked` opens the Icon dropdown.
 
-State=Clicked — same + INSTANCE "dropdown-options" (Style=Icon)
-                       ├── "Sign out" + INSTANCE "SignOut"
-                       └── "Refresh"  + INSTANCE "ArrowCounterClockwise"
-```
+### Appearance — from the component set (`2125:197`)
 
-`Show Menu` toggles the three-dots action. `Clicked` opens the `Icon` dropdown.
+| Part | Value |
+|---|---|
+| row | 228 × 48 · `--gw-radius-12` · padding `8px 4px` · space-between |
+| avatar | **42.667 × 32** · radius **53.333** (`--gw-radius-80`) · `--gw-color-neutral-50` fill · **0.333px** `--gw-color-neutral-100` border |
+| name | **`--gw-text-button-12`** — Inter Medium 12 · `--gw-color-black` |
+| designation | **`--gw-text-button-10`** — Inter Medium 10 · `--gw-color-neutral-400` |
+| name stack gap | `--gw-space-4` |
+| menu | padding `--gw-space-4` · `--gw-radius-4` · `DotsThreeOutlineVertical` at **12px** |
 
-The avatar follows the Avatar rule — **Admin avatar for owner/admin only**. See
-`avatar.md`.
+**The avatar is a landscape pill, not a circle** — 42.667 × 32 at radius 53.333 clamps to a
+stadium. Same proportion as the web `client/avatar`. Two components now, both pills.
 
----
+**Name and designation are Medium, not Bold.** See the source-conflict note under
+`list-item` — an instance read reports Bold; the set reports Medium.
 
 ## `gushwork-logo-(internal-use)`
 

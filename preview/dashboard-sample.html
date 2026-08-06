@@ -24,6 +24,7 @@
             background:var(--gw-color-black);color:var(--gw-color-white);
             display:flex;align-items:center;justify-content:center;padding:var(--gw-space-8)}
   .logotile img{width:100%;height:100%;object-fit:contain}
+  /* NO TOKEN: display face at 18/600. The heading ramp has no 18px step (h7 is 22 Medium). */
   .rail__name{font:600 18px/1 var(--gw-font-display);color:var(--gw-color-black)}
   .groups{display:flex;flex-direction:column;gap:var(--gw-space-24)}
   /* list-item — measured 2102:14027: pad 8, gap 8, r8, icon 16 Regular, label Inter BOLD 14 */
@@ -54,8 +55,8 @@
   .uc__av i{width:16px;height:22px;background:var(--gw-color-neutral-900);
             border-radius:6px 6px 0 0;display:block}
   .uc__n{display:flex;flex-direction:column;gap:var(--gw-space-4)}
-  .uc__n b{font:700 12px/1 var(--gw-font-body);color:var(--gw-color-black)}
-  .uc__n span{font:700 10px/1 var(--gw-font-body);color:var(--gw-color-neutral-400)}
+  .uc__n b{font:var(--gw-text-button-12);color:var(--gw-color-black)}
+  .uc__n span{font:var(--gw-text-button-10);color:var(--gw-color-neutral-400)}
   .uc__m{padding:var(--gw-space-4);border-radius:var(--gw-radius-4);
          color:var(--gw-color-neutral-500);display:flex}
   .uc__m svg{width:12px;height:12px}
@@ -82,7 +83,7 @@
       color:var(--gw-color-neutral-900);cursor:pointer}
   .dd svg{width:12px;height:12px;color:var(--gw-color-neutral-500)}
   .refresh{margin-left:auto;display:flex;align-items:center;gap:var(--gw-space-8)}
-  .refresh span{font:500 10px/1 var(--gw-font-body);color:var(--gw-color-neutral-700)}
+  .refresh span{font:var(--gw-text-button-10);color:var(--gw-color-neutral-700)}
   .refresh button{width:28px;height:28px;border-radius:var(--gw-radius-8);
                   border:2px solid var(--gw-color-neutral-100);background:transparent;
                   color:var(--gw-color-neutral-700);cursor:pointer;
@@ -98,6 +99,7 @@
        padding:var(--gw-space-20);background:var(--gw-color-neutral-900);
        display:flex;flex-direction:column;gap:var(--gw-space-80);overflow:hidden}
   .kpi__hd{display:flex;align-items:center;justify-content:space-between;width:100%}
+  /* NO TOKEN: Inter Medium 10 at line-height 1.6; body-10-med is 10/15 = 1.5. */
   .kpi__t{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
           color:var(--gw-color-neutral-300)}
   .kpi__hd svg{width:16px;height:16px;color:var(--gw-color-neutral-300)}
