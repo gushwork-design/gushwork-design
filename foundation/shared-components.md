@@ -167,43 +167,27 @@ components actually instance icons, and are the defaults to follow:
 - **`Fill`** for filled glyphs — a badge glyph, a caret in a dropdown trigger.
 - Colour via `currentColor` only. Never hardcode an icon fill.
 
-### Committed icon assets
+### Committed icon assets — the complete library
 
-Icons live in `assets/icons/`, exported from Figma at `Weight=Regular, Size=24`, chrome
-stripped, with the baked `#0D0D0D` fill rewritten to `fill="currentColor"` so they inherit
-text colour. Size them in CSS; the `viewBox` is `0 0 24 24`.
+**All 1,512 Phosphor icons, all six weights, are in `assets/icons/`.** Look one up at
+`assets/icons/{weight}/{kebab-name}.svg`. Full conventions, provenance and the verification
+method: `assets/icons/README.md`.
 
-| File | Figma set | `Regular, 24` node | Used by |
-|---|---|---|---|
-| `caret-down.svg` | `112:4354` | `1426:26933` | dropdown triggers, section collapse, nav dropdowns |
-| `arrow-up-right.svg` | `112:4802` | `1426:29845` | button `Trailing` icon, the CTA arrow |
-| `target.svg` | `112:13686` | `1426:87560` | `section/progress-bar` header |
-| `arrow-clockwise.svg` | `112:5600` | `1426:35032` | `section/header` refresh control |
+The Figma library is Phosphor imported. Extracting 1,248 sets node-by-node was not viable
+(~2,500 calls per weight), so the upstream package was taken and **verified against Figma** —
+four icons harvested directly from the file are kept in `assets/icons/_figma-verified/` and
+overlay their upstream counterparts exactly. Re-check with `preview/icon-verify.html`.
 
-**Inline the SVG — don't load it through `<img>`.** An `<img src="…svg">` renders in its own
-document and cannot inherit `currentColor`; the glyph falls back to black regardless of the
-surrounding text colour. Verified. Inline the markup (or use a sprite / icon component) any
-time the icon needs to be anything other than black.
+Two constraints that bite:
 
-**This is a partial harvest — 4 of 11.** The following are instanced by components but not
-yet exported. Treat a missing file as a finding, not a licence to substitute a Unicode
-character or draw a shape:
-
-`ChartLine` · `DotsThree` · `DotsThreeOutlineVertical` · `ArrowsDownUp` · `Plus` · `Star` ·
-`ArrowCounterClockwise`
-
-Their set node IDs are not yet known. To find one, call `get_design_context` on a component
-that instances it — the response's "Component descriptions" block names each icon with its
-node ID. Then `get_metadata` on that set to get the `Weight=Regular, Size=24` variant, and
-`download_assets` on the variant. **Within a set, `Regular` steps by 2 per size from the
-`Regular, Size=12` base, and `Bold` sits at that base + 42** — but the base itself differs
-per set and is not derivable from the set ID, so the metadata call is unavoidable.
+- **Inline the SVG.** An `<img src="….svg">` cannot inherit `currentColor` and falls back to
+  black. Use an inline `<svg>` or a `<symbol>`/`<use>` sprite.
+- **1,512 upstream vs 1,248 in Figma.** ~264 files here are not in the Figma library. Using
+  one is off-system even though the file exists. No manifest of the 1,248 exists, so this
+  can't be checked automatically — sanity-check an unusual-looking icon against Figma.
 
 **Never substitute a text glyph for an icon.** `⌄` is not `CaretDown`, `⟳` is not
-`ArrowClockwise`, `⋮` is not `DotsThreeOutlineVertical`. If the asset isn't in
-`assets/icons/`, say so.
-- Match `Size` to the surrounding text: `16` beside 14px text, `20` beside 16–18px,
-  `32` for the kpi-card header icon.
+`ArrowClockwise`, `⋮` is not `DotsThreeOutlineVertical`.
 
 ### Never
 
