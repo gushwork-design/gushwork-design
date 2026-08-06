@@ -89,6 +89,12 @@
      which silently collapsed graph bodies to a sliver. */
   .slot > *{flex:0 0 auto}
 
+  /* Hide the scrollbar chrome on the two scrolling regions while keeping them
+     scrollable. NOT a measured value — a product choice. Figma has no scrollbar
+     spec, and the shell reads cleaner without one. */
+  .slot,.rail{scrollbar-width:none;-ms-overflow-style:none}
+  .slot::-webkit-scrollbar,.rail::-webkit-scrollbar{width:0;height:0;display:none}
+
   /* section/card-layout — cards FILL the section */
   .cl{display:flex;flex-direction:column;gap:var(--gw-space-8)}
   .cl__krow{display:flex;gap:var(--gw-space-8)}
