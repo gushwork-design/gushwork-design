@@ -291,7 +291,53 @@ you did.
 | x-axis | Inter Medium 12 · `--gw-color-neutral-600` · space-between · each label 32 wide |
 
 Bars are brand blue — a data fill, not a button fill, so the no-blue rule does not apply.
-`Type=Line` and `Type=Grouped Bar` are **not yet measured**.
+
+### `Type=Line` — `2143:682` · 1028 × 400
+
+| Part | Value |
+|---|---|
+| stroke | `--gw-color-primary-500`, ~2px |
+| area under the line | a **vertical gradient**, sampled `#e4efff` at the line → `#eff6ff` mid → `#f9fbff` at the baseline |
+| y-axis | `1.0 · 0.8 · 0.6 · 0.4 · 0.2 · 0` |
+| x-axis | hourly — `12 AM` … `7 AM` |
+| grid | vertical rules, `--gw-color-white` on the plot |
+| tooltip | white card + shadow, a dashed vertical leader down to the point |
+
+The tooltip carries a clock glyph, a headline (`7 leads at $63 each`) and a breakdown list
+of campaign rows. **It is the only charted component with a hover affordance drawn in.**
+
+### `Type=Grouped Bar` — `2143:683` · 1108 × 456
+
+Seven groups of three bars, each bar labelled with its percentage. x-axis `0%` … `50%`.
+
+**The three-series palette is not in the token system.** Sampled from the render:
+
+| Series | Value | Nearest token | Match? |
+|---|---|---|---|
+| 1 | `#fed14a` | `--gw-color-yellow-200` `#fcd34d` | no |
+| 2 | **`#9784ff`** | — | **no purple exists in the system** |
+| 3 | `#a1cdfe` | `--gw-color-primary-200` `#99c6ff` | no |
+
+`get_variable_defs` on the node returns **only neutrals** — `Neutral/600`, `black`, `200`,
+`100`, `800`, `white`. The three series colours are **raw hex painted on the bars**, bound
+to nothing.
+
+This is a real gap, not a transcription slip:
+
+- There is **no categorical chart palette** in the variable collections. Any second chart
+  built in this system has nothing to reach for.
+- The purple `#9784ff` appears nowhere else. The file's only other purple is
+  `_Helper/Purple` `#8427DE`, which is explicitly marked internal-use and must never render.
+- Two of the three are *near* an existing token but not equal to it, which suggests they
+  were eyedropped rather than chosen.
+
+**Do not invent a palette to fill this.** If a chart needs more than one series, report the
+gap. If you must ship the Grouped Bar as drawn, use the three hexes above verbatim and say
+they are untokenised.
+
+One y-axis label renders bold (`FLI Retargeting Core Sched`) while the other six are
+`--gw-color-neutral-600` regular. Nothing distinguishes that row — it looks like a stray
+override.
 
 ## `section/With Dropdown` — appearance from the component (`2140:16131`)
 

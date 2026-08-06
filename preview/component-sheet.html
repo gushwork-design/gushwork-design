@@ -230,6 +230,34 @@
           text-transform:uppercase;letter-spacing:.04em}
   .ana__v{font:var(--gw-text-body-20-sem)}
 
+
+  /* Graph — measured 2143:681 / 682 / 683 */
+  .gr{background:var(--gw-color-white);border-radius:var(--gw-radius-8);padding:var(--gw-space-16)}
+  .gr__row{display:flex;gap:var(--gw-space-12)}
+  .gr__y{display:flex;flex-direction:column;gap:var(--gw-space-20);flex:none;
+         font:500 12px/1 var(--gw-font-body);letter-spacing:-.2px;color:var(--gw-color-neutral-600)}
+  .gr__area{flex:1;display:flex;flex-direction:column;gap:var(--gw-space-16);min-width:0}
+  .gr__plot{display:flex;flex-direction:column;gap:var(--gw-space-20);padding-block:16px}
+  .gr__x{display:flex;justify-content:space-between;font:500 12px/1 var(--gw-font-body);
+         letter-spacing:-.2px;color:var(--gw-color-neutral-600)}
+  .gbar{height:10px;background:var(--gw-color-primary-500);border-radius:0 2px 2px 0;position:relative}
+  .gbar span{position:absolute;left:calc(100% + 4px);top:-2px;white-space:nowrap;
+             font:500 10px/1 var(--gw-font-body);letter-spacing:-.2px;color:var(--gw-color-black)}
+  /* Grouped Bar — three RAW hex series, bound to no variable */
+  .ggrp{display:flex;flex-direction:column;gap:1px}
+  .ggrp .gbar{border-radius:0 2px 2px 0}
+  .gs1{background:#fed14a}
+  .gs2{background:#9784ff}
+  .gs3{background:#a1cdfe}
+
+  .ggrid{display:flex;flex-direction:column;gap:var(--gw-space-16)}
+  .ggrid__row{display:grid;grid-template-columns:200px 1fr;align-items:center;
+              gap:var(--gw-space-12)}
+  .ggrid__lbl{font:500 12px/1 var(--gw-font-body);letter-spacing:-.2px;
+              color:var(--gw-color-neutral-600)}
+  .gline{position:relative;height:200px}
+  .gline svg{width:100%;height:100%;display:block}
+
   /* progress-bar — measured */
   .pb{width:100%;max-width:620px;background:var(--gw-color-neutral-25);
       border-radius:var(--gw-radius-16);padding:var(--gw-space-20);
@@ -871,11 +899,56 @@
   <div class="frame">
     <div class="info">
       <h3>section/section-element/Graph</h3>
-      <span class="prov prov--struct">structure only</span>
-      <p>Charts. Pick Type by the shape of the data.</p>
-      <dl><dt>Bar</dt><dd>horizontal value comparison across items · 1060 × 280</dd><dt>Line</dt><dd>change over time, with tooltip · 1028 × 400</dd><dt>Grouped Bar</dt><dd>several measures per item · 1108 × 456</dd><dt>Shared</dt><dd>y-axis labels | chart area with grid lines | x-axis</dd></dl>
+      <span class="prov prov--measured">measured</span>
+      <p>Charts. Pick <code>Type</code> by the shape of the data.</p>
+      <dl>
+        <dt>Bar</dt><dd>1060 × 280 — compare values across items</dd>
+        <dt>Line</dt><dd>1028 × 400 — change over time, with a tooltip</dd>
+        <dt>Grouped Bar</dt><dd>1108 × 456 — several measures per item</dd>
+        <dt>Bar fill</dt><dd>primary-500, height 10, radius on the trailing end only</dd>
+        <dt>Axes</dt><dd>Inter Medium 12, neutral-600, tracking -0.2</dd>
+        <dt>Palette gap</dt><dd><strong>Grouped Bar's three series are raw hex, bound to no variable.</strong> No categorical chart palette exists.</dd>
+      </dl>
     </div>
-    <div class="comp"><div class="lbl">Three types — structural stand-ins</div><div class="row"><div style="width:31%;height:120px;border-radius:var(--gw-radius-8);background:var(--gw-color-white);border:1px dashed var(--gw-color-neutral-250);display:flex;align-items:center;justify-content:center;text-align:center;font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);padding:8px;"><strong>Type=Bar</strong><br>compare items</div><div style="width:31%;height:120px;border-radius:var(--gw-radius-8);background:var(--gw-color-white);border:1px dashed var(--gw-color-neutral-250);display:flex;align-items:center;justify-content:center;text-align:center;font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);padding:8px;"><strong>Type=Line</strong><br>over time</div><div style="width:31%;height:120px;border-radius:var(--gw-radius-8);background:var(--gw-color-white);border:1px dashed var(--gw-color-neutral-250);display:flex;align-items:center;justify-content:center;text-align:center;font:var(--gw-text-body-10-med);color:var(--gw-color-neutral-500);padding:8px;"><strong>Type=Grouped Bar</strong><br>measures per item</div></div><div class="todo" style="margin-top:var(--gw-space-16)">No chart rendering measured — axis type, grid colour and series colours are unknown.</div></div>
+    <div class="comp">
+      <div class="lbl">Type=Bar — 1060 × 280 · bars primary-500</div>
+      <div class="row" style="display:block"><div class="gr"><div class="gr__row">
+        <div class="gr__y"><span>FLI Prospecting</span><span>Chilly campaign Core</span><span>FLI Retargeting Core</span></div>
+        <div class="gr__area"><div class="gr__plot"><div class="gbar" style="width:59%"><span>$148</span></div><div class="gbar" style="width:66%"><span>$164</span></div><div class="gbar" style="width:90%"><span>$225</span></div></div>
+          <div class="gr__x"><span>$0</span><span>$50</span><span>$100</span><span>$150</span><span>$200</span><span>$250</span></div>
+        </div></div></div></div>
+
+      <div class="lbl">Type=Line — 1028 × 400 · gradient area under the stroke</div>
+      <div class="row" style="display:block"><div class="gr"><div class="gr__row">
+        <div class="gr__y" style="justify-content:space-between;gap:0;height:200px"><span>1.0</span><span>0.8</span><span>0.6</span><span>0.4</span><span>0.2</span><span>0</span></div>
+        <div class="gr__area">
+          <div class="gline"><svg viewBox="0 0 600 200" preserveAspectRatio="none">
+            <defs><linearGradient id="gwLineFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#e4efff"/><stop offset="55%" stop-color="#eff6ff"/>
+              <stop offset="100%" stop-color="#f9fbff"/></linearGradient></defs>
+            <path d="M0,126 L86,148 L172,132 L258,108 L343,100 L429,100 L514,118 L600,100 L600,200 L0,200 Z"
+                  fill="url(#gwLineFill)"/>
+            <polyline points="0,126 86,148 172,132 258,108 343,100 429,100 514,118 600,100"
+                      fill="none" stroke="var(--gw-color-primary-500)" stroke-width="2"/>
+          </svg></div>
+          <div class="gr__x"><span>12 AM</span><span>1 AM</span><span>2 AM</span><span>3 AM</span><span>4 AM</span><span>5 AM</span><span>6 AM</span><span>7 AM</span></div>
+        </div></div></div></div>
+
+      <div class="lbl">Type=Grouped Bar — 1108 × 456 · three series, all untokenised</div>
+      <div class="row" style="display:block"><div class="gr">
+        <div class="ggrid"><div class="ggrid__row"><span class="ggrid__lbl">FLI Prospecting</span><div class="ggrp"><div class="gbar gs1" style="width:62%"><span>31%</span></div><div class="gbar gs2" style="width:46%"><span>23%</span></div><div class="gbar gs3" style="width:18%"><span>9%</span></div></div></div><div class="ggrid__row"><span class="ggrid__lbl">Chilly campaign Core</span><div class="ggrp"><div class="gbar gs1" style="width:22%"><span>11%</span></div><div class="gbar gs2" style="width:36%"><span>18%</span></div><div class="gbar gs3" style="width:30%"><span>15%</span></div></div></div><div class="ggrid__row"><span class="ggrid__lbl">FLI Retargeting Core</span><div class="ggrp"><div class="gbar gs1" style="width:32%"><span>16%</span></div><div class="gbar gs2" style="width:18%"><span>9%</span></div><div class="gbar gs3" style="width:28%"><span>14%</span></div></div></div><div class="ggrid__row"><span class="ggrid__lbl">Say Primer (2 March)</span><div class="ggrp"><div class="gbar gs1" style="width:20%"><span>10%</span></div><div class="gbar gs2" style="width:16%"><span>8%</span></div><div class="gbar gs3" style="width:26%"><span>13%</span></div></div></div><div class="ggrid__row"><span class="ggrid__lbl">FLI TOF</span><div class="ggrp"><div class="gbar gs1" style="width:22%"><span>11%</span></div><div class="gbar gs2" style="width:28%"><span>14%</span></div><div class="gbar gs3" style="width:34%"><span>17%</span></div></div></div><div class="ggrid__row"><span class="ggrid__lbl">FLI Audience Testing Sched</span><div class="ggrp"><div class="gbar gs1" style="width:26%"><span>13%</span></div><div class="gbar gs2" style="width:30%"><span>15%</span></div><div class="gbar gs3" style="width:18%"><span>9%</span></div></div></div><div class="ggrid__row"><span class="ggrid__lbl">FLI Audience Testing</span><div class="ggrp"><div class="gbar gs1" style="width:28%"><span>14%</span></div><div class="gbar gs2" style="width:14%"><span>7%</span></div><div class="gbar gs3" style="width:20%"><span>10%</span></div></div></div>
+          <div class="ggrid__row"><span class="ggrid__lbl"></span>
+            <div class="gr__x"><span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span></div></div>
+        </div></div></div>
+      <div class="todo" style="margin-top:var(--gw-space-16)">
+        <strong>The Grouped Bar palette is not in the token system.</strong>
+        <code>#fed14a</code> · <code>#9784ff</code> · <code>#a1cdfe</code> — painted as raw
+        hex. <code>get_variable_defs</code> on the node returns only neutrals. The purple
+        exists nowhere else in the file, and two of the three are near an existing token but
+        not equal to it. A second chart has nothing to reach for — report the gap rather than
+        inventing a palette.
+      </div>
+    </div>
   </div>
   <div class="frame">
     <div class="info">
