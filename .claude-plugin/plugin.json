@@ -1,0 +1,21 @@
+{
+  "name": "gushwork-design",
+  "version": "1.0.0",
+  "description": "Gushwork's governed design system. Two surface-scoped skills — marketing web and product dashboard — over one shared foundation of tokens, voice, and shared atoms, generated from the Gush Design System v2.0 Figma file.",
+  "author": {
+    "name": "Utsav Singh",
+    "email": "utsav.singh@gushwork.ai"
+  },
+  "homepage": "https://github.com/utsav-gushwork/gushwork-design",
+  "keywords": [
+    "design-system",
+    "gushwork",
+    "figma",
+    "marketing-web",
+    "dashboard"
+  ],
+  "skills": [
+    "./skills/gushwork-web",
+    "./skills/gushwork-dashboard"
+  ]
+}
