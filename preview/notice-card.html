@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design system notice — new elements and deviations</title>
+<link rel="stylesheet" href="../foundation/tokens.css">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--gw-color-neutral-100);
+       font:var(--gw-text-body-14-reg);color:var(--gw-color-black);
+       -webkit-font-smoothing:antialiased;display:flex;justify-content:center;
+       padding:var(--gw-space-40) var(--gw-space-20)}
+  .wrap{width:100%;max-width:720px}
+  h1{margin:0 0 var(--gw-space-8);font:var(--gw-text-h5);
+     letter-spacing:var(--gw-text-h5-tracking);color:var(--gw-color-neutral-900)}
+  .sub{margin:0 0 var(--gw-space-32);font:var(--gw-text-body-14-reg);
+       color:var(--gw-color-neutral-600)}
+
+  /* the notice — section/Container treatment, yellow signal band */
+  .notice{background:var(--gw-color-white);border-radius:var(--gw-radius-20);
+          box-shadow:var(--gw-shadow-card);overflow:hidden}
+  .notice__bar{display:flex;align-items:center;gap:var(--gw-space-8);
+               padding:var(--gw-space-12) var(--gw-space-20);
+               background:var(--gw-color-yellow-25);
+               border-bottom:1px solid var(--gw-color-yellow-100)}
+  .notice__bar svg{width:20px;height:20px;color:var(--gw-color-yellow-500);flex:none}
+  .notice__bar b{font:var(--gw-text-body-14-sem);color:var(--gw-color-neutral-900)}
+  .notice__body{padding:var(--gw-space-20)}
+
+  .msg{background:var(--gw-color-neutral-25);border:1px solid var(--gw-color-neutral-100);
+       border-radius:var(--gw-radius-8);padding:var(--gw-space-16);
+       font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-800);
+       white-space:pre-wrap;word-break:break-word}
+  .msg a{color:var(--gw-color-primary-500)}
+
+  .row{display:flex;align-items:center;gap:var(--gw-space-8);
+       margin-top:var(--gw-space-16);flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--gw-space-8);
+       height:44px;padding:0 var(--gw-space-20);border:0;border-radius:var(--gw-radius-8);
+       font:var(--gw-text-button-16);cursor:pointer;text-decoration:none;
+       box-shadow:var(--gw-shadow-s2)}
+  .btn svg{width:18px;height:18px}
+  .btn--primary{background:var(--gw-color-black);color:var(--gw-color-white)}
+  .btn--primary:hover{background:var(--gw-color-neutral-900)}
+  .btn--outline{background:transparent;color:var(--gw-color-black);box-shadow:none;
+                border:2px solid var(--gw-color-neutral-100)}
+  .btn--outline:hover{border-color:var(--gw-color-black)}
+  .btn--done{background:var(--gw-color-green-alpha-10);color:var(--gw-color-green-700);
+             box-shadow:none}
+
+  .steps{margin:var(--gw-space-32) 0 0;padding:0;list-style:none;
+         display:flex;flex-direction:column;gap:var(--gw-space-8)}
+  .steps li{display:flex;gap:var(--gw-space-12);align-items:baseline;
+            font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-700)}
+  .steps b{flex:none;width:20px;height:20px;border-radius:var(--gw-radius-full);
+           background:var(--gw-color-neutral-50);color:var(--gw-color-neutral-900);
+           font:var(--gw-text-body-10-sem);display:inline-flex;
+           align-items:center;justify-content:center}
+
+  .note{margin-top:var(--gw-space-32);padding:var(--gw-space-16);
+        border-radius:var(--gw-radius-8);background:var(--gw-color-primary-25);
+        border:1px solid var(--gw-color-primary-100);
+        font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-700)}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-warn" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm-8-80V80a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,172Z" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 256 256"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z" fill="currentColor"/></symbol>
+  <symbol id="i-check" viewBox="0 0 256 256"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z" fill="currentColor"/></symbol>
+  <symbol id="i-link" viewBox="0 0 256 256"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></symbol></svg>
+
+<div class="wrap">
+  <h1>Design system notice</h1>
+  <p class="sub">What a skill shows you when it had to build something the library
+     doesn't have. One block, four lines, one link.</p>
+
+  <div class="notice">
+    <div class="notice__bar">
+      <svg><use href="#i-warn"/></svg>
+      <b>Built 1 new element and 8 deviations — copy this to Utsav</b>
+    </div>
+    <div class="notice__body">
+      <div class="msg" id="msg">Hi Utsav — built 1 new element + 8 deviations while making the Meta Ads dashboard.
+All token-safe, nothing new added to the palette or type ramp.
+Detail: <a href="https://github.com/utsav-gushwork/gushwork-design/blob/main/notices/2026-08-06-meta-ads.md">https://github.com/utsav-gushwork/gushwork-design/blob/main/notices/2026-08-06-meta-ads.md</a>
+Worth your eye: the card-layout KPI cap — I overrode a measured split.</div>
+      <div class="row">
+        <button class="btn btn--primary" id="copy">
+          <svg><use href="#i-copy"/></svg>Copy message
+        </button>
+        <a class="btn btn--outline" href="https://gushwork.slack.com/team/U06UAR183TR">
+          Open Slack DM<svg><use href="#i-link"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <ul class="steps">
+    <li><b>1</b><span>Click <strong>Copy message</strong> — the four lines go to your clipboard.</span></li>
+    <li><b>2</b><span>Click <strong>Open Slack DM</strong> — goes straight to Utsav.</span></li>
+    <li><b>3</b><span>Paste and send.</span></li>
+  </ul>
+
+  <div class="note">
+    <strong>Why there's no single send button.</strong> Slack has no URL parameter that
+    pre-fills direct-message text, so no link can compose the message for you. The copy
+    above is genuinely one click; the send is one paste. A true one-click send needs a
+    Slack incoming webhook, which means a secret — it would live in
+    <code>GUSHWORK_SLACK_WEBHOOK</code>, never in this repo, since the repo is public.
+  </div>
+</div>
+
+<script>
+const MSG = `Hi Utsav — built 1 new element + 8 deviations while making the Meta Ads dashboard.\nAll token-safe, nothing new added to the palette or type ramp.\nDetail: https://github.com/utsav-gushwork/gushwork-design/blob/main/notices/2026-08-06-meta-ads.md\nWorth your eye: the card-layout KPI cap — I overrode a measured split.`;
+document.getElementById('copy').addEventListener('click', async function(){
+  const ok = () => {
+    this.className = 'btn btn--done';
+    this.innerHTML = '<svg><use href="#i-check"/></svg>Copied';
+    setTimeout(() => {
+      this.className = 'btn btn--primary';
+      this.innerHTML = '<svg><use href="#i-copy"/></svg>Copy message';
+    }, 2200);
+  };
+
+  // 1. async clipboard — needs a secure context AND real user activation
+  try {
+    await navigator.clipboard.writeText(MSG);
+    return ok();
+  } catch (e) { /* fall through */ }
+
+  // 2. execCommand — works on file:// and without a secure context
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = MSG;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, MSG.length);
+    const done = document.execCommand('copy');
+    ta.remove();
+    if (done) return ok();
+  } catch (e) { /* fall through */ }
+
+  // 3. last resort — select the text so the keyboard shortcut works
+  const r = document.createRange();
+  r.selectNodeContents(document.getElementById('msg'));
+  const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  this.textContent = 'Selected — press ' + (navigator.platform.startsWith('Mac') ? '\u2318C' : 'Ctrl+C');
+});
+</script>
+</body></html>

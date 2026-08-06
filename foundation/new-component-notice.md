@@ -94,12 +94,18 @@ people to ignore the real ones.
 `?text=` works for some share flows but not direct messages. Do not promise single-click
 send with a plain link; promise copy-and-paste, which is what it delivers.
 
-**In an HTML artifact**, make the copy genuinely one click:
+**In an HTML artifact**, make the copy genuinely one click — but use three tiers, because
+`navigator.clipboard` fails silently in two common cases: it needs a **secure context** (so
+not `file://`, which is what happens when someone double-clicks the file) and **real user
+activation**.
+
+1. `await navigator.clipboard.writeText(MSG)`
+2. on failure, a hidden `<textarea>` + `document.execCommand('copy')` — works on `file://`
+3. on failure, select the text and tell them the keyboard shortcut, platform-correct
+
+Working implementation: `preview/notice-card.html`.
 
 ```html
-<button onclick="navigator.clipboard.writeText(MSG).then(()=>this.textContent='Copied ✓')">
-  Copy message
-</button>
 <a href="https://gushwork.slack.com/team/U06UAR183TR">Open Slack DM</a>
 ```
 
@@ -116,6 +122,39 @@ send with a plain link; promise copy-and-paste, which is what it delivers.
 curl -sS -X POST -H 'Content-Type: application/json' \
   --data "$(jq -Rn --arg t "$MESSAGE" '{text:$t}')" "$GUSHWORK_SLACK_WEBHOOK"
 ```
+
+## Reviewing a notice — for whoever receives it
+
+The notice is only half the loop. **A decision that doesn't land in the repo gets re-made
+next time**, by a different session, probably differently.
+
+### 1. Open the link and read "Worth a decision" first
+
+Everything else in the file is a record. That section is the ask. If you have two minutes,
+read only that.
+
+### 2. Each item gets one of four verdicts
+
+| Verdict | What it means | What lands in the repo |
+|---|---|---|
+| **Add** | the element earns a place in the library | draw it in Figma, then someone measures it into `exports/` and it stops being a deviation |
+| **Replace** | something already covers this — here's what | a pointer in the relevant `exports/` file so the next session finds it instead of rebuilding |
+| **Promote** | the deviation is right and should become part of the spec | the value moves into Figma (e.g. a min/max on the component) and `exports/` records it as measured |
+| **Revert** | no — use the measured value and accept the consequence | a line in `exports/` saying so, and why, so it isn't retried |
+
+**"Promote" is the one people forget.** If a deviation was correct across nine pages and
+three viewport heights, the component is what's wrong, not the deviation.
+
+### 3. Reply in the thread, then land it
+
+Verdict in Slack is enough to unblock. But it isn't done until it's in Figma or in
+`exports/` — until then the next build hits the same gap and files the same notice.
+
+### 4. Close the notice
+
+Add a short `## Resolved` block at the bottom of the notice file with the date and the
+verdicts. It becomes the record of why the system looks the way it does, which is worth more
+than the original notice.
 
 ## What never goes in a new element
 
