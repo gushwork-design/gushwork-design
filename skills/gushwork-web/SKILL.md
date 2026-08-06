@@ -132,7 +132,9 @@ dashboard-only and invalid here. Never merge, alias, or substitute the two sets.
 
 These sit above the individual component rules.
 
-- **Content column is 1240 inside a 1440 page**, centred with 100px side margins.
+- **Content column is `--gw-content-width` (1240) inside a 1440 page**, centred with
+  `--gw-content-margin` (100px). Not `--gw-bp-content-width` — that variable holds 1400 and is
+  not the content column. Ruled 6 Aug 2026; see `RECONCILIATION.md`.
 - **Eyebrows are black by default.** `Color=Default` is black and is what you use.
   `Color=Blue` is **only when asked** — do not reach for the blue eyebrow because it looks
   better against a heading. Blue accents are earned, not decorative.
@@ -193,6 +195,21 @@ Encoded so you don't silently invent an answer:
 
 If a request needs a value or variant that doesn't exist, say so. Don't interpolate a
 radius, invent a variant, or guess a behaviour.
+
+## Components that do NOT exist — fall back, don't build
+
+A Figma-agent-generated specification circulating alongside this system documents components
+that are **not in the file**. They read as plausible and they are not there:
+
+`Modal` · `Empty State` · `Dropdown Menu` · `Notification Badge` · `Segmented Control` ·
+`Breadcrumbs` · `Date Picker` · `Pagination` (as a standalone component)
+
+That spec's structural claims were checkable in nine places and wrong in all nine — it
+describes a conventional SaaS kit, not this one. **Treat it as a lead, never as authority.**
+If a request needs one of the above, use the out-of-scope fallback below. Building it is
+exactly the invent-a-component failure this skill exists to prevent.
+
+Full detail: `RECONCILIATION.md`.
 
 ## When the request is out of scope
 

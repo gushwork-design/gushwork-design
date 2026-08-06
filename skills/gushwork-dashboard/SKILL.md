@@ -147,6 +147,25 @@ Encoded so you don't silently invent an answer:
 If a request needs a value or variant that doesn't exist, say so. Don't interpolate a
 radius, invent a Mode, or guess a timeout.
 
+## Components that do NOT exist — fall back, don't build
+
+A Figma-agent-generated specification circulating alongside this system documents dashboard
+components that are **not in the file**:
+
+`Modal` · `Empty State` · `Dropdown Menu` · `Notification Badge` · `Segmented Control` ·
+`Breadcrumbs` · `Date Picker` · `Pagination` (as a standalone component)
+
+The same spec describes a 240px collapsible sidebar, a 56px app top bar, an initials-based
+avatar, and a **`Blue` dashboard button**. **None of those is in this file.** The rail is
+260px, the page header is 1164×164 with a 32px Vert Grotesk title, the avatar is an
+illustrated character, and blue button fills are banned — ruled 6 Aug 2026.
+
+Its structural claims were checkable in nine places and wrong in all nine. **Treat it as a
+lead, never as authority.** If a request needs one of the above, use the out-of-scope
+fallback below.
+
+Full detail: `RECONCILIATION.md`.
+
 ## When the request is out of scope
 
 **Always try to fulfil the request by composing existing components first.** Most requests

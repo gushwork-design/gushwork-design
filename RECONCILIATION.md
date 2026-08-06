@@ -12,7 +12,41 @@ Where they agree, the exports state it once. Where they disagree, **the exports 
 measured value and this file records the conflict.** A measured node is what actually
 renders; a spec is a description of it.
 
-This is a decision queue, not a changelog. Nothing here is resolved.
+---
+
+## Rulings — Utsav, 6 Aug 2026
+
+**1. There is no second component library.** Only `↳ web/ pattern-library` holds the navbar
+and the button. `↳ web/ component-library` does not contain a second set.
+
+This settles almost everything below, and not in the spec's favour. The "two components,
+document both" theory is dead. Where the spec describes a navbar, page-build, dashboard
+button, avatar, header, sidebar, toast, KPI card or table row that does not match the
+measured node, **the spec is describing something that is not in this file.** Measured wins
+in every case. Do not merge those sections.
+
+**2. Blue fills are banned on dashboards.** Confirmed. The measured rule stands; the spec's
+`Blue` dashboard-button style is rejected. Action tiers on the product surface are
+`Primary` (black) / `Outline` / `Ghost`. Blue remains valid as a signal — Info toasts, blue
+badges, the progress-bar track — the ban is on button fills.
+
+**3. Content width is 1240.** The measured value wins over the `1400` token and the spec's
+`~1280`. Side margins are 100px in a 1440 page.
+
+### What ruling 1 implies for the rest of the spec
+
+The spec's structural claims were checkable in nine places and **wrong in all nine**. It is
+therefore not a trusted source for anything not independently measured. Two consequences:
+
+- The detail in spec §13 and §15 for components that *do* exist — Badge, tooltip, the input
+  set, the card types, controls, toast — is **plausible but unverified**. Merge it only after
+  measuring the node.
+- Several components the spec documents have **never been found in the file at all**:
+  `Modal` (§15.8), `Empty State` (§15.9), `Dropdown Menu` (§15.10), `Notification Badge`
+  (§15.11), `Segmented Control`, `Breadcrumbs`, `Date Picker`, and `Pagination` as a
+  standalone component. Treat every one as **not verified to exist.** Building from them is
+  exactly the invent-a-component failure the fallback rule exists to prevent — if a request
+  needs one, fall back rather than build it.
 
 ---
 
@@ -189,18 +223,26 @@ and the exports are incomplete rather than wrong.
 
 ---
 
-## What needs a ruling
+## Status
 
-1. **Does `↳ web/ component-library` contain a second navbar and button set?** If yes, most of
-   Part 2 dissolves into "two components, document both". If no, the spec's versions are
-   wrong and should not be merged.
-2. **Blue on dashboards — banned or not?** (§2.4) The file's rule and the spec directly
-   oppose. This one changes every dashboard.
-3. **Content width — 1240, 1280 or 1400?** (§2.9)
-4. **Toast — is `Info` real, and is auto-dismiss 5s?** (§2.7)
-5. **Dashboard avatar — illustrated character or conventional user avatar?** (§2.5)
-6. Confirm the irregular variant-key spacing stays as measured (§2.1).
+| # | Conflict | Resolution |
+|---|---|---|
+| 2.1 | Variant key spacing | **Measured.** Irregular spacing is literal and load-bearing. |
+| 2.2 | Navbar | **Measured.** Ruling 1 — the spec's navbar is not in this file. |
+| 2.3 | Page Build | **Measured.** The `Type` (Brand\|Ads) axis is real and governs both skills. |
+| 2.4 | Dashboard button | **Measured.** Ruling 2 — blue fills banned on dashboards. |
+| 2.5 | Dashboard avatar | **Measured.** The illustrated character, with the reserved admin variant. |
+| 2.6 | Dashboard header & sidebar | **Measured.** 1164×164 page header; 260px rail. |
+| 2.7 | Toast | **Measured.** `Info` stands; auto-dismiss stays undefined — do not pick a timeout. |
+| 2.8 | Hero & CTA copy | **Measured.** Primary colour follows page `Type`. CTA is `Book a Demo`. |
+| 2.9 | Content width | **1240**, per ruling 3. |
+| 2.10 | KPI card & table row | **Measured** props. |
+| 2.11 | Icon count | Cosmetic. Left at 1,248. |
 
-Until 1 and 2 are answered, the spec's §13 and §15 detail is **not** merged into the exports.
-Merging it would overwrite measured values with unverified ones, and in the dashboard's case
-would invert a governing rule.
+All eleven resolved in favour of the measured node. Ruling 1 removed the only reading under
+which the spec's structural claims could have been correct.
+
+**The spec remains useful** for the components it does not contradict — it resolved the
+eyebrow stroke, corrected the button radius, and surfaced the entire Breakpoint collection.
+Those are merged. Its per-component detail for Badge, tooltip, inputs and cards is a good
+lead for what to measure next, but is not itself authoritative.

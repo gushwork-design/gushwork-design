@@ -466,17 +466,30 @@
 }
 
 /* ============================================================================
-   CONFLICT — content width has three competing values
+   RESOLVED — the content column is 1240, not --gw-bp-content-width
    ----------------------------------------------------------------------------
-   --gw-bp-content-width says 1400. The two worked page-build instances on
-   `↳ web/ template-library` measure a 1240 content column, centred with 100px
-   side margins in a 1440 page. The master spec's prose says "max content
-   width ~1280px centered in 1440".
+   Three values competed: this collection's 1400, a measured 1240 from both
+   worked page-build instances on `↳ web/ template-library`, and ~1280 from the
+   master spec's prose.
 
-   1240 is the only one measured off a real composition, so exports/web/
-   page-shell.md documents 1240. Do not treat this token as settled — it needs
-   a ruling. Flagged, not resolved.
+   Ruled 1240 (Utsav, 6 Aug 2026) — the only value measured off a real
+   composition. Use --gw-content-width below for the marketing content column.
+   --gw-bp-content-width is kept because the Figma variable genuinely holds
+   1400, but it is NOT the content column. Don't reach for it by name.
    ============================================================================ */
+
+:root {
+  /* The marketing content column. 1240 centred in a 1440 page, 100px margins. */
+  --gw-content-width: 1240px;
+  --gw-content-margin: 100px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --gw-content-width: 343px;
+    --gw-content-margin: 16px;
+  }
+}
 
 /* ============================================================================
    TYPE — Links
