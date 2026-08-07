@@ -151,3 +151,16 @@ The Controls description (`1578:749`) is accurate but generic. The group has **n
 (`2152:17853`), and that blob omits the `Color` property on `controls/dropdown`. The
 usage guidance above is derived from how `section/header` and `section/table` actually
 instance these controls.
+
+> **Re-measured 7 Aug 2026 off the sets, correcting values written from instances.**
+>
+> - `controls/toggle` (`1591:578`) — **`On` is `--gw-color-neutral-900`, not blue.** `Off` is
+>   `--gw-color-neutral-200`. Built as **two white knobs, one at `opacity: 0`** — `p-4`, `gap-4`,
+>   `--gw-radius-40`, knob `--gw-radius-60` with `Shadows/S3`. Knob 16/20/24 gives 44×24, 52×28,
+>   60×32.
+> - `controls/tab` (`1589:605`) — **five tabs, not three.** Container `--gw-color-neutral-50`,
+>   `gap-8`; `Small` is `p-4 r8`, `Medium`/`Large` `p-8 r12`. **Every label is
+>   `--gw-color-neutral-900`** — inactive tabs are not greyed. `Selected` adds
+>   `drop-shadow(0 16px 16px rgba(88,92,95,.1))`.
+> - The set nodes are `1589:605`, `1589:669` and `1591:578`. The ids previously recorded here
+>   (`1589:572`, `1591:572`, `2152:17853`) are symbols or stale.

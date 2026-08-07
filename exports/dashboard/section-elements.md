@@ -50,8 +50,8 @@ Identical across both measured variants except the badge:
 
 | Part | Value |
 |---|---|
-| card | **286 × 198** intrinsic · `--gw-radius-12` · padding `--gw-space-20` · **gap `--gw-space-80`** |
-| fill | `--gw-color-neutral-900` |
+| card | **286 wide, height content-driven** · `--gw-radius-12` · padding `--gw-space-20` · **gap `--gw-space-80`** |
+| fill | **`--gw-color-neutral-900` on `Mode=light`/`Mode4`/`Mode6`; `--gw-color-neutral-25` on `Mode=dark`/`Mode3`/`Mode5`** — the names are inverted |
 | title | `Inter Medium 10px`, **uppercase**, line-height 1.6, `--gw-color-neutral-300` |
 | header icon | `Money` (`112:6455`) at 16px, top-right |
 | value | **`--gw-text-h5`** — 32px Vert Grotesk Semibold, `--gw-color-white` |
