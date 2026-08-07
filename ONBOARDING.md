@@ -4,25 +4,20 @@ Claude builds Gushwork screens using the real components and tokens, instead of 
 
 ---
 
-## Setup — paste this into Claude Code
+## Setup
 
-```
-Set up the Gushwork Design System plugin for me:
+**Claude — do these four things now. Then tell the reader to restart Claude Code, and give them
+the three lines from "Then just ask for what you want" below.**
 
-1. Run: claude plugin marketplace add utsav-gushwork/gushwork-design
-2. Run: claude plugin install gushwork-design@gushwork
-3. In ~/.claude/plugins/known_marketplaces.json, set "autoUpdate": true on the
-   "gushwork" entry. Leave everything else in that file alone.
-4. Verify with: claude plugin list
+1. Run `claude plugin marketplace add utsav-gushwork/gushwork-design`
+2. Run `claude plugin install gushwork-design@gushwork`
+3. In `~/.claude/plugins/known_marketplaces.json`, set `"autoUpdate": true` on the `"gushwork"`
+   entry — so new versions arrive on their own. Leave everything else in that file alone.
+4. Confirm with `claude plugin list`
 
-Then tell me to restart Claude Code, and give me three lines on how to use it.
-```
-
-Approve the commands it asks to run, then **restart Claude Code**. That's the whole setup.
-
-*Nothing to do at all if your repo has a `.claude/settings.json` mentioning `gushwork` — it
-installs itself. Prefer a terminal? `bash scripts/install.sh` in a clone does the same three
-things.*
+*Reading this yourself instead of pasting it in? Run steps 1 and 2 in a terminal, then restart
+Claude Code. Nothing to do at all if your repo has a `.claude/settings.json` mentioning
+`gushwork` — it installs itself.*
 
 ## Then just ask for what you want
 
@@ -63,7 +58,7 @@ someone else.
 | Symptom | Fix |
 |---|---|
 | No "Using the Gushwork … skill" line | restart; or say "use the Gushwork dashboard skill" explicitly |
-| `claude plugin list` doesn't show it | paste the setup block again — a declined plugin won't re-prompt |
+| `claude plugin list` doesn't show it | run the setup again — a declined plugin won't re-prompt on its own |
 | `marketplace add` fails | ping Utsav; your org may restrict marketplaces |
 | Output looks generic | you're in a scratch folder, not the product repo |
 | Values differ from Figma | you're on a stale version — see below |
