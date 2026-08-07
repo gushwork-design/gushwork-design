@@ -87,6 +87,45 @@ missed). Worth a follow-up if either matters.
 
 ---
 
+## Ruled — blue is a data colour, not a control-state colour
+
+The calendar's selected day was built blue and corrected to **black**:
+
+> **A selected date takes `--gw-color-black`, not `--gw-color-primary-500`.** Hover is
+> `--gw-color-neutral-100`. Ruled by Utsav, 7 Aug 2026.
+
+This is more general than one component, and it sharpens a rule the system currently states too
+narrowly. `button.md` and the surface defaults say *"never a blue button **fill**"* and *"blue
+remains valid as a status/signal colour"* — which leaves **control states** unclassified. A
+selected calendar cell is neither a button fill nor a status signal, so both readings were
+available and the blue one was wrong.
+
+The sharper statement: **blue carries data and status; black carries interaction state.** The
+progress-bar fill and the chart series stay blue because they are data. Selection, active and
+pressed states go black.
+
+**One open item this exposes:** `controls/toggle` `State=On` is currently built blue here, and by
+the rule above it is a control state and should be black. It was not flagged, so it is left as
+built — but the two cannot both be right. Worth a one-line answer.
+
+---
+
+## Ruled — the user-card row is not a control
+
+The whole card was given a hover, borrowed from the measured `State=Hover` variant. Corrected:
+
+> **On this dashboard the dots button is the only interactive target in the user-card.** The row
+> itself takes no hover; the dots button carries hover and the open state. Ruled by Utsav,
+> 7 Aug 2026.
+
+The measured `State=Hover` variant (`2125:198`) is presumably for products where the whole row
+opens a profile. Since the export does not say what the hover is *for*, **worth one line in
+`section-elements.md`** saying when the row is a target and when only the menu button is.
+
+The menu is also anchored **right, directly above the dots button** — not left of the card.
+
+---
+
 ## Created
 
 Nothing below introduces a colour, size, radius, shadow or type value that is not already a
@@ -107,7 +146,13 @@ row. Closes on outside click and on Escape.
 
 ### `dropdown-options` `Style=Calendar` — reached from the `Custom` tab
 Built to the measured geometry: 200 wide, 7 day headers + 35 day cells at 24×24 `--gw-radius-4`.
-Selected cells use `--gw-color-primary-500`. Previously `Custom` was inert.
+Hover `--gw-color-neutral-100`, selected `--gw-color-black` on white text (see the ruling above).
+Previously `Custom` was inert.
+
+**Single-select, not a range.** The variant is a bare 7×5 grid with **no range affordance drawn**
+— no start/end cell, no in-between fill, no two-month view. A `Custom` date filter in a
+`section/header` almost certainly wants a range, so this is a real gap: either the Calendar
+variant needs range states drawn, or the toolbar needs a different control. Not invented here.
 
 ### `controls/toggle` `Size=Small`
 `controls.md` gives the sizes (44×24, pad 4, gap 4) and the Off/On child-order swap, but **no
@@ -224,6 +269,10 @@ looks fine and silently does nothing, which is the worst failure shape.
 ---
 
 ## Worth a decision
+
+**0. Blue: data or control state?** Ruled for the calendar (black), but `controls/toggle`
+`State=On` is still blue in this build, and the same argument applies to it. One line settles both
+and stops the next build re-deciding. See the ruling section above.
 
 **1. Blue is not the only missing signal — there is no focus specification at all.** The hover
 gaps are recoverable by analogy (each is one step from a measured neighbour). Focus is not: no
