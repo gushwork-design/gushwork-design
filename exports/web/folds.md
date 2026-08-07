@@ -224,3 +224,105 @@ the file is built. Don't replicate the pattern in new work.
 - Delete card instances to reduce a grid — use `Show Card 3`–`6`.
 - Restyle `fold/ CTA` — it inherits the footer CTA's rules.
 - Ship a fold without its Phone variant considered.
+
+---
+
+# Measured appearance
+
+Everything above this line was transcribed from the page's annotations. Everything below was
+**measured off the rendered components** on 7 Aug 2026, and where the two disagree the measured
+figure wins.
+
+**Measured so far: `fold/ With image`, `fold/ FAQs`, `fold/ CTA`, plus `fold/ Hero`'s frame
+geometry.** The other eight folds are still annotation-only — treat them as a good first draft
+and say so.
+
+## The container is 1240 desktop / 343 phone
+
+Confirmed identically on `With image` and `FAQs`: `max-w-[1240px] w-[1240px]` desktop,
+`max-w-[343px] w-[343px]` phone. That is the fold's own width, inside `page-build`'s margins.
+
+## Headings are `neutral/black` `#0d0d0d` — not `neutral-900`
+
+Every fold heading measured binds `colors/neutral/black` (`#0d0d0d`), and body copy binds
+`colors/neutral/600` (`#6a7077`). `neutral-900` (`#262a2e`) is the **dashboard** text colour.
+Using it on a marketing page is a surface mix-up, and it is subtle enough to pass review.
+
+## `fold/ With image` — `1793:6561`
+
+Props: `breakpoint` · `showCta` (default `true`) · `slot`.
+
+| | Desktop | Phone |
+|---|---|---|
+| Fold width | 1240 | 343 |
+| Column gap | `spacing/80` — 80 | `spacing/40` — 40, stacked |
+| Text block padding | `py-80` | — |
+| Heading | h3 · Vert Grotesk Bold 44/1.2 | h4 · 38/1.2 |
+| Body | `body-18-med` 18/1.6, max-w 680 | `body-16-med` 16/24 |
+| Heading→body gap | 20 | 20 |
+| Image slot | fills, `radius/20`, `neutral/50` on `neutral/100` border | 400 tall, `radius/16` |
+| Button | 44 tall, `px-20 py-16`, radius 8, gap 8, 18px trailing icon | same, full-width |
+
+**The slot has a real placeholder** — `neutral/50` fill, 1px `neutral/100` border, `radius/20`.
+That is the empty state, not a missing image.
+
+**On phone the image comes first**, above the text. Desktop is text-left / image-right.
+
+## `fold/ FAQs` — `1790:7851`
+
+Props: `breakpoint` · `question6`–`question10`, all **boolean, default `false`**. Five
+accordions are hard-built; 6–10 are the toggles. The "5 by default, up to 10" rule is correct.
+
+| | Desktop | Phone |
+|---|---|---|
+| Layout | two columns, gap `spacing/100` — 100 | stacked, gap 40 |
+| Heading column | 480 wide (max-w 800) | full width |
+| Accordion column | 660 wide | full width |
+| Accordion gap | `spacing/8` — 8 | 8 |
+| Accordion | `p-12`, radius 12, `overflow-clip` | same |
+| Question | `body-18-sem` 18/1.6 · `neutral/800` | same |
+| Answer | `body-16-med` 16/24 · `neutral/600` | same |
+| Caret | 32 box, `neutral/50`, `radius/8`, 16px `CaretDown` | same |
+
+**Collapsed answers are `opacity-0` at `size-px`, absolutely positioned** — present in the DOM,
+not removed. Match that if you want the measured markup.
+
+The subhead carries an inline link — *"Talk to us"*, underlined, `decoration-dotted`, at a **raw
+`#0070ff`** rather than the `primary/500-main` token. Cosmetically identical, but it is a
+hardcoded hex in the source.
+
+## `fold/ CTA` — `2085:20750`
+
+Props: `breakpoint` only. Nests `ClientAvatar` and `footer/footer-elements/cta-image`, which is
+why the fold cannot be restyled independently.
+
+Measured: 1240 container, 600-wide inner block, 440 tall panel, `radius/40` avatars at 56×40,
+gaps 40 / 20 / 12 / 8. Type is h3 44 and h4 38 over `body-14`/`body-16` Inter Medium.
+
+**Binds `colors/secondary/500-main` (`#111827`).** That is a *Secondary* collection — see the
+token findings below.
+
+## `fold/ Hero` — `1731:55983` · frame geometry only
+
+Too large for a single design-context read; the 10 variant symbols measure:
+
+| Layout | Desktop | Phone |
+|---|---|---|
+| `Home` | 1440 × 1234 | 375 × 620 |
+| `Centered` | 1440 × 590 | 375 × 656 |
+| `Form` | 1440 × 729 | 375 × 1003 |
+| `Split` | 1440 × 928 | 375 × 764 |
+| `+ Create New` | 1440 × 540 | 375 × 460 |
+
+Note these are **1440/375 frame widths**, not the 1240/343 content width — the hero symbol
+includes the page margin. `Home` is by far the tallest because it carries the client-logo strip.
+Per-layout internals still need measuring, one symbol at a time.
+
+## Token findings from this pass
+
+| Finding | Detail |
+|---|---|
+| **Letter-spacing was wrong system-wide** | Figma's magnitude is a **percent**, not px. `body-18-med` reports `-0.2` and renders `-0.036px` at 18px. `tokens.css` emitted `-0.2px` — 5–6× too wide on every style. Now emitted in `em`; **fixed**. |
+| **`Body/body-18-med` does exist** | The known-issues list said it was the one ramp step missing its Medium. Figma returns it: Inter Medium 18/1.6, letterSpacing −0.2. That entry was wrong. |
+| **`colors/neutral/white` has no token** | Used by `fold/ CTA`. Minor, but it is a real bound variable with nothing in `tokens.css`. |
+| **`colors/secondary/500-main` `#111827`** | A whole **Secondary** collection that `tokens.css` documents only as a stray legacy `gray/900`. It is bound by a shipping fold, so it is current, not legacy. Needs pulling properly. |

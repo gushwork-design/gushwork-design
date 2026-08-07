@@ -261,9 +261,15 @@
      below carry absolute px. Converting the px ones to ratios would introduce
      rounding (20/14 = 1.4286), so they are left as authored.
 
-     Letter-spacing is emitted in px. Figma reports the magnitude without a
-     unit, so px vs percent is not fully determinable from the API; px is the
-     only reading that produces plausible tracking at these sizes.
+     Letter-spacing is emitted in EM, because Figma's magnitude is a PERCENT
+     of the font size — not px. Measured against the rendered output on
+     ↳ web/ pattern-library, three independent confirmations:
+         body-18-med  letterSpacing -0.2 -> renders -0.036px at 18px
+         body-16-med  letterSpacing -0.2 -> renders -0.032px at 16px
+         body-18-sem  letterSpacing -0.6 -> renders -0.108px at 18px
+     -0.2% is -0.002em, and 18 x -0.002 = -0.036. An earlier revision of this
+     file read the magnitude as px, which made every tracking value 5-6x too
+     wide. Do not reintroduce that reading.
      ========================================================================== */
 
   --gw-font-display: 'Vert Grotesk Display', ui-sans-serif, system-ui, sans-serif;
@@ -298,46 +304,46 @@
   /* --- Body — Inter -------------------------------------------------------
      Full ramp: 22, 20, 18, 16, 14, 12, 10 px, each in reg / med / sem. */
   --gw-text-body-22-reg: 400 22px/1.4 var(--gw-font-body);
-  --gw-text-body-22-reg-tracking: -0.6px;
+  --gw-text-body-22-reg-tracking: -0.006em;
   --gw-text-body-22-med: 500 22px/1.4 var(--gw-font-body);
-  --gw-text-body-22-med-tracking: -0.6px;
+  --gw-text-body-22-med-tracking: -0.006em;
   --gw-text-body-22-sem: 600 22px/1.4 var(--gw-font-body);
-  --gw-text-body-22-sem-tracking: -0.6px;
+  --gw-text-body-22-sem-tracking: -0.006em;
 
   --gw-text-body-20-reg: 400 20px/1.4 var(--gw-font-body);
-  --gw-text-body-20-reg-tracking: -0.6px;
+  --gw-text-body-20-reg-tracking: -0.006em;
   --gw-text-body-20-med: 500 20px/1.4 var(--gw-font-body);
-  --gw-text-body-20-med-tracking: -1.6px;  /* outlier — every sibling is -0.6px */
+  --gw-text-body-20-med-tracking: -0.016em;  /* outlier — every sibling is -0.6px */
   --gw-text-body-20-sem: 600 20px/1.4 var(--gw-font-body);
-  --gw-text-body-20-sem-tracking: -0.6px;
+  --gw-text-body-20-sem-tracking: -0.006em;
 
   --gw-text-body-18-reg: 400 18px/1.6 var(--gw-font-body);
-  --gw-text-body-18-reg-tracking: -0.2px;
+  --gw-text-body-18-reg-tracking: -0.002em;
   --gw-text-body-18-med: 500 18px/1.6 var(--gw-font-body);
-  --gw-text-body-18-med-tracking: -0.2px;
+  --gw-text-body-18-med-tracking: -0.002em;
   --gw-text-body-18-sem: 600 18px/1.6 var(--gw-font-body);
-  --gw-text-body-18-sem-tracking: -0.6px;
+  --gw-text-body-18-sem-tracking: -0.006em;
 
   --gw-text-body-16-reg: 400 16px/24px var(--gw-font-body);
-  --gw-text-body-16-reg-tracking: -0.2px;
+  --gw-text-body-16-reg-tracking: -0.002em;
   --gw-text-body-16-med: 500 16px/24px var(--gw-font-body);
-  --gw-text-body-16-med-tracking: -0.2px;
+  --gw-text-body-16-med-tracking: -0.002em;
   --gw-text-body-16-sem: 600 16px/24px var(--gw-font-body);
-  --gw-text-body-16-sem-tracking: -0.2px;
+  --gw-text-body-16-sem-tracking: -0.002em;
 
   --gw-text-body-14-reg: 400 14px/20px var(--gw-font-body);
-  --gw-text-body-14-reg-tracking: -0.2px;
+  --gw-text-body-14-reg-tracking: -0.002em;
   --gw-text-body-14-med: 500 14px/20px var(--gw-font-body);
-  --gw-text-body-14-med-tracking: -0.2px;
+  --gw-text-body-14-med-tracking: -0.002em;
   --gw-text-body-14-sem: 600 14px/21px var(--gw-font-body);  /* 21px, not 20px */
-  --gw-text-body-14-sem-tracking: -0.2px;
+  --gw-text-body-14-sem-tracking: -0.002em;
 
   --gw-text-body-12-reg: 400 12px/16px var(--gw-font-body);
-  --gw-text-body-12-reg-tracking: -0.6px;
+  --gw-text-body-12-reg-tracking: -0.006em;
   --gw-text-body-12-med: 500 12px/16px var(--gw-font-body);
-  --gw-text-body-12-med-tracking: -0.6px;
+  --gw-text-body-12-med-tracking: -0.006em;
   --gw-text-body-12-sem: 600 12px/16px var(--gw-font-body);
-  --gw-text-body-12-sem-tracking: -0.6px;
+  --gw-text-body-12-sem-tracking: -0.006em;
 
   --gw-text-body-10-reg: 400 10px/15px var(--gw-font-body);
   --gw-text-body-10-reg-tracking: 0;
