@@ -254,9 +254,27 @@ The variant's numbers are mutually dependent and hold only at 1084:
 | height | 2 analytics rows (2×94 + 8 = 196) ≈ 1 KPI (198) |
 
 Section width = viewport − 16 shell padding − 260 rail − 80 slot padding, so 1084 needs **exactly
-1440**. Below that the section keeps 1084 and the slot — already the one scrolling region —
-scrolls horizontally. Nothing deforms and no fourth variant is invented. Verified identical at
-670, 1280 and 1440.
+1440**.
+
+**Resolution, after two wrong attempts — the 1440 canvas is scaled to fit the window.** Both
+earlier answers failed in review and are recorded because the failure modes are instructive:
+
+| Attempt | Why it failed |
+|---|---|
+| Stack the blocks below 1440 | Produces a layout matching none of the three variants — reads as a malformed `KPI cards=3` |
+| Hold 1084 and scroll the slot horizontally | Sections get visibly clipped, and the header toolbar wraps the refresh control onto a second line |
+
+The shell now keeps its **full 1440 layout width at every viewport** and is scaled with
+`zoom: min(1, 100vw/1440)`, with width and height divided by the same factor so the scaled box
+fills the window exactly. Every measured value survives — verified at 1024, 1230 and 1440 that
+the rail is **260**, container **1164**, section **1084**, split **580/496**, kpi-card **286**,
+analytics-card **160**, with **nothing clipped** and the toolbar on **one line**. It never scales
+above 1, because past 1440 the container is genuinely fluid.
+
+**The trade-off, stated plainly:** below 1440 type paints smaller than the ramp — 14px renders
+~12px at a 1230 viewport, ~10px at 1024. That is the price of a fixed-width canvas with no
+responsive specification, and it is the only option that deforms nothing. If sub-1440 is a
+supported width for real users rather than reviewers, the variants need narrow behaviour drawn.
 
 `preview/_meta_ads_app.css` carries `.cl--side .kpi{min-width:0}`, which is what let the cards
 fall under their floor in the first place (**measured 242.9px at 1280**). With the section floor
@@ -313,16 +331,23 @@ component in the file defines one, so every keyboard user on every Gushwork dash
 gets whatever the browser does. This is an accessibility gap, not a polish item, and it needs a
 real decision rather than my `primary-alpha-40` guess.
 
-**2. `card-layout` has no responsive specification, and guessing one produced a wrong layout.**
-The split, both card floors and the two-rows-equals-one-KPI height relationship are only
-simultaneously satisfiable at exactly 1084 / 1440. Below that, every option is a judgement call —
-and the obvious-looking one (stack the blocks) is *wrong*, because it collides with what
-`KPI cards=3` already means. This build holds the 1084 floor and scrolls the slot instead.
+**2. The dashboard surface has no defined behaviour below 1440, and every guess was wrong.**
+This is the single biggest gap found. The split, both card floors and the
+two-analytics-rows-equals-one-KPI height relationship are only simultaneously satisfiable at
+exactly 1084 / 1440 — there is no slack anywhere in the variant. Two attempts failed in review
+before landing on scale-to-fit (see `card-layout` above). Every future Gushwork dashboard hits
+this on the first narrow window.
 
-Worth deciding once, in `build-rules.md`, because every future dashboard hits it: **is 1440 the
-minimum supported width for the dashboard surface?** If yes, say so and the floor is simply
-correct. If no, the three variants need drawn narrow behaviour. Also **remove
-`.cl--side .kpi{min-width:0}`** from the reference stylesheet — it silently defeats the floor rule.
+**The ruling needed, one line in `build-rules.md`:** is 1440 the **minimum supported width** for
+the dashboard surface?
+
+- **If yes** — scale-to-fit is the right answer and should be written down as the standard
+  treatment, so nobody re-derives it.
+- **If no** — the three `card-layout` variants need narrow behaviour drawn in Figma, because the
+  intuitive guess (stack the blocks) collides with what `KPI cards=3` already means.
+
+Either way, **remove `.cl--side .kpi{min-width:0}`** from the reference stylesheet — it silently
+defeats the floor rule `build-rules.md` states.
 
 **3. The missing chart palette, hit for the second time.** `Grouped Bar`'s three untokenised hexes
 were already logged. This build hit the same wall on `Type=Line`, whose second series has no
