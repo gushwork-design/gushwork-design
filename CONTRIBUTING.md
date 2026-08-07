@@ -65,10 +65,18 @@ disagree, and which one each export follows. Add to it rather than silently pick
 See the propagation table in [`README.md`](README.md). The short version:
 
 1. Change Figma **and** measure it into the repo in the same sitting. Figma alone ships nothing.
-2. Bump `version` in **both** `.claude-plugin/plugin.json` and
-   `.claude-plugin/marketplace.json`.
+2. **`bash scripts/stamp-release.sh 1.2.0`** — stamps the version and today's date into all four
+   places at once: both manifests and both skills' announce lines.
 3. `claude plugin validate .` before you push.
-4. Push to `main`, then tell the team — there is no auto-update and no notification.
+4. Push to `main`. Anyone with `autoUpdate` on gets it at their next start.
+
+**Always stamp.** The announce line is how a teammate finds out they're stale without checking —
+their copy reports *its own* date, not today's. If you edit a skill without stamping, that signal
+silently lies. It costs one command.
+
+You do **not** need a version bump for content to propagate — the marketplace clone *is* the
+plugin, so a refresh is a `git pull` and whatever is on `main` becomes live. The version is how
+people tell you what they're running, not the delivery mechanism.
 
 ## Closing a notice
 

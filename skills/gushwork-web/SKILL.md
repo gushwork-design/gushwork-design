@@ -8,7 +8,18 @@ description: Builds Gushwork marketing and public-website pages on-brand — lan
 You are building a **public-facing marketing surface** for Gushwork. Spacious,
 white-on-black with a blue accent, numbers leading every claim. This is not the product UI.
 
-Announce at the start: "Using the Gushwork web skill."
+Announce at the start: **"Using the Gushwork web skill — v1.2.0, updated 7 Aug 2026."**
+
+That version and date are stamped into this file, so **a stale copy reports its own stale date**
+rather than claiming to be current. If the user asks whether they are up to date, or the output
+disagrees with Figma, check for real:
+
+```bash
+cd ~/.claude/plugins/marketplaces/gushwork && git fetch -q && git log --oneline HEAD..origin/main
+```
+
+Any commits listed means they are behind: tell them to run
+`claude plugin marketplace update gushwork` and restart Claude Code.
 
 ## Read these first
 
