@@ -53,6 +53,38 @@ icon holder in that file sizes its own `svg`; this one was missed.
 .sec__caret svg{width:12px;height:12px;display:block}
 ```
 
+### 3. `.li:hover` applies to the nav GROUP LABEL, which has no hover variant
+
+The group label is a `list-item` too — `Property 1=Variant4, Label=yes` — so it inherits
+`.li:hover{background:neutral-25}` and lights up under the cursor. The component set has four
+variants, and **only the three `Label=no` ones carry hover and selected states.** There is no
+hover variant for `Label=yes`, because the label is not a target: it labels the nav, it does not
+navigate.
+
+```css
+.li.li--group,.li.li--group:hover{background:none;cursor:default}
+```
+
+Also worth marking up correctly: nav rows are `<button>`, group labels are `<div>`. A label that
+looks pressable but is not is a worse defect than a missing hover.
+
+---
+
+## Ruled — toast auto-dismiss is 4s
+
+`exports/dashboard/toast.md` closes with *"Auto-dismiss is still undefined … Do not invent
+either."* That gap is now closed by decision, not by guess:
+
+> **Toasts auto-dismiss after 4 seconds.** Ruled by Utsav, 7 Aug 2026.
+
+Implemented here as a 4s timer that **resets** if a second toast fires and **clears** on manual
+dismiss, so toasts never stack timers or ghost-hide a later message. **This belongs in
+`toast.md`** — otherwise the next build re-reads "undefined" and re-decides it differently.
+
+Two things the ruling does *not* cover, left alone rather than extended: whether the timer pauses
+on hover or focus, and whether it applies to `State=Error` (an error that vanishes in 4s can be
+missed). Worth a follow-up if either matters.
+
 ---
 
 ## Created
@@ -94,9 +126,36 @@ The export measures only `Type=Data, State=Default`. Chosen: `--gw-text-body-14-
 `--gw-color-neutral-800`, matching the section title. Sort state is shown with the measured
 `ArrowsDownUp` glyph at 12px, `primary-500` when active.
 
-### `table-row` `State=Hover` — fill
-Variant `2192:540` exists; its fill is not measured. Borrowed `list-item`'s measured hover
-`--gw-color-neutral-25` rather than picking a new step.
+### `table-row` `State=Hover` and `user-card` `State=Hover` — fills
+Variants `2192:540` and `2125:198` exist; neither fill is measured. Both borrow `list-item`'s
+measured hover `--gw-color-neutral-25` rather than picking a new step.
+
+### Toast copy is written to a 292px column
+The toast's 360 width is measured, so it is **not widened to fit copy.** After 16px padding, the
+20px icon, the 16px close and 16px of gaps, the message column is exactly **292px** — verified in
+the browser. `Export ready — 40 pages, last 28 days` needed ~307px and wrapped to two lines; the
+copy was shortened rather than the component stretched. Worth stating in `toast.md`, since the
+component gives a fixed width and no guidance on message length.
+
+### `user-card` `State=Clicked` → `dropdown-options` `Style=Icon`
+The set documents `State=Clicked` as opening "the Icon dropdown" and `dropdown-options`
+`Style=Icon` (`2124:182`) as 140×102, r8, pad 4, gap 4, with three text props and a trailing
+action icon — but the menu's own contents are nowhere specified. Built with the three actions a
+signed-in user needs: **Account settings · Notifications · Sign out**, each with a trailing
+Phosphor glyph.
+
+Two things worth recording:
+
+- **It opens upward.** The card sits at the foot of the rail and `build-rules.md` requires the
+  rail to be `overflow: hidden`, so a downward menu is clipped and invisible. Any future
+  implementation of this component has the same constraint.
+- **It is 112 tall, not the measured 102.** Rows reuse the `.ddopt` treatment (8px padding) so
+  every menu in the product matches. Hitting 102 needs a 28.7px row, which needs 6.3px vertical
+  padding, and **there is no 6px spacing token** — the scale jumps 4 → 8. Matching sibling menus
+  was worth 10px; inventing a spacing value was not.
+- **Sign out has no destructive treatment**, because the system defines none — no destructive
+  Button style, no red menu row. Left neutral rather than reaching for `red-500`. Flagging it
+  rather than inventing it.
 
 ### Empty state
 `output-targets.md` requires an empty state per Section and records that the library ships none
@@ -221,6 +280,13 @@ Values in use with **no token**, all pre-existing gaps rather than inventions:
 - Collapse carets `scaleY(-1)` while expanded, and now **12×12**.
 - Both brand faces render, proved by comparing measured text width against a forced fallback, not
   `document.fonts.check()`.
+- Toast: width **360** (measured), message column **292**, message height 24 against a 24px
+  line-height — **one line, no wrap**. Auto-dismiss measured at 4.4s elapsed: still visible at
+  3.5s, gone by 4.4s. Re-firing resets the timer instead of stacking; manual dismiss clears it.
+- Nav group label: `cursor: default`, background stays transparent, and the override outranks
+  `.li:hover` on both specificity and order.
+- User-card menu: **140 wide**, opens upward, and its box sits entirely inside the rail's
+  bounds — so the rail's required `overflow: hidden` cannot clip it.
 - Every control exercised programmatically **after a navigate-away-and-back round trip**:
   dropdowns open/select/close, tabs switch, `Custom` opens the calendar and cells select, the
   toggle flips and changes the per-engine figures, sections collapse and expand, all four sortable
