@@ -27,7 +27,16 @@ Claude Code installs marketplaces and plugins declared in settings **automatical
 background** on startup. So this file, committed to a repo, means anyone who opens that repo
 gets the design system with no commands and no instructions to follow.
 
-`.claude/settings.json` in each product repo:
+**One command per repo.** Run this from the root of the repo you want it in:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/enable-in-repo.sh | bash
+```
+
+It merges into an existing `.claude/settings.json` rather than overwriting it, is safe to re-run,
+and refuses to touch the file if it isn't valid JSON. Then commit the result.
+
+Or write it by hand — `.claude/settings.json` in each product repo:
 
 ```json
 {
@@ -137,6 +146,19 @@ in [`README.md`](README.md).
 
 ## What to send people
 
-The commands are the small part. Send them [`ONBOARDING.md`](ONBOARDING.md) — five minutes, and
-it covers the four ways output goes off-system, which is what actually determines whether the
-system holds.
+If you took approach 2 or 3, there is nothing for them to install, so don't send install
+instructions — send this:
+
+> The Gushwork design system is now in `<repo>`. Just describe what you want — "build a dashboard
+> for X", "add a KPI row" — and Claude uses the real components and tokens. It'll ask a couple of
+> questions first; that's on purpose.
+>
+> Restart Claude Code once so it loads. Two things to know: if the reply doesn't open with "Using
+> the Gushwork … skill" it didn't fire, and if a dashboard shows a `Sample data` badge the numbers
+> are illustrative — don't put it in a deck yet.
+>
+> Detail if you want it: https://github.com/utsav-gushwork/gushwork-design/blob/main/ONBOARDING.md
+
+[`ONBOARDING.md`](ONBOARDING.md) is the eight-step version for anyone who wants it, and the
+reference when something looks wrong. It covers the four ways output goes off-system, which is
+what actually determines whether the system holds.

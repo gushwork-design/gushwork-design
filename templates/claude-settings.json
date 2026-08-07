@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "gushwork": {
+      "source": {
+        "source": "github",
+        "repo": "utsav-gushwork/gushwork-design"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "gushwork-design@gushwork": true
+  }
+}
