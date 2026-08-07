@@ -67,7 +67,7 @@ someone else.
 the setup block prevents that. If you skipped it, update by hand:
 
 ```bash
-claude plugin marketplace update gushwork && claude plugin update gushwork-design
+claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork
 ```
 
 Restart after. Either way a new version takes effect on the **next** start, not the current one.

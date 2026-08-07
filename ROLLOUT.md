@@ -147,7 +147,7 @@ Verified against the 2.1.23 startup path (`uB0`):
 Manual update, when someone hasn't:
 
 ```bash
-claude plugin marketplace update gushwork && claude plugin update gushwork-design
+claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork
 ```
 
 **A restart is required either way.** Claude Code says so on install and it means it — a
@@ -178,6 +178,16 @@ instructions — send this:
 >
 > Detail if you want it: https://github.com/utsav-gushwork/gushwork-design/blob/main/ONBOARDING.md
 
-[`ONBOARDING.md`](ONBOARDING.md) is the eight-step version for anyone who wants it, and the
-reference when something looks wrong. It covers the four ways output goes off-system, which is
-what actually determines whether the system holds.
+[`ONBOARDING.md`](ONBOARDING.md) is the fuller version — three steps and the reference material
+for when something looks wrong. It covers the four ways output goes off-system, which is what
+actually determines whether the system holds.
+
+## Announcing a release
+
+```bash
+bash scripts/release-notes.sh
+```
+
+Prints a short Slack message summarising what changed since the last release, built from the git
+log. Review it, then post it. There is no push notification, so an unannounced release reaches
+only the people with auto-update on.

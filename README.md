@@ -61,15 +61,22 @@ The chain, end to end:
 |---|---|---|
 | 1 | maintainer | change it in Figma |
 | 2 | maintainer | measure it into `exports/` or re-pull `tokens.css` — see [`CONTRIBUTING.md`](CONTRIBUTING.md) |
-| 3 | maintainer | bump `version` in **both** `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` |
+| 3 | maintainer | `bash scripts/stamp-release.sh 1.2.0` — stamps version + date into both manifests and both skills |
 | 4 | maintainer | commit and push to `main` |
-| 5 | maintainer | say so in Slack — there is no push notification |
-| 6 | everyone | `claude plugin marketplace update gushwork && claude plugin update gushwork-design`, then **restart** |
+| 5 | maintainer | `bash scripts/release-notes.sh`, then post it in Slack — there is no push notification |
+| 6 | everyone | `claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork`, then **restart** |
 
-Two things worth knowing:
+Three things worth knowing:
 
-- **`plugin.json` is the version people see.** `claude plugin list` reads it, not the
-  marketplace entry. Bump both or the two disagree and nobody can tell what they're running.
+- **Content propagates without a version bump.** The marketplace clone *is* the plugin, so a
+  refresh is a `git pull` and whatever is on `main` becomes live. Versions are how people tell
+  you what they're running, not the delivery mechanism.
+- **`claude plugin list` lags.** A marketplace refresh updates the skills but leaves the reported
+  version at whatever was last installed — verified: skills at 1.2.0 while `list` still said
+  1.1.0 until `claude plugin update gushwork-design@gushwork` ran. The **skill's own announce
+  line** is the trustworthy figure, which is why it's stamped.
+- **`plugin update` needs the full `plugin@marketplace` form.** Bare `gushwork-design` fails with
+  "Plugin not found".
 - **Auto-update is off by default for third-party marketplaces.** Set `autoUpdate: true` and
   step 6 happens on startup; leave it and a teammate runs whatever they installed, indefinitely,
   with no warning. Either way **a restart is required** — updating without one leaves the old

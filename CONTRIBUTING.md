@@ -78,6 +78,12 @@ You do **not** need a version bump for content to propagate — the marketplace 
 plugin, so a refresh is a `git pull` and whatever is on `main` becomes live. The version is how
 people tell you what they're running, not the delivery mechanism.
 
+5. **Announce it.** `bash scripts/release-notes.sh` prints a Slack message built from the commit
+   subjects since the last tag. Trim it — it cannot know which changes people care about — then
+   post it. An unannounced release only reaches the people with auto-update on.
+
+Tag the release so the next run has a clean starting point: `git tag v1.2.0 && git push --tags`.
+
 ## Closing a notice
 
 When a build hits a gap it files `notices/YYYY-MM-DD-<slug>.md` and sends a four-line Slack
