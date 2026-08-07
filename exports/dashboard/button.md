@@ -113,20 +113,34 @@ tracking 0; vertical centring comes from padding.
 
 ## Re-measured off the set, 7 Aug 2026
 
-Values previously in this file were written from instances. Measured on `2203:931`:
+Earlier values here came from instances. Read off `2203:931`, symbol by symbol.
 
 | | Fill / border | Label |
 |---|---|---|
 | `Primary` | **`--gw-color-neutral-black` `#0d0d0d`** — not `neutral-900` | `--gw-color-neutral-white` |
-| `Outline` | **2px `--gw-color-neutral-100`** — not 1px `neutral-200`, and no fill | `--gw-color-neutral-black` |
+| `Outline` | **2px `--gw-color-neutral-100`**, no fill | `--gw-color-neutral-black` |
 | `Ghost` | none | `--gw-color-neutral-black` |
-| any `Disabled` | unchanged | **`--gw-color-neutral-250` `#bcbec2`** |
 
-| `Size` | Height | Text Only | With icon | Icon Only | Padding | Radius | Label |
-|---|---|---|---|---|---|---|---|
-| `Small` | 28 | 88 | 112 | 28 | — | 8 | 12 |
-| `Medium` | 44 | 115 | 141 | 44 | `px-20 py-16` | **8** | `body-14-med` 14/20 |
-| `Large` | 48 | 134 | 156 | 48 | **`pl-24 pr-20 py-16`** | **12** | 16, leading 1 |
+**`Disabled` is three different treatments, not one.**
 
-**`Large` is radius 12 with asymmetric horizontal padding** — 24 leading, 20 trailing. Every
-other size is radius 8 and symmetric. Neither is guessable from the smaller sizes.
+| | Disabled |
+|---|---|
+| `Primary` | fill swaps to **`--gw-color-neutral-200`**; the label stays **white** |
+| `Outline` | border unchanged; label → **`--gw-color-neutral-250`** |
+| `Ghost` | still no fill; label → **`--gw-color-neutral-250`** |
+
+### Geometry — padding depends on `Size` **and** `Type`
+
+| `Size` | Height | Radius | `Text Only` | With an icon | Label |
+|---|---|---|---|---|---|
+| `Small` | 28 | 8 | `px-12 py-8` | — | 12, leading 1 |
+| `Medium` | 44 | 8 | `px-20 py-16` | `px-20 py-16` — **still symmetric** | `body-14-med` 14/20 |
+| `Large` | 48 | **12** | `px-24 py-16` | **`pl-24 pr-20 py-16`** | 16, leading 1 |
+
+**The asymmetry is `Large` + icon only.** `Large` `Text Only` is symmetric `px-24`, and `Medium`
+stays symmetric even with an icon. Widths: `Small` 88 / 112 / 28□, `Medium` 115 / 141 / 44□,
+`Large` 134 / 156 / 48□. Icon is 16 at `Small`, 18 above it; `gap-8`.
+
+> An earlier revision of this section claimed Large was always asymmetric and that Disabled
+> simply dimmed the label. Both were extrapolated from a single `Ghost` symbol and both were
+> wrong — caught before shipping by reading `Primary` and `Outline` too.

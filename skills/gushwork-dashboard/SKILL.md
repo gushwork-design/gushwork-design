@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.17.0, updated 7 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.18.0, updated 7 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -77,6 +77,44 @@ tokens. That procedure lives in `CONTRIBUTING.md`, and it is not part of buildin
 If a value you need isn't in `exports/`, that is a **gap to report**, not a reason to go
 measuring. Use tier 3 above — choose sensibly, say in one line that you chose it — and put it
 in the notice.
+
+## Values a sensible guess gets wrong
+
+Read off the component sets on 7 Aug 2026. **Eleven components were checked and ten had been
+recorded wrong.** Every line below is a value that was built incorrectly at least once. Reach for
+this before you reach for intuition.
+
+| Component | The trap |
+|---|---|
+| `kpi-card` | **The `Mode` names are inverted.** `Mode=light`, `Mode4`, `Mode6` render on **`neutral/900`** — a dark card. `Mode=dark`, `Mode3`, `Mode5` render on `neutral/25`. Height is content-driven; there is no fixed 198. |
+| `list-item` | Nav rows are **Inter Medium 500 / 14**; group labels **Inter Semi Bold 600 / 10** on `neutral/400`. The instance inside `dashboard-build` reports Bold for both — it is wrong. |
+| `controls/toggle` | `On` is **`neutral/900`**, not blue. |
+| `controls/tab` | **Five tabs, not three.** `gap-8`, and **every label is `neutral/900`** — inactive tabs are not greyed. |
+| `toast` | **8 variants** (`Mode` × `State`). Padding is **`px-16 py-8`**. `Mode=Dark` collapses all four fills to `neutral/900` and carries the state in the icon alone. |
+| `user-card` | **No background fill on any state.** Only the menu tile changes — `neutral/50` on Hover and Clicked. |
+| `analytics-card` | `p-12` and `gap-20`. |
+| `table-row` | The first column (`col-price`) is a **fixed 200**; the other five are 120, in a `flex-1` group with `gap-40`. |
+| `section/header` | **1164 × 146**, not the 164 in the rules text. Title is Vert Grotesk Semibold 32 on **`neutral/900`**. |
+| `dashboard-build` | **The shell gap is 0.** 8 + 260 + 1164 + 8 = 1440; the annotation's `gap:8` would give 1448. Rail **880**, container **872** — the rail runs 8px lower. |
+
+### `Button` — padding depends on Size **and** Type, and Disabled differs by Style
+
+| Size | Height | Radius | Padding | Label |
+|---|---|---|---|---|
+| `Small` | 28 | 8 | `px-12 py-8` | 12, leading 1 |
+| `Medium` | 44 | 8 | `px-20 py-16` — symmetric even with an icon | `body-14-med` |
+| `Large` | 48 | **12** | `px-24` — but **`pl-24 pr-20` when it carries an icon** | 16, leading 1 |
+
+`Primary` is **`neutral/black` `#0d0d0d`**, not `neutral/900`. `Outline` is a **2px
+`neutral/100`** border with no fill.
+
+**`Disabled` is not one treatment.** `Primary` swaps its fill to **`neutral/200`** and keeps
+white text; `Outline` and `Ghost` keep their shape and drop the label to **`neutral/250`**.
+
+**When two files in `exports/` disagree, the one written from the component *set* wins.** That is
+how the nav rail shipped bold twice — `dashboard-build.md` had been written from an instance and
+contradicted `section-elements.md`, which was right. If you cannot tell which is which, say so
+rather than picking.
 
 ## Before building a dashboard — ask with options, don't assume
 
