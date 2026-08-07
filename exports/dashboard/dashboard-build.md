@@ -80,17 +80,25 @@ here drew it as a white card; it is not one. The grey you see behind it is the s
 | logo tile | `--gw-color-black` · `--gw-radius-8` · pad `--gw-space-8` · wraps the 16px White symbol |
 | `container` gap | `--gw-space-40` between title and list-groups |
 | `list-groups` gap | `--gw-space-24` between groups · **0 within a group** |
-| group label | a `list-item` — **Inter Bold 10px**, uppercase, line-height 15, `--gw-color-neutral-400`, pad 4/8 |
-| nav row | `list-item` — pad 8, gap 8, r8, Regular 16 icon, **Inter Bold 14**, `--gw-color-neutral-900` |
+| group label | a `list-item` — **Inter Semi Bold 600, 10px**, uppercase, line-height 15, `--gw-color-neutral-400`, pad 4/8 |
+| nav row | `list-item` — pad 8, gap 8, r8, Regular 16 icon, **Inter Medium 500, 14px**, `--gw-color-neutral-900` |
 | user-card wrapper | **1px top border `--gw-color-neutral-alpha-10-black`**, pad 8/0, width 228 |
+
+> **Those two weights were wrong here until 7 Aug 2026** — this table said Bold 14 and Bold 10,
+> because it was written from a design-context read of the **instance inside this shell**, which
+> reports `Inter:Bold` for both. The `list-item` **set** (`2102:13507`) says Medium 500 and
+> Semi Bold 600. **The set wins.** `section-elements.md` had it right and this file contradicted
+> it; a rail was built wrong from this table. When the two disagree, go to the set.
 
 **The annotation's `gap:8` on the shell is wrong.** Figma's own coordinates place
 `side-panel` at x=8 width 260 — ending at 268 — and `dashboard-container` at x=268. They
 are **flush**; there is no gap. An 8px gap makes the container 1156 instead of 1164.
 
 **The default shell shows no selected nav row.** All `list-item`s render identically.
-`list-item` does carry selected and hover states, but their fills are not measured — don't
-invent one.
+
+`list-item` carries `hover` and `selected`, and **their fills are measured** — `hover` is
+`--gw-color-neutral-25`, `selected` is `--gw-color-neutral-50`. See `section-elements.md`. (This
+file previously said they were unmeasured; they are not.)
 
 
 ### Layout — verified box by box against Figma's coordinates
