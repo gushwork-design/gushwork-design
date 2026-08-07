@@ -90,7 +90,7 @@ here drew it as a white card; it is not one. The grey you see behind it is the s
 > Semi Bold 600. **The set wins.** `section-elements.md` had it right and this file contradicted
 > it; a rail was built wrong from this table. When the two disagree, go to the set.
 
-**The annotation's `gap:8` on the shell is wrong.** Figma's own coordinates place
+**The annotation's `gap:8` on the shell is wrong — re-confirmed 7 Aug 2026.** Figma's own coordinates place
 `side-panel` at x=8 width 260 — ending at 268 — and `dashboard-container` at x=268. They
 are **flush**; there is no gap. An 8px gap makes the container 1156 instead of 1164.
 
@@ -198,3 +198,34 @@ rules and set defaults for the whole surface.
   pointer:"* — before the real rules begin. Ignore the preamble.
 - The property is unnamed (`Property 1`). Renaming it in Figma would let this doc drop
   the caveat.
+
+---
+
+## Coordinates re-verified against the set, 7 Aug 2026
+
+Read off `2140:16479`. Every figure below is from Figma's own `x/y/w/h`, not an annotation.
+
+| Node | x | y | w | h |
+|---|---|---|---|---|
+| `side-panel` | 8 | 8 | 260 | **880** |
+| ` container` | 16 | 24 | 228 | 445 |
+| `  dashboard-title` | 0 | 0 | 228 | 32 |
+| `   gushwork-logo-(internal-use)` | 0 | 0 | 32 | 32 |
+| `   "Dashboard title"` | **40** | 7 | 188 | 18 |
+| `  list-groups` | 0 | 72 | 228 | 373 |
+| ` user-card wrapper` | 16 | 792 | 228 | **64** |
+| `dashboard-container` | **268** | 8 | 1164 | **872** |
+| ` section/header` | 0 | 0 | 1164 | **146** |
+| ` Slot` | 0 | 146 | 1164 | 548 |
+
+**The gap is 0, confirmed by arithmetic:** 8 + 260 + 1164 + 8 = 1440. With the annotation's
+`gap:8` it would be 1448. The rail ends at 268 and the container starts at 268.
+
+**The rail is 880 and the container 872** — the rail runs 8px lower, flush to the shell's
+bottom padding.
+
+**`side-panel` has `gap:60`** between its container and the user-card wrapper, and the wrapper
+is 64 tall holding a 48-tall `user-card` — 8px of padding above and below.
+
+**Within a `list-group` the gap is 0.** The label row is 23 tall and each nav row is 32; groups
+are separated by 24.

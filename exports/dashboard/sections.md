@@ -372,3 +372,20 @@ across the system: this one, kpi-card's, and the standalone Badge's `green-100`/
 
 **Cell values are the display face at Medium 18** — a fourth display size in use (18, 20, 32
 and the rail's 18), none of which has a token. The heading ramp starts at 22.
+
+---
+
+## `section/header` — `2140:16372`, measured 7 Aug 2026
+
+Single component, no variants. **1164 × 146** — the rules text says 164; the component is 146.
+
+| Part | Measured |
+|---|---|
+| Shell | white · **1px `--gw-color-neutral-50` bottom border** · `pt-40 pb-20 px-40` · `gap-20` |
+| Title | Vert Grotesk **Semibold 32**/1.2 on **`--gw-color-neutral-900`** — not `neutral-black` |
+| Row | `justify-content: space-between`, full width |
+| Left | `gap-12` — one `controls/tab` (`Size=Small`) then **three** `controls/dropdown` at `Size=Small, Color=Grey`, 120 wide each |
+| Right | `gap-4` — "Updated 4s ago" in **Inter Medium 10** on `--gw-color-neutral-700`, then a **28 × 28** refresh button: **2px `--gw-color-neutral-100`** border, `--gw-radius-8`, 16px `ArrowClockwise` |
+
+The header is the only place a **2px-bordered 28px icon button** appears — it is an `Outline`
+button at a size the `Button` set does not offer.
