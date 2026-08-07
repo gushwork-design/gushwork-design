@@ -258,11 +258,12 @@ deliberate or defects:
 | Most folds | 1240 | 343 | the norm |
 | `fold/ Hero` | **1440** | **375** | full-bleed — the symbol includes the page margin |
 | `fold/AI Agents` | **1440** | **375** | full-bleed — the marquee runs edge to edge |
-| `fold/Comparison Table` | **1242** | **337** | its own width — use it |
+| `fold/Comparison Table` | **1242** | **337** | 1240 of rows **+ its 1px border each side** |
 
-**Use each fold's own measured width.** Comparison Table is 1242/337, not 1240/343; that is what
-the component is, so that is what to build. Reported as a possible inconsistency, but the
-component renders and the component wins.
+**Comparison Table's 1242 is not an anomaly** — measuring its internals explains it. The rows are
+1240 wide and the Table Body wraps them in a 1px `neutral/100` border, so the frame is
+1240 + 1 + 1 = 1242. Build the rows at 1240 and let the border add the rest. The 337 on phone is
+6 short of 343 and does **not** have the same explanation; use it as measured.
 
 ## Measured frame heights
 
@@ -496,6 +497,54 @@ That is the whole visual idea of the fold; even spacing would flatten it.
 
 The callout's eyebrow (`WEEKS 3-4`) is Inter Medium 14 with `leading-none`, which is the
 `button-14-med` token doing duty as a label. Uppercase is applied in the copy, not by CSS.
+
+## `fold/Comparison Table` — `1824:6836` · Desktop measured
+
+Props: `breakpoint` only. Root has **no fixed width** — it sizes from the table.
+
+| Part | Measured |
+|---|---|
+| Root | `gap-60`, centred |
+| Heading | **620** wide, `h3` 44 on `neutral/black`, **no eyebrow and no subtext** |
+| Table Body | **1px** `neutral/100` border, `radius/20`, `overflow-clip` |
+| Every cell border | **1.5px** `neutral/100` |
+| Header row | 1240 wide, cells **60** tall, `neutral/white` fill |
+| Header type | Inter **Bold** 16/24 on `secondary/500-main` |
+| Gushwork header cell | **the logo SVG at 105.24 × 20**, not text |
+| Feature column | `flex-1`, `p-12`, fill `#f7f8f9`, `body-16-med` on `secondary/500-main` |
+| Gushwork column | **280** fixed, fill `#f2f8ff`, `body-14-sem` on **`primary/500-main`** |
+| Competitor columns | **280** each, `bg-white`, `body-14-med` on `secondary/500-main` |
+| Rows | 7 |
+
+**The Gushwork column is the only place blue is used** — a tinted `#f2f8ff` cell with blue
+semibold text against plain white competitor cells. That contrast is the fold's whole argument;
+losing it makes the table decorative.
+
+**Three colours here are raw hex where a token exists** — `#f7f8f9` is `neutral/25`, `#f2f8ff` is
+`primary/25`, and the competitor cells use bare `bg-white`. Recorded as measured; reported as a
+binding gap, since a palette change would not reach them.
+
+This fold is also where the **`secondary/500-main`** collection is used most heavily — every text
+colour in the table binds it rather than `neutral/*`.
+
+**Type conflict worth reporting:** this fold reports `Body/body-16-reg` with `letterSpacing -0.6`,
+while `Cards Grid` and `Cards Grid (small)` report the same named style at `-0.2`. One name, two
+values, depending on where you read it.
+
+## `fold/ other` — `1790:6807` · Desktop measured
+
+Props: `breakpoint` · `showCta`. The generic fold, and it is deliberately almost empty:
+
+| Part | Measured |
+|---|---|
+| Root | 1240, `gap-60`, centred |
+| Heading | the shared heading at full **800**, badge and subtext both on |
+| `container` | **an empty div, full width, 320 tall** — no fill, no border, no radius |
+| CTA | blue `primary/500-main`, 44 tall, radius 8 |
+
+**The container is 320 tall with no styling at all** — unlike `With image`'s slot, which ships a
+`neutral/50` placeholder. So `fold/ other` gives you a bare 320px band between a heading and a
+CTA. Anything you put in it is yours to style, and 320 is a starting height, not a constraint.
 
 ## `fold/ Hero` — `1731:55983` · frame geometry only
 
