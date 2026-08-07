@@ -340,16 +340,35 @@ The subhead carries an inline link — *"Talk to us"*, underlined, `decoration-d
 `#0070ff`** rather than the `primary/500-main` token. Cosmetically identical, but it is a
 hardcoded hex in the source.
 
-## `fold/ CTA` — `2085:20750`
+## `fold/ CTA` — `2085:20750` · Desktop measured
 
-Props: `breakpoint` only. Nests `ClientAvatar` and `footer/footer-elements/cta-image`, which is
-why the fold cannot be restyled independently.
+Props: `breakpoint` only.
 
-Measured: 1240 container, 600-wide inner block, 440 tall panel, `radius/40` avatars at 56×40,
-gaps 40 / 20 / 12 / 8. Type is h3 44 and h4 38 over `body-14`/`body-16` Inter Medium.
+**It is a full-width blue panel, not a centred block.** An earlier revision of this file
+described it from aggregate token counts rather than its structure and got it wrong — the 600 is
+the image block, and the `radius/40` 56×40 shapes are avatars nested *inside* `cta-image`, not
+part of the fold's own layout.
 
-**Binds `colors/secondary/500-main` (`#111827`).** That is a *Secondary* collection — see the
-token findings below.
+| Part | Measured |
+|---|---|
+| Root | 1240, `radius/20`, `gap-60`, **`drop-shadow(0 16px 16px rgba(88,92,95,.1))`** |
+| Panel | full width, **440 tall**, `primary/500-main` fill, `radius/16`, `overflow-clip` |
+| Inner row | `justify-between`, full height, max-w **1400** |
+| Left column | `flex-1`, **`pl-60`**, `gap-40` |
+| Heading | `h3` 44/1.2 Vert Grotesk Bold, **white** — *"Let Gushwork run your marketing team in the background."* |
+| Body | 16/24 Inter Medium on **`neutral/alpha/80-white`** |
+| Primary button | **white fill**, `radius/10`, **`pl-16 pr-12 py-12`**, 14/20 on `secondary/500-main`, 16px icon — *"Book a demo"* |
+| Secondary button | 1px **`neutral/alpha/30-white`** border, no fill, `px-16 py-12`, `radius/10`, white 14/20 — *"Calculate ROI with Gushwork"* |
+| Right | `footer/footer-elements/cta-image`, **600 wide**, full height |
+
+**This is the one fold whose buttons use `radius/10` and 14px labels** — everything else uses
+radius 8 with 16px. It also confirms the CTA copy split: this fold ships **"Book a demo"**.
+
+**Binds `colors/secondary/500-main` (`#111827`)** for the primary button's label — see the token
+findings below.
+
+Because the right-hand 600 is `cta-image`, the fold cannot be restyled independently; changing
+it means changing the footer element.
 
 ## `fold/ Cards Grid` — `1790:7329` · the annotations are wrong about this one
 
