@@ -12,7 +12,11 @@ one `Type` and listed a `CTA` boolean — neither exists.
 
 ## Appearance — from the set
 
-Shared: 360 wide · `--gw-radius-8` · padding `16px 8px` · gap `--gw-space-8` ·
+Set `1579:614` · **8 variants** — `Mode` [`Light`, `Dark`] × `State` [`Error`, `Warning`, `Success`, `Info`].
+
+Shared: 360 wide · `--gw-radius-8` · **padding `8px 16px`** (px-16, py-8 — an earlier revision
+wrote this as `16px 8px`, which is the CSS shorthand for the opposite and was built that way) ·
+gap `--gw-space-8` · `align-items: flex-start` ·
 **1px border** · `align-items: flex-start` · `overflow: hidden`.
 
 | `State` | Light fill | Light border | Icon |
