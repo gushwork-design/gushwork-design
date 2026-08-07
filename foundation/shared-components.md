@@ -203,13 +203,51 @@ The Figma library is Phosphor imported. Extracting 1,248 sets node-by-node was n
 four icons harvested directly from the file are kept in `assets/icons/_figma-verified/` and
 overlay their upstream counterparts exactly. Re-check with `preview/icon-verify.html`.
 
-Two constraints that bite:
+Three constraints that bite. **The first two are the same failure — an icon that silently
+renders black — and both have shipped.**
 
 - **Inline the SVG.** An `<img src="….svg">` cannot inherit `currentColor` and falls back to
   black. Use an inline `<svg>` or a `<symbol>`/`<use>` sprite.
+
+- **Building a sprite? Carry `fill` onto the `<symbol>`.** The committed files put
+  `fill="currentColor"` on the **outer `<svg>`**, and the inner `<path>` has no fill of its
+  own:
+
+  ```svg
+  <svg xmlns="…" viewBox="0 0 256 256" fill="currentColor"><path d="…"/></svg>
+  ```
+
+  Stripping that wrapper to make a `<symbol>` **drops the only `fill` in the file**, so every
+  glyph in the sprite paints black. It is not obvious in review — the icons appear, they are
+  just the wrong colour, and on a dark kpi-card or inside a blue tile it reads as a design
+  choice rather than a bug.
+
+  `fill` is an inherited presentation attribute, so re-apply it to the symbol:
+
+  ```html
+  <symbol id="i-chart" viewBox="0 0 256 256" fill="currentColor">…</symbol>
+  ```
+
+  **Verify by sampling, not by looking:** read `getComputedStyle` on each icon's host and
+  confirm it resolves to the token you expect. Black where you expected `primary-500` or
+  `green-300` is this bug.
+
 - **1,512 upstream vs 1,248 in Figma.** ~264 files here are not in the Figma library. Using
   one is off-system even though the file exists. No manifest of the 1,248 exists, so this
   can't be checked automatically — sanity-check an unusual-looking icon against Figma.
+
+### Size the `<svg>`, not just its wrapper
+
+A `<svg>` with no `width`/`height` renders at the SVG default **300 × 150**, regardless of the
+size set on the span or button around it. `overflow: hidden` on an ancestor hides the damage
+while the element still pushes layout — a 12px caret measured 300px wide and threw its row's
+scrollWidth out by 284px.
+
+Every icon holder sizes its own `svg`, without exception:
+
+```css
+.some-icon-holder svg { width: 12px; height: 12px; display: block; }
+```
 
 **Never substitute a text glyph for an icon.** `⌄` is not `CaretDown`, `⟳` is not
 `ArrowClockwise`, `⋮` is not `DotsThreeOutlineVertical`.

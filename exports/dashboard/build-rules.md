@@ -35,6 +35,53 @@ change the **column count**, not the sizes.
   on a 1600 display while data columns drifted past their measured widths. Unsized first
   column absorbs the slack; pin the action column.
 
+### 1440 is the minimum width. Below it, SCALE the canvas. RULED.
+
+Ruled by Utsav, 7 Aug 2026, after three attempts got this wrong.
+
+`dashboard-build` is drawn at a fixed **1440 × 888** and `card-layout` has no responsive
+specification at all. Its numbers are mutually dependent and hold **only** at 1084 — there is
+no slack anywhere in the variant:
+
+| At `KPI cards=2` | |
+|---|---|
+| split | 580 / 496 |
+| 2 KPIs in 580 | (580 − 8) / 2 = **286**, exactly the intrinsic floor |
+| 6 analytics in 496, 3 columns | (496 − 16) / 3 = **160**, exactly the intrinsic floor |
+| height | 2 analytics rows (2 × 94 + 8 = 196) ≈ 1 KPI (198) |
+
+Section width = viewport − 16 shell padding − 260 rail − 80 slot padding, so **1084 needs
+exactly 1440**.
+
+**The rule: keep the shell at its full 1440 layout width at every viewport and scale it to
+fit.**
+
+```css
+/* --fit set from JS as min(1, innerWidth / 1440); never scales UP */
+.shell { zoom: var(--fit, 1);
+         width:  calc(100vw / var(--fit, 1));
+         height: calc(100vh / var(--fit, 1)); }
+```
+
+Every measured value survives, nothing is clipped, and the header toolbar never wraps. Set
+`.toolbar { flex-wrap: nowrap }` — safe, because every width now lays out as 1440, where it
+fits on one line.
+
+**The trade-off, so nobody rediscovers it:** below 1440, type paints smaller than the ramp —
+14px renders ~12px at a 1230 viewport, ~10px at 1024. That is the price of a fixed-width canvas
+and it is the only option that deforms nothing.
+
+**All three alternatives are wrong, and were each tried:**
+
+| Attempt | Why it fails |
+|---|---|
+| Reflow — stack the KPI and analytics blocks | Produces a layout matching **none** of the three variants; reads as a malformed `KPI cards=3`, which is 3 KPIs above **six-across** analytics |
+| Shrink — let the cards absorb it | kpi-cards fall under their measured 286 floor (measured 242.9 at a 1280 viewport) |
+| Scroll — hold 1084 and scroll the slot sideways | Sections are visibly clipped and the header toolbar wraps the refresh control onto a second line |
+
+**`card-layout` variants are never rearranged responsively.** `KPI cards=2` *is* "2 KPIs left +
+6 analytics right" — that is the variant's definition, not a wide-screen arrangement.
+
 ### Vertical — measured values are the ceiling
 
 Vertical rhythm clamps, with **the Figma value as the maximum**, so a tall viewport renders
@@ -51,6 +98,18 @@ the fold.
 | rail padding | 12 → 24 | 24 |
 | rail title→nav gap | 14 → 40 | 40 |
 | nav group gap | 8 → 24 | 24 |
+
+**The KPI card must STRETCH, not take a fixed height.** `card-layout` has two columns: the KPI
+side takes its height from the clamp, the analytics grid takes it from content (a flat 196). A
+fixed `height` on the kpi-card makes them drift apart on any viewport shorter than ~1250 —
+measured **189 against 196 at 900 tall**, leaving the dark cards ending 7px above the light
+ones across the whole section. In Figma both are ~196–198 and read as flush.
+
+```css
+.card-layout--side .kpi { height: auto; min-height: var(--v-kpi); }
+```
+
+The clamp maximum still governs: at 1300 tall both measure 198.4.
 
 ### Charts — align by grid, never by matching gaps
 
@@ -82,6 +141,14 @@ pages inside one shell. Real products have several. Declared as a created elemen
 - **Every page keeps its own `section/header`.** The title changes with the page; the rail
   does not.
 - **`list-item` group headers stay put across pages.** They label the nav, not the page.
+- **Rebind every control after each swap.** The header and slot are replaced wholesale, so
+  handlers bound once at load are attached to elements that no longer exist. The page then
+  looks completely normal and silently does nothing — the worst failure shape there is. Bind
+  the rail and any global overlay once; bind everything inside the header and the slot in a
+  `bindPage()` that runs after every swap, and re-render slot content (tables, charts) there
+  too. Test by navigating **away and back**, not just away.
+- **Every destination needs a real page.** A nav row that selects but leaves the old content
+  behind is a bug. If a page is not built yet, give it the empty state from `states.md`.
 
 ### Choices that are not measured — say so in the code
 

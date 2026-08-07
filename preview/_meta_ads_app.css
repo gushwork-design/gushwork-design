@@ -47,11 +47,15 @@
       padding:var(--gw-space-8);border-radius:var(--gw-radius-8);font:var(--gw-text-button-14);
       color:var(--gw-color-neutral-900);text-decoration:none;cursor:pointer}
   .li svg{width:16px;height:16px;flex:none;color:currentColor}
-  .li:hover{background:var(--gw-color-neutral-25)}
+  .li:hover{background:var(--gw-color-neutral-25);transition:background var(--gw-motion-fast)}
   .li--sel{background:var(--gw-color-neutral-50)}
   .li--group{height:auto;width:228px;padding:var(--gw-space-4) var(--gw-space-8);
              border-radius:var(--gw-radius-8);font:var(--gw-text-body-10-sem);
              text-transform:uppercase;color:var(--gw-color-neutral-400);display:flex;align-items:center}
+  /* The group label is a list-item too, so it inherited .li:hover and lit up under the
+     cursor. Only the three Label=no variants carry hover — there is no hover variant for
+     Label=yes, because the label is not a target. See section-elements.md. */
+  .li.li--group,.li.li--group:hover{background:none;cursor:default}
   .ucwrap{border-top:1px solid var(--gw-color-neutral-alpha-10-black);
           padding:var(--gw-space-8) 0;width:228px;height:64px;flex:none}
   .usercard{height:48px;display:flex;align-items:center;justify-content:space-between;
@@ -123,8 +127,14 @@
   .cl--side[data-k="1"] .cl__agrid{flex:676 1 0}
   .cl--side[data-k="2"] .cl__kside{flex:580 1 0}
   .cl--side[data-k="2"] .cl__agrid{flex:496 1 0}
-  /* the KPI floor must not fight the split when the shell is narrow */
-  .cl--side .kpi{min-width:0}
+  /* The KPI card STRETCHES to the row. A fixed height here makes the two columns of
+     card-layout drift apart below ~1250 viewport height — the KPI side takes its height from
+     the clamp (189 at 900 tall) while the analytics grid takes it from content (196), leaving
+     the dark cards ending 7px short. The clamp maximum still governs. See build-rules.md. */
+  .cl--side .kpi{height:auto;min-height:var(--v-kpi)}
+  /* NOTE: `.cl--side .kpi{min-width:0}` used to live here. It has been REMOVED — it silently
+     defeated the 286 floor that build-rules.md states, measuring 242.9 at a 1280 viewport.
+     Narrow widths are handled by scaling the shell, not by shrinking cards. */
 
   /* ── Wide screens ────────────────────────────────────────────────────────
      The analytics grid is 3 columns at 1440. Past ~1800 that leaves a sparse
@@ -188,6 +198,10 @@
   .sec__t{font:600 14px/1 var(--gw-font-body);letter-spacing:-.2px;
           color:var(--gw-color-neutral-800)}
   .sec__caret{width:12px;height:12px;color:var(--gw-color-neutral-400);flex:none}
+  /* Size the SVG, not just its wrapper. An <svg> with no width/height renders at the SVG
+     default 300x150 — this caret measured 300 wide and threw .sec__hd's scrollWidth out by
+     284px, hidden by .sec{overflow:hidden}. See shared-components.md. */
+  .sec__caret svg{width:12px;height:12px;display:block}
   .sec__caret--up{transform:scaleY(-1)}
   .sec__body{background:var(--gw-color-white);border:1px solid var(--gw-color-neutral-50);
              border-radius:var(--gw-radius-8);padding:var(--gw-space-16);width:100%;

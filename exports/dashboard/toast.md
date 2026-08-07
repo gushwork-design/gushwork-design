@@ -38,7 +38,42 @@ gap `--gw-space-8` · `align-items: flex-start` ·
 **`Error` and `Warning` share the same `WarningCircle` glyph** (`112:446`) — only the fill
 colour separates them. Don't look for a distinct error icon.
 
-## Auto-dismiss is still undefined
+## Auto-dismiss — 4 seconds. RULED.
 
-Nothing in the component specifies a timeout, and there is no CTA or action slot. Do not
-invent either.
+**Toasts auto-dismiss after 4 seconds.** `--gw-toast-dismiss` in `foundation/tokens.css`.
+Ruled by Utsav, 7 Aug 2026. This file previously said the timeout was undefined; it no longer
+is, and it must not be re-decided.
+
+Three behaviours go with it, so a second toast never eats the first:
+
+- **A new toast resets the timer**, it does not stack another one.
+- **Manual dismiss clears the timer**, so nothing ghost-hides a later message.
+- **Pair it with a live region** (`role="status"`) — a message that disappears in 4s must be
+  announced when it appears.
+
+Still genuinely open, and still not to be invented: whether the timer **pauses on hover or
+focus**, and whether `State=Error` should be exempt (an error that vanishes in 4s can be
+missed). Ask before assuming either.
+
+There is **no CTA or action slot**. Do not add one.
+
+## The message must fit one line — the width is measured
+
+360 is a measured width and **is never widened to fit copy.** With the measured `px-16 py-8`
+padding, the 20px status icon, the 16px close and 16px of gaps, the message column is exactly
+**276px**:
+
+```
+360 − 16 − 16 (padding) − 20 (icon) − 16 (close) − 16 (2 gaps) = 276
+```
+
+At `--gw-text-body-16-med` that is roughly **32 characters**. Write to it. `Export ready —
+40 pages` fits; `Export ready — 40 pages, last 28 days` wraps to two lines and looks broken
+against the `align-items: flex-start` icon.
+
+> An earlier revision of this section said **292px**, computed from the inverted `16px 8px`
+> padding this file used to record. The padding is `px-16 py-8`, so the column is 276. If you
+> wrote copy to 292, re-check it.
+
+If the message genuinely cannot be said in 34 characters, that is a finding — not a reason to
+stretch the component.

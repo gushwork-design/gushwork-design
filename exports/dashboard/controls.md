@@ -117,7 +117,7 @@ Set `1591:578` · **6 variants** (3 × 2), complete.
 
 | Property | Values |
 |---|---|
-| `Size` | `Large`, `Medium`, `Small` |
+| `Size` | `Large`, `Medium`, `Small`, **`X-Small`** (ruled — see below, not yet in Figma) |
 | `State` | `Off`, `On` |
 
 | Node | Variant | Size |
@@ -141,6 +141,118 @@ State=On    COMPONENT (HORIZONTAL, gap:4, pad:4)
 
 `On` and `Off` are the same tree with the child order reversed — the knob slides by
 auto-layout, not by absolute positioning. `State` is bound to data, not a design choice.
+
+### `Size=X-Small` — 36 × 20. RULED, pending Figma.
+
+Ruled by Utsav, 7 Aug 2026. `Small` at 44×24 is **too heavy for a section header**, where it
+sits beside a 12px caret, a 14px label and 24px badges — it becomes the largest thing in the
+row. There was nothing below `Small`, so builds either used an oversized toggle or invented
+one.
+
+The size **continues the set's own ramp** — every measured step adds 8 to the width, 4 to the
+height and 4 to the knob, with padding fixed at 4 and travel = track − knob:
+
+| Size | Track | Knob | Travel |
+|---|---|---|---|
+| `Large` | 60 × 32 | 24 | 28 |
+| `Medium` | 52 × 28 | 20 | 24 |
+| `Small` | 44 × 24 | 16 | 20 |
+| **`X-Small`** | **36 × 20** | **12** | **16** |
+
+**Use `X-Small` inside a section header, a table row, or any dense toolbar.** `Small` remains
+the default for a settings row or a form.
+
+### Appearance — MEASURED off the set, 7 Aug 2026
+
+| Part | Value |
+|---|---|
+| track `Off` | `--gw-color-neutral-200` |
+| track `On` | **`--gw-color-neutral-900`** — **not blue** |
+| knob | `--gw-color-white` on `--gw-shadow-s2`, `--gw-radius-full` |
+| transition | `--gw-motion-fast` on the track fill |
+
+**`State=On` is `neutral/900`.** This was independently arrived at twice on the same day — once
+by measuring the set, and once by ruling that a flipped toggle is interaction state rather than
+data (see below). They agree. A blue toggle is wrong on both counts.
+
+## Blue is a data colour. Black is a control-state colour. RULED.
+
+Ruled by Utsav, 7 Aug 2026. This supersedes the narrower "never a blue button **fill**"
+phrasing, which left control states unclassified and let blue leak into selection.
+
+| Carries | Colour | Examples |
+|---|---|---|
+| **Data and status** | blue | `section/progress-bar` fill, chart series and bars, Info toasts, blue badges, focus rings |
+| **Interaction state** | black / near-black | a selected calendar date, `controls/toggle` `State=On`, any selected / active / pressed state |
+
+**If you are about to fill something blue, ask which of the two it is.** A chosen date and a
+flipped toggle are the user's state, not the data — they go black.
+
+**Which black?** Use the component's own measured value where one exists — `controls/toggle`
+`State=On` is `neutral/900`, `Button Primary` is `neutral/black` `#0d0d0d`. Where none exists,
+`--gw-color-black`. The two are one step apart and the measurement wins over the pattern.
+
+Action tiers are unchanged: `Primary` black, `Outline`, `Ghost`. Never a blue button fill.
+
+**This rule was corroborated by measurement, not just reasoning.** The 7 Aug re-measurement pass
+found `controls/toggle` `State=On` already drawn `neutral/900` in Figma while builds were
+rendering it blue — the rule and the file agreed; only the implementations were wrong.
+
+## Hover, open and focus — RULED. The variants exist; their fills never did.
+
+`controls/tab Show=Hover` and the dropdown states exist in Figma with **no measured fill**, so
+every build guessed. These are the values, each derived from the nearest measured neighbour:
+
+| Control | State | Value | Why this value |
+|---|---|---|---|
+| `controls/tab` | hover (unselected) | `--gw-color-neutral-alpha-50-white` | moves **toward** the white `Selected` state instead of darkening away from it |
+| `controls/dropdown` `Color=Grey` | hover | `--gw-color-neutral-100` | one step up from its `neutral-50` trigger |
+| `controls/dropdown` `Color=White` | hover | `--gw-color-neutral-25` | one step down from white |
+| `Button` `Primary` | hover | `--gw-color-neutral-900` | the lightest near-black in the ramp |
+| `Button` `Outline` / `Ghost` | hover | `--gw-color-neutral-25` | the measured `list-item` hover |
+| any focusable element | focus | `--gw-focus-ring` at `--gw-focus-offset` | see `states.md` |
+
+All hover transitions use `--gw-motion-fast`.
+
+## `controls/dropdown` `Color=White` — appearance. RULED.
+
+The variant exists (`2199:739` / `2199:744` / `2199:749`) but only its node and size were
+recorded. Fill `--gw-color-white` with a **1px inset ring** in `--gw-color-neutral-100`,
+matching how the Grey variant is constructed. Use it on a white panel — a `section/table`
+toolbar or footer — and `Color=Grey` on the grey canvas.
+
+## `State=Open` — the menu surface. RULED.
+
+`State=Open`'s size was recorded; its fill, border and shadow were not.
+
+| Part | Value |
+|---|---|
+| menu | `--gw-color-white` · `--gw-radius-8` · `--gw-shadow-s3` + 1px inset `--gw-color-neutral-100` · pad `--gw-space-4` · gap `--gw-space-4` |
+| option row | pad `--gw-space-8` · `--gw-radius-4` · `--gw-text-body-12-med` · `--gw-color-neutral-900` |
+| option hover | `--gw-color-neutral-25` |
+| selected mark | `Check` at 12px in `--gw-color-primary-500` |
+| trigger caret | flips `scaleY(-1)` while open |
+
+**Closes on outside click and on `Escape`.** Both, not one.
+
+## `dropdown-options` `Style=Calendar` — appearance. RULED.
+
+Geometry is measured (200 × 172, 7 day headers + 35 cells at 24×24, `--gw-radius-4`). The
+states were not:
+
+| Part | Value |
+|---|---|
+| day header | `--gw-text-body-10-sem` · `--gw-color-neutral-400` |
+| day cell | `--gw-text-body-10-med` · `--gw-color-neutral-900` |
+| hover | `--gw-color-neutral-100` |
+| **selected** | **`--gw-color-black`** with `--gw-color-white` text — a control state, not data |
+| selected + hover | `--gw-color-neutral-900` |
+| outside the month | transparent text, not interactive |
+
+**Known gap — there is no range affordance.** The variant is a bare 7×5 grid: no start/end
+cell, no in-between fill, no two-month view. A `Custom` date filter in a `section/header`
+almost certainly wants a range. **Single-select is what the component supports** — if you need
+a range, that is a finding to report, not a thing to invent.
 
 ---
 

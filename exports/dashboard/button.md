@@ -41,8 +41,18 @@ Every combination exists. Variant names take the form
 | Third, lowest emphasis | `Ghost` | Text only |
 
 **Never use a blue fill on dashboards.** The tiers here are black / outlined / text
-only. Blue remains valid as a status or signal colour — Info toasts, blue badges — the
-ban is on button *fills*.
+only.
+
+**The general rule, ruled 7 Aug 2026 — blue carries data and status; black carries interaction
+state.** The older phrasing banned blue *button fills* only, which left control states
+unclassified and let blue leak into selected dates and toggles.
+
+| Carries | Colour | Examples |
+|---|---|---|
+| Data and status | blue | `section/progress-bar` fill, chart series, Info toasts, blue badges, focus rings |
+| Interaction state | black | selected calendar date, `controls/toggle` `State=On`, any selected / active / pressed state |
+
+Full statement in `exports/dashboard/controls.md`.
 
 ## Size
 
@@ -74,6 +84,23 @@ Pick by icon need: `Text Only`, `Leading Icon`, `Trailing Icon`, or `Icon Only`.
 
 `Default` / `Hover` / `Disabled` are **interaction states, not a choice.** The component
 handles them. Don't pick a state when composing; pick `Style`, `Size`, and `Type`.
+
+### Hover and focus values — RULED
+
+The `State=Hover` variants exist in Figma with **no measured fill**, so every build guessed a
+different one. These are the values:
+
+| `Style` | Hover |
+|---|---|
+| `Primary` | `--gw-color-neutral-900` — the lightest near-black in the ramp |
+| `Outline` | `--gw-color-neutral-25` — the measured `list-item` hover |
+| `Ghost` | `--gw-color-neutral-25` |
+
+Transition with `--gw-motion-fast`. Focus follows `exports/dashboard/states.md` — a
+`--gw-focus-ring` on `:focus-visible`, which is **required**, because a restyled `<button>`
+otherwise gives keyboard users nothing.
+
+Ruled by Utsav, 7 Aug 2026.
 
 ## Structure
 

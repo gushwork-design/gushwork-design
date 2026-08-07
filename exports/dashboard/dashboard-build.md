@@ -150,10 +150,19 @@ the slot. If nothing fits, use `section/Container` and put custom content in its
 every page. Its content — page title, tabs, filter dropdowns, refresh — changes per
 page. The shell and the sticky behaviour do not.
 
+**The `Dashboard title` is the DASHBOARD's name, not the company's.** The logo tile beside it
+already carries the brand, so "Gushwork" there is redundant and wastes the one place that could
+tell the user which product they are in. Name the surface — `Website performance`, `Meta Ads`,
+`Leads`. The page `h1` in `section/header` then names the *page* within it, normally matching
+the selected nav row (`Site overview`). Ruled by Utsav, 7 Aug 2026.
+
 **Nav items group when needed.** The rail lists `list-item`s, grouped under uppercase
 label rows (`list-item` with `Label=yes`, i.e. `Property 1=Variant4`) when the
 navigation needs sections. Use a flat list when it doesn't. Add or remove list-groups
 per the page structure.
+
+**The group label is not a target** — no hover, no cursor, no focus. See `list-item` in
+`section-elements.md`.
 
 **Follow the build structure.** Rail (internal logo + grouped list-items + user-card)
 and container (sticky header + section slot). Only the slot content, the nav items, and

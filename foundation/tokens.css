@@ -402,8 +402,9 @@
    9. There is a bare top-level `White` variable (#ffffff) alongside
       `Colors/Neutral/white`. Prefer --gw-color-white.
 
-  10. No motion tokens exist anywhere in the file. Transitions are
-      component-level values, documented per component in exports/.
+  10. No motion tokens exist in FIGMA. They now exist here — RULED, not
+      harvested. See the RULED section at the end of this file. Never write a
+      raw duration into a component; use --gw-motion-fast.
 
       An earlier revision of this file also claimed no breakpoint tokens
       existed. That was wrong — there is a whole second collection. See the
@@ -600,4 +601,49 @@
   --gw-radius-72: 72px;
   --gw-radius-76: 76px;
   --gw-radius-80: 80px;
+}
+
+/* ============================================================================
+   RULED — values decided by the design owner, NOT harvested from Figma
+   ----------------------------------------------------------------------------
+   Everything above this line came out of the Figma variables. Everything below
+   was ruled because the file had no answer and every build was inventing one.
+
+   Same standing as the --gw-content-width ruling further up: authoritative, and
+   to be mirrored into Figma when someone next opens the file. Use these tokens;
+   do not re-decide them.
+   ============================================================================ */
+
+:root {
+
+  /* --- Motion -------------------------------------------------------------
+     Ruled by Utsav, 7 Aug 2026. Figma has no motion variables and note 10 above
+     used to say "document per component" — which in practice meant every build
+     picked its own duration.
+
+     ONE duration for dashboard state changes: hover, open/close, selection,
+     toggle. It is deliberately short; a product surface should feel immediate,
+     not animated. Anything that needs a different duration is a finding.
+
+     Always pair with a prefers-reduced-motion guard. */
+  --gw-motion-fast: 120ms ease;
+
+  /* --- Focus ---------------------------------------------------------------
+     Ruled by Utsav, 7 Aug 2026. NO component in the Figma file defines a focus
+     state — not Button, not controls, not list-item, not table-row — so every
+     keyboard user got whatever the browser did.
+
+     Composed from existing tokens; introduces no new colour. Applies to every
+     focusable element on both surfaces. */
+  --gw-focus-ring: 2px solid var(--gw-color-primary-alpha-40);
+  --gw-focus-offset: 2px;
+
+  /* --- Timing --------------------------------------------------------------
+     Toast auto-dismiss. Ruled by Utsav, 7 Aug 2026 — see exports/dashboard/toast.md,
+     which previously recorded this as undefined. */
+  --gw-toast-dismiss: 4000ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --gw-motion-fast: 0ms; }
 }

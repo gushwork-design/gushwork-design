@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.18.0, updated 7 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.19.0, updated 7 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -235,6 +235,10 @@ Three hard rules:
 | A status pill anywhere | **Badge** | `foundation/shared-components.md` |
 | A metric's direction | kpi-card `Type` = `Positive` / `Negative` / `Neutral` | `section-elements.md` |
 | Nav rail grouping | `list-item` with `Property 1=Variant4, Label=yes` for the uppercase group header | `section-elements.md` |
+| **Focus, hover, empty and loading states** | ruled values for all of them | **`states.md`** |
+| **An account / sign-out menu** | `user-card` `State=Clicked` → `dropdown-options` `Style=Icon` | `section-elements.md` |
+| **A date range on a header** | `dropdown-options` `Style=Calendar` — single-select; no range affordance exists | `controls.md` |
+| **A toggle in a dense row** | `controls/toggle` `Size=X-Small` (36×20) | `controls.md` |
 
 ## Cross-surface: which one?
 
@@ -267,8 +271,18 @@ merge, alias, or substitute the two sets.
 
 These sit above the individual component rules.
 
-- **Never a blue button fill.** Action tiers are black / outlined / text-only. Blue stays
-  valid as a *signal* — Info toasts, blue badges. The ban is on fills.
+- **Blue carries data and status. Black carries interaction state.** Action tiers stay black /
+  outlined / text-only — never a blue button fill. Blue is right for the progress-bar fill,
+  chart series, Info toasts, blue badges and focus rings. Black is right for a selected calendar
+  date, `controls/toggle` `State=On` (measured `neutral/900`), and any selected / active /
+  pressed state. **Before filling anything blue, ask which of the two it is.** Full rule in
+  `controls.md`.
+- **Every interactive element has hover and focus; nothing else does.** Values are ruled per
+  component. The focus ring is mandatory — no component in Figma defines one, so without it
+  keyboard users get nothing. Anything non-interactive gets no hover, cursor or ring. See
+  `states.md`.
+- **1440 is the minimum dashboard width.** Below it, scale the shell — never reflow, shrink or
+  clip. See `build-rules.md`.
 - **`section/header` is sticky** at the top of every page unless explicitly asked
   otherwise.
 - **Collapsible Sections default to expanded.** Collapse exists so users can manage a
@@ -305,12 +319,53 @@ nothing and prevents the one failure that outlives the build.
 Never invent a number that implies a business outcome — revenue, conversion rate, pipeline —
 without that marker.
 
+## Settled — do not re-decide these
+
+Each of these was an open question a build had to answer, answered differently every time, and
+cost a review round. **They are ruled. Follow the file.**
+
+| Question | Ruled | Where |
+|---|---|---|
+| Toast auto-dismiss | **4s**, resets on a new toast, clears on manual dismiss | `toast.md` |
+| Toast message length | must fit the **276px** column — ~32 characters. Never widen the 360 | `toast.md` |
+| Blue vs black | blue = data/status, black = interaction state | `controls.md` |
+| Focus states | `--gw-focus-ring` on `:focus-visible`, everywhere. Mandatory | `states.md` |
+| Hover fills | ruled per control; hover moves ONE step toward the element's selected state | `controls.md`, `button.md`, `section-elements.md` |
+| Motion | `--gw-motion-fast` (120ms), reduced-motion guarded | `tokens.css` |
+| Below 1440 | scale the shell; never reflow, shrink or clip | `build-rules.md` |
+| `card-layout` responsiveness | variants are **never** rearranged | `build-rules.md` |
+| Toggle in a dense row | `Size=X-Small` 36×20 | `controls.md` |
+| Nav group label | not a target — no hover, cursor or focus | `section-elements.md` |
+| user-card row | not a target — only the menu tile, `neutral/50` | `section-elements.md` |
+| Rail `Dashboard title` | the dashboard's name, not the company's | `dashboard-build.md` |
+| Empty and loading states | ruled; compose from `section/Container` | `states.md` |
+
+## Four traps that survive a screenshot
+
+The table above catches wrong *values*. These four are wrong *behaviour* — each has shipped at
+least once, and none is visible in a screenshot. Check them before calling a build done.
+
+1. **Black icons.** Building a `<symbol>` sprite drops the `fill="currentColor"` that sits on the
+   source file's outer `<svg>`. Sample the computed colour; don't eyeball it.
+2. **300 × 150 icons.** An `<svg>` with no width/height renders at the SVG default and blows out
+   its row's scrollWidth, hidden by an ancestor's `overflow: hidden`.
+3. **Dead controls after a page swap.** Handlers bound once at load detach when the header and
+   slot are replaced. Test by navigating **away and back**.
+4. **Cards under their floor.** `kpi-card` 286 and `analytics-card` 160 are floors. Measure with
+   `getBoundingClientRect()`, at more than one viewport.
+
 ## Known gaps in the source — do not paper over these
 
 Encoded so you don't silently invent an answer:
 
-- **Toast auto-dismiss is undefined.** The rule leaves it as an open question. Don't pick a
-  timeout.
+- **`dropdown-options` `Style=Calendar` has no range affordance** — no start/end cell, no
+  in-between fill, no two-month view. Single-select only; a date *range* is a finding.
+- **There is no destructive treatment** — no destructive `Button` style, no red menu row. Sign
+  out and delete stay neutral.
+- **There is no categorical chart palette.** `Graph Type=Line`'s second series has no colour and
+  `Grouped Bar`'s three are raw hex. Any multi-series chart is blocked on this — report it.
+- **Toast auto-dismiss on `State=Error`**, and whether the timer pauses on hover, are still open.
+  The 4s ruling does not cover them.
 - **`controls/dropdown` has no `Color=White, State=Open` variant.**
 - **kpi-card has only 6 of 18 `Mode × Type` combinations.** Check `section-elements.md`
   before specifying one.

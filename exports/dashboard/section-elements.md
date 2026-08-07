@@ -224,9 +224,30 @@ ends with a `DotsThree` overflow menu.
 | overflow | `DotsThree` (`112:10164`) at **16px**, outside the column group |
 
 **Data cells are `neutral-600`, not near-black.** The row reads quieter than a typical table.
+**Do not darken the first column** to emphasise the row's identifier — that was tried and it
+fights the component's deliberate quietness.
 
 **The bottom border is `neutral-200`** — a step darker than the `neutral-100` used for
 hairlines elsewhere in the dashboard.
+
+### `Type=Header` and `State=Hover` — appearance. RULED.
+
+The export measures only `Type=Data, State=Default`. Both of these variants exist in Figma with
+no recorded appearance, so builds were guessing:
+
+| Variant | Value |
+|---|---|
+| `Type=Header` text | `--gw-text-body-14-sem` · `--gw-color-neutral-800` — matches the Section title, so header row and section title read as one level |
+| `State=Hover` fill | `--gw-color-neutral-25` — borrowed from `list-item`'s measured hover, transitioned with `--gw-motion-fast` |
+
+**Sortable header columns** carry the measured `ArrowsDownUp` glyph at 12px: hidden at rest,
+`--gw-color-neutral-400` at 50% on hover, `--gw-color-primary-500` on the active sort column.
+Make the header a real focusable control — `role="button"`, `tabindex="0"`, Enter and Space —
+per `states.md`.
+
+**First click leads with the useful end of the column:** biggest-first for volume columns, but
+**smallest-first for an average-position column**, where lower is better. Sorting rank
+descending on first click is technically consistent and practically useless.
 
 The star glyph resolves to `112:17221`, one of the three sets still named
 `component_set-element` in Figma, so it cannot be found by icon name.
@@ -321,6 +342,32 @@ and shipped the whole rail at Bold 700, which is visibly too heavy.
 
 **When an instance and its component set disagree, measure the set.**
 
+### The group label is NOT interactive — no hover, no cursor, no focus
+
+Only the three `Label=no` variants carry `hover` and `selected`. **There is no hover variant
+for `Label=yes`**, because the label is not a target: it labels the nav, it does not navigate.
+
+This bites because the group label is *also* a `list-item`, so a naive `.list-item:hover` rule
+lights it up under the cursor. It shipped that way once.
+
+```css
+/* the group label opts OUT — it is not a control */
+.li.li--group, .li.li--group:hover { background: none; cursor: default; }
+```
+
+**Mark it up honestly too:** nav rows are `<button>` (or `<a>`), group labels are `<div>`. See
+`states.md` — a row that looks pressable and is not is worse than a missing hover.
+
+### Nav row states
+
+| State | Fill |
+|---|---|
+| default | none |
+| hover | `--gw-color-neutral-25` (measured, `2102:13506`) |
+| selected | `--gw-color-neutral-50` (measured, `2102:13504`) |
+
+Transition with `--gw-motion-fast`.
+
 ## `user-card`
 
 Set `2125:200` · **3 variants** · 228 × 48.
@@ -349,6 +396,47 @@ stadium. Same proportion as the web `client/avatar`. Two components now, both pi
 
 **Name and designation are Medium, not Bold.** See the source-conflict note under
 `list-item` — an instance read reports Bold; the set reports Medium.
+
+### The ROW is not a control — only the menu button. RULED.
+
+Ruled by Utsav, 7 Aug 2026. `State=Hover` exists (`2125:198`) but the export never said what it
+was *for*, and the natural reading — hover the whole row — is wrong on a dashboard.
+
+**The dots button is the only interactive target in the user-card.** The row takes no hover and
+no pointer cursor. **Confirmed by measurement** in the 7 Aug pass: the set has *no background
+fill on any state* — only the menu tile changes.
+
+| Part | State | Value |
+|---|---|---|
+| row | `Default` / `Hover` / `Clicked` | **no fill, ever** |
+| menu tile | `Hover` and `Clicked` | **`--gw-color-neutral-50`**, `--gw-radius-4` |
+
+So `State=Hover` never meant "tint the row" — it meant "tint the menu tile". A build that
+highlighted the whole row was reading the variant name, not the variant.
+
+### `State=Clicked` — the menu. RULED.
+
+`State=Clicked` opens `dropdown-options` `Style=Icon` (`2124:182`) — but the set never said what
+goes in it. For a signed-in user, three rows, each with a trailing Phosphor glyph:
+
+**Account settings · Notifications · Sign out**
+
+Two constraints that are not optional, both learned the hard way:
+
+- **It opens UPWARD.** The user-card sits at the foot of the rail and `build-rules.md` requires
+  the rail to be `overflow: hidden`. A menu opening downward is clipped and invisible.
+- **It anchors RIGHT, to the dots button** — inset by the card's own `--gw-space-4` horizontal
+  padding so the menu's right edge lands on the button's right edge, not the card's.
+
+Surface values follow `controls.md`'s `State=Open` menu — white, `--gw-radius-8`,
+`--gw-shadow-s3` + `neutral-100` inset ring, rows at `--gw-space-8` padding. That makes the
+menu **112 tall, not the measured 102**: a 28.7px row needs 6.3px vertical padding and **there
+is no 6px spacing token**. Matching every other menu in the product is worth 10px; inventing a
+spacing value is not.
+
+**Sign out has no destructive treatment**, because the system defines none — no destructive
+`Button` style, no red menu row. Leave it neutral. If a destructive treatment is wanted, that is
+a finding, not a red you pick.
 
 ## `gushwork-logo-(internal-use)`
 

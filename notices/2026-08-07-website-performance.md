@@ -429,3 +429,63 @@ Values in use with **no token**, all pre-existing gaps rather than inventions:
 - Figures reconcile: the 40 table rows sum to 85,386 sessions / 404 leads / 3,338 citations, each
   at or under the site totals of 96,420 / 412 / 3,860, with the remainder in the long tail; the
   per-engine cells sum to exactly 3,860; the chart series sums to exactly 96,420.
+
+---
+
+## Resolved — 7 Aug 2026, shipped in v1.3.0
+
+Every item above is now in the repo. Nothing here is left for a future build to re-decide.
+
+### Promote — the deviation was right and is now the spec
+
+| Item | Landed in |
+|---|---|
+| Toast auto-dismiss 4s (+ reset on new, clear on manual) | `toast.md`, `--gw-toast-dismiss` |
+| Toast copy must fit the measured 292px column | `toast.md` |
+| Blue = data/status, black = interaction state | `controls.md`, `button.md`, dashboard `SKILL.md` |
+| 1440 minimum width; scale the shell below it | `build-rules.md` |
+| `card-layout` variants are never rearranged responsively | `build-rules.md` |
+| KPI card stretches to the row rather than taking a fixed height | `build-rules.md`, reference CSS |
+| Rail `Dashboard title` = the dashboard's name | `dashboard-build.md` |
+| Nav group label is not a target | `section-elements.md`, reference CSS |
+| user-card row is not a target — only the dots button | `section-elements.md` |
+| Rebind every control after a page swap | `build-rules.md` |
+| Sortable header leads with the useful end of the column | `section-elements.md` |
+
+### Add — new to the library
+
+| Item | Landed in |
+|---|---|
+| `controls/toggle` `Size=X-Small` 36×20 | `controls.md` |
+| Focus ring, mandatory, on both surfaces | **`states.md`**, `--gw-focus-ring` |
+| Empty state and loading/skeleton state | **`states.md`** |
+| Motion duration | `--gw-motion-fast`, reduced-motion guarded |
+| Hover fills for tab, dropdown, all three Button tiers, table-row, user-card | `controls.md`, `button.md`, `section-elements.md` |
+| `controls/dropdown` `Color=White` appearance | `controls.md` |
+| `State=Open` menu surface | `controls.md` |
+| `Style=Calendar` states | `controls.md` |
+| `table-row` `Type=Header` and `State=Hover` | `section-elements.md` |
+| `user-card` `State=Clicked` menu, contents and anchoring | `section-elements.md` |
+
+### Fixed — defects in the shared reference build
+
+| Defect | Fix |
+|---|---|
+| Sprite build drops `fill="currentColor"` → every icon black | documented in `shared-components.md` |
+| `<svg>` with no size renders 300×150 | documented in `shared-components.md`; `.sec__caret svg` sized in the reference CSS |
+| `.li:hover` lit up the nav group label | reference CSS |
+| `.cl--side .kpi{min-width:0}` defeated the 286 floor | **removed** from the reference CSS |
+| `.kpi` fixed height drifted from the analytics grid | reference CSS |
+
+### Still open — deliberately not decided
+
+These were raised and are **not** resolved. Do not invent answers:
+
+- Whether toast auto-dismiss **pauses on hover/focus**, and whether `State=Error` is exempt.
+- **No categorical chart palette.** `Graph Type=Line`'s second series has no colour;
+  `Grouped Bar`'s three are raw hex. Every multi-series chart is blocked on this.
+- **No range affordance** on `Style=Calendar`.
+- **No destructive treatment** anywhere — no destructive Button style, no red menu row.
+
+All four are recorded as known gaps in the dashboard `SKILL.md` so the next build reports them
+rather than filling them in.
