@@ -361,12 +361,51 @@ part of the fold's own layout.
 | Secondary button | 1px **`neutral/alpha/30-white`** border, no fill, `px-16 py-12`, `radius/10`, white 14/20 — *"Calculate ROI with Gushwork"* |
 | Right | `footer/footer-elements/cta-image`, **600 × 440**, `overflow-clip` |
 
-**`cta-image` is not a bitmap.** At `image=Testimonial, color=Blue, breakpoint=Desktop` it is a
-drawn pattern: **141 outlined 40 × 40 squares** in `primary/400` (`#338cff`) on a
-`primary/500-main` ground, laid on a 40px grid — x from 40 to 560, y from 0 to 400, so a
-**14 × 11 lattice of 154 slots with 13 deliberately left empty**. There is no image asset to
-export, and nothing to go missing; it renders from geometry alone. Its own props are
-`breakpoint` · `color` · `image`, 24 variants in total.
+### `footer/footer-elements/cta-image` — `1712:2684` · 24 variants
+
+**`Image` × `Breakpoint` × `Color` = 6 × 2 × 2.** Desktop is **600 × 440**, Phone **343 × 393**.
+
+| `Image` | Overlay |
+|---|---|
+| `Testimonial` | a `Card / Testimonial` — **measured** |
+| `AI Search Engines` | six 60px logo tiles — **measured** |
+| `AI Agents` | not read yet |
+| `Lead Notification` | not read yet |
+| `Get Mentioned By AI` | not read yet |
+| `+ Create New` | a slot for custom content |
+
+**Every variant shares the same square pattern**, and it is **drawn geometry, not a bitmap** —
+so there is no image asset to export and nothing that can fail to load. On
+`Testimonial / Desktop / Blue`: **143 squares, 40 × 40**, `primary/400` (`#338cff`) borders on a
+`primary/500-main` ground, on a 40px grid — x `0…560`, y `0…400`. That is a **15 × 11 lattice of
+165 slots with 22 left empty**, and **three squares are filled** rather than outlined, at
+`(480,80)`, `(440,120)` and `(240,360)`. The holes and the three fills are what stop it reading
+as a flat mesh.
+
+**`Image=Testimonial` overlay** — a `Card / Testimonial` centred on the block:
+
+| Part | Measured |
+|---|---|
+| Card | **360** wide, `neutral/25` on `neutral/100`, `p-20`, `gap-40` |
+| Radius | **`20 20 20 2`** — the bottom-left corner is 2px, a speech-bubble tail |
+| Shadow | `0 2px 2px rgba(27,28,29,.04)` — `Shadows/S2` |
+| Quote | `body-16-med` on `neutral/700` |
+| Avatar | `client/avatar` `Source Equipment`, 56 × 40, radius 40 |
+| Name / role | `body-14-sem` on `neutral/900` · `body-12-med` on `neutral/500` |
+
+**`Image=AI Search Engines` overlay** — six **60 × 60** tiles at measured positions:
+
+| Position | Treatment |
+|---|---|
+| `(170, 50)` · `(370, 170)` · `(450, 370)` · `(490, 49)` | bare SVG, no fill |
+| `(170, 290)` gemini · `(570, 250)` copilot | `primary/400` fill, `radius/8` |
+
+Note `(570, 250)` starts 570 across a 600-wide block, so it is **deliberately half-clipped** by
+the parent's `overflow-clip`. The copilot glyph inside is 34.375 × 32, not square.
+
+**These six glyphs are the only real image assets in the component**, and they are remote Figma
+URLs that expire in about seven days — they need harvesting into `assets/` before this variant
+can be built.
 
 **This is the one fold whose buttons use `radius/10` and 14px labels** — everything else uses
 radius 8 with 16px. It also confirms the CTA copy split: this fold ships **"Book a demo"**.
