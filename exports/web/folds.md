@@ -384,6 +384,54 @@ this one.
 `Card / Information` carries its own `subtext` boolean, so a card can drop its body copy without
 a different style.
 
+## `fold/ Testimonial` — `1790:6285` · `Style=Single` measured
+
+Props: `breakpoint` · `style` (`Video` / `Single`). No CTA, no slot.
+
+| Part | Measured |
+|---|---|
+| Root | 1240, centred, `py-40`, `gap-60` |
+| Quote | **Vert Grotesk Display Semibold 44**/1.2 · `neutral/900` · centred · **fixed 1011 wide** |
+| Attribution row | `gap-12`, centred |
+| Avatar | `client/avatar` `size=large` — 64 × 48, **radius 100** |
+| Name | `body-14-sem` 14/21 · `neutral/900` |
+| Role | `body-12-med` 12/16 · `neutral/500` |
+
+**Two things here are off-pattern and worth a decision:**
+
+1. **The quote is Semibold 44 — there is no such token.** `h3` is 44 **Bold**; the display ramp
+   has no 44 Semibold. Either add it or set the quote to `h3`.
+2. **It uses `neutral/900` where every other fold heading uses `neutral/black`.** One of the two
+   is wrong; the rest of the library says `neutral/black`.
+
+The avatar measurements confirm `avatar.md` exactly — 64 × 48, radius 100, a 72 × 48 photo inside
+a 64-wide clip. That file was already right.
+
+The 1011px fixed quote width is suspicious next to a 1240 container — not a round number and not
+centred on any grid. Treat it as measured but don't propagate it.
+
+## `fold/Timeline` — `1809:21318` · Desktop measured
+
+**Not a dark full-bleed fold — a dark rounded card.** `neutral/black` fill, **radius 20**,
+`p-60`, `gap-60`, 1240 wide.
+
+| Part | Measured |
+|---|---|
+| Heading | `h5-bold` — Vert Grotesk Bold **32**/1.2 · `neutral/white` · 740 wide |
+| Subhead | `body-16-med` · `neutral/400` |
+| Corner icon | `Lightning`, 40 |
+| Columns | 5, each 380 tall, `flex-1`, **dashed left+right border** in `neutral/700` |
+| `timeline-tab` | **222** wide, `p-12`, `radius/12`, `neutral/100` fill, `body-16-sem` on `neutral/black` |
+| Active tab | `primary/500-main` fill, `neutral/white` text — the one blue fill on the fold |
+| Week label | `body-14-med` · `neutral/400` · `py-4`, bottom-aligned |
+| Callout | 320 wide, `neutral/900` on `neutral/800` border, `radius/12`, `p-16`, `gap-12`, `Shadows/S3` |
+
+**The tabs are a staircase in 56px steps** — `top` 0, 56, 112, 168, 224 across the five columns.
+That is the whole visual idea of the fold; even spacing would flatten it.
+
+The callout's eyebrow (`WEEKS 3-4`) is Inter Medium 14 with `leading-none`, which is the
+`button-14-med` token doing duty as a label. Uppercase is applied in the copy, not by CSS.
+
 ## `fold/ Hero` — `1731:55983` · frame geometry only
 
 Too large for a single design-context read; the 10 variant symbols measure:
