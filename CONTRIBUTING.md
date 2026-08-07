@@ -84,6 +84,39 @@ people tell you what they're running, not the delivery mechanism.
 
 Tag the release so the next run has a clean starting point: `git tag v1.2.0 && git push --tags`.
 
+## Every new component goes on the review sheet — before it counts as done
+
+`preview/review-sheet.html` renders each measured component from its measured values so Utsav can
+confirm it against Figma. **A measurement that has not been rendered has not been checked.** The
+export file and the sheet move together; adding one without the other is half the job.
+
+So when you add or correct a component, element or pattern:
+
+1. **Render it on the sheet** from the values you measured — not from the annotations, and not
+   from a screenshot.
+2. **File it under its Figma page and group**, because the sheet mirrors the file's own
+   hierarchy and that is what makes it checkable side by side:
+
+   ```
+   01 · Core                 building-blocks · shared-components
+   02 · Web                  ↳ web/ component-library      112:414
+   02 · Web                  ↳ web/ pattern-library        1658:22673
+   03 · Dashboard            ↳ dashboard/ component+pattern-library   1658:24112
+   ```
+
+   Inside a page, the section is the **Figma group name** — `button`, `badge`, `card`,
+   `input-fields`, `fold`, `footer/footer-elements` — not a name of your own. Add a nav entry for
+   any new group.
+3. **Put the node id in the header** so it can be opened in Figma in one click.
+4. **Say what is not rendered.** If you measured `Active` but not `Hover`, draw `Active` and state
+   that the rest is unmeasured. Leave the gap visible.
+5. **Tell Utsav it is there**, in the same message as the notice.
+
+**Never render from a guess.** Two CTA errors came from exactly that — a layout inferred from
+aggregate token counts, and a square count from a regex that silently dropped a column. A
+plausible render is worse than an empty slot, because it gets approved. If you did not read the
+component's structure, say so and leave the slot empty.
+
 ## Closing a notice
 
 When a build hits a gap it files `notices/YYYY-MM-DD-<slug>.md` and sends a four-line Slack
