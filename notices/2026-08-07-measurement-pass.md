@@ -123,3 +123,36 @@ four of six `cta-image` `Image` values.
 
 `footer/footer-elements/list-item` (`1672:35328`) is a **broken component set in Figma** and
 cannot be read until it is fixed.
+
+---
+
+## Addendum — dashboard re-check, 7 Aug 2026
+
+Re-measured `03 · Dashboard` (`1658:24112`) after the rendered elements looked wrong.
+
+**`toast` had three defects.** `toast.md` wrote the padding as `16px 8px`; the component is
+`px-16 py-8`, so as CSS shorthand the file said the opposite and everything built from it was
+inverted. The `Error` fill was rendered `#fef2f2` where the component binds `red/25` `#fff1f2`.
+And the set has **8 variants**, not 4 — `Mode` × `State`; only the Light half existed. The set
+node is `1579:614`, not the `2146:17848` recorded.
+
+**`table-row`'s first column is a fixed 200**, not flexible. `col-price` is 200 and the other
+five are 120, inside a `flex-1` group with gap 40.
+
+**Two things on that page look like component sets and are not.** `2146:17161` and `2146:17726`
+are plain **"Component Frame"** wrappers holding unrelated components side by side —
+`section/progress-bar`, `section/header`, `section/With Dropdown`, `section/table` in the first;
+`gushwork-logo-(internal-use)` and `section/section-element/table` in the second. Any audit
+counting symbols-in-a-frame reads them as 4- and 2-variant sets. They are not.
+
+**Three components were absent from the exports entirely** and are now measured:
+`dropdown-options` (`2124:199`, 4 variants — `Style` Simple 140 wide / Detailed 400×182),
+`section/section-element/dropdown` (`2142:584`, 2 variants, 466 wide, caret flips `scaleY(-1)`
+when open), and `section/section-element/table` (`2205:15807`, 1084 × 606 — toolbar, ten rows and
+a paginated footer).
+
+**Confirmed correct, no change:** `section/card-layout` variants are 1084×198, 1084×198 and
+1084×300. The 1164×856 reported for the set is its wrapper frame plus 40px padding.
+
+**New finding:** every cell in `section/section-element/table` binds a **raw `#6a7077`** rather
+than `neutral/600`. A palette change would not reach the table.
