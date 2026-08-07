@@ -53,6 +53,10 @@ search. It exists and it works.
 
 **Use `Show Card 3`–`6` to add or drop cards rather than deleting instances manually.**
 
+> **Measured correction.** `fold/ Cards Grid` — the fold this rule is most obviously about —
+> **has no `Show Card` properties at all.** Its real axes are `Card Style`, `Card Image` and
+> `Card Layout`. See *Measured appearance* below before relying on this table.
+
 **"Most folds" is doing real work in that sentence — 4 of 12 inherit nothing.**
 `fold/AI Agents`, `fold/ CTA`, `fold/Timeline`, and `fold/Comparison Table` have only
 `Breakpoint`.
@@ -233,9 +237,45 @@ Everything above this line was transcribed from the page's annotations. Everythi
 **measured off the rendered components** on 7 Aug 2026, and where the two disagree the measured
 figure wins.
 
-**Measured so far: `fold/ With image`, `fold/ FAQs`, `fold/ CTA`, plus `fold/ Hero`'s frame
-geometry.** The other eight folds are still annotation-only — treat them as a good first draft
-and say so.
+**All 12 folds now have measured frame geometry and variant matrices.** Internals are measured
+for `With image`, `FAQs`, `CTA` and `Cards Grid`; the remaining eight have geometry but their
+inner spacing and type are still annotation-only.
+
+## Fold width is 1240 — except three
+
+Measured on every fold. The container is **1240 desktop / 343 phone**, and the exceptions are
+deliberate or defects:
+
+| Fold | Desktop | Phone | |
+|---|---|---|---|
+| Most folds | 1240 | 343 | the norm |
+| `fold/ Hero` | **1440** | **375** | full-bleed — the symbol includes the page margin |
+| `fold/AI Agents` | **1440** | **375** | full-bleed — the marquee runs edge to edge |
+| `fold/Comparison Table` | **1242** | **337** | **off by +2 / −6. No reason for it — a defect.** |
+
+Build to 1240/343 unless the fold is one of the two full-bleed ones. Do not reproduce the
+Comparison Table's 1242/337.
+
+## Measured frame heights
+
+Heights are content-driven, so treat these as the drawn state rather than a constraint.
+
+| Fold | Desktop | Phone |
+|---|---|---|
+| `fold/ Hero` | 540–1234 by layout | 460–1003 |
+| `fold/ Testimonial` `Style=Video` | 1067 | 1975 |
+| `fold/ Testimonial` `Style=Single` | 347 | 430 |
+| `fold/ Cards Grid` | 639–841 without image · **1549 with** | 632–1067 |
+| `fold/ Cards Grid (small)` | 597 | 1171 |
+| `fold/ FAQs` | — | — |
+| `fold/ Video` | 850 | 548 |
+| `fold/Timeline` | 656 | 649 |
+| `fold/Comparison Table` | 511 | 1071 |
+| `fold/AI Agents` | 696 | 660 |
+| `fold/ other` | 712 | 788 |
+
+**`Card Image=With` roughly doubles a Cards Grid** — 1549 against 639–841. Worth knowing before
+you put one above the fold.
 
 ## The container is 1240 desktop / 343 phone
 
@@ -301,6 +341,48 @@ gaps 40 / 20 / 12 / 8. Type is h3 44 and h4 38 over `body-14`/`body-16` Inter Me
 
 **Binds `colors/secondary/500-main` (`#111827`).** That is a *Secondary* collection — see the
 token findings below.
+
+## `fold/ Cards Grid` — `1790:7329` · the annotations are wrong about this one
+
+**Real props: `breakpoint` · `cardStyle` · `cardImage` · `cardLayout` · `showCta`.**
+
+Three axes the rules never mention, and they are what the 24 variants actually are:
+
+| Property | Values | Rule |
+|---|---|---|
+| `Card Style` | `1` `2` `3` `4` | which `Card / Information` style fills the grid |
+| `Card Image` | `With` `Without` | `With` roughly doubles the fold's height |
+| `Card Layout` | `Grid` `Single` `Stacked` | **`Grid` is Desktop-only; `Single` and `Stacked` are Phone-only** |
+
+That last row is the one to internalise: 8 Desktop variants are all `Grid`, and the 16 Phone
+variants split into `Single` and `Stacked`. Asking for `Card Layout=Grid` on Phone resolves to
+nothing.
+
+**There are no `Show Card 3`–`Show Card 6` properties on this fold.** The shared-toggles table
+above lists them and instructs you to use them instead of deleting instances. They do not exist
+here — the fold hard-builds **six** cards in two rows of three, and the only content toggle is
+`showCta`. Treat that rule as applying to whichever fold actually carries those booleans, not
+this one.
+
+### Measured — `Breakpoint=Desktop, Card Style=1, Card Image=Without, Card Layout=Grid`
+
+| Part | Measured |
+|---|---|
+| Root | 1240 wide, 785 tall, `gap-60`, centre-aligned column |
+| Heading block | **620** wide, `gap-20`, centred |
+| eyebrow | `neutral/white` fill, **0.5px** `neutral/100` border, 24 tall, radius **100**, `gap-4`, 14px icon, `button-12-med` on `neutral/900` |
+| Heading | h3 · 44/1.2 Vert Grotesk Bold · `neutral/black` · centred |
+| Body | `body-18-med` 18/1.6 · max-w **580** · `neutral/600` · centred |
+| Card | `flex-1` from an intrinsic **336**, `neutral/25` on 1px `neutral/100`, radius 16 |
+| Card inner | `p-16`, `gap-12`; 24px icon; title `body-18-sem` on `neutral/black`; subtext `body-16-reg` on `neutral/800` |
+| CTA | blue `primary/500-main`, 44 tall, `px-20 py-16`, radius 8 |
+
+**The two card rows have different gaps — row 1 is `gap-8`, row 2 is `gap-10`.** Since cards are
+`flex-1`, that makes row 1's cards 2px wider than row 2's. It is a drawing slip, not a design.
+**Use 10 for both** and note it, rather than reproducing a visible misalignment.
+
+`Card / Information` carries its own `subtext` boolean, so a card can drop its body copy without
+a different style.
 
 ## `fold/ Hero` — `1731:55983` · frame geometry only
 
