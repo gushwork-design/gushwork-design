@@ -244,9 +244,9 @@ here. An export that tidies a value is worse than an odd number: the build then 
 the file everyone designs in, and nobody can tell which one is authoritative. Deviations are the
 build's decision to declare in a notice, not this file's to pre-empt.
 
-**All 12 folds now have measured frame geometry and variant matrices.** Internals are measured
-for `With image`, `FAQs`, `CTA` and `Cards Grid`; the remaining eight have geometry but their
-inner spacing and type are still annotation-only.
+**All 12 folds are measured** — frame geometry, variant matrices, and internals. What remains
+unmeasured is only the **Phone** side of each fold and Hero's other four layouts, both of which
+have geometry recorded below.
 
 ## Fold width is 1240 — except three
 
@@ -546,9 +546,64 @@ Props: `breakpoint` · `showCta`. The generic fold, and it is deliberately almos
 `neutral/50` placeholder. So `fold/ other` gives you a bare 320px band between a heading and a
 CTA. Anything you put in it is yours to style, and 320 is a starting height, not a constraint.
 
-## `fold/ Hero` — `1731:55983` · frame geometry only
+## `fold/AI Agents` — `2085:18017` · Desktop measured
 
-Too large for a single design-context read; the 10 variant symbols measure:
+Props: `breakpoint` only. Full-bleed **1440**, `gap-60`, `pb-40`, `overflow-clip`.
+
+**Four rows of nine `Agent Card`s, offset to fake a marquee:**
+
+| Row | Offset |
+|---|---|
+| 1 | none |
+| 2 | `pl-80` |
+| 3 | `pr-120` |
+| 4 | `pl-80` |
+
+Row gap and card gap are both `spacing/12`. The agents are **shuffled per row**, not repeated in
+order. The stagger plus `overflow-clip` on a 1440 frame is the entire effect — evenly aligned
+rows read as a plain grid.
+
+| Part | Measured |
+|---|---|
+| Heading | 800 wide, `h3` 44 on `neutral/black`, **hard two-line break** |
+| Subhead | `body-18-med` max-w 680 on `neutral/600` |
+| `Agent Card` | **min-w 270**, `pl-16 pr-20 py-16`, `radius/16`, `neutral/white` on `neutral/100` |
+| — shadow | `0 2px 2px rgba(27,28,29,0.04)` — `Shadows/S2` |
+| — title | `body-18-sem` · `neutral/black` |
+| — subtitle | Inter Medium **12**, `leading-none`, `neutral/500` |
+
+**`agent-icon` is a 60px tile drawn from 8px squares.** Each of the nine agents is a different
+dot pattern — `primary/300` (`#66a9ff`) squares at `radius/2`, placed on an 11 / 21 / 31 / 41 px
+grid inside the tile. It is a generated glyph, not an icon font, so it cannot be swapped for a
+Phosphor icon.
+
+Nine agents in use here: `research` · `refresh` · `authority` · `paid_boost` · `strategy` ·
+`content` · `follow_up` · `memory` · `design_&_development`. The card's asymmetric padding
+(16 left, 20 right) is as measured.
+
+## `fold/ Hero` — `1731:55983` · `Layout=Centered` measured
+
+| Part | Measured |
+|---|---|
+| Root | **1440** wide, **`neutral/25` fill** — the hero is tinted, not white |
+| Rhythm | `py-120`, `gap-160` — the largest spacing values in the system |
+| Container | 1240 |
+| Text block | **872** wide, `gap-20`, centred |
+| eyebrow | 24 tall, `px-8 py-4`, radius 100, `neutral/white` on **0.5px** `neutral/100` |
+| Heading | **`h1` 60**/1.2 Vert Grotesk Bold · `neutral/black` |
+| Subhead | `body-18-med` · **`neutral/700`** — darker than the `neutral/600` other folds use |
+| Button row | `gap-12` |
+| Primary | **`neutral/black` fill**, 44 tall, `px-20 py-16`, radius 8, `neutral/white` label |
+| Secondary | **2px** `neutral/100` border, no fill, `button-16-med` on `neutral/black` |
+
+**The Hero primary is `neutral/black` (`#0d0d0d`), not `neutral/900`** — same distinction as the
+headings. And **it is the black button, not the blue one**, on this Brand variant; the blue
+primary belongs to `Type=Ads`.
+
+**Hero says `Book a demo`.** Confirms the split recorded above — Hero and CTA ship "Book a demo",
+the six content folds ship "Book a call". Write `Book a Demo` regardless, per `voice.md`.
+
+### The other four layouts — frame geometry
 
 | Layout | Desktop | Phone |
 |---|---|---|
