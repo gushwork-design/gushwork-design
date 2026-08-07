@@ -13,6 +13,13 @@ claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin in
 
 *Skip this if your repo has a `.claude/settings.json` mentioning `gushwork` — it installs itself.*
 
+Then run this once, so new versions arrive on their own instead of you finding out you're six
+weeks behind:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/enable-autoupdate.sh | bash
+```
+
 ## 2. Restart Claude Code
 
 It won't load the skills otherwise. This is the one step people skip and then think the install
@@ -62,13 +69,15 @@ someone else.
 | Output looks generic | you're in a scratch folder, not the product repo |
 | Values differ from Figma | you're on a stale version — see below |
 
-**Stale versions fail silently**, emitting last month's values confidently:
+**Stale versions fail silently** — they emit last month's values with full confidence. If you
+skipped the auto-update line in step 1, update by hand:
 
 ```bash
 claude plugin marketplace update gushwork && claude plugin update gushwork-design
 ```
 
-Restart after. Ask Utsav to turn on `autoUpdate` so you never think about it again.
+Restart after. Either way the new version takes effect on the **next** start, not the current
+one.
 
 ## Where to look things up
 

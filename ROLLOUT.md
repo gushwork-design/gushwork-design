@@ -123,7 +123,26 @@ The flag lives per-machine in `~/.claude/plugins/known_marketplaces.json`:
 ```
 
 **It is not settable from repo settings** — `extraKnownMarketplaces` entries only carry `source`
-and `installLocation`. So either your MDM payload writes it, or people set it once by hand.
+and `installLocation`. So either your MDM payload writes it, or people run this once:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/enable-autoupdate.sh | bash
+```
+
+That line is in [`ONBOARDING.md`](ONBOARDING.md) directly under the install, because it is the
+difference between a system that stays current and one that quietly doesn't.
+
+### What auto-update does and doesn't cover
+
+Verified against the 2.1.23 startup path (`uB0`):
+
+- **Does:** refresh the marketplace, update installed plugins, and report what changed. Covers
+  `user` and `managed` scopes, plus project scope when you're in that project.
+- **Doesn't:** take effect in the session that pulled it. The refresh is fire-and-forget at
+  startup, so a new version lands during one run and loads on the **next**.
+- **Doesn't:** run at all if the auto-updater is disabled globally.
+- **Doesn't** apply to committed `.claude/settings.json`. That path installs what's **missing** —
+  it never updates what's already there. Distribution and updating are separate problems.
 
 Manual update, when someone hasn't:
 
