@@ -108,3 +108,25 @@ apply to product actions.
 Button labels use the `Button/*` type ramp, not the Body ramp —
 `--gw-text-button-12` / `-14` / `-16` from `foundation/tokens.css`. Line-height 1,
 tracking 0; vertical centring comes from padding.
+
+---
+
+## Re-measured off the set, 7 Aug 2026
+
+Values previously in this file were written from instances. Measured on `2203:931`:
+
+| | Fill / border | Label |
+|---|---|---|
+| `Primary` | **`--gw-color-neutral-black` `#0d0d0d`** — not `neutral-900` | `--gw-color-neutral-white` |
+| `Outline` | **2px `--gw-color-neutral-100`** — not 1px `neutral-200`, and no fill | `--gw-color-neutral-black` |
+| `Ghost` | none | `--gw-color-neutral-black` |
+| any `Disabled` | unchanged | **`--gw-color-neutral-250` `#bcbec2`** |
+
+| `Size` | Height | Text Only | With icon | Icon Only | Padding | Radius | Label |
+|---|---|---|---|---|---|---|---|
+| `Small` | 28 | 88 | 112 | 28 | — | 8 | 12 |
+| `Medium` | 44 | 115 | 141 | 44 | `px-20 py-16` | **8** | `body-14-med` 14/20 |
+| `Large` | 48 | 134 | 156 | 48 | **`pl-24 pr-20 py-16`** | **12** | 16, leading 1 |
+
+**`Large` is radius 12 with asymmetric horizontal padding** — 24 leading, 20 trailing. Every
+other size is radius 8 and symmetric. Neither is guessable from the smaller sizes.
