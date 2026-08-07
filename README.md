@@ -12,16 +12,28 @@ and a hard stop rather than an invented component when something genuinely doesn
 
 ## Install
 
-`claude plugin install` resolves a plugin **name from a marketplace** — it does not take a git
-URL. This repo is its own single-plugin marketplace, so add it once, then install:
+**Easiest — paste this into Claude Code** and approve the commands it runs:
 
-```bash
-claude plugin marketplace add utsav-gushwork/gushwork-design
+```
+Set up the Gushwork Design System plugin for me:
+
+1. Run: claude plugin marketplace add utsav-gushwork/gushwork-design
+2. Run: claude plugin install gushwork-design@gushwork
+3. In ~/.claude/plugins/known_marketplaces.json, set "autoUpdate": true on the
+   "gushwork" entry. Leave everything else in that file alone.
+4. Verify with: claude plugin list
+
+Then tell me to restart Claude Code, and give me three lines on how to use it.
 ```
 
+By hand, if you prefer: `claude plugin install` resolves a plugin **name from a marketplace**, not
+a git URL. This repo is its own single-plugin marketplace, so add it once, then install:
+
 ```bash
-claude plugin install gushwork-design@gushwork
+claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin install gushwork-design@gushwork
 ```
+
+`scripts/install.sh` does all three steps and is safe to re-run.
 
 New to it? Read [`ONBOARDING.md`](ONBOARDING.md) first — five minutes, and it covers the four
 ways output goes off-system.

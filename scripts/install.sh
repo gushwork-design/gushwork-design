@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#
+# One-command setup for the Gushwork Design System.
+#
+#   curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/install.sh | bash
+#
+# Adds the marketplace, installs the plugin, and turns on auto-update so new
+# versions arrive on their own. Safe to re-run — every step is idempotent.
+
+set -uo pipefail
+
+REPO="utsav-gushwork/gushwork-design"
+MARKET="gushwork"
+PLUGIN="gushwork-design@gushwork"
+KNOWN="$HOME/.claude/plugins/known_marketplaces.json"
+
+fail() { printf '\n✘ %s\n' "$1" >&2; exit 1; }
+
+command -v claude >/dev/null 2>&1 || fail \
+  "Claude Code isn't installed, or 'claude' isn't on your PATH.
+  Install it first: https://claude.com/claude-code"
+
+# --- 1. marketplace -------------------------------------------------------
+if python3 -c "
+import json,os,sys
+p=os.path.expanduser('$KNOWN')
+sys.exit(0 if os.path.exists(p) and '$MARKET' in json.load(open(p)) else 1)
+" 2>/dev/null; then
+  echo "✔ marketplace '$MARKET' already added"
+else
+  echo "→ adding marketplace $REPO"
+  claude plugin marketplace add "$REPO" >/dev/null 2>&1 \
+    || fail "couldn't add the marketplace. Check your GitHub access, then try:
+    claude plugin marketplace add $REPO"
+  echo "✔ marketplace added"
+fi
+
+# --- 2. plugin ------------------------------------------------------------
+if claude plugin list 2>/dev/null | grep -q "$PLUGIN"; then
+  echo "✔ plugin already installed"
+else
+  echo "→ installing $PLUGIN"
+  claude plugin install "$PLUGIN" >/dev/null 2>&1 \
+    || fail "couldn't install the plugin. Try it directly to see why:
+    claude plugin install $PLUGIN"
+  echo "✔ plugin installed"
+fi
+
+# --- 3. auto-update -------------------------------------------------------
+# Lives per-machine; a repo's .claude/settings.json cannot set it.
+python3 - <<PY
+import json, os, sys
+p = os.path.expanduser("$KNOWN")
+if not os.path.exists(p):
+    print("… skipped auto-update: no marketplace config yet"); sys.exit(0)
+try:
+    d = json.load(open(p))
+except json.JSONDecodeError:
+    print("… skipped auto-update: known_marketplaces.json isn't valid JSON"); sys.exit(0)
+e = d.get("$MARKET")
+if e is None:
+    print("… skipped auto-update: marketplace missing"); sys.exit(0)
+if e.get("autoUpdate") is True:
+    print("✔ auto-update already on"); sys.exit(0)
+e["autoUpdate"] = True
+open(p, "w").write(json.dumps(d, indent=2) + "\n")
+print("✔ auto-update on")
+PY
+
+cat <<'EOF'
+
+  Now restart Claude Code — it won't load the skills until you do.
+
+  Then just describe what you want:
+      "Build a dashboard for the sales team to see show-ups over the week"
+
+  Guide: https://github.com/utsav-gushwork/gushwork-design/blob/main/ONBOARDING.md
+EOF

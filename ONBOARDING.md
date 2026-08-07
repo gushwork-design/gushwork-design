@@ -1,31 +1,30 @@
 # Gushwork Design System
 
-Claude builds Gushwork screens using the real components and tokens, instead of guessing at
-them. Three steps to start.
+Claude builds Gushwork screens using the real components and tokens, instead of guessing at them.
 
 ---
 
-## 1. Install
+## Setup — paste this into Claude Code
 
-```bash
-claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin install gushwork-design@gushwork
+```
+Set up the Gushwork Design System plugin for me:
+
+1. Run: claude plugin marketplace add utsav-gushwork/gushwork-design
+2. Run: claude plugin install gushwork-design@gushwork
+3. In ~/.claude/plugins/known_marketplaces.json, set "autoUpdate": true on the
+   "gushwork" entry. Leave everything else in that file alone.
+4. Verify with: claude plugin list
+
+Then tell me to restart Claude Code, and give me three lines on how to use it.
 ```
 
-*Skip this if your repo has a `.claude/settings.json` mentioning `gushwork` — it installs itself.*
+Approve the commands it asks to run, then **restart Claude Code**. That's the whole setup.
 
-Then run this once, so new versions arrive on their own instead of you finding out you're six
-weeks behind:
+*Nothing to do at all if your repo has a `.claude/settings.json` mentioning `gushwork` — it
+installs itself. Prefer a terminal? `bash scripts/install.sh` in a clone does the same three
+things.*
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/enable-autoupdate.sh | bash
-```
-
-## 2. Restart Claude Code
-
-It won't load the skills otherwise. This is the one step people skip and then think the install
-failed.
-
-## 3. Ask for what you want
+## Then just ask for what you want
 
 > "Build a dashboard for the sales team to see show-ups over the week"
 
@@ -64,20 +63,19 @@ someone else.
 | Symptom | Fix |
 |---|---|
 | No "Using the Gushwork … skill" line | restart; or say "use the Gushwork dashboard skill" explicitly |
-| `claude plugin list` doesn't show it | re-run step 1 — a declined plugin won't re-prompt |
+| `claude plugin list` doesn't show it | paste the setup block again — a declined plugin won't re-prompt |
 | `marketplace add` fails | ping Utsav; your org may restrict marketplaces |
 | Output looks generic | you're in a scratch folder, not the product repo |
 | Values differ from Figma | you're on a stale version — see below |
 
-**Stale versions fail silently** — they emit last month's values with full confidence. If you
-skipped the auto-update line in step 1, update by hand:
+**Stale versions fail silently** — they emit last month's values with full confidence. Step 3 of
+the setup block prevents that. If you skipped it, update by hand:
 
 ```bash
 claude plugin marketplace update gushwork && claude plugin update gushwork-design
 ```
 
-Restart after. Either way the new version takes effect on the **next** start, not the current
-one.
+Restart after. Either way a new version takes effect on the **next** start, not the current one.
 
 ## Where to look things up
 
