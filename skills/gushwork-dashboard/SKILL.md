@@ -39,8 +39,9 @@ Skipping a step here is what produced every rebuild. **1 and 2 come before any m
 
 1. **Read.** `tokens.css`, `build-rules.md`, `sections.md`, `section-elements.md`. Do not
    start from memory of what a Gushwork dashboard looks like.
-2. **Ask the four questions below and wait.** A dashboard is a set of decisions about what
-   matters; guessing produces a screen that looks right and answers nothing.
+2. **Ask with options and wait** — one `AskUserQuestion` call, not a paragraph. See below. A
+   dashboard is a set of decisions about what matters; guessing produces a screen that looks
+   right and answers nothing.
 3. **Name the KPIs and the sections, in order, before building.** One line each. Cheap to
    correct now, expensive after markup.
 4. **Pick the `card-layout` variant** from how many numbers genuinely lead — not by habit.
@@ -66,23 +67,34 @@ If a value you need isn't in `exports/`, that is a **gap to report**, not a reas
 measuring. Use tier 3 above — choose sensibly, say in one line that you chose it — and put it
 in the notice.
 
-## Before building a dashboard — ask, don't assume
+## Before building a dashboard — ask with options, don't assume
 
 A dashboard is a set of decisions about what matters. Guessing produces a screen that looks
-right and answers nothing. **Unless the request already answers them, ask these first:**
+right and answers nothing.
 
-1. **What are the KPIs?** Which one to three numbers is this screen accountable for? Those
-   become the kpi-cards. Everything else is a supporting metric.
-2. **What should someone see first?** The top of the slot is the most valuable space in the
-   product. What belongs there decides the section order.
-3. **What will they do with it?** Monitoring, diagnosing, or acting. Monitoring wants
-   headline numbers and a trend. Diagnosing wants breakdowns and filters. Acting wants a
-   table with row actions. The answer changes which Sections you reach for.
-4. **How often does it change, and who looks at it?** Drives whether the header needs a
-   refresh indicator, filters, or a date range at all.
+**Use `AskUserQuestion`, not a paragraph of questions.** Options are far easier to answer than
+open prose — the user clicks instead of composing, and every option you offer teaches them what
+the system can actually do. They can always write their own answer instead.
 
-Ask them in one short message and wait. Two or three questions answered beats a screen
-rebuilt three times.
+Ask in **one** call with all the questions at once. Never interrogate across several turns.
+
+| Ask | Options to offer | What the answer decides |
+|---|---|---|
+| **What is this screen accountable for?** | the two or three metrics you inferred from their request, each as an option | which numbers become kpi-cards; everything else drops to supporting |
+| **What will they do with it?** | `Monitor` — is it on track · `Diagnose` — why is it off · `Act` — work a list | the Sections you reach for. Monitor → headline + trend. Diagnose → breakdowns + filters. Act → table with row actions |
+| **How many numbers genuinely lead?** | `One north-star` · `A natural pair` · `Three co-equal` | the `card-layout` variant — 1, 2 or 3 |
+| **Is there real data yet?** | `Yes, connected` · `Yes, I'll paste it` · `Not yet — use samples` | whether the header carries a `Sample data` badge |
+
+**Infer before you ask.** "Show-ups over the week" already tells you the metric is a show rate
+and the grain is daily — so offer that as the first option rather than asking from scratch. A
+question that ignores what they just told you reads as not listening.
+
+**Skip any question the request already answers**, and drop the whole thing for a small
+change — "add a KPI row" needs no interview. Two or three answers beat a screen rebuilt three
+times; four questions on a one-card change is friction.
+
+Then **state your read in two or three lines before building** — the KPI, the sections in
+order, the variant. Cheap to correct as a sentence, expensive after markup.
 
 **If the user supplies a reference — a screenshot, a URL, an existing tool — read it for
 CONTENT, never for layout.** Their KPIs, labels and data are the useful part. Their card
