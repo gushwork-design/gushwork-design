@@ -154,12 +154,34 @@ Previously `Custom` was inert.
 `section/header` almost certainly wants a range, so this is a real gap: either the Calendar
 variant needs range states drawn, or the toolbar needs a different control. Not invented here.
 
-### `controls/toggle` `Size=Small`
-`controls.md` gives the sizes (44×24, pad 4, gap 4) and the Off/On child-order swap, but **no
-colours**. Track off `--gw-color-neutral-200`, on `--gw-color-primary-500`, knob white on
-`--gw-shadow-s2`. Blue here is a state signal, the same use as the `progress-bar` fill — the
-no-blue rule bans *button* fills only. Wired to the AI section so flipping it actually changes
-the per-engine numbers rather than being decorative.
+### `controls/toggle` — a NEW SIZE, `X-Small` 36×20
+
+The set stops at `Size=Small` (44×24); `Medium` is 52×28 and `Large` 60×32. **There is nothing
+below Small**, and 44×24 is visually heavy next to a section header's 12px caret, 14px label and
+24px badges — it was the first thing flagged on review.
+
+The new size **continues the component's own ramp** rather than being picked by eye. Every
+measured step adds 8 to the width, 4 to the height and 4 to the knob, with padding fixed at 4 and
+travel = track − knob:
+
+| Size | Track | Knob | Travel |
+|---|---|---|---|
+| `Large` | 60 × 32 | 24 | 28 |
+| `Medium` | 52 × 28 | 20 | 24 |
+| `Small` | 44 × 24 | 16 | 20 |
+| **`X-Small`** (new) | **36 × 20** | **12** | **16** |
+
+Verified in the browser: 36×20, knob 12, padding 4, knob travel exactly 16.
+
+**Worth adding to the set** — a toggle placed in a section header, table row or dense toolbar has
+nothing to reach for today, and the ramp extrapolates cleanly, so this is a `Promote` rather than
+a one-off.
+
+Colours remain unmeasured in `controls.md` (it gives only sizes and the Off/On child-order swap):
+track off `--gw-color-neutral-200`, on `--gw-color-primary-500`, knob white on `--gw-shadow-s2`.
+Blue here is a state signal like the `progress-bar` fill — **but see the open question above about
+whether control states should be black**; that ruling would change this toggle too. Wired to the
+AI section so flipping it actually changes the per-engine numbers rather than being decorative.
 
 ### `controls/dropdown` `Color=White, Size=Small`
 Variant `2199:739` exists; only its node and 96×28 size are recorded. Built as `--gw-color-white`
