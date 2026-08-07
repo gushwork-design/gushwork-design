@@ -53,9 +53,10 @@ search. It exists and it works.
 
 **Use `Show Card 3`–`6` to add or drop cards rather than deleting instances manually.**
 
-> **Measured correction.** `fold/ Cards Grid` — the fold this rule is most obviously about —
-> **has no `Show Card` properties at all.** Its real axes are `Card Style`, `Card Image` and
-> `Card Layout`. See *Measured appearance* below before relying on this table.
+> **Measured correction.** The `Show Card` toggles live on **`fold/ Cards Grid (small)`** only,
+> and they are **`Show Card 4` and `Show Card 5`** — two, both default `false`, so it renders
+> three cards and tops out at five. `fold/ Cards Grid` has none; its axes are `Card Style`,
+> `Card Image` and `Card Layout`. See *Measured appearance* below before relying on this table.
 
 **"Most folds" is doing real work in that sentence — 4 of 12 inherit nothing.**
 `fold/AI Agents`, `fold/ CTA`, `fold/Timeline`, and `fold/Comparison Table` have only
@@ -237,6 +238,12 @@ Everything above this line was transcribed from the page's annotations. Everythi
 **measured off the rendered components** on 7 Aug 2026, and where the two disagree the measured
 figure wins.
 
+**Figma is right. Build what it says.** Where a measured value looks like a slip — an odd width,
+two gaps that should match — it is recorded as measured and **reported**, never quietly corrected
+here. An export that tidies a value is worse than an odd number: the build then disagrees with
+the file everyone designs in, and nobody can tell which one is authoritative. Deviations are the
+build's decision to declare in a notice, not this file's to pre-empt.
+
 **All 12 folds now have measured frame geometry and variant matrices.** Internals are measured
 for `With image`, `FAQs`, `CTA` and `Cards Grid`; the remaining eight have geometry but their
 inner spacing and type are still annotation-only.
@@ -251,10 +258,11 @@ deliberate or defects:
 | Most folds | 1240 | 343 | the norm |
 | `fold/ Hero` | **1440** | **375** | full-bleed — the symbol includes the page margin |
 | `fold/AI Agents` | **1440** | **375** | full-bleed — the marquee runs edge to edge |
-| `fold/Comparison Table` | **1242** | **337** | **off by +2 / −6. No reason for it — a defect.** |
+| `fold/Comparison Table` | **1242** | **337** | its own width — use it |
 
-Build to 1240/343 unless the fold is one of the two full-bleed ones. Do not reproduce the
-Comparison Table's 1242/337.
+**Use each fold's own measured width.** Comparison Table is 1242/337, not 1240/343; that is what
+the component is, so that is what to build. Reported as a possible inconsistency, but the
+component renders and the component wins.
 
 ## Measured frame heights
 
@@ -358,11 +366,10 @@ That last row is the one to internalise: 8 Desktop variants are all `Grid`, and 
 variants split into `Single` and `Stacked`. Asking for `Card Layout=Grid` on Phone resolves to
 nothing.
 
-**There are no `Show Card 3`–`Show Card 6` properties on this fold.** The shared-toggles table
-above lists them and instructs you to use them instead of deleting instances. They do not exist
-here — the fold hard-builds **six** cards in two rows of three, and the only content toggle is
-`showCta`. Treat that rule as applying to whichever fold actually carries those booleans, not
-this one.
+**There are no `Show Card` properties on this fold.** It hard-builds **six** cards in two rows of
+three, and `showCta` is its only content toggle. The shared-toggles rule about `Show Card 3`–`6`
+describes **`fold/ Cards Grid (small)`**, which carries `Show Card 4` and `Show Card 5` — two
+booleans, not four. See below.
 
 ### Measured — `Breakpoint=Desktop, Card Style=1, Card Image=Without, Card Layout=Grid`
 
@@ -377,14 +384,71 @@ this one.
 | Card inner | `p-16`, `gap-12`; 24px icon; title `body-18-sem` on `neutral/black`; subtext `body-16-reg` on `neutral/800` |
 | CTA | blue `primary/500-main`, 44 tall, `px-20 py-16`, radius 8 |
 
-**The two card rows have different gaps — row 1 is `gap-8`, row 2 is `gap-10`.** Since cards are
-`flex-1`, that makes row 1's cards 2px wider than row 2's. It is a drawing slip, not a design.
-**Use 10 for both** and note it, rather than reproducing a visible misalignment.
+**The two card rows use different gaps — row 1 is `gap-8`, row 2 is `gap-10`.** Build both as
+measured. Because cards are `flex-1`, row 1's cards come out 2px wider than row 2's; that is what
+the component does. Flagged as a possible slip for review, but not corrected here — a "tidied"
+export that silently disagrees with Figma is worse than an odd number, because the next person
+cannot tell which is authoritative.
 
 `Card / Information` carries its own `subtext` boolean, so a card can drop its body copy without
 a different style.
 
-## `fold/ Testimonial` — `1790:6285` · `Style=Single` measured
+## `fold/ Cards Grid (small)` — `2085:21418` · Desktop measured
+
+Props: `breakpoint` · `showCard4` · `showCard5` · `showCta`.
+
+**This is the fold the `Show Card` rule belongs to** — and it is `Show Card 4` and `Show Card 5`,
+both defaulting to **`false`**. So the fold renders **three cards by default, five at most.** The
+shared-toggles table's "3–6" is wrong on both the range and the fold.
+
+| Part | Measured |
+|---|---|
+| Root | 1240, `gap-60`, centred |
+| Heading | the shared `fold/fold-element/heading` at its full **800** width |
+| Card row | single row, `gap-8` |
+| Card | `Card / Information` `Style=4` — `neutral/25` on `neutral/100`, `radius/16`, `gap-12` |
+| Card inner | `p-16`, `gap-24` |
+| Icon container | **40 box, `neutral/black` fill, `radius/8`, `p-8`, 20px glyph** |
+| Title | `body-18-sem` · `neutral/black` |
+| Subtext | `body-16-reg` · `neutral/600` |
+| CTA | blue `primary/500-main`, 44 tall, radius 8 |
+
+**`Style=4` puts the icon in a filled black 40px tile**, where `Style=1` (used by the big Cards
+Grid) sets a bare 24px glyph on the card background. That is the visible difference between the
+two card styles.
+
+Note the subtext colour differs between the two folds — `neutral/600` here, `neutral/800` on
+`Cards Grid` `Style=1`. Both as measured.
+
+## `fold/fold-element/heading` — `1732:3742` · the shared heading
+
+Props: `breakpoint` · `length` · `showBadge` · `showSubtext`.
+
+Intrinsically **800 wide**, `gap-20`, centred: eyebrow → `h3` 44 on `neutral/black` → `body-18-med`
+at max-w **680** on `neutral/600`.
+
+**`fold/ Cards Grid` overrides it to 620 wide**; `Cards Grid (small)` and `Video` use the full
+800. Both toggles are real — `Video` switches badge and subtext **off** and ships heading-only.
+
+## `fold/ Video` — `2085:17304` · Desktop measured
+
+Props: `breakpoint` · `showCta`.
+
+| Part | Measured |
+|---|---|
+| Root | 1240, `gap-60`, centred |
+| Heading | shared heading with `showBadge=false`, `showSubtext=false` — the h3 alone |
+| Video well | full width, **`aspect-[1240/580]`**, `neutral/400` fill, `neutral/100` border, `radius/20` |
+| Play button | centred, 56 tall, `pl-24 pr-20 py-16`, radius 12 |
+| — its fill | `neutral/alpha/10-black` with **`backdrop-blur-[2px]`** |
+| — its border | **2px** `neutral/alpha/10-white` |
+| — its label | `button-18-med` · `neutral/white` · 18px `Play` glyph, `gap-8` |
+| CTA | blue `primary/500-main`, 44 tall, radius 8 |
+
+**The play button is glassmorphic** — a translucent black fill over a 2px translucent white
+border with a 2px backdrop blur. Nothing in the annotations says so, and it does not survive
+being rebuilt as a plain button. The asymmetric padding (24 left, 20 right) optically centres the
+label against the leading icon.
 
 Props: `breakpoint` · `style` (`Video` / `Single`). No CTA, no slot.
 
@@ -397,18 +461,19 @@ Props: `breakpoint` · `style` (`Video` / `Single`). No CTA, no slot.
 | Name | `body-14-sem` 14/21 · `neutral/900` |
 | Role | `body-12-med` 12/16 · `neutral/500` |
 
-**Two things here are off-pattern and worth a decision:**
+**Build all three as measured.** Two are worth *reporting* because they point at gaps in the
+token set, not because the fold is wrong:
 
-1. **The quote is Semibold 44 — there is no such token.** `h3` is 44 **Bold**; the display ramp
-   has no 44 Semibold. Either add it or set the quote to `h3`.
-2. **It uses `neutral/900` where every other fold heading uses `neutral/black`.** One of the two
-   is wrong; the rest of the library says `neutral/black`.
+1. **The quote is Vert Grotesk Semibold 44, and no token covers it.** `h3` is 44 **Bold**; the
+   display ramp has no 44 Semibold. Set it explicitly and report the missing ramp step — the
+   fold is not wrong, the ramp is short.
+2. **It colours the quote `neutral/900`, where other fold headings use `neutral/black`.** Both
+   are real tokens. Use `neutral/900` here because that is what this component binds.
+3. **The quote box is a fixed 1011 wide** inside the 1240 container. Not a round number, but it
+   is the measured value — use it.
 
 The avatar measurements confirm `avatar.md` exactly — 64 × 48, radius 100, a 72 × 48 photo inside
 a 64-wide clip. That file was already right.
-
-The 1011px fixed quote width is suspicious next to a 1240 container — not a round number and not
-centred on any grid. Treat it as measured but don't propagate it.
 
 ## `fold/Timeline` — `1809:21318` · Desktop measured
 
