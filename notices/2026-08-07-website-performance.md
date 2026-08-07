@@ -234,17 +234,50 @@ be swapped for a token the day one exists. `prefers-reduced-motion` disables all
 
 ## Modified
 
-### `section/card-layout` `KPI cards=2` — side-by-side split now stacks below 1440
-`preview/_meta_ads_app.css` carries `.cl--side .kpi{min-width:0}`, which lets kpi-cards fall under
-their measured 286 floor when the shell narrows. **Measured 242.9px at a 1280 viewport.**
-`build-rules.md` is explicit that 286 and 160 are floors and that horizontal measured values are
-never clamped.
+### `section/card-layout` — the section holds its measured 1084 floor at every width
 
-The arithmetic: the 580/496 split seats 2 KPIs at 286 and 6 analytics cards at 160 only when the
-section is the full measured 1084 — and section width = viewport − 16 shell padding − 260 rail −
-80 slot padding, so 1084 requires **exactly 1440**. Added `@media (max-width:1439px)` to stack the
-two blocks; each then gets the whole section and both floors hold (verified: 458 and 302.7 at
-1280).
+**Corrected after review.** An earlier pass here stacked the two blocks below 1440 (2 KPIs
+full-width above 6 analytics). That was wrong, and worth recording because it is an easy mistake:
+it produces a layout matching **none of the three variants** — it reads as a malformed
+`KPI cards=3`, which is 3 KPIs above **six-across** analytics, not two above a 3×2 grid.
+
+`KPI cards=2` **is** "2 KPIs left + 6 analytics right". That is the variant's definition, not a
+wide-screen arrangement, so it must not be rearranged responsively.
+
+The variant's numbers are mutually dependent and hold only at 1084:
+
+| | |
+|---|---|
+| split | 580 / 496 |
+| 2 KPIs in 580 | (580 − 8) / 2 = **286**, exactly the intrinsic floor |
+| 6 analytics in 496, 3 columns | (496 − 16) / 3 = **160**, exactly the intrinsic floor |
+| height | 2 analytics rows (2×94 + 8 = 196) ≈ 1 KPI (198) |
+
+Section width = viewport − 16 shell padding − 260 rail − 80 slot padding, so 1084 needs **exactly
+1440**. Below that the section keeps 1084 and the slot — already the one scrolling region —
+scrolls horizontally. Nothing deforms and no fourth variant is invented. Verified identical at
+670, 1280 and 1440.
+
+`preview/_meta_ads_app.css` carries `.cl--side .kpi{min-width:0}`, which is what let the cards
+fall under their floor in the first place (**measured 242.9px at 1280**). With the section floor
+in place that override no longer bites, but **it should still come out** — it silently defeats the
+rule `build-rules.md` states.
+
+### `.kpi` takes a fixed height while the analytics grid sizes to content — the columns drift
+
+Also in `preview/_meta_ads_app.css`. `.kpi{height:var(--v-kpi)}` is a **fixed** clamped height,
+while `.cl__agrid` sizes to its content at a flat 196. Below roughly 1250px of viewport height the
+two diverge: **measured 189 against 196 at 900 tall**, so the dark cards end 7px above the light
+ones — a visible misalignment along the section's whole width. In Figma both are ~196–198 and read
+as flush.
+
+```css
+.cl--side .kpi{height:auto;min-height:var(--v-kpi)}
+```
+
+Stretching the KPI to the row locks the columns together at every height and still honours 198 as
+the ceiling — verified flush at 196/196 on a 853-tall viewport and at 198.4/198.4 on a 1300-tall
+one.
 
 ### `Graph Type=Line` — 2 series → 1
 The measured component (`2143:682`) draws two series. The system has no second-series colour and
@@ -280,11 +313,16 @@ component in the file defines one, so every keyboard user on every Gushwork dash
 gets whatever the browser does. This is an accessibility gap, not a polish item, and it needs a
 real decision rather than my `primary-alpha-40` guess.
 
-**2. The 1440 floor on `card-layout` `KPI cards=2`.** The measured split and the measured card
-floors are only simultaneously satisfiable at exactly 1440. Below it something must give, and the
-reference CSS currently gives up the floor silently. A **Promote** candidate: either the component
-gets a documented stacking behaviour below 1440, or `.cl--side .kpi{min-width:0}` comes out of the
-reference stylesheet. Two files currently disagree about which rule wins.
+**2. `card-layout` has no responsive specification, and guessing one produced a wrong layout.**
+The split, both card floors and the two-rows-equals-one-KPI height relationship are only
+simultaneously satisfiable at exactly 1084 / 1440. Below that, every option is a judgement call —
+and the obvious-looking one (stack the blocks) is *wrong*, because it collides with what
+`KPI cards=3` already means. This build holds the 1084 floor and scrolls the slot instead.
+
+Worth deciding once, in `build-rules.md`, because every future dashboard hits it: **is 1440 the
+minimum supported width for the dashboard surface?** If yes, say so and the floor is simply
+correct. If no, the three variants need drawn narrow behaviour. Also **remove
+`.cl--side .kpi{min-width:0}`** from the reference stylesheet — it silently defeats the floor rule.
 
 **3. The missing chart palette, hit for the second time.** `Grouped Bar`'s three untokenised hexes
 were already logged. This build hit the same wall on `Type=Line`, whose second series has no
