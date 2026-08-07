@@ -208,10 +208,17 @@ follows, and the six questions that need a ruling. Read it before trusting eithe
 the navbar, the dashboard button, the dashboard avatar, toasts, or content width.
 
 The short version: where they disagree, the exports follow the measured node, because that is
-what actually renders. The likeliest explanation for the biggest conflicts is that
-`↳ web/ component-library` — 21 component sets — has never been read, since the MCP's page
-listing only ever returns `00 · Cover`. If a second navbar and button set live there, most of
-the conflicts dissolve into "two components, document both".
+what actually renders.
+
+**`↳ web/ component-library` has now been read** — see
+[`exports/web/component-library.md`](exports/web/component-library.md). It holds **23 component
+sets and 525 variants**, and it contains **no second navbar and no second button set**. The old
+hypothesis here — that a second set would dissolve most of the conflicts into "two components,
+document both" — is disproven, and Utsav's 6 Aug ruling to the same effect is now confirmed by
+measurement rather than assertion. The conflicts are real disagreements; measured wins.
+
+The "21 component sets" figure repeated in earlier inventories was counting **21 stray hidden
+`Frame 2147223955` nodes** at the page root. The count was right; the interpretation was not.
 
 ## Known issues in the Figma source
 
