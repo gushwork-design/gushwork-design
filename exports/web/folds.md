@@ -359,7 +359,14 @@ part of the fold's own layout.
 | Body | 16/24 Inter Medium on **`neutral/alpha/80-white`** |
 | Primary button | **white fill**, `radius/10`, **`pl-16 pr-12 py-12`**, 14/20 on `secondary/500-main`, 16px icon — *"Book a demo"* |
 | Secondary button | 1px **`neutral/alpha/30-white`** border, no fill, `px-16 py-12`, `radius/10`, white 14/20 — *"Calculate ROI with Gushwork"* |
-| Right | `footer/footer-elements/cta-image`, **600 wide**, full height |
+| Right | `footer/footer-elements/cta-image`, **600 × 440**, `overflow-clip` |
+
+**`cta-image` is not a bitmap.** At `image=Testimonial, color=Blue, breakpoint=Desktop` it is a
+drawn pattern: **141 outlined 40 × 40 squares** in `primary/400` (`#338cff`) on a
+`primary/500-main` ground, laid on a 40px grid — x from 40 to 560, y from 0 to 400, so a
+**14 × 11 lattice of 154 slots with 13 deliberately left empty**. There is no image asset to
+export, and nothing to go missing; it renders from geometry alone. Its own props are
+`breakpoint` · `color` · `image`, 24 variants in total.
 
 **This is the one fold whose buttons use `radius/10` and 14px labels** — everything else uses
 radius 8 with 16px. It also confirms the CTA copy split: this fold ships **"Book a demo"**.
