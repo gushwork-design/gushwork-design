@@ -21,17 +21,21 @@ claude plugin install gushwork-design@gushwork
 
 Two skills register. **You never name them** — they fire on the work.
 
+If your repo already has a `.claude/settings.json` naming this plugin, skip both commands — it
+installs itself in the background when you open the repo.
+
 ### Staying current
 
-There is **no auto-update.** A stale plugin fails silently — it keeps emitting last month's
-values with full confidence. When Utsav announces a version, run:
+A stale plugin fails silently: it keeps emitting last month's values with full confidence. To
+update:
 
 ```bash
 claude plugin marketplace update gushwork && claude plugin update gushwork-design
 ```
 
-Then **restart Claude Code** — the CLI won't apply it otherwise. Check what you're on with
-`claude plugin list`.
+Then **restart Claude Code** — it won't apply otherwise. Check what you're on with
+`claude plugin list`. Ask whoever set this up to turn on `autoUpdate` so you never have to
+think about it.
 
 | You ask for | You get |
 |---|---|

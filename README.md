@@ -26,6 +26,9 @@ claude plugin install gushwork-design@gushwork
 New to it? Read [`ONBOARDING.md`](ONBOARDING.md) first — five minutes, and it covers the four
 ways output goes off-system.
 
+**Rolling it out to a team or the whole org?** Don't send these commands around — commit a
+`.claude/settings.json` and it installs itself. See [`ROLLOUT.md`](ROLLOUT.md).
+
 Then just describe what you're building. The skills trigger on the work, not on being named:
 
 - *"Build a pricing page for Gushwork"* → `gushwork-web`
@@ -55,9 +58,13 @@ Two things worth knowing:
 
 - **`plugin.json` is the version people see.** `claude plugin list` reads it, not the
   marketplace entry. Bump both or the two disagree and nobody can tell what they're running.
-- **There is no auto-update, and no way to force one.** A teammate who never runs step 6 runs
-  last month's system indefinitely, with no warning. So keep step 5 real, and keep changes
-  batched rather than trickling — one announced version beats five silent ones.
+- **Auto-update is off by default for third-party marketplaces.** Set `autoUpdate: true` and
+  step 6 happens on startup; leave it and a teammate runs whatever they installed, indefinitely,
+  with no warning. Either way **a restart is required** — updating without one leaves the old
+  skills loaded. See [`ROLLOUT.md`](ROLLOUT.md).
+
+Steps 5 and 6 disappear entirely if you deploy via committed `.claude/settings.json` or managed
+settings, which is what [`ROLLOUT.md`](ROLLOUT.md) recommends.
 
 Verdicts from a [`notices/`](notices/) review are exactly what feeds step 1. That is the loop
 closing: a deviation someone hit in a real build becomes a measured value everyone gets.
