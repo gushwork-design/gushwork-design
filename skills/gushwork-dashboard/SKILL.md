@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.20.0, updated 8 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.21.0, updated 8 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -332,7 +332,9 @@ cost a review round. **They are ruled. Follow the file.**
 | Toast message length | must fit the **276px** column — ~32 characters. Never widen the 360 | `toast.md` |
 | Blue vs black | blue = data/status, black = interaction state | `controls.md` |
 | Focus states | `--gw-focus-ring` on `:focus-visible`, everywhere. Mandatory | `states.md` |
-| Hover fills | ruled per control; hover moves ONE step toward the element's selected state | `controls.md`, `button.md`, `section-elements.md` |
+| `Button` hover fills | **MEASURED, not ruled** — Primary `neutral/850`, Outline `neutral/35`, Ghost `neutral/50`. The three hand-ruled values were all wrong | `button.md` |
+| Other hover fills | ruled per control; hover moves ONE step toward the element's selected state | `controls.md`, `section-elements.md` |
+| Text fields | there is **no dashboard text field** — `input/text-field` `1562:705` is a **web** component. Read `exports/web/component-library.md` | `login-screen.md` |
 | Motion | `--gw-motion-fast` (120ms), reduced-motion guarded | `tokens.css` |
 | Below 1440 | scale the shell; never reflow, shrink or clip | `build-rules.md` |
 | `card-layout` responsiveness | variants are **never** rearranged | `build-rules.md` |
@@ -341,6 +343,23 @@ cost a review round. **They are ruled. Follow the file.**
 | user-card row | not a target — only the menu tile, `neutral/50` | `section-elements.md` |
 | Rail `Dashboard title` | the dashboard's name, not the company's | `dashboard-build.md` |
 | Empty and loading states | ruled; compose from `section/Container` | `states.md` |
+
+## Two traps when you measure
+
+Before the build traps, the two that corrupt the *numbers* — both hit `login-screen.md` on
+8 Aug 2026, and neither is visible from the element you are reading.
+
+1. **The parent holds what the child cannot show you.** The login lattice reads as a solid
+   `1px dashed neutral/800` on every one of its 400 cells; the `opacity: 0.3` that makes it subtle
+   is on the frame *above* them. Same shape as the scaled logo tile, which reports `spacing/8`
+   while rendering 15. **Read the frame, then the children, then check the two agree.**
+2. **A "no value here" is a claim, and it needs checking.** All three `Button` hover fills were
+   ruled by hand on the belief that Figma left them blank. Figma had them. Ruling is for what the
+   source genuinely omits — confirm the omission before you fill it.
+
+And one that only shows up once you render: **Figma centre-aligns strokes, CSS puts borders
+inside the box.** A tiled grid of bordered cells doubles every shared edge. Draw one border per
+grid line.
 
 ## Four traps that survive a screenshot
 

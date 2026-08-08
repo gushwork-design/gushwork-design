@@ -85,22 +85,31 @@ Pick by icon need: `Text Only`, `Leading Icon`, `Trailing Icon`, or `Icon Only`.
 `Default` / `Hover` / `Disabled` are **interaction states, not a choice.** The component
 handles them. Don't pick a state when composing; pick `Style`, `Size`, and `Type`.
 
-### Hover and focus values — RULED
+### Hover values — MEASURED
 
-The `State=Hover` variants exist in Figma with **no measured fill**, so every build guessed a
-different one. These are the values:
+An earlier pass ruled these by hand, on the belief that the `State=Hover` symbols carried no
+fill. **They do.** Read off `2203:839`, `2203:875` and `2203:911` on 8 Aug 2026 — all three ruled
+values were wrong:
 
-| `Style` | Hover |
-|---|---|
-| `Primary` | `--gw-color-neutral-900` — the lightest near-black in the ramp |
-| `Outline` | `--gw-color-neutral-25` — the measured `list-item` hover |
-| `Ghost` | `--gw-color-neutral-25` |
+| `Style` | Hover — measured | Node | Was ruled | Delta |
+|---|---|---|---|---|
+| `Primary` | **`--gw-color-neutral-850` `#333333`** | `2203:839` | `neutral-900` `#262a2e` | one step lighter |
+| `Outline` | **`--gw-color-neutral-35` `#f5f5f5`** fill | `2203:875` | `neutral-25` `#f7f8f9` | one step darker |
+| `Ghost` | **`--gw-color-neutral-50` `#f1f2f3`** | `2203:911` | `neutral-25` `#f7f8f9` | two steps darker |
+
+The gaps are small in hex and consistent in direction: **Figma's hovers are one step stronger
+than the guess, every time.** Two more corrections that fall out of the same read:
+
+- `Outline` keeps its **2px `--gw-color-neutral-100` border across both states** — confirmed
+  against `2203:863`. Hover adds a fill and changes nothing else.
+- `Ghost` and `Outline` do **not** share a hover value. The ruling assumed they did.
 
 Transition with `--gw-motion-fast`. Focus follows `exports/dashboard/states.md` — a
 `--gw-focus-ring` on `:focus-visible`, which is **required**, because a restyled `<button>`
 otherwise gives keyboard users nothing.
 
-Ruled by Utsav, 7 Aug 2026.
+> The lesson is the one already in `CONTRIBUTING.md`: *a value you ruled is a value you did not
+> read.* Ruling is for what Figma genuinely leaves blank. Check that it is blank first.
 
 ## Structure
 
