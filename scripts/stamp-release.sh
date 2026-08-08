@@ -59,7 +59,9 @@ echo
 echo "The commit subject becomes the CHANGELOG row, so write it as the one-line"
 echo "summary — 'v$VERSION — what changed' — and name the chat in a trailer:"
 echo
-echo "    Session: <this chat's title>"
+echo "    Session: <session-uuid> <chat title>"
+echo
+echo "  (uuid = the transcript filename in ~/.claude/projects/<project>/)"
 echo
 echo "Then regenerate the log as a SEPARATE commit — never an amend, because"
 echo "amending rewrites the sha the newest row just recorded:"

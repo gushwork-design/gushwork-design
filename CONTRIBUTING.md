@@ -133,10 +133,12 @@ See the propagation table in [`README.md`](README.md). The short version:
 
    ...body...
 
-   Session: GW Design Associate
+   Session: 5a7c696b-5bbf-4aee-adf8-603e744f9018 Gushwork Design System plugin
    ```
 
-   The subject *is* the `CHANGELOG.md` row, and the trailer *is* its `Session` column.
+   The subject *is* the `CHANGELOG.md` row. The trailer is `<session-uuid> <title>`, and
+   becomes a `claude://resume/<uuid>` link in the `Session` column. Get the uuid from the
+   transcript filename in `~/.claude/projects/<project>/`.
 4. **`bash scripts/changelog.sh`**, then commit it **separately** —
    `git commit -m "Regenerate CHANGELOG after v1.2.0"`. Never amend: the log records the
    release commit's sha, and amending changes it. `bash scripts/changelog.sh --check`
@@ -144,10 +146,18 @@ See the propagation table in [`README.md`](README.md). The short version:
 5. `claude plugin validate .` before you push.
 6. Push to `main`. Anyone with `autoUpdate` on gets it at their next start.
 
-**Why a `Session:` trailer and not a chat link.** Chat sessions are machine-local ids with no
-shareable URL — a link would be dead for everyone but its author. The title is enough for Utsav
-to find the right conversation. **Never put a session id, transcript path, or chat content in the
-repo: it is public.**
+**What the Session link is, and is not.** `Claude.app` registers a `claude://` scheme whose
+`resume` route reopens a CLI session by uuid. The link therefore **only resolves on the machine
+holding the transcript** — it is a pointer for the maintainer, not something a teammate can
+follow. Everyone else uses the commit link.
+
+A uuid and a chat title are opaque and safe in a public repo. **Chat content is not — never put
+a transcript, an excerpt, or a quote from one in here.**
+
+**Attribute from first-hand knowledge, not from grepping transcripts.** Forked sessions duplicate
+each other's history, so a session that merely *mentions* a version reads as its author. Two
+different greps produced two different, both-wrong attributions before that was noticed. If you
+cannot vouch for a release, leave its cell blank.
 
 Several chats push here. On 8 Aug 2026 two of them shipped versions within ten minutes of each
 other, and a third built a component that already existed because its plugin copy was stale. The
