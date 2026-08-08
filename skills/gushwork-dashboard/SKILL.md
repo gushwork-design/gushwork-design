@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.23.0, updated 8 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.24.0, updated 8 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -83,14 +83,16 @@ in the notice.
 
 ## Values a sensible guess gets wrong
 
-Read off the component sets, 7–8 Aug 2026. **Seventeen components have now been checked and
-fifteen had been recorded wrong.** Every line below is a value that was built incorrectly at
+Read off the component sets, 7–8 Aug 2026. **All nineteen dashboard components have now been
+checked, and seventeen had been recorded wrong.** Every line below is a value that was built incorrectly at
 least once. Reach for this before you reach for intuition.
 
 | Component | The trap |
 |---|---|
 | `controls/dropdown` | **The open menu is wider than its trigger** — 160 vs 144, right-aligned. Menu border is `neutral/50`, options are `button-12-med`, option hover is `neutral/50`. **There is no selected checkmark** — an earlier ruling invented one. |
 | `Graph` | **Three sizes, not interchangeable** — 280 / 400 / 456 tall. `Line` is **single-series**; its "second series" is a gradient fill. `Grouped Bar`'s three colours are raw hex — use `--gw-color-chart-1/2/3`. |
+| `section/With Dropdown` | Metric value is **Vert Grotesk Display 18**, not 20. **10 metrics then 6**, not 6+2 then 9. Its data card has **no border** — `section/Container`'s does. Its header dropdown is `2142:583`, not `controls/dropdown`. |
+| `section/table` | **The collapse caret is 12px off centre** against its title, and overflows the header box. `section/Container` centres it correctly. Build it centred. |
 | `kpi-card` | **The `Mode` names are inverted.** `Mode=light`, `Mode4`, `Mode6` render on **`neutral/900`** — a dark card. `Mode=dark`, `Mode3`, `Mode5` render on `neutral/25`. Height is content-driven; there is no fixed 198. |
 | `list-item` | Nav rows are **Inter Medium 500 / 14**; group labels **Inter Semi Bold 600 / 10** on `neutral/400`. The instance inside `dashboard-build` reports Bold for both — it is wrong. |
 | `controls/toggle` | `On` is **`neutral/900`**, not blue. |

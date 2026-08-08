@@ -153,6 +153,57 @@ COMPONENT (1084×296, r:12, VERTICAL, gap:16, pad:12)
 The sub-section title placeholder reads `"SUB-SECtion title"` — broken casing in the
 source. Write proper text.
 
+### Appearance — MEASURED 8 Aug 2026, and the tree above is wrong in four places
+
+Read off `2140:16131`. The shell matches `section/Container` exactly — `--gw-color-neutral-25`,
+`p-12`, `--gw-radius-12`, `gap-16`, `overflow: clip`, 1084 wide. Below that it diverges:
+
+| | Transcribed above | **Measured** |
+|---|---|---|
+| Metric value | `20px` | **Vert Grotesk Display Medium 18**/1.2 on `--gw-color-neutral-900` |
+| First card | `6× cell` + `2× compact` | **10 cells**, all the same |
+| Second card | `9 cells` | **6 cells** |
+| Data card border | not stated | **none** — see below |
+
+| Part | Measured |
+|---|---|
+| Data card | `--gw-color-neutral-white` · `p-16` · `--gw-radius-8` · **no border** · `overflow: clip` |
+| Metric cell | `px-8 py-4` · `gap-4` · **`min-width: 100`** |
+| Metric label | Inter Medium **10**, line-height **1.6**, **UPPERCASE**, `--gw-color-neutral-600` |
+| Metric value | **Vert Grotesk Display Medium 18**/1.2, `--gw-color-neutral-900` |
+| Separator | a 1px vertical rule between every pair of cells, `self-stretch` |
+| Sub-section title | Inter Medium 10/1.6 UPPERCASE on **`--gw-color-neutral-500`**, `p-4` |
+
+**The data card has no border, and `section/Container`'s inner card does** (1px
+`--gw-color-neutral-50`). Two sections that look like siblings are built differently. Don't copy
+one's card into the other.
+
+**Three text tiers, all 10px uppercase, separated only by colour**: metric label `neutral/600`,
+sub-section title `neutral/500`. Getting these the same way round matters more than it looks —
+the quieter colour is the *heading*, which is backwards from every other hierarchy in the system.
+
+**✗ The data row overflows its card.** The row is drawn **1036 wide** inside a card whose content
+box is 1028 (`1084 − 12·2 shell − 16·2 card`). `overflow: clip` hides the last 8px. Build the row
+`width: 100%` and let the cells flex; do not reproduce 1036.
+
+### The header dropdown is its own component
+
+`section/section-element/dropdown` `2142:583` · **466 wide** · 2 variants — **not**
+`controls/dropdown`.
+
+| Part | Measured |
+|---|---|
+| Trigger | `--gw-color-neutral-white` · `p-8` · `--gw-radius-8` · `min-w-140` · `justify-between` |
+| Label | **Inter Semi Bold 14**, `--gw-color-neutral-800`, tracking `-0.2px`, line-height 1 |
+| Badge 1 | `--gw-color-neutral-100` · `px-8 py-4` · `--gw-radius-4` · `--gw-text-body-12-med` on `--gw-color-neutral-600` |
+| Badge 2 | **`--gw-color-green-alpha-10`** · same geometry · text **`--gw-color-green-500`** |
+| Caret | `CaretDown` 12px |
+
+**It carries two badges, and the second is a status.** "Active" in green is part of the drawn
+component, not example content — this dropdown names a *thing with a state*, e.g. a campaign.
+These are hand-built badge frames, **not** instances of the `badge` set in
+`foundation/shared-components.md`, so they inherit nothing from it.
+
 ---
 
 ## `section/table`
@@ -178,6 +229,31 @@ COMPONENT (1084×674, r:12, VERTICAL, gap:16, pad:12)
 
 6 columns, 10 data rows, per-row `DotsThree` overflow menu, pagination footer with
 page-size control.
+
+### Geometry — MEASURED 8 Aug 2026
+
+Read off `2209:17021`. **1084 × 674**, and it tiles exactly:
+`12 + 28 + 16 + 606 + 12 = 674`. ✓
+
+| Part | Position | Size |
+|---|---|---|
+| `header` | 12, 12 | **1060 × 28** |
+| `title-container` | 4, 4 *(within header)* | 145 × 20 |
+| `icon-container` | 0, 0 | **20 × 20** — `p-4` around a 12px `ChartLine` |
+| `title` | **28**, 3 | 117 × 14 — so `gap-8` after the 20px tile |
+| `CaretDown` | 1044, **20** | 12 × 12 |
+| `container` | 12, **56** | **1060 × 606** |
+
+The container holds one instance — `section/section-element/table` at the full 1060 × 606. The
+section is a shell; **all the table's own structure belongs to that element**, not here.
+
+**✗ The collapse caret is not vertically centred.** The title block spans y 4–24 (centre **14**);
+the caret spans y 20–32 (centre **26**). They are **12px apart**, and the caret's bottom edge
+overflows the 28-tall header by 4. `section/Container` centres the two correctly, so this is
+`section/table` alone.
+
+**Build it centred.** Two sections whose headers are meant to read identically should not differ
+by 12px, and nothing about the table makes its caret a special case. Report the drift.
 
 ---
 
