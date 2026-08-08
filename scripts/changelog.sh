@@ -88,7 +88,12 @@ HEAD
           version="${subject%% *}"
           summary="${subject#* — }"
           [ "$summary" = "$subject" ] && summary="${subject#"$version" }"
-          [ -z "${session:-}" ] && session="$(backfill "$version")"
+          # Fall back to the table when the trailer is missing, or predates the
+          # "<uuid> <title>" shape and so cannot render as a link.
+          case "${session:-}" in
+            [0-9a-f]*-[0-9a-f]*-*) ;;
+            *) session="$(backfill "$version")" ;;
+          esac
           printf '| **%s** | %s | %s | [`%s`](%s/commit/%s) | %s |\n' \
             "$version" "$date" "$summary" "${sha:0:7}" "$REPO" "$sha" "$(session_cell "$session")"
           ;;
