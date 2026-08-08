@@ -46,11 +46,19 @@ Per-control values live with their components — `controls.md` for tabs, dropdo
 buttons; `section-elements.md` for `list-item`, `table-row` and `user-card`. Two rules sit
 above them:
 
-1. **Every interactive element has a hover state.** If a variant exists in Figma without a
+1. **Every *click target* has a hover state.** If a variant exists in Figma without a
    measured fill, the value is in the component's export file. Do not invent a third answer.
 2. **Hover moves one step, in the direction of the element's own selected state.** A tab moves
    toward white because `Selected` is white. A grey trigger moves to `neutral-100`. It never
    jumps two steps or changes hue.
+3. **Check that Figma is actually silent before you fill the silence.** All three `Button` hover
+   fills were ruled by hand on the belief that the `State=Hover` symbols carried none. They
+   carried them the whole time, and all three rulings were wrong — see `button.md`.
+
+**The one exception to rule 1 is the text field.** `input/text-field`'s `State=Hover` is
+byte-identical to `State=Default` across all 14 variants — measured, not missing. A text input's
+affordance is the caret, not a fill, and its feedback is `Selected`. `DECISIONS.md` → **R2**,
+`foundation/text-field.md`. Rule 1 is about **click targets**; a field is not one.
 
 All hover transitions use `--gw-motion-fast`, guarded by `prefers-reduced-motion`.
 

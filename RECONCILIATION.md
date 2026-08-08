@@ -72,9 +72,21 @@ exports never had. Not yet merged in — see Part 3.
 
 ---
 
-## Part 2 — Where they conflict, unresolved
+## Part 2 — Where they conflict — RULED
 
-The exports keep the measured value. Each of these needs a ruling.
+**All four are settled by one standing rule: where a measured component and the written spec
+disagree, the measurement wins.** `DECISIONS.md` → **R0**.
+
+The spec describes an intended system; the file *is* the system. These four are not near-misses —
+the navbar differs in variant count, prop names and fill, and the dashboard button spec proposes
+a blue style that does not exist. Building to the spec produces screens that match nothing anyone
+opens in Figma.
+
+**R0 settles spec-vs-Figma, not Figma-vs-sense.** A measured value that is wrong on its own terms
+— off-palette, failing contrast, internally inconsistent — is still a defect, and R6, R7, R9 and
+R10 each override one.
+
+The detail below is the record of what differed.
 
 ### 2.1 Variant key spacing — spec normalises load-bearing keys
 

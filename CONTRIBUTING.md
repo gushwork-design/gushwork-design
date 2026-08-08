@@ -35,7 +35,41 @@ renders a **dark** card, and `side-panel` has no fill at all despite being drawn
 
 **When an annotation and the component disagree, the component wins** and the disagreement is a
 finding to record. `dashboard-build`'s annotation claims `gap:8` where its own coordinates prove
-0.
+0. Same rule one level up: **a structure blob is documentation, not the component** — the
+`image` "typos" were only ever in the doc; the canvas keys were correct all along.
+
+## Before you rule, confirm the silence
+
+**A ruling fills a gap in the source. Prove the gap is there first.**
+
+All three `Button` hover fills were ruled by hand on 7 Aug on the belief that the `State=Hover`
+symbols carried no fill. **They carried them the whole time**, and all three rulings were wrong —
+`neutral/850`, `neutral/35`, `neutral/50`, not the values invented for them. A day of builds
+shipped slightly wrong hovers that no screenshot would show.
+
+So: **open the symbol.** Not the parent, not a sibling, not the variant next to it — the exact one
+whose value you are about to rule. If it has the value, there is nothing to rule.
+
+The mirror case is just as important. `input/text-field`'s `State=Hover` really *is* identical to
+`Default` — measured, across all 14 variants. That made "the field has no hover" a finding about
+the design rather than a gap to paper over. **Silence you have verified is data.** Silence you
+assumed is a guess wearing a ruling's clothes.
+
+Every ruling lives in `DECISIONS.md` with its reasoning, and withdrawn ones stay listed there
+with why. If you overturn one, overturn it there.
+
+## Two places a value hides from you
+
+Both cost a rebuild on 8 Aug 2026.
+
+**The parent holds what the child cannot show you.** Every one of the login lattice's 400 cells
+reports a full-strength `1px dashed neutral/800`; the `opacity: 0.3` that makes it subtle is on
+the frame above them. Read the frame, then the children, then check the two agree.
+
+**The gaps between children are not in any child.** Node CSS gives you each part; only the
+coordinates give you the 40 between the header and the field group, or the 16 between the field
+and its button. `get_metadata` on the parent, then do the arithmetic — and check it sums to the
+parent's own height.
 
 ## Tokens come from variables, never the canvas
 

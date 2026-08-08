@@ -147,10 +147,16 @@ That matters because the two skills are surface-scoped: a dashboard build otherw
 usage rules are all in `exports/web/component-library.md` — go there, don't re-derive them from
 the single stripped instance used here.
 
-**It also needs a ruling.** Either the field is promoted to a shared atom in `foundation/`,
-alongside the other things both surfaces use, or the dashboard grows its own and this screen
-switches to it. Leaving it as a silent reach across the boundary means a change made for a
-marketing form quietly changes the login screen. Flagged, not resolved — see *Findings*.
+**RULED — it is a shared atom.** `DECISIONS.md` → **R1**. The field now lives in
+**`foundation/text-field.md`**, fully measured across all 14 variants, and both skills own it.
+Read it there; do not re-derive the field from the single stripped instance used here.
+
+Two things that file settles and this screen must follow:
+
+- **The field has no hover state.** `State=Hover` is byte-identical to `State=Default` — measured,
+  not missing. `DECISIONS.md` → **R2**.
+- **The fill never changes**, in any of the 14 variants. The login instance is
+  `State=Default, Feedback=None`, and it matches that symbol exactly.
 
 ### The black button — `Button` `Size=Large` + icon, but **50 tall**
 
@@ -194,8 +200,12 @@ The **Google mark is a real asset**, `Platform=Google, Color=Original` — a fou
 17.64 × 18. Harvested to `assets/brand/google-g.svg`. Do not substitute a letter "G" in a
 coloured circle; it is a third-party brand mark with a fixed form.
 
-**Two variants of one component render the same button two ways different.** Nothing says which
-is intended. Flagged, not normalised — see *Findings*.
+**RULED — build 48 / `--gw-radius-12` / no arrow, in both variants.** `DECISIONS.md` → **R3**.
+Radius 12 matches the black button it stacks with; 72 is out of scale with a system whose largest
+button is 48; and a trailing arrow on a secondary OAuth button repeats the primary's promise.
+`Type=Google`'s 72/16/arrow is a Figma-side fix — **report the drift when you build it.**
+
+The `0.81px` border builds as **1px** — `DECISIONS.md` → **R5**.
 
 ### The `OR` divider — `Google + Email` only
 
@@ -207,14 +217,23 @@ It sits **32 below the container and 32 above the Google button** — the same g
 
 ## Findings
 
-| Finding | Detail |
+All five are ruled. Build the **Ruled** column; the **Measured** column is what Figma still says,
+and each difference is a Figma-side fix to report, not to silently absorb.
+
+| Finding | Measured | Ruled | |
+|---|---|---|---|
+| The field is a web component on a dashboard screen | `input/text-field` `1562:705` in `↳ web/ component-library` | **shared atom** — `foundation/text-field.md`, both skills own it | **R1** |
+| The Google button differs between variants | 72/16/arrow vs 48/12/none | **48 / radius 12 / no arrow**, both | **R3** |
+| `dashboardTitle` binds a raw `black` | `#000000` | **`--gw-color-neutral-black`** `#0d0d0d` | **R4** |
+| Sub-pixel border | `0.81px` | **1px** | **R5** |
+| Field hover | `State=Hover` ≡ `State=Default` | **no hover treatment** | **R2** |
+
+Two that are not defects, just traps — nothing to rule, but don't be caught by them:
+
+| | |
 |---|---|
-| **The field is a web component used on a dashboard screen** | `input/text-field` `1562:705` belongs to `↳ web/ component-library`. The dashboard has no field of its own. Promote it to a shared atom, or give the dashboard one — but don't leave the boundary crossed silently. |
-| **The Google button is inconsistent across variants** | 72 tall at radius 16 with an arrow in `Google`; 48 tall at radius 12 without one in `Google + Email`. Needs a ruling. |
-| **Neither Google button is a `Button` instance** | Both are hand-built frames named "Button". The 48-tall one uses 15px vertical padding, which no `Button` size does. They inherit nothing — a change to the `Button` set will not reach them. |
-| **`dashboardTitle` binds a raw `black`** | Every other title in the system uses `--gw-color-neutral-black` `#0d0d0d`. This one is `#000000`, so a palette change misses it — the same defect as `Button Style=White`. |
-| **`0.81px` border** | Not a token and not a round number; it is a 1px border on a scaled instance. Build 1px and report it. |
-| **The logo tile's variable and value disagree** | Bound to `spacing/8` and `radius/8`, rendering 15 and 15, because the instance is scaled 2×. |
+| **Neither Google button is a `Button` instance** | Both are hand-built frames named "Button". The 48-tall one uses 15px vertical padding, which no `Button` size does. **They inherit nothing** — a change to the `Button` set will not reach them. |
+| **The logo tile's variable and value disagree** | Bound to `spacing/8` and `radius/8`, rendering 15 and 15, because the instance is scaled 2×. Build the rendered value. |
 
 ## Rules
 

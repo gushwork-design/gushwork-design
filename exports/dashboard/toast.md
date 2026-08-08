@@ -51,9 +51,16 @@ Three behaviours go with it, so a second toast never eats the first:
 - **Pair it with a live region** (`role="status"`) — a message that disappears in 4s must be
   announced when it appears.
 
-Still genuinely open, and still not to be invented: whether the timer **pauses on hover or
-focus**, and whether `State=Error` should be exempt (an error that vanishes in 4s can be
-missed). Ask before assuming either.
+**Both remaining questions are now RULED** — `DECISIONS.md` → **R10**.
+
+- **`State=Error` does not auto-dismiss.** It stays until dismissed. An error the user did not
+  see is an error that did not happen, and errors are exactly the toasts carrying something the
+  user must act on. Success and info are confirmations — losing one costs nothing.
+- **The timer pauses while the pointer is over the toast**, and on keyboard focus, resuming on
+  leave. That is the general fix for "it vanished while I was reading it", and it costs nothing
+  on the toasts nobody looks at.
+
+An error toast that never auto-dismisses **must** have a reachable dismiss control.
 
 There is **no CTA or action slot**. Do not add one.
 

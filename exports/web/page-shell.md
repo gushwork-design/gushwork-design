@@ -306,10 +306,12 @@ Addresses: `Regents Inc, 16192 Coastal Hwy, Lewes, DE 19958, United States` ·
    marquee's CSS `text-transform: capitalize` which renders `Agents Working 24/7`. Per
    `foundation/voice.md` these should be `All rights reserved`, `Terms of use`, and
    `Agents working 24/7`. Write them corrected.
-4. **The copyright fails contrast** — `--gw-color-neutral-700` (`#535a61`) on
-   `--gw-color-black` (`#0d0d0d`) is roughly 2.3:1, well under the 4.5:1 floor. The legal
-   links at `neutral-600` are not much better. Flagged, not fixed — changing it is a design
-   decision.
+4. **The copyright fails contrast — RULED, build `--gw-color-neutral-400`.** `neutral-700`
+   (`#535a61`) on `--gw-color-black` (`#0d0d0d`) is roughly **2.3:1**, against a 4.5:1 floor;
+   the legal links at `neutral-600` are about **3.9:1**. Both fail. `neutral-400` `#959ba4`
+   gives **~6.9:1** on black and **~5.1:1** on `neutral-900`, and is the only step that clears
+   the floor on both dark surfaces. `DECISIONS.md` → **R9**. Contrast is a floor, not a
+   preference — this overrides the measured value.
 5. **`Solutions` names differ from the navbar.** The footer says `AI Search Agent`; the
    navbar submenu says `AI Search`. Same destination, two labels.
 

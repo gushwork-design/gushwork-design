@@ -317,11 +317,21 @@ emphasis states is 18. The extra pair is almost certainly the undocumented `othe
   aspect ratio.
 - **Variant names are the keys. Renaming one breaks it.**
 
-**Three conflicts, one still open.** The structure blob says `variant` has *"47 total options"*
-then lists *"All Variants (46 total)"* — in the same blob. **46 is correct.** The default variant
-is `image/startegy-and-pages`, and `image/product-&-serivce-cards` is likewise misspelled; both
-carry an unresolved **`[decide before handoff]`** asking whether to fix the typos in Figma or keep
-them permanently. **That decision is still open and it is load-bearing** — these are variant keys.
+**Three conflicts, all now settled.** The structure blob says `variant` has *"47 total options"*
+then lists *"All Variants (46 total)"* — in the same blob. **46 is correct.**
+
+**The typos are in the blob, not in the components — and this file said otherwise.** It reported
+`image/startegy-and-pages` and `image/product-&-serivce-cards` as variant *keys*, read out of the
+structure doc. `exports/web/images.md` checked the canvas: **the real keys are spelled
+correctly**, `image/strategy-and-pages` and `image/product-&-service-cards`. The doc is wrong and
+also sets the typo'd form as the property default.
+
+**RULED — build the correct spellings.** `DECISIONS.md` → **R8**. The `[decide before handoff]`
+bracket asks whether to rename keys or keep them; there is nothing to rename. Correcting the blob
+is a maintainer task with nothing bound to it.
+
+**Where two of our own files disagree, the one that measured the canvas wins.** Same rule as
+set-over-instance — a structure blob is documentation, not the component.
 
 ## Where there are no rules at all
 

@@ -86,7 +86,18 @@ The face and the admin character are drawn vectors and cannot be approximated:
 
 Bodies are consistently the `-300` step. Backgrounds are not: **Blue uses `-50` where Red,
 Yellow and Green use `-25`, and Orange abandons its own hue entirely for `neutral-50`.**
-Both look unintended. Flagged, not normalised — the variants render what they render.
+
+**RULED — build the `-25` step of the variant's own hue, in all five.** `DECISIONS.md` → **R7**.
+
+| | Measured | Build |
+|---|---|---|
+| Blue | `primary-50` `#e5f1ff` | **`--gw-color-primary-25`** `#f2f8ff` |
+| Orange | `neutral-50` `#f1f2f3` | **`--gw-color-orange-25`** `#fff7ed` |
+| Red · Yellow · Green | already `-25` | unchanged |
+
+Three of five already agree on `-25`, so `-25` is the pattern and the other two are the
+exceptions. Orange on a grey background reads as a different component entirely — every other
+avatar tints with its own hue. Both replacement tokens exist. **Report the drift when you build.**
 
 ## Three avatar components, all stadiums
 

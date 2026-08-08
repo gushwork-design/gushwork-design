@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.21.0, updated 8 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.22.0, updated 8 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -26,8 +26,10 @@ Any commits listed means they are behind: tell them to run
 | For | Read |
 |---|---|
 | Every colour, size, radius, shadow, type style | `foundation/tokens.css` |
+| **Every standing ruling — R0 to R10** | `DECISIONS.md` |
 | Voice, casing, banned words, CTA copy | `foundation/voice.md` |
 | Badge, Gushwork logo, Phosphor icons | `foundation/shared-components.md` |
+| **Text fields — shared with web, all 14 variants** | `foundation/text-field.md` |
 | Declaring anything you had to build yourself | `foundation/new-component-notice.md` |
 | **What to emit — React or static HTML** | `foundation/output-targets.md` |
 | Shell, scrolling, fill and responsive detail | `exports/dashboard/build-rules.md` |
@@ -334,7 +336,13 @@ cost a review round. **They are ruled. Follow the file.**
 | Focus states | `--gw-focus-ring` on `:focus-visible`, everywhere. Mandatory | `states.md` |
 | `Button` hover fills | **MEASURED, not ruled** — Primary `neutral/850`, Outline `neutral/35`, Ghost `neutral/50`. The three hand-ruled values were all wrong | `button.md` |
 | Other hover fills | ruled per control; hover moves ONE step toward the element's selected state | `controls.md`, `section-elements.md` |
-| Text fields | there is **no dashboard text field** — `input/text-field` `1562:705` is a **web** component. Read `exports/web/component-library.md` | `login-screen.md` |
+| Text fields | a **shared atom**, used by both surfaces. **No hover state** — `State=Hover` ≡ `Default` | `foundation/text-field.md`, **R1 R2** |
+| Toast on `State=Error` | **never auto-dismisses**; the 4s timer pauses on hover and focus | `toast.md`, **R10** |
+| Avatar backgrounds | the **`-25`** step of the variant's own hue — Blue and Orange are drifted | `avatar.md`, **R7** |
+| Text on a dark surface | at most **`--gw-color-neutral-400`**; `neutral-600` and `-700` fail contrast | **R9** |
+| A raw hex where a token exists | build the **token**, report the binding bug | **R4** |
+| A sub-pixel border or radius | round to **1px** — it is a scaled instance, not a design value | **R5** |
+| Spec vs Figma | the **measurement** wins, always | `RECONCILIATION.md`, **R0** |
 | Motion | `--gw-motion-fast` (120ms), reduced-motion guarded | `tokens.css` |
 | Below 1440 | scale the shell; never reflow, shrink or clip | `build-rules.md` |
 | `card-layout` responsiveness | variants are **never** rearranged | `build-rules.md` |

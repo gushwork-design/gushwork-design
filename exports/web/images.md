@@ -127,7 +127,9 @@ Renaming a variant changes its key and breaks every instance. Use the names abov
 - The unresolved bracket in the rule — *"[decide before handoff: fix the typos … in Figma
   now, or keep them exactly as-is permanently]"* — is **built on a wrong premise**: the
   typos are not in Figma, they are in the doc. Nothing needs renaming; the doc needs
-  correcting.
+  correcting. **RULED on that basis** — `DECISIONS.md` → **R8**. This file's reading of the
+  canvas is what settled it; `component-library.md` had reported the typos as keys because it
+  read the doc blob, and has been corrected.
 - **The doc states three different totals for one property**: "47 total options", then
   "All Variants (46 total)", and its per-category tables sum to 45. **The canvas has 46.**
   The 46th, missing from the doc, is `image/Frame 2147259566` — an unnamed frame promoted

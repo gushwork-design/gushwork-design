@@ -8,6 +8,13 @@ separately per surface.** The Logo section below covers both, because one compon
 serves marketing and a different one serves product chrome. For Buttons and Avatars,
 go to the per-surface exports.
 
+**The text field is shared and has its own file — `foundation/text-field.md`.**
+`input/text-field` `1562:705`, 14 variants. It is drawn in the web library, but
+`dashboard-login-screen` instantiates it and the dashboard has no field of its own, so it
+was promoted here rather than duplicated. `DECISIONS.md` → **R1**. It is the only
+component that crossed the surface boundary; **if a second one does, promote it too**
+rather than letting the boundary blur one exception at a time.
+
 ---
 
 ## Badge

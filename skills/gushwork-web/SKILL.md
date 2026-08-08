@@ -8,7 +8,7 @@ description: Builds Gushwork marketing and public-website pages on-brand — lan
 You are building a **public-facing marketing surface** for Gushwork. Spacious,
 white-on-black with a blue accent, numbers leading every claim. This is not the product UI.
 
-Announce at the start: **"Using the Gushwork web skill — v1.21.0, updated 8 Aug 2026."**
+Announce at the start: **"Using the Gushwork web skill — v1.22.0, updated 8 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -26,10 +26,23 @@ Any commits listed means they are behind: tell them to run
 | For | Read |
 |---|---|
 | Every colour, size, radius, shadow, type style | `foundation/tokens.css` |
+| **Every standing ruling — R0 to R10** | `DECISIONS.md` |
 | Voice, casing, banned words, CTA copy | `foundation/voice.md` |
 | Badge, Gushwork logo, Phosphor icons | `foundation/shared-components.md` |
+| **Text fields — shared with dashboard, all 14 variants** | `foundation/text-field.md` |
 | Declaring anything you had to build yourself | `foundation/new-component-notice.md` |
 | **What to emit — React or static HTML** | `foundation/output-targets.md` |
+
+### The rulings that bite on this surface
+
+| Question | Ruled | |
+|---|---|---|
+| Text fields | `input/text-field` is a **shared atom** in `foundation/`, not web-only. **No hover state** — `State=Hover` ≡ `Default`. `Yellow Warning` builds `--gw-color-yellow-500`, not the off-palette `#c18c0b` | **R1 R2 R6** |
+| Footer legal text | **`--gw-color-neutral-400`**. `neutral-700` on black is ~2.3:1 and `neutral-600` ~3.9:1 — both fail the 4.5:1 floor | **R9** |
+| The `image` typos | a **documentation** bug, not a key bug. The canvas keys are spelled correctly — build `strategy` and `service` | **R8** |
+| Variant key spacing | keep it irregular — `Outlined/ black`, `Outlined / white`, `Text/ black` are **identifiers**; the spec's tidied forms do not resolve | **R0** |
+| Spec vs Figma | the **measurement** wins, always | **R0** |
+| A raw hex where a token exists | build the **token**, report the binding bug | **R4** |
 
 **Never restate a token value or a voice rule here or in your output.** Reference the token.
 
