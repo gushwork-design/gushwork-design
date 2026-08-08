@@ -66,11 +66,18 @@ happened the first time this screen was built outside Figma.
 **`creatorInfo` is attribution.** It always reads:
 
 ```
-Created and owned by {creator first name} on {created date}.
+Created and owned by {creator first name} on {created date} at {created time}.
 ```
 
-Both values come off the dashboard record. It is never marketing copy, a tagline, or a feature
-line. Ruled by Utsav, 8 Aug 2026.
+Formatted `D MMM YYYY at h:mm am/pm` — no leading zero on the day or the hour, three-letter
+month, lowercase meridiem:
+
+```
+Created and owned by Utsav on 8 Aug 2026 at 5:47 pm.
+```
+
+All three values come off the dashboard record. It is never marketing copy, a tagline, or a
+feature line. Ruled by Utsav, 8 Aug 2026.
 
 **`welcomeDescription` says what the dashboard is and how to use it.** Not a greeting — the
 title already greets — and not a status report on what happened while the user was away. It

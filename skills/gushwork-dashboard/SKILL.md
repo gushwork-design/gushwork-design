@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.25.0, updated 8 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.26.0, updated 8 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -342,10 +342,11 @@ cost a review round. **They are ruled. Follow the file.**
 | Other hover fills | ruled per control; hover moves ONE step toward the element's selected state | `controls.md`, `section-elements.md` |
 | Text fields | a **shared atom**, used by both surfaces. **No hover state** — `State=Hover` ≡ `Default` | `foundation/text-field.md`, **R1 R2** |
 | Toast on `State=Error` | **never auto-dismisses**; the 4s timer pauses on hover and focus | `toast.md`, **R10** |
-| Login `creatorInfo` | fixed attribution — `Created and owned by {first name} on {date}.` Never marketing copy | `login-screen.md`, **R12** |
+| Login `creatorInfo` | fixed attribution — `Created and owned by {first name} on 8 Aug 2026 at 5:47 pm.` Date **and** time, never marketing copy | `login-screen.md`, **R12** |
 | Login `welcomeDescription` | says **what the dashboard is and how to use it** — not a greeting, not a status report | `login-screen.md`, **R12** |
 | Login subtext height | **always exactly two lines** (56px, clamped). Ceiling ~121 chars at the 600 column | `login-screen.md`, **R13** |
 | Login title→subtext gap | **24**, not the measured 32 — puts the subtext at y 96 | `login-screen.md`, **R13** |
+| Login screen scaling | fixed **1440 × 840** — scale on **both** axes, and guard the factor against a zero viewport | `build-rules.md` |
 | Avatar backgrounds | the **`-25`** step of the variant's own hue — Blue and Orange are drifted | `avatar.md`, **R7** |
 | Text on a dark surface | at most **`--gw-color-neutral-400`**; `neutral-600` and `-700` fail contrast | **R9** |
 | A raw hex where a token exists | build the **token**, report the binding bug | **R4** |

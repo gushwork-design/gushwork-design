@@ -67,6 +67,28 @@ Every measured value survives, nothing is clipped, and the header toolbar never 
 `.toolbar { flex-wrap: nowrap }` — safe, because every width now lays out as 1440, where it
 fits on one line.
 
+**`dashboard-login-screen` scales on BOTH axes.** `dashboard-build` is fixed in width and fluid
+in height, so one factor from `innerWidth` is enough. The login screen is fixed at **1440 × 840**,
+and its 800px panel has to stay square, so it takes its own factor:
+
+```css
+/* --fit-login = min(1, innerWidth/1440, innerHeight/840) */
+.login-screen { zoom: var(--fit-login, 1); width: 1440px; height: 840px; }
+```
+
+Centre it and let the surrounding surface show through. A width-only factor stretches the
+composition vertically on a short viewport and crops the panel on a tall narrow one.
+
+**Guard the factor against a zero viewport.** A tab that has not been laid out yet reports
+`innerWidth`/`innerHeight` as `0`, which makes the factor `0` and collapses the whole screen to
+nothing — it renders blank, not broken, so it is easy to misread as a build failure:
+
+```js
+const w = window.innerWidth || DESIGN_W, h = window.innerHeight || DESIGN_H;
+```
+
+Fall back to the design size until real dimensions arrive; the `resize` listener corrects it.
+
 **The trade-off, so nobody rediscovers it:** below 1440, type paints smaller than the ramp —
 14px renders ~12px at a 1230 viewport, ~10px at 1024. That is the price of a fixed-width canvas
 and it is the only option that deforms nothing.

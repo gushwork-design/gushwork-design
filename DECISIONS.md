@@ -238,10 +238,20 @@ was built from the export alone.
 **`creatorInfo` is attribution.** It always reads:
 
 ```
-Created and owned by {creator first name} on {created date}.
+Created and owned by {creator first name} on {created date} at {created time}.
 ```
 
 Both values come off the dashboard record. Never a tagline, a feature line, or marketing copy.
+
+**The stamp carries a date *and* a time**, formatted `D MMM YYYY at h:mm am/pm`:
+
+```
+Created and owned by Utsav on 8 Aug 2026 at 5:47 pm.
+```
+
+No leading zero on the day or the hour, three-letter month, **lowercase meridiem**. This is the
+one place the system writes a timestamp, so the format is fixed here rather than left to each
+build. Ruled by Utsav, 8 Aug 2026.
 
 **`welcomeDescription` says what the dashboard is and how to use it.** The title already greets;
 the subtext orients someone landing on the product for the first time. It is **not** a status

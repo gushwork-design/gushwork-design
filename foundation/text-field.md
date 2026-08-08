@@ -61,6 +61,12 @@ hover state" in `exports/dashboard/states.md`.
 **The label shrinks on `Filled`, not on `Selected`.** A focused-but-empty field still shows its
 label at full size, with the caret on the line below. Slightly unusual, and measured — build it.
 
+**Do not animate the label between 14 and 12.** Nothing in the set specifies motion on this
+transition, and `font-size` is a poor property to animate — it does not composite, and in
+practice it proved unreliable, holding the old size until an unrelated repaint and so reporting
+14px on a field that was already `Filled`. Swap the size. The only motion in this component is
+the `CircleNotch` spinner below.
+
 ## `Feedback` — adds a border and a message, and grows the component to 76
 
 | | `Red Warning` | `Yellow Warning` |
