@@ -94,6 +94,31 @@ Copy them exactly. Document reality; don't tidy it.
 `RECONCILIATION.md` holds every place the measured exports and the Master Specification
 disagree, and which one each export follows. Add to it rather than silently picking a side.
 
+## Never work inside the installed plugin
+
+`~/.claude/plugins/marketplaces/gushwork` is a **read-only mirror**. The repo you edit is your own
+clone. They are not the same directory and they must never both have commits.
+
+On 8 Aug 2026 a session wrote a notice, committed it **into the mirror**, and never pushed. That
+one commit made the mirror diverge from `origin/main`, so it could no longer fast-forward — and
+the plugin sat frozen while a second session, reading it, correctly reported that the design
+system *has no sign-in screen* and hand-built one. The component had been in `main` for hours.
+
+The failure is silent in both directions: the stale session has no way to know it is stale beyond
+the announce line, and the mirror gives no warning that it has diverged.
+
+**If a session ever edits or commits inside the mirror, recover it:**
+
+```bash
+cd ~/.claude/plugins/marketplaces/gushwork
+git tag -f rescue HEAD          # keep anything unpushed, just in case
+git reset --hard origin/main
+claude plugin update gushwork-design@gushwork
+```
+
+Then restart Claude Code. Check with `claude plugin list` — and trust the skill's announce line
+over any memory of having updated.
+
 ## Shipping the change
 
 See the propagation table in [`README.md`](README.md). The short version:
