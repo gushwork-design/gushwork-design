@@ -137,8 +137,10 @@ See the propagation table in [`README.md`](README.md). The short version:
    ```
 
    The subject *is* the `CHANGELOG.md` row, and the trailer *is* its `Session` column.
-4. **`bash scripts/changelog.sh`**, then `git add -A && git commit --amend --no-edit`.
-   The log is derived from git, so it cannot drift — but it does have to be regenerated.
+4. **`bash scripts/changelog.sh`**, then commit it **separately** —
+   `git commit -m "Regenerate CHANGELOG after v1.2.0"`. Never amend: the log records the
+   release commit's sha, and amending changes it. `bash scripts/changelog.sh --check`
+   exits non-zero if the log is stale.
 5. `claude plugin validate .` before you push.
 6. Push to `main`. Anyone with `autoUpdate` on gets it at their next start.
 
