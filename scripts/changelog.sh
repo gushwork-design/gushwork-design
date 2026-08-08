@@ -5,17 +5,21 @@
 # A row appears for every commit whose subject starts `vX.Y.Z`. The subject after the dash
 # is the one-line summary, so write release subjects accordingly.
 #
-# The "Session" column comes from a `Session:` trailer on the release commit:
+# The "Session" column comes from a `Session:` trailer on the release commit —
+# the session uuid, then the title:
 #
 #     git commit -m "v1.27.0 — what changed
 #
 #     ...body...
 #
-#     Session: GW Design Associate"
+#     Session: 5a7c696b-5bbf-4aee-adf8-603e744f9018 Gushwork Design System plugin"
 #
-# Chat sessions are machine-local and have no shareable URL, so the trailer holds the
-# session TITLE — enough for Utsav to find the right conversation, meaningless to leak.
-# Never put a session id, transcript path or chat content in here: the repo is public.
+# It renders as a claude://resume/<uuid> deep link, which reopens that conversation in
+# the desktop app. The link only resolves on the machine holding the transcript — it is
+# a pointer for the maintainer, not something a teammate can follow.
+#
+# Never put chat CONTENT in here. The uuid and title are opaque and safe; the transcript
+# is not, and this repo is public.
 #
 # Usage:  bash scripts/changelog.sh          # rewrite CHANGELOG.md
 #         bash scripts/changelog.sh --check  # exit 1 if it is out of date
@@ -24,6 +28,30 @@ cd "$(dirname "$0")/.."
 
 REPO="https://github.com/utsav-gushwork/gushwork-design"
 
+# Releases that predate the Session: trailer. Attribution is first-hand only —
+# transcript greps are unreliable because forked sessions duplicate each other's
+# history, so a mention reads as authorship. Anything not listed stays blank.
+backfill() {
+  case "$1" in
+    v1.21.0|v1.22.0|v1.23.0|v1.24.0|v1.24.1|v1.27.0)
+      echo "5a7c696b-5bbf-4aee-adf8-603e744f9018 Gushwork Design System plugin" ;;
+    v1.19.0|v1.25.0|v1.26.0)
+      echo "5eeaa384-81a5-460f-8fff-20a987090035 Website performance dashboard" ;;
+    *) echo "" ;;
+  esac
+}
+
+# "<uuid> <title>" -> a markdown deep link. Bare titles (no uuid) render as plain text.
+session_cell() {
+  local raw="${1:-}"
+  [ -z "$raw" ] && { printf '—'; return; }
+  local uuid="${raw%% *}" title="${raw#* }"
+  case "$uuid" in
+    [0-9a-f]*-[0-9a-f]*-*) printf '[%s](claude://resume/%s)' "$title" "$uuid" ;;
+    *) printf '%s' "$raw" ;;
+  esac
+}
+
 build() {
   cat <<'HEAD'
 # Changelog
@@ -31,9 +59,14 @@ build() {
 Every released version, newest first. **Generated from git history** by
 `scripts/changelog.sh` — do not edit by hand, the next release will overwrite it.
 
-`Session` is the chat the change came from. Chat sessions are machine-local and have no
-shareable link, so this is the session's title, recorded as a `Session:` trailer on the
-release commit. If it is blank, the release predates the convention.
+`Session` is the chat the change came from — a `claude://resume/<uuid>` deep link that
+reopens that conversation in the Claude desktop app, recorded as a `Session:` trailer on
+the release commit.
+
+**The link only resolves on the machine holding the transcript.** It is a pointer for the
+maintainer, not something a teammate can follow — for everyone else the commit link is the
+one that works. Entries before the trailer convention are backfilled from first-hand
+knowledge only; a blank cell means nobody could vouch for it.
 
 To check what you are running: the skill announces its own version and date at the start of
 every session. Trust that line over memory — it is stamped into the file, so **a stale copy
@@ -55,8 +88,9 @@ HEAD
           version="${subject%% *}"
           summary="${subject#* — }"
           [ "$summary" = "$subject" ] && summary="${subject#"$version" }"
+          [ -z "${session:-}" ] && session="$(backfill "$version")"
           printf '| **%s** | %s | %s | [`%s`](%s/commit/%s) | %s |\n' \
-            "$version" "$date" "$summary" "${sha:0:7}" "$REPO" "$sha" "${session:-—}"
+            "$version" "$date" "$summary" "${sha:0:7}" "$REPO" "$sha" "$(session_cell "$session")"
           ;;
       esac
     done
