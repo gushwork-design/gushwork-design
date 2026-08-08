@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.19.0, updated 7 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.20.0, updated 8 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -31,6 +31,7 @@ Any commits listed means they are behind: tell them to run
 | Declaring anything you had to build yourself | `foundation/new-component-notice.md` |
 | **What to emit — React or static HTML** | `foundation/output-targets.md` |
 | Shell, scrolling, fill and responsive detail | `exports/dashboard/build-rules.md` |
+| The sign-in gate | `exports/dashboard/login-screen.md` |
 
 **Never restate a token value or a voice rule here or in your output.** Reference the token.
 
@@ -222,6 +223,7 @@ Three hard rules:
 | Need | Use | Read |
 |---|---|---|
 | Any dashboard page | `dashboard-build` | `dashboard-build.md` |
+| **A dashboard behind a login** | `dashboard-login-screen` — `Type` = `Password` / `Google` / `Google + Email` | `login-screen.md` |
 | Page title + tabs + filters + refresh | `section/header` — one per page, sticky | `sections.md` |
 | Headline metrics + supporting metrics | `section/card-layout`, `KPI cards` = 1, 2, or 3 | `sections.md` |
 | A goal / progress readout | `section/progress-bar` | `sections.md` |
