@@ -24,6 +24,7 @@ reports its own stale date.**
 
 | Version | Date | What changed | Commit | Session |
 |---|---|---|---|---|
+| **v1.29.0** | 08 Aug 2026 18:34 | the changelog is a sheet, and a release is a version bump | [`76ab96d`](https://github.com/utsav-gushwork/gushwork-design/commit/76ab96d5ad81f1ec8aa79510fd6615b570b07310) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.28.1** | 08 Aug 2026 18:06 | fall back to the backfill table when a trailer has no uuid | [`5a8df70`](https://github.com/utsav-gushwork/gushwork-design/commit/5a8df70cce32dde46da01cfdabdc9cbae07972b5) | [Gushwork Design System plugin](claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018) |
 | **v1.28.0** | 08 Aug 2026 18:05 | the Session column is a claude://resume deep link | [`6388221`](https://github.com/utsav-gushwork/gushwork-design/commit/6388221e9e506db19c6281d1165ff0c41f24ad16) | [Gushwork Design System plugin](claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018) |
 | **v1.27.0** | 08 Aug 2026 17:59 | a derived changelog, so multi-chat releases stay traceable | [`732d4df`](https://github.com/utsav-gushwork/gushwork-design/commit/732d4dff9b864016028460b97ae381bc268fd624) | [Gushwork Design System plugin](claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018) |
