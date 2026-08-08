@@ -126,6 +126,22 @@
   --gw-color-neutral-alpha-20-black: #01010933;
   --gw-color-neutral-alpha-50-black: #01010980;
 
+  /* --- Categorical chart series — RULED, DECISIONS.md R11 -------------------
+     `Graph Type=Grouped Bar` (2143:683) binds three raw hexes. Two sit within a few
+     units of an existing ramp step across 765 — differences nobody can see — and are
+     treated as those tokens, unbound:
+         #a1cdfe -> --gw-color-primary-200      #fed14a -> --gw-color-yellow-200
+     The third is a violet and the system has NO violet ramp, so it is added here as a
+     single named colour rather than nine steps nobody drew.
+     THREE SERIES IS THE CEILING. A fourth category is a finding to report, not a
+     colour to pick. Single-series charts (`Bar`, `Line`) use --gw-color-primary-500
+     and do not touch this palette.
+     Not a Figma variable — added by ruling, 8 Aug 2026. */
+  --gw-color-chart-violet: #9784ff;
+  --gw-color-chart-1: var(--gw-color-primary-200);
+  --gw-color-chart-2: var(--gw-color-chart-violet);
+  --gw-color-chart-3: var(--gw-color-yellow-200);
+
   /* --- Red (negative / error) ---------------------------------------------- */
   --gw-color-red-25:  #fff1f2;
   --gw-color-red-50:  #ffe4e6;

@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.22.0, updated 8 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.23.0, updated 8 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -26,7 +26,7 @@ Any commits listed means they are behind: tell them to run
 | For | Read |
 |---|---|
 | Every colour, size, radius, shadow, type style | `foundation/tokens.css` |
-| **Every standing ruling — R0 to R10** | `DECISIONS.md` |
+| **Every standing ruling — R0 to R11** | `DECISIONS.md` |
 | Voice, casing, banned words, CTA copy | `foundation/voice.md` |
 | Badge, Gushwork logo, Phosphor icons | `foundation/shared-components.md` |
 | **Text fields — shared with web, all 14 variants** | `foundation/text-field.md` |
@@ -83,12 +83,14 @@ in the notice.
 
 ## Values a sensible guess gets wrong
 
-Read off the component sets on 7 Aug 2026. **Eleven components were checked and ten had been
-recorded wrong.** Every line below is a value that was built incorrectly at least once. Reach for
-this before you reach for intuition.
+Read off the component sets, 7–8 Aug 2026. **Seventeen components have now been checked and
+fifteen had been recorded wrong.** Every line below is a value that was built incorrectly at
+least once. Reach for this before you reach for intuition.
 
 | Component | The trap |
 |---|---|
+| `controls/dropdown` | **The open menu is wider than its trigger** — 160 vs 144, right-aligned. Menu border is `neutral/50`, options are `button-12-med`, option hover is `neutral/50`. **There is no selected checkmark** — an earlier ruling invented one. |
+| `Graph` | **Three sizes, not interchangeable** — 280 / 400 / 456 tall. `Line` is **single-series**; its "second series" is a gradient fill. `Grouped Bar`'s three colours are raw hex — use `--gw-color-chart-1/2/3`. |
 | `kpi-card` | **The `Mode` names are inverted.** `Mode=light`, `Mode4`, `Mode6` render on **`neutral/900`** — a dark card. `Mode=dark`, `Mode3`, `Mode5` render on `neutral/25`. Height is content-driven; there is no fixed 198. |
 | `list-item` | Nav rows are **Inter Medium 500 / 14**; group labels **Inter Semi Bold 600 / 10** on `neutral/400`. The instance inside `dashboard-build` reports Bold for both — it is wrong. |
 | `controls/toggle` | `On` is **`neutral/900`**, not blue. |
@@ -96,7 +98,7 @@ this before you reach for intuition.
 | `toast` | **8 variants** (`Mode` × `State`). Padding is **`px-16 py-8`**. `Mode=Dark` collapses all four fills to `neutral/900` and carries the state in the icon alone. |
 | `user-card` | **No background fill on any state.** Only the menu tile changes — `neutral/50` on Hover and Clicked. |
 | `analytics-card` | `p-12` and `gap-20`. |
-| `table-row` | The first column (`col-price`) is a **fixed 200**; the other five are 120, in a `flex-1` group with `gap-40`. |
+| `table-row` | **`Selected` and `Hover` are the same fill**, `neutral/25` — a selected row is marked *only* by a 16px black checkbox. First column (`col-price`) is a fixed **200**, the other five **120**, in a `flex-1` group with `gap-40`. Cell text binds a raw `#6a7077`. |
 | `section/header` | **1164 × 146**, not the 164 in the rules text. Title is Vert Grotesk Semibold 32 on **`neutral/900`**. |
 | `dashboard-build` | **The shell gap is 0.** 8 + 260 + 1164 + 8 = 1440; the annotation's `gap:8` would give 1448. Rail **880**, container **872** — the rail runs 8px lower. |
 
@@ -391,10 +393,12 @@ Encoded so you don't silently invent an answer:
   in-between fill, no two-month view. Single-select only; a date *range* is a finding.
 - **There is no destructive treatment** — no destructive `Button` style, no red menu row. Sign
   out and delete stay neutral.
-- **There is no categorical chart palette.** `Graph Type=Line`'s second series has no colour and
-  `Grouped Bar`'s three are raw hex. Any multi-series chart is blocked on this — report it.
-- **Toast auto-dismiss on `State=Error`**, and whether the timer pauses on hover, are still open.
-  The 4s ruling does not cover them.
+- ~~**There is no categorical chart palette.**~~ **RULED — `DECISIONS.md` R11.** The blocker was
+  narrower than recorded: `Line` is **single-series by design** (the "second series" is the
+  gradient fill under the one line). Only `Grouped Bar` needs categorical colours — use
+  `--gw-color-chart-1/2/3`. **Three series is the ceiling**; a fourth is a finding.
+- ~~**Toast auto-dismiss on `State=Error`.**~~ **RULED — R10.** Errors never auto-dismiss; the
+  4s timer pauses on hover and focus.
 - **`controls/dropdown` has no `Color=White, State=Open` variant.**
 - **kpi-card has only 6 of 18 `Mode × Type` combinations.** Check `section-elements.md`
   before specifying one.

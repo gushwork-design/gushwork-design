@@ -198,6 +198,36 @@ and it costs nothing on toasts nobody looks at.
 
 ---
 
+## R11 — the categorical chart palette
+
+**Three series, and the blocker was narrower than recorded.** `Graph Type=Line` is
+**single-series by design** — what an earlier pass read as "a second series with no colour" is
+the gradient area fill under the one line. Only `Grouped Bar` needs categorical colours, and it
+binds three raw hexes.
+
+| Series | Measured | Build | |
+|---|---|---|---|
+| 1 | `#a1cdfe` | **`--gw-color-primary-200`** `#99c6ff` | unbound token |
+| 2 | `#9784ff` | **`--gw-color-chart-violet`** `#9784ff` — **new token** | genuine gap |
+| 3 | `#fed14a` | **`--gw-color-yellow-200`** `#fcd34d` | unbound token |
+
+**Why two map and one does not.** Series 1 and 3 sit within ~11 and ~4 units of an existing ramp
+step across 765 — differences no one can see, and far too close to be deliberate choices. They
+are almost certainly those tokens, unbound. Series 2 is a violet, and **the system has no violet
+or purple ramp at all**, so there is nothing to map it to and rounding it into blue would destroy
+the categorical distinction that is the entire point.
+
+**So `#9784ff` becomes a token rather than a hex.** It is added as `--gw-color-chart-violet`
+under a new `chart` group — deliberately *not* as `violet-300` in a full ramp, because one
+colour is not a ramp and inventing nine steps nobody drew would be worse than the problem.
+
+**Three series is the ceiling.** That is what the palette supports and what `Grouped Bar` draws.
+A fourth category is a finding to report, not a colour to pick.
+
+**Line and Bar stay `--gw-color-primary-500`.** Single-series charts do not touch this palette.
+
+---
+
 ## Withdrawn
 
 | Ruling | Why |

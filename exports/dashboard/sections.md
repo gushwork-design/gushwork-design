@@ -222,8 +222,91 @@ All three share one pattern: `y-axis labels │ chart area with grid lines + dat
 | Variant | Size | y-axis | Chart area |
 |---|---|---|---|
 | `Bar` | 1060×280 | 182×280, 7 labels, gap 20 | 866×280, grid gap 60 |
-| `Line` | 1028×400 | 6 labels, gap 56 | 999×400, 2 series + tooltip |
+| `Line` | 1028×400 | 6 labels, gap 56 | 999×400, **1 series + gradient fill** + tooltip |
 | `Grouped Bar` | 1108×456 | 182×456, 7 labels | 914×456, 7 bar groups × 3 bars |
+
+**The three sizes are not interchangeable** — 280, 400 and 456 tall. A slot sized for `Bar` will
+not hold `Grouped Bar`. Pick the chart before you size the section.
+
+## Graph appearance — MEASURED 8 Aug 2026
+
+Read off `2143:681`, `2143:682` and `2143:683`, plus the four SVG assets `Line` renders its data
+as.
+
+### Shared across all three
+
+| Part | Measured |
+|---|---|
+| Canvas | `--gw-color-neutral-white`, `overflow: clip` |
+| Grid lines | **6**, horizontal, `--gw-color-neutral-100` `#e7e8e9`, 1px solid, in a `py-16` band |
+| Axis labels | Inter Medium **12**, line-height 1, tracking `-0.2px`, `--gw-color-neutral-600` |
+| x-axis | `justify-between`, each tick **32 wide** (36 on `Line`) |
+
+The chart area is authored **rotated −90°** inside a `containerType: size` wrapper, so every bar
+is drawn horizontal and turned. That is a Figma drawing technique, not a spec — build it however
+your chart library wants.
+
+### `Bar` — single series
+
+Bars are **`--gw-color-primary-500`**, **10 tall**, radius **2 on the right corners only**
+(`rounded-br-2 rounded-tr-2`). Value labels sit just past the bar end, Inter Medium **10**.
+
+**✗ The value labels disagree with each other.** The first is `--gw-color-neutral-black`; the
+other two are `--gw-color-neutral-900`. Same role, two colours. Build **`neutral/900`** — it is
+the majority, and it is closest to `Grouped Bar`, which uses `neutral/800` throughout and never
+black. Report the drift.
+
+### `Line` — one series, not two
+
+**The data is four SVG assets, not styled elements**, which is why an earlier pass recorded "2
+series" and "the second series has no colour". There is no second series:
+
+| Asset | Measured |
+|---|---|
+| The line | `stroke: #0070FF` = `--gw-color-primary-500`, **`stroke-width: 2`** |
+| The area beneath it | a vertical linear gradient, `#0070FF` **30% → 0%** |
+| Grid lines | `stroke: #E7E8E9` = `--gw-color-neutral-100` |
+| Crosshair | `#0070FF`, **`stroke-dasharray: 2 2`** |
+
+So `Line` is **single-series by design** and needs no categorical palette. Only `Grouped Bar`
+does.
+
+#### The tooltip — a component nothing else documents
+
+`Line` carries a hover tooltip that appears in no other export:
+
+| Part | Measured |
+|---|---|
+| Surface | `--gw-color-neutral-25` · **0.5px `--gw-color-neutral-100`** · `--gw-radius-4` · `p-8` · `gap-8` · **`--gw-shadow-s2`** |
+| Header | 12px `Clock` + `gap-2` + `--gw-text-body-10-med` on `--gw-color-neutral-500` |
+| Headline | `--gw-text-body-10-med` on `--gw-color-neutral-900`, with an 8px flipped `CaretDown` pushed right |
+| Breakdown | **0.7px dashed left border `--gw-color-neutral-500`**, `pl-8 py-4`; rows of **8px** Inter Medium, `gap-12` across, `gap-4` down |
+| Breakdown row | label `--gw-color-neutral-600` · value `--gw-color-neutral-700` |
+
+Figma's Tailwind output reports the shadow as `drop-shadow(0 2px 2px …)` while the style
+annotation names `Shadows/S2` — *offset (0,2), radius 4*. **The annotation is the token.** Same
+flattening as the login button's S3.
+
+**0.7px and 0.5px are sub-pixel** — build 1px per `DECISIONS.md` → **R5**, and report them.
+
+### `Grouped Bar` — three series, none of them a token
+
+7 category groups × 3 bars, **`gap-px` between bars within a group**. Bars are 10 tall with the
+same right-only radius 2. Value labels are Inter Medium 10 on `--gw-color-neutral-800` —
+consistent here, unlike `Bar`.
+
+| Series | Measured | Nearest token | Δ |
+|---|---|---|---|
+| 1 | `#a1cdfe` | `--gw-color-primary-200` `#99c6ff` | ~11/765 — imperceptible |
+| 2 | `#9784ff` | **none — the system has no purple ramp** | — |
+| 3 | `#fed14a` | `--gw-color-yellow-200` `#fcd34d` | ~4/765 — imperceptible |
+
+**Two of the three are almost certainly meant to be those tokens and are simply unbound.** The
+third has nowhere to go. `DECISIONS.md` → **R11**.
+
+The left label column is `pb-40` with `gap-32` and 32-tall labels. **✗ One category label is
+`--gw-color-neutral-black` where the other six are `--gw-color-neutral-600`** — the same
+one-off-in-a-set drift as `Bar`'s value labels. Build all seven `neutral/600`.
 
 ---
 

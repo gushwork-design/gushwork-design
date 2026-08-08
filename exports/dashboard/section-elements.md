@@ -230,15 +230,39 @@ fights the component's deliberate quietness.
 **The bottom border is `neutral-200`** — a step darker than the `neutral-100` used for
 hairlines elsewhere in the dashboard.
 
-### `Type=Header` and `State=Hover` — appearance. RULED.
+### `State=Hover` and `State=Selected` — MEASURED 8 Aug 2026
 
-The export measures only `Type=Data, State=Default`. Both of these variants exist in Figma with
-no recorded appearance, so builds were guessing:
+Read off `2192:540` and `2192:542`. The hover was previously ruled at `neutral-25`, borrowed from
+`list-item` — **that ruling turns out to be right**, and is now confirmed rather than assumed.
+
+| Variant | Measured | |
+|---|---|---|
+| `State=Hover` fill | **`--gw-color-neutral-25`** | ruled correctly ✓ |
+| `State=Selected` fill | **`--gw-color-neutral-25`** — the *same* | not previously recorded |
+| `State=Selected` mark | a **16 × 16 `--gw-color-neutral-black` tile at `--gw-radius-4`**, holding a 12px white `Check`, inserted **before** the column group at the row's `gap-12` | not previously recorded |
+
+**Selected and Hover are the same colour.** A selected row is distinguished *only* by its
+checkbox — hovering a selected row changes nothing at all. Do not invent a darker selected fill
+to separate them; the checkbox is the signal, and it is a strong one.
+
+Everything else — border, padding, column widths, type — is identical across `Default`, `Hover`
+and `Selected`. Only the fill and the checkbox move.
+
+**✗ The cell text binds a raw `#6a7077`.** It is exactly `--gw-color-neutral-600`, but unbound,
+so a palette change would miss every table cell in the system. `DECISIONS.md` → **R4**: build the
+token, report the binding bug.
+
+### `Type=Header` — appearance. STILL RULED.
+
+`Type=Header` (`2192:538`, `2177:12472`, `2177:12488`) was **not** read in the 8 Aug pass:
 
 | Variant | Value |
 |---|---|
 | `Type=Header` text | `--gw-text-body-14-sem` · `--gw-color-neutral-800` — matches the Section title, so header row and section title read as one level |
-| `State=Hover` fill | `--gw-color-neutral-25` — borrowed from `list-item`'s measured hover, transitioned with `--gw-motion-fast` |
+
+**Treat this as provisional.** Of the two `Type=Data` rulings checked in this pass, one was right
+and one described something that was never recorded at all — the ruling process is not reliable
+enough to trust the third unread.
 
 **Sortable header columns** carry the measured `ArrowsDownUp` glyph at 12px: hidden at rest,
 `--gw-color-neutral-400` at 50% on hover, `--gw-color-primary-500` on the active sort column.

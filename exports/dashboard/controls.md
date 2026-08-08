@@ -214,26 +214,65 @@ every build guessed. These are the values, each derived from the nearest measure
 
 All hover transitions use `--gw-motion-fast`.
 
-## `controls/dropdown` `Color=White` — appearance. RULED.
+## `controls/dropdown` — MEASURED 8 Aug 2026
 
-The variant exists (`2199:739` / `2199:744` / `2199:749`) but only its node and size were
-recorded. Fill `--gw-color-white` with a **1px inset ring** in `--gw-color-neutral-100`,
-matching how the Grey variant is constructed. Use it on a white panel — a `section/table`
-toolbar or footer — and `Color=Grey` on the grey canvas.
+Read off `1589:612` (Grey/Medium/Closed), `2199:744` (White/Medium/Closed) and `1589:639`
+(Grey/Medium/Open). **Both sections below were previously RULED, and the rulings were wrong in
+five places** — including one element that does not exist.
 
-## `State=Open` — the menu surface. RULED.
+### The trigger
 
-`State=Open`'s size was recorded; its fill, border and shadow were not.
+| | `Color=Grey` | `Color=White` |
+|---|---|---|
+| Fill | `--gw-color-neutral-50` | `--gw-color-neutral-white` |
+| Border | **none** | **1px `--gw-color-neutral-100`** |
+| Padding · radius | `p-12` · `--gw-radius-12` | identical |
+| Label | `--gw-text-body-14-med` on `--gw-color-neutral-900` | identical |
+| Caret | `CaretDown` **12px**, `gap-4` from the label | identical |
 
-| Part | Value |
+Layout is `justify-between` — label group left, caret hard right. `Medium` is 144 × 44; `p-12`
+around a 20px line box = 44. ✓
+
+**✗→✓ The Grey variant has no ring.** The old ruling gave White "a 1px inset ring … matching how
+the Grey variant is constructed". Grey is a bare fill with no border at all, and White's ring is
+a real **border** — it occupies layout. The token was right; the reasoning and the construction
+were not.
+
+**`Color=White` exists only at `State=Closed`.** Nine variants = 3 sizes × Grey(Closed, Open) +
+3 sizes × White(Closed). There is no White + Open.
+
+### `State=Open` — measured, not ruled
+
+Figma had all of this. It was never a gap.
+
+| Part | Measured |
 |---|---|
-| menu | `--gw-color-white` · `--gw-radius-8` · `--gw-shadow-s3` + 1px inset `--gw-color-neutral-100` · pad `--gw-space-4` · gap `--gw-space-4` |
-| option row | pad `--gw-space-8` · `--gw-radius-4` · `--gw-text-body-12-med` · `--gw-color-neutral-900` |
-| option hover | `--gw-color-neutral-25` |
-| selected mark | `Check` at 12px in `--gw-color-primary-500` |
-| trigger caret | flips `scaleY(-1)` while open |
+| Wrapper | column, **`gap-4`**, `items-end`, **160 wide** at `Medium` |
+| Trigger | as above, plus **`min-w-140`**; the caret **flips** (`-scale-y-100`) |
+| Menu | `--gw-color-neutral-white` · **1px `--gw-color-neutral-50`** · `--gw-radius-8` · `p-4` · `gap-4` · `overflow: clip` · **`--gw-shadow-s3`** · `w-full` |
+| Option row | `p-8` · `--gw-radius-4` · **`--gw-text-button-12-med`** on `--gw-color-neutral-900` · `gap-8` |
+| Option hover | **`--gw-color-neutral-50`** |
 
-**Closes on outside click and on `Escape`.** Both, not one.
+**The menu is wider than its trigger** — 160 against 144, right-aligned by `items-end` on the
+wrapper. The menu is not `width: 100%` of the trigger.
+
+Five corrections against the old ruling:
+
+| | Ruled | **Measured** |
+|---|---|---|
+| Menu border | 1px inset `neutral-100` | **1px `neutral/50`** |
+| Option type | `body-12-med` | **`button-12-med`** — line-height 1, not the body ramp |
+| Option hover | `neutral-25` | **`neutral/50`** |
+| Selected mark | `Check` 12px in `primary-500` | **does not exist** — no check, tick or mark of any kind is in the symbol |
+| Menu width | implied to match the trigger | **160 vs 144**, right-aligned |
+
+Fill, radius, shadow, padding, gap, option padding, option radius and the caret flip were all
+ruled correctly. **The invented checkmark is the one that matters** — a build following the old
+ruling renders an affordance the design does not have, and a single-select dropdown then shows
+two competing signals for the current value.
+
+**Closes on outside click and on `Escape`.** Both, not one. Still a behaviour ruling — Figma
+carries no interaction model.
 
 ## `dropdown-options` `Style=Calendar` — appearance. RULED.
 
