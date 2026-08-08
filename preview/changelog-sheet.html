@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gushwork design system — changelog</title>
+<link rel="stylesheet" href="../foundation/tokens.css">
+<style>
+  /* Every value below is a token or a rule already verified in preview/_meta_ads_app.css.
+     Lines marked ADDED are new to this sheet and are listed in the footer note. */
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--gw-color-neutral-100);
+       font:var(--gw-text-body-14-reg);color:var(--gw-color-black);
+       -webkit-font-smoothing:antialiased;
+       display:flex;justify-content:center;
+       padding:var(--gw-space-40) var(--gw-space-20)}
+  .wrap{width:100%;max-width:1084px}   /* the measured dashboard section width */
+
+  h1{margin:0 0 var(--gw-space-8);font:var(--gw-text-h5);
+     letter-spacing:var(--gw-text-h5-tracking);color:var(--gw-color-neutral-900)}
+  .sub{margin:0 0 var(--gw-space-24);max-width:70ch;
+       font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-600)}
+  .sub code{font:inherit;color:var(--gw-color-neutral-800)}
+
+  /* stat strip — section/Container "With Dropdown" cells, verbatim */
+  .cells{display:flex;align-items:stretch;gap:var(--gw-space-8);flex-wrap:wrap;
+         background:var(--gw-color-white);border-radius:var(--gw-radius-12);
+         padding:var(--gw-space-12);margin-bottom:var(--gw-space-20);
+         box-shadow:var(--gw-shadow-s2)}
+  .cell{min-width:100px;flex:1;padding:var(--gw-space-4) var(--gw-space-8);
+        display:flex;flex-direction:column;gap:var(--gw-space-4);white-space:nowrap}
+  .cell__l{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
+           color:var(--gw-color-neutral-600)}
+  .cell__v{font:500 18px/1.2 var(--gw-font-display);color:var(--gw-color-neutral-900)}
+  .cell__sep{width:1px;align-self:stretch;background:var(--gw-color-neutral-100);flex:none}
+
+  /* section shell — verbatim from the verified stylesheet */
+  .sec{border-radius:var(--gw-radius-12);padding:var(--gw-space-12);
+       background:var(--gw-color-neutral-25);display:flex;flex-direction:column;
+       gap:var(--gw-space-12);overflow:hidden}
+  .sec__hd{display:flex;align-items:center;justify-content:space-between;
+           padding:var(--gw-space-4);width:100%;gap:var(--gw-space-12)}
+  .sec__ttl{display:flex;align-items:center;gap:var(--gw-space-8);min-width:0}
+  .sec__ico{width:20px;height:20px;border-radius:var(--gw-radius-4);padding:4px;flex:none;
+            background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500);
+            display:flex;align-items:center;justify-content:center}
+  .sec__ico svg{width:12px;height:12px;display:block}
+  .sec__t{font:600 14px/1 var(--gw-font-body);letter-spacing:-.2px;
+          color:var(--gw-color-neutral-800)}
+  .sec__c{font:var(--gw-text-body-12-med);color:var(--gw-color-neutral-500)}
+  .sec__body{background:var(--gw-color-white);border:1px solid var(--gw-color-neutral-50);
+             border-radius:var(--gw-radius-8);width:100%;overflow-x:auto}
+
+  /* table — table-row measured 8 Aug 2026: padding 12/24, bottom border neutral-200,
+     cells body-14-med neutral-600, header body-14-sem neutral-800, hover neutral-25 */
+  .dt{width:100%;border-collapse:collapse;background:var(--gw-color-white)}
+  .dt th,.dt td{text-align:left;padding:12px 24px;
+                border-bottom:1px solid var(--gw-color-neutral-200);
+                font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-600);
+                letter-spacing:-.028px;vertical-align:baseline}
+  .dt th{font:var(--gw-text-body-14-sem);color:var(--gw-color-neutral-800);
+         position:sticky;top:0;z-index:1;background:var(--gw-color-white)} /* ADDED: sticky */
+  .dt tbody tr:hover{background:var(--gw-color-neutral-25)}
+  .dt tr:last-child td{border-bottom:0}
+  /* Only the summary wraps. `width:1%` on a nowrap column collapses it to its content, so
+     "What changed" absorbs all the slack — the same rule the verified table uses to stop the
+     action column growing. Without it the Session titles wrapped to two lines on every row. */
+  .dt th:nth-child(1),.dt th:nth-child(2),.dt th:nth-child(4),.dt th:nth-child(5){width:1%}
+  .dt td:nth-child(1),.dt td:nth-child(2),.dt td:nth-child(4),.dt td:nth-child(5){white-space:nowrap}
+  .dt th:nth-child(3),.dt td:nth-child(3){width:auto;white-space:normal;
+                                          color:var(--gw-color-neutral-800)}
+
+  /* day divider — the verified .subttl treatment, spanning the row */
+  .grp td{padding:var(--gw-space-12) 24px var(--gw-space-4);
+          font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
+          letter-spacing:0;color:var(--gw-color-neutral-500);
+          background:var(--gw-color-neutral-25);border-bottom:0}
+  .grp:hover td{background:var(--gw-color-neutral-25)}
+
+  .ver{font:var(--gw-text-body-14-sem);color:var(--gw-color-neutral-900);
+       font-variant-numeric:tabular-nums}
+  .sha{font-variant-numeric:tabular-nums}     /* Inter, not a mono face — two families only */
+  .tm{font-variant-numeric:tabular-nums}
+
+  .badge{display:inline-flex;align-items:center;padding:4px var(--gw-space-8);
+         border-radius:var(--gw-radius-4);font:var(--gw-text-body-12-med);white-space:nowrap}
+  .badge--n{background:var(--gw-color-neutral-100);color:var(--gw-color-neutral-600)}
+  /* ADDED: a primary badge. New rule, no new colour — it is the primary-alpha-10 /
+     primary-500 pairing the section icon tile already uses. */
+  .badge--p{background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500)}
+  .vcell{display:flex;align-items:center;gap:var(--gw-space-8)}
+
+  .lnk{display:inline-flex;align-items:center;gap:var(--gw-space-4);
+       color:var(--gw-color-primary-500);text-decoration:none;
+       font:var(--gw-text-link-14);letter-spacing:var(--gw-text-link-14-tracking)}
+  .lnk:hover{text-decoration:underline}
+  .lnk:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset);
+                     border-radius:var(--gw-radius-4)}
+  .gl{width:14px;height:14px;flex:none;display:block;color:var(--gw-color-neutral-400)}
+  .none{color:var(--gw-color-neutral-400)}
+
+  .note{margin-top:var(--gw-space-20);padding:var(--gw-space-16);
+        border-radius:var(--gw-radius-8);background:var(--gw-color-primary-25);
+        border:1px solid var(--gw-color-primary-100);
+        font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-700)}
+  .note p{margin:0 0 var(--gw-space-8)}
+  .note p:last-child{margin:0}
+  .note code{font:inherit;color:var(--gw-color-neutral-900)}
+
+  @media (max-width:767px){
+    body{padding:var(--gw-space-20) var(--gw-space-16)}
+    .cell__sep{display:none}
+  }
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- Phosphor. `fill` is re-applied to the symbol: it lives on the source <svg>, and
+       stripping that wrapper drops it, which renders every path black. -->
+  <symbol id="i-history" viewBox="0 0 256 256" fill="currentColor"><path d="M140,80v41.21l34.17,20.5a12,12,0,1,1-12.34,20.58l-40-24A12,12,0,0,1,116,128V80a12,12,0,0,1,24,0ZM128,28A99.38,99.38,0,0,0,57.24,57.34c-4.69,4.74-9,9.37-13.24,14V64a12,12,0,0,0-24,0v40a12,12,0,0,0,12,12H72a12,12,0,0,0,0-24H57.77C63,86,68.37,80.22,74.26,74.26a76,76,0,1,1,1.58,109,12,12,0,0,0-16.48,17.46A100,100,0,1,0,128,28Z"/></symbol>
+  <symbol id="i-commit" viewBox="0 0 256 256" fill="currentColor"><path d="M248,120H183.42a56,56,0,0,0-110.84,0H8a8,8,0,0,0,0,16H72.58a56,56,0,0,0,110.84,0H248a8,8,0,0,0,0-16ZM128,168a40,40,0,1,1,40-40A40,40,0,0,1,128,168Z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></symbol>
+</svg>
+
+<div class="wrap">
+  <h1>Changelog</h1>
+  <p class="sub">Every version of the <code>gushwork-design</code> plugin, newest first.
+     Generated from git by <code>scripts/changelog-sheet.sh</code> — a release is a commit that
+     moved the <code>version</code> field in <code>.claude-plugin/plugin.json</code>, which is the
+     field <code>plugin update</code> actually compares.</p>
+
+  <div class="cells">
+    <div class="cell"><span class="cell__l">Releases</span><span class="cell__v">34</span></div>
+    <div class="cell__sep"></div>
+    <div class="cell"><span class="cell__l">Current</span><span class="cell__v">v1.28.1</span></div>
+    <div class="cell__sep"></div>
+    <div class="cell"><span class="cell__l">First shipped</span><span class="cell__v">06 Aug 2026</span></div>
+    <div class="cell__sep"></div>
+    <div class="cell"><span class="cell__l">Last release</span><span class="cell__v">08 Aug 2026</span></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec__hd">
+      <div class="sec__ttl">
+        <span class="sec__ico"><svg><use href="#i-history"/></svg></span>
+        <span class="sec__t">Release history</span>
+      </div>
+      <span class="sec__c">34 releases · v1.0.0 → v1.28.1</span>
+    </div>
+    <div class="sec__body">
+      <table class="dt">
+        <thead><tr><th>Version</th><th>Time</th><th>What changed</th><th>Commit</th><th>Session</th></tr></thead>
+        <tbody>
+        <tr class="grp"><td colspan="5">08 Aug 2026</td></tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.28.1</span> <span class="badge badge--p">current</span></span></td>
+          <td class="tm">18:06</td>
+          <td>fall back to the backfill table when a trailer has no uuid</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/5a8df70cce32dde46da01cfdabdc9cbae07972b5"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">5a8df70</span></a></td>
+          <td><a class="lnk" href="claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018" title="Gushwork Design System plugin"><svg class="gl"><use href="#i-chat"/></svg><span>Gushwork Design System plugin</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.28.0</span></span></td>
+          <td class="tm">18:05</td>
+          <td>the Session column is a claude://resume deep link</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/6388221e9e506db19c6281d1165ff0c41f24ad16"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">6388221</span></a></td>
+          <td><a class="lnk" href="claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018" title="Gushwork Design System plugin"><svg class="gl"><use href="#i-chat"/></svg><span>Gushwork Design System plugin</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.27.0</span></span></td>
+          <td class="tm">17:59</td>
+          <td>a derived changelog, so multi-chat releases stay traceable</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/732d4dff9b864016028460b97ae381bc268fd624"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">732d4df</span></a></td>
+          <td><a class="lnk" href="claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018" title="Gushwork Design System plugin"><svg class="gl"><use href="#i-chat"/></svg><span>Gushwork Design System plugin</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.26.0</span></span></td>
+          <td class="tm">17:50</td>
+          <td>the creator stamp carries a time, and the login screen's build rules</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/499cdde30f8d32b21cbff129a906a42c775da22d"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">499cdde</span></a></td>
+          <td><a class="lnk" href="claude://resume/5eeaa384-81a5-460f-8fff-20a987090035" title="Website performance dashboard"><svg class="gl"><use href="#i-chat"/></svg><span>Website performance dashboard</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.25.0</span></span></td>
+          <td class="tm">17:40</td>
+          <td>R12/R13: the login screen's text props have jobs, and the subtext is two lines</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/bdfa56ac2a1af971479edc8be9f7aacad18b0608"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">bdfa56a</span></a></td>
+          <td><a class="lnk" href="claude://resume/5eeaa384-81a5-460f-8fff-20a987090035" title="Website performance dashboard"><svg class="gl"><use href="#i-chat"/></svg><span>Website performance dashboard</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.24.1</span> <span class="badge badge--n">patch</span></span></td>
+          <td class="tm">17:08</td>
+          <td>stamp the mirror-divergence guard so it actually propagates</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/d8c6bb82267a94a5d8152ec7dd5935aa22fe4f80"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">d8c6bb8</span></a></td>
+          <td><a class="lnk" href="claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018" title="Gushwork Design System plugin"><svg class="gl"><use href="#i-chat"/></svg><span>Gushwork Design System plugin</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.24.0</span></span></td>
+          <td class="tm">14:05</td>
+          <td>the dashboard surface is fully measured</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/8a77366a9bb98c52220057109ee003f4af33154d"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">8a77366</span></a></td>
+          <td><a class="lnk" href="claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018" title="Gushwork Design System plugin"><svg class="gl"><use href="#i-chat"/></svg><span>Gushwork Design System plugin</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.23.0</span></span></td>
+          <td class="tm">13:59</td>
+          <td>six more dashboard components measured; chart palette blocker resolved</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/281a6062579a00f318e6e762df475e3acb18953a"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">281a606</span></a></td>
+          <td><a class="lnk" href="claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018" title="Gushwork Design System plugin"><svg class="gl"><use href="#i-chat"/></svg><span>Gushwork Design System plugin</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.22.0</span></span></td>
+          <td class="tm">13:43</td>
+          <td>lock in every open decision; promote the text field to a shared atom</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/49f980b5e265631985af7f908b3c92bdc206a4ba"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">49f980b</span></a></td>
+          <td><a class="lnk" href="claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018" title="Gushwork Design System plugin"><svg class="gl"><use href="#i-chat"/></svg><span>Gushwork Design System plugin</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.21.0</span></span></td>
+          <td class="tm">13:23</td>
+          <td>re-measure the login screen, correct all three Button hover values</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/8de9b9b85cfef0c8579f18714ed454b3b8ba31c5"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">8de9b9b</span></a></td>
+          <td><a class="lnk" href="claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018" title="Gushwork Design System plugin"><svg class="gl"><use href="#i-chat"/></svg><span>Gushwork Design System plugin</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.20.0</span></span></td>
+          <td class="tm">12:48</td>
+          <td>Add dashboard-login-screen — 3 variants, measured off all three symbols</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/5c2d3b495e632043c791ee88fbc3da01b53a77e3"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">5c2d3b4</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr class="grp"><td colspan="5">07 Aug 2026</td></tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.19.0</span></span></td>
+          <td class="tm">22:24</td>
+          <td>lock in the rulings, fixes and components from the website-performance build</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/9af46490b7be124ec8c6bab69bb7fc70c02345f8"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">9af4649</span></a></td>
+          <td><a class="lnk" href="claude://resume/5eeaa384-81a5-460f-8fff-20a987090035" title="Website performance dashboard"><svg class="gl"><use href="#i-chat"/></svg><span>Website performance dashboard</span></a></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.18.0</span></span></td>
+          <td class="tm">20:47</td>
+          <td>Put the measured traps in the skill — after correcting three of them</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/3eb5b219bee251e34cfdcea74109138cf9b514ba"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">3eb5b21</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.17.0</span></span></td>
+          <td class="tm">20:38</td>
+          <td>Measure section/header and re-verify the dashboard-build coordinates</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/d857ed4173cc83e45d3b836f85e66e3e1c928b1b"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">d857ed4</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.16.0</span></span></td>
+          <td class="tm">20:32</td>
+          <td>Re-measure dashboard Button, progress-bar and user-card — nine of nine wrong</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/c734e92300d3ddac07af908455e7eb7ff10fe7a5"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">c734e92</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.15.0</span></span></td>
+          <td class="tm">20:28</td>
+          <td>Re-measure six dashboard components off their sets — all six were wrong</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/ffe8a1e9a3403c744c6e3c41842bdb04739413bf"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">ffe8a1e</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.14.0</span></span></td>
+          <td class="tm">20:13</td>
+          <td>Measure the last four dashboard components, fix table-row columns</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/1ef99f5085111baa9c2260dc7faa6eb26a6dbf3c"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">1ef99f5</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.13.2</span> <span class="badge badge--n">patch</span></span></td>
+          <td class="tm">20:07</td>
+          <td>Fix toast: padding was inverted, error fill wrong, half the set missing</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/3ad6616a232780becacb8f30613d56bfde8d732f"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">3ad6616</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.13.1</span> <span class="badge badge--n">patch</span></span></td>
+          <td class="tm">20:03</td>
+          <td>Draw the admin avatar and all five Colors</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/cedf644b7086deaa0f3dc955b256c28b7820ba04"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">cedf644</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.13.0</span></span></td>
+          <td class="tm">20:01</td>
+          <td>Draw the whole dashboard surface — 20 components</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/507646360627c715003b468bf3070a060bd4975f"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">5076463</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.12.1</span> <span class="badge badge--n">patch</span></span></td>
+          <td class="tm">18:37</td>
+          <td>Fix list-item weights at the source, and use the real logo symbol</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/791d9170c17a7ae78d6660310bd7cd57b0cec779"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">791d917</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.12.0</span></span></td>
+          <td class="tm">18:32</td>
+          <td>Draw the remaining dashboard elements and a full sample screen</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/56f9360bdb5e2f6ed79e6f320b0188b2d7ce6a2e"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">56f9360</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.11.0</span></span></td>
+          <td class="tm">18:11</td>
+          <td>Draw the dashboard surface, and account for every remaining set</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/bc28d27de275a4704cd20f51fbdecf45fcf076c4"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">bc28d27</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.10.0</span></span></td>
+          <td class="tm">17:50</td>
+          <td>Organise the review sheet by Figma's hierarchy, add nav, require new work on it</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/aafdd7d9b602a30d8d76c734526cbf177b7449c3"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">aafdd7d</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.9.0</span></span></td>
+          <td class="tm">16:36</td>
+          <td>Measure badge and Button, and transcribe all ten sets of usage rules</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/e7c8cedff1d9dc8520795bc4d316d150c7bc4d6f"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">e7c8ced</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.8.0</span></span></td>
+          <td class="tm">16:31</td>
+          <td>Read web/ component-library for the first time — 23 sets, 525 variants</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/f2ddb538a60b4a4a81b1ac69341743aca0a21450"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">f2ddb53</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.7.0</span></span></td>
+          <td class="tm">16:26</td>
+          <td>Measure AI Agents and Hero — all 12 folds now done</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/dd2c723af3e4a19fd4a92a870fa623463b07cd61"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">dd2c723</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.6.0</span></span></td>
+          <td class="tm">16:14</td>
+          <td>Figma is authoritative: stop correcting measured values, and measure four more</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/5a274c2a4b6af3c47a2e2e304f4e3d7260c8cf50"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">5a274c2</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.5.0</span></span></td>
+          <td class="tm">16:11</td>
+          <td>Measure Testimonial and Timeline internals</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/d487605cadcc23125b4e30d7186eee219bcb5890"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">d487605</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.4.0</span></span></td>
+          <td class="tm">16:07</td>
+          <td>Measure all 12 folds, and correct what the annotations got wrong</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/94d9c7e102baa3d208056d8875d49cab3e2d36a8"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">94d9c7e</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.3.0</span></span></td>
+          <td class="tm">16:02</td>
+          <td>Measure the web pattern library, and fix letter-spacing system-wide</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/d7299f58f631766bddcd4104eeb2346baca162be"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">d7299f5</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.2.0</span></span></td>
+          <td class="tm">15:52</td>
+          <td>Make each skill report its own version and date</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/364eeb13153cd5289e7353eeedcfdde0d3e278a7"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">364eeb1</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr class="grp"><td colspan="5">06 Aug 2026</td></tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.1.0</span></span></td>
+          <td class="tm">17:57</td>
+          <td>Make the plugin installable and shareable</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/bc465978ca515115a132bf4af2328d397b8f0979"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">bc46597</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td><span class="vcell"><span class="ver">v1.0.0</span></span></td>
+          <td class="tm">09:35</td>
+          <td>Add Gushwork design system as a Claude Code plugin</td>
+          <td><a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/commit/4a36d4847d61cf5990f1ff28627a8308d5d3ecb2"><svg class="gl"><use href="#i-commit"/></svg><span class="sha">4a36d48</span></a></td>
+          <td><span class="none">—</span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><strong>Why this sheet exists alongside CHANGELOG.md.</strong> The markdown log derives a
+    release from the commit <em>subject</em> — a row per commit titled <code>vX.Y.Z — …</code>.
+    That convention started at v1.19.0, so it lists <strong>34 of 34</strong> releases —
+    0 missing, including <strong>v1.20.0, the login screen</strong>, whose commit was titled
+    differently. This sheet derives from the version field in the manifest instead, so nothing
+    that shipped can be lost by writing a commit message the wrong way.</p>
+    <p><strong>The Session link only resolves on the machine holding the transcript.</strong> It
+    is a pointer for the maintainer; for everyone else the commit link is the one that works. An
+    em dash means nobody could vouch for the attribution — releases before v1.19.0 predate the
+    <code>Session:</code> trailer, and guessing from transcript greps is unreliable because
+    forked sessions duplicate each other's history.</p>
+    <p><strong>Two additions to the system on this sheet</strong>, both new rules rather than new
+    values: a sticky table header, and a primary badge reusing the
+    <code>primary-alpha-10</code> / <code>primary-500</code> pairing the section icon tile already
+    uses. No new colour, size, radius or shadow.</p>
+  </div>
+</div>
+</body></html>

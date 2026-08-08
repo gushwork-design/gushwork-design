@@ -56,16 +56,19 @@ PY
 echo
 echo "Stamped v$VERSION · $DATE"
 echo
-echo "The commit subject becomes the CHANGELOG row, so write it as the one-line"
-echo "summary — 'v$VERSION — what changed' — and name the chat in a trailer:"
+echo "The commit subject becomes the row in both release logs, so write it as the"
+echo "one-line summary — 'v$VERSION — what changed' — and name the chat in a trailer:"
 echo
 echo "    Session: <session-uuid> <chat title>"
 echo
 echo "  (uuid = the transcript filename in ~/.claude/projects/<project>/)"
 echo
-echo "Then regenerate the log as a SEPARATE commit — never an amend, because"
-echo "amending rewrites the sha the newest row just recorded:"
+echo "A release is a commit that MOVES THE VERSION FIELD, which stamping just did —"
+echo "the subject is only the summary. Then regenerate the logs as a SEPARATE"
+echo "commit, never an amend, because amending rewrites the sha the newest row"
+echo "just recorded. One command does the markdown and the sheet together:"
 echo
-echo "    bash scripts/changelog.sh"
-echo "    git add CHANGELOG.md && git commit -m \"Regenerate CHANGELOG after v$VERSION\""
+echo "    bash scripts/release-log.sh"
+echo "    git add CHANGELOG.md preview/changelog-sheet.html"
+echo "    git commit -m \"Regenerate the release logs after v$VERSION\""
 echo "    git push"

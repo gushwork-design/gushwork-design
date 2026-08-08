@@ -2,8 +2,19 @@
 # Regenerate CHANGELOG.md from git history.
 #
 # The log is DERIVED, never hand-written — so it cannot drift from what actually shipped.
-# A row appears for every commit whose subject starts `vX.Y.Z`. The subject after the dash
-# is the one-line summary, so write release subjects accordingly.
+# The derivation lives in `scripts/_releases.sh` and is shared with `changelog-sheet.sh`,
+# so the markdown and the rendered sheet can never disagree. Run both together:
+#
+#     bash scripts/release-log.sh
+#
+# WHAT CHANGED 8 Aug 2026. This script used to define a release as a commit whose SUBJECT
+# started `vX.Y.Z`. That convention only began at v1.19.0, so it listed 11 of 34 releases
+# and silently dropped v1.20.0 — the login screen — whose commit was titled
+# "Add dashboard-login-screen — …" instead. A release is now a commit that moved the
+# `version` field in `.claude-plugin/plugin.json`, which is the field `plugin update`
+# actually compares. Nothing that shipped can be lost by writing a commit message the
+# wrong way. Release subjects should still read `vX.Y.Z — what changed`, because the part
+# after the dash is the summary in both renderings.
 #
 # The "Session" column comes from a `Session:` trailer on the release commit —
 # the session uuid, then the title:
@@ -25,21 +36,7 @@
 #         bash scripts/changelog.sh --check  # exit 1 if it is out of date
 set -euo pipefail
 cd "$(dirname "$0")/.."
-
-REPO="https://github.com/utsav-gushwork/gushwork-design"
-
-# Releases that predate the Session: trailer. Attribution is first-hand only —
-# transcript greps are unreliable because forked sessions duplicate each other's
-# history, so a mention reads as authorship. Anything not listed stays blank.
-backfill() {
-  case "$1" in
-    v1.21.0|v1.22.0|v1.23.0|v1.24.0|v1.24.1|v1.27.0)
-      echo "5a7c696b-5bbf-4aee-adf8-603e744f9018 Gushwork Design System plugin" ;;
-    v1.19.0|v1.25.0|v1.26.0)
-      echo "5eeaa384-81a5-460f-8fff-20a987090035 Website performance dashboard" ;;
-    *) echo "" ;;
-  esac
-}
+. scripts/_releases.sh
 
 # "<uuid> <title>" -> a markdown deep link. Bare titles (no uuid) render as plain text.
 session_cell() {
@@ -58,6 +55,12 @@ build() {
 
 Every released version, newest first. **Generated from git history** by
 `scripts/changelog.sh` — do not edit by hand, the next release will overwrite it.
+`preview/changelog-sheet.html` is the same data rendered as a sheet; both come from
+`scripts/_releases.sh`, so they cannot disagree.
+
+A release is **a commit that moved the `version` field in `.claude-plugin/plugin.json`** —
+the field `plugin update` compares. Not a commit subject: subjects are a convention that
+started at v1.19.0, and deriving from them dropped 23 releases including v1.20.0.
 
 `Session` is the chat the change came from — a `claude://resume/<uuid>` deep link that
 reopens that conversation in the Claude desktop app, recorded as a `Session:` trailer on
@@ -66,7 +69,7 @@ the release commit.
 **The link only resolves on the machine holding the transcript.** It is a pointer for the
 maintainer, not something a teammate can follow — for everyone else the commit link is the
 one that works. Entries before the trailer convention are backfilled from first-hand
-knowledge only; a blank cell means nobody could vouch for it.
+knowledge only; an em dash means nobody could vouch for it.
 
 To check what you are running: the skill announces its own version and date at the start of
 every session. Trust that line over memory — it is stamped into the file, so **a stale copy
@@ -77,28 +80,11 @@ HEAD
   printf '| Version | Date | What changed | Commit | Session |\n'
   printf '|---|---|---|---|---|\n'
 
-  # One record per line, fields split on US (0x1f). Trailers are single-line by
-  # construction, so newline stays a safe record separator.
-  git log --format='%H%x1f%ad%x1f%s%x1f%(trailers:key=Session,valueonly,separator=%x2c)' \
-          --date=format:'%d %b %Y %H:%M' \
-  | while IFS=$'\x1f' read -r sha date subject session; do
-      [ -z "${sha:-}" ] && continue
-      case "$subject" in
-        v[0-9]*)
-          version="${subject%% *}"
-          summary="${subject#* — }"
-          [ "$summary" = "$subject" ] && summary="${subject#"$version" }"
-          # Fall back to the table when the trailer is missing, or predates the
-          # "<uuid> <title>" shape and so cannot render as a link.
-          case "${session:-}" in
-            [0-9a-f]*-[0-9a-f]*-*) ;;
-            *) session="$(backfill "$version")" ;;
-          esac
-          printf '| **%s** | %s | %s | [`%s`](%s/commit/%s) | %s |\n' \
-            "$version" "$date" "$summary" "${sha:0:7}" "$REPO" "$sha" "$(session_cell "$session")"
-          ;;
-      esac
-    done
+  releases | while IFS=$'\x1f' read -r version sha date summary session; do
+    [ -z "${version:-}" ] && continue
+    printf '| **v%s** | %s | %s | [`%s`](%s/commit/%s) | %s |\n' \
+      "$version" "$date" "$summary" "${sha:0:7}" "$REPO" "$sha" "$(session_cell "$session")"
+  done
 }
 
 if [ "${1:-}" = "--check" ]; then

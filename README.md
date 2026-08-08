@@ -63,8 +63,9 @@ The chain, end to end:
 | 2 | maintainer | measure it into `exports/` or re-pull `tokens.css` — see [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 | 3 | maintainer | `bash scripts/stamp-release.sh 1.2.0` — stamps version + date into both manifests and both skills |
 | 4 | maintainer | commit and push to `main` |
-| 5 | maintainer | `bash scripts/release-notes.sh`, then post it in Slack — there is no push notification |
-| 6 | everyone | `claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork`, then **restart** |
+| 5 | maintainer | `bash scripts/release-log.sh` — rebuilds [`CHANGELOG.md`](CHANGELOG.md) **and** `preview/changelog-sheet.html` from git; commit them separately |
+| 6 | maintainer | `bash scripts/release-notes.sh`, then post it in Slack — there is no push notification |
+| 7 | everyone | `claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork`, then **restart** |
 
 Three things worth knowing:
 

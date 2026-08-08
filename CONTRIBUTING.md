@@ -136,13 +136,24 @@ See the propagation table in [`README.md`](README.md). The short version:
    Session: 5a7c696b-5bbf-4aee-adf8-603e744f9018 Gushwork Design System plugin
    ```
 
-   The subject *is* the `CHANGELOG.md` row. The trailer is `<session-uuid> <title>`, and
-   becomes a `claude://resume/<uuid>` link in the `Session` column. Get the uuid from the
+   The subject is the *summary* in both release logs. The trailer is `<session-uuid> <title>`,
+   and becomes a `claude://resume/<uuid>` link in the `Session` column. Get the uuid from the
    transcript filename in `~/.claude/projects/<project>/`.
-4. **`bash scripts/changelog.sh`**, then commit it **separately** —
-   `git commit -m "Regenerate CHANGELOG after v1.2.0"`. Never amend: the log records the
-   release commit's sha, and amending changes it. `bash scripts/changelog.sh --check`
-   exits non-zero if the log is stale.
+4. **`bash scripts/release-log.sh`**, then commit it **separately** —
+   `git commit -m "Regenerate the release logs after v1.2.0"`. Never amend: the logs record
+   the release commit's sha, and amending changes it. `bash scripts/release-log.sh --check`
+   exits non-zero if either is stale.
+
+   That one command regenerates **both** renderings — `CHANGELOG.md` and
+   `preview/changelog-sheet.html` — from one derivation in `scripts/_releases.sh`, so they
+   cannot disagree. Neither is ever edited by hand.
+
+   **A release is a commit that moves the `version` field in `.claude-plugin/plugin.json`** —
+   the field `plugin update` compares. It is *not* a commit whose subject starts `vX.Y.Z`.
+   That was the old rule, and because the subject convention only started at v1.19.0 it
+   dropped 23 of 34 releases, including **v1.20.0, the login screen**. Write the subject well
+   anyway: a release with a badly-formed subject now appears in the log with a bad summary
+   rather than not appearing at all.
 5. `claude plugin validate .` before you push.
 6. Push to `main`. Anyone with `autoUpdate` on gets it at their next start.
 
