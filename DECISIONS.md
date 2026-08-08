@@ -228,6 +228,65 @@ A fourth category is a finding to report, not a colour to pick.
 
 ---
 
+## R12 — the login screen's text props are not free copy
+
+`dashboard-login-screen` exposes six text props. They read like open slots, and two of them are
+not: they have fixed jobs, and a build that treats them as somewhere to put a value proposition
+gets the screen wrong. That is not hypothetical — it is what happened the first time this screen
+was built from the export alone.
+
+**`creatorInfo` is attribution.** It always reads:
+
+```
+Created and owned by {creator first name} on {created date}.
+```
+
+Both values come off the dashboard record. Never a tagline, a feature line, or marketing copy.
+
+**`welcomeDescription` says what the dashboard is and how to use it.** The title already greets;
+the subtext orients someone landing on the product for the first time. It is **not** a status
+report on what happened while they were away.
+
+> ✓ `Track how your site performs across AI search and Google, and use the page table to find
+> what is worth fixing next.`
+> ✗ `Your AI marketing team has been researching and publishing while you were away.`
+
+The second reads well and tells a new user nothing about the screen they are looking at.
+
+**Why this is a ruling and not a copy note:** every one of the six props is documented by
+*type* and by *measurement*, and none by *purpose*. A prop whose purpose is undocumented gets
+filled with whatever sounds good. Where a prop has a fixed job, say so.
+
+---
+
+## R13 — `welcomeDescription` is always exactly two lines, and the gap above it is 24
+
+Two changes to the left panel, both ruled 8 Aug 2026.
+
+**The gap is 24, not the measured 32.** Figma draws the text block at `gap-32`; build **24**.
+That moves `welcomeDescription` from y 104 to **y 96**. The 600 × 355 block, `creatorInfo` at
+405, and the panel tiling are unchanged. A Figma-side fix to report.
+
+**The subtext always occupies exactly two lines.** `body-20-reg` is 20/1.4, so two lines is
+**56px** — reserve it and clamp at two:
+
+```css
+min-height: 56px;
+display: -webkit-box; -webkit-box-orient: vertical;
+-webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+```
+
+The left panel is a tiling that only closes if each block holds its height —
+`40 + 355 + 10 + 355 + 40 = 800`. A one-line subtext collapses the rhythm; a three-line one
+pushes `creatorInfo` out of its measured box. **A one-line subtext is a bug, not a short string.**
+
+**The clamp is a backstop, not a licence.** Write to two full lines. At the measured 600px column
+the practical ceiling is about **121 characters**, and it is sensitive to punctuation — 121 chars
+with a comma wraps to two lines, while the same sentence at 122 with an em-dash wraps to three
+and silently truncates. Measure the copy; do not eyeball it.
+
+---
+
 ## Withdrawn
 
 | Ruling | Why |

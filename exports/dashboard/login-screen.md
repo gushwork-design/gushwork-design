@@ -41,14 +41,63 @@ Text is exposed as six props: `dashboardTitle` · `description` · `welcomeTitle
 |---|---|---|
 | Panel | **absolute at `left: 20, top: 20`**, **800 × 800** — square, not full-height | `2321:20494` |
 | Fill | `--gw-color-neutral-black` · `--gw-radius-20` · `overflow: hidden` | |
-| Text block | at **40, 40**, **600 × 355**, `gap-32` | `2321:21407` |
+| Text block | at **40, 40**, **600 × 355**, **`gap-24`** — ruled, see below | `2321:21407` |
 | `welcomeTitle` | **Vert Grotesk Display Medium 60**/1.2 · `--gw-color-neutral-25` · box 600 × 72 | `2321:21404` |
-| `welcomeDescription` | `--gw-text-body-20-reg` — Inter Regular 20/1.4, tracking `-0.006em` · `--gw-color-neutral-400` · at y **104** | `2321:21406` |
-| `creatorInfo` | same `--gw-text-body-20-reg` on `--gw-color-neutral-400`, in a **720 × 355 box at 40, 405** with `justify-end` | `2323:21411` |
+| `welcomeDescription` | `--gw-text-body-20-reg` — Inter Regular 20/1.4, tracking `-0.006em` · `--gw-color-neutral-400` · at y **96** · **always two lines** | `2321:21406` |
+| `creatorInfo` | same `--gw-text-body-20-reg` on `--gw-color-neutral-400`, in a **720 × 355 box at 40, 405** with `justify-end` · **fixed attribution string** | `2323:21411` |
 | Backdrop | the dashed 40px lattice — **see below** | `2323:21853` |
 
 **The panel is 800 × 800 in an 840-tall screen** — 20px of white above and below, never
 full-bleed. The two text blocks tile the panel exactly: `40 + 355 + 10 + 355 + 40 = 800`.
+
+### Title to subtext is 24, not 32 — RULED
+
+Ruled by Utsav, 8 Aug 2026. Figma draws the text block at `gap-32`; **build 24.** That moves
+`welcomeDescription` from y 104 to **y 96**. The 600 × 355 block, `creatorInfo` at 405, and the
+panel tiling are all unchanged — only the gap and the subtext's y move. A Figma-side fix to
+report, not to silently absorb.
+
+### The two text props are not free copy — RULED
+
+The six text props read like open slots, and they are not. Two of them have fixed jobs, and a
+build that treats them as a place for a value proposition gets it wrong — which is exactly what
+happened the first time this screen was built outside Figma.
+
+**`creatorInfo` is attribution.** It always reads:
+
+```
+Created and owned by {creator first name} on {created date}.
+```
+
+Both values come off the dashboard record. It is never marketing copy, a tagline, or a feature
+line. Ruled by Utsav, 8 Aug 2026.
+
+**`welcomeDescription` says what the dashboard is and how to use it.** Not a greeting — the
+title already greets — and not a status report on what happened while the user was away. It
+answers "what is this screen for, and what do I do with it" for someone landing on the product
+for the first time. Ruled by Utsav, 8 Aug 2026.
+
+> ✓ `Track how your site performs across AI search and Google, and use the page table to find
+> what is worth fixing next.`
+> ✗ `Your AI marketing team has been researching and publishing while you were away.` — a status
+> update, and it tells a new user nothing about the screen.
+
+**It is also always exactly two lines.** `body-20-reg` is 20/1.4, so two lines is **56px**.
+Reserve that height and clamp at two, so a short string cannot collapse the panel's rhythm and a
+long one cannot push `creatorInfo` out of its measured box:
+
+```css
+min-height: 56px;
+display: -webkit-box; -webkit-box-orient: vertical;
+-webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+```
+
+**The clamp is a backstop, not a licence — write to two full lines.** At the measured 600px
+column the practical ceiling is about **121 characters**, and it is sensitive to punctuation:
+121 chars with a comma wraps to two lines, while the same sentence at 122 with an em-dash wraps
+to three and silently truncates. Measure the copy; do not eyeball it.
+
+A one-line subtext is a bug, not a short string.
 
 ### The lattice — ✗→✓ two corrections
 

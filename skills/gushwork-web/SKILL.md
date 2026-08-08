@@ -8,7 +8,7 @@ description: Builds Gushwork marketing and public-website pages on-brand — lan
 You are building a **public-facing marketing surface** for Gushwork. Spacious,
 white-on-black with a blue accent, numbers leading every claim. This is not the product UI.
 
-Announce at the start: **"Using the Gushwork web skill — v1.24.1, updated 8 Aug 2026."**
+Announce at the start: **"Using the Gushwork web skill — v1.25.0, updated 8 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -26,7 +26,7 @@ Any commits listed means they are behind: tell them to run
 | For | Read |
 |---|---|
 | Every colour, size, radius, shadow, type style | `foundation/tokens.css` |
-| **Every standing ruling — R0 to R11** | `DECISIONS.md` |
+| **Every standing ruling — R0 to R13** | `DECISIONS.md` |
 | Voice, casing, banned words, CTA copy | `foundation/voice.md` |
 | Badge, Gushwork logo, Phosphor icons | `foundation/shared-components.md` |
 | **Text fields — shared with dashboard, all 14 variants** | `foundation/text-field.md` |
