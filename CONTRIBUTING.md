@@ -126,8 +126,30 @@ See the propagation table in [`README.md`](README.md). The short version:
 1. Change Figma **and** measure it into the repo in the same sitting. Figma alone ships nothing.
 2. **`bash scripts/stamp-release.sh 1.2.0`** — stamps the version and today's date into all four
    places at once: both manifests and both skills' announce lines.
-3. `claude plugin validate .` before you push.
-4. Push to `main`. Anyone with `autoUpdate` on gets it at their next start.
+3. **Commit with the subject as the one-line summary**, and name the chat in a trailer:
+
+   ```
+   v1.2.0 — what changed, in one line
+
+   ...body...
+
+   Session: GW Design Associate
+   ```
+
+   The subject *is* the `CHANGELOG.md` row, and the trailer *is* its `Session` column.
+4. **`bash scripts/changelog.sh`**, then `git add -A && git commit --amend --no-edit`.
+   The log is derived from git, so it cannot drift — but it does have to be regenerated.
+5. `claude plugin validate .` before you push.
+6. Push to `main`. Anyone with `autoUpdate` on gets it at their next start.
+
+**Why a `Session:` trailer and not a chat link.** Chat sessions are machine-local ids with no
+shareable URL — a link would be dead for everyone but its author. The title is enough for Utsav
+to find the right conversation. **Never put a session id, transcript path, or chat content in the
+repo: it is public.**
+
+Several chats push here. On 8 Aug 2026 two of them shipped versions within ten minutes of each
+other, and a third built a component that already existed because its plugin copy was stale. The
+log exists so "what changed, when, and from where" is answerable without reading git.
 
 **Always stamp.** The announce line is how a teammate finds out they're stale without checking —
 their copy reports *its own* date, not today's. If you edit a skill without stamping, that signal

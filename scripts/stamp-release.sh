@@ -55,4 +55,13 @@ PY
 
 echo
 echo "Stamped v$VERSION · $DATE"
-echo "Now: git commit -am \"...\" && git push"
+echo
+echo "The commit subject becomes the CHANGELOG row, so write it as the one-line"
+echo "summary — 'v$VERSION — what changed' — and name the chat in a trailer:"
+echo
+echo "    Session: <this chat's title>"
+echo
+echo "Then regenerate the log and push together:"
+echo
+echo "    bash scripts/changelog.sh"
+echo "    git add -A && git commit --amend --no-edit && git push"
