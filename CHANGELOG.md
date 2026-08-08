@@ -18,7 +18,7 @@ reports its own stale date.**
 
 | Version | Date | What changed | Commit | Session |
 |---|---|---|---|---|
-| **v1.28.1** | 08 Aug 2026 18:06 | fall back to the backfill table when a trailer has no uuid | [`4681d90`](https://github.com/utsav-gushwork/gushwork-design/commit/4681d9056658444a9576535ffdcd7e38a91dcdea) | [Gushwork Design System plugin](claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018) |
+| **v1.28.1** | 08 Aug 2026 18:06 | fall back to the backfill table when a trailer has no uuid | [`5a8df70`](https://github.com/utsav-gushwork/gushwork-design/commit/5a8df70cce32dde46da01cfdabdc9cbae07972b5) | [Gushwork Design System plugin](claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018) |
 | **v1.28.0** | 08 Aug 2026 18:05 | the Session column is a claude://resume deep link | [`6388221`](https://github.com/utsav-gushwork/gushwork-design/commit/6388221e9e506db19c6281d1165ff0c41f24ad16) | [Gushwork Design System plugin](claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018) |
 | **v1.27.0** | 08 Aug 2026 17:59 | a derived changelog, so multi-chat releases stay traceable | [`732d4df`](https://github.com/utsav-gushwork/gushwork-design/commit/732d4dff9b864016028460b97ae381bc268fd624) | [Gushwork Design System plugin](claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018) |
 | **v1.26.0** | 08 Aug 2026 17:50 | the creator stamp carries a time, and the login screen's build rules | [`499cdde`](https://github.com/utsav-gushwork/gushwork-design/commit/499cdde30f8d32b21cbff129a906a42c775da22d) | [Website performance dashboard](claude://resume/5eeaa384-81a5-460f-8fff-20a987090035) |
