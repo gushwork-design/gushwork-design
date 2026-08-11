@@ -2,6 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gushwork design system — changelog</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Cpath%20d%3D%22M76.6088%204.56344C77.5025%202.36058%2075.8495%200%2073.4723%200H9.14286C4.0934%200%200%204.0934%200%209.14286V66.7778C0%2072.018%205.17081%2075.6829%209.9603%2073.5568C40.8494%2059.8449%2064.3785%2034.7075%2076.6088%204.56344Z%22%20fill%3D%22%230070FF%22%2F%3E%3Cpath%20d%3D%22M32.5161%2080C31.4022%2080%2030.9357%2078.5531%2031.8259%2077.8835C54.9007%2060.5265%2071.4338%2035.8047%2078.7658%208.0522C78.9403%207.39154%2080%207.51618%2080%208.19951V70.8571C80%2075.9066%2075.9066%2080%2070.8571%2080H32.5161Z%22%20fill%3D%22%230070FF%22%2F%3E%3C%2Fsvg%3E">
 <link rel="stylesheet" href="../foundation/tokens.css">
 <style>
   /* LIGHT THEME ONLY, by instruction — there is no prefers-color-scheme block below.
@@ -68,15 +69,20 @@
   .prose > :last-child{margin-bottom:0}
   .prose strong{font-weight:600;color:var(--gw-color-neutral-800)}
 
-  /* disclosure — bodies run past twenty lines, so only the lede is open by default */
+  /* disclosure — bodies run past twenty lines, so only the lede is open by default.
+     The caret follows the label and points DOWN at rest, flipping to up when open:
+     it describes what the control will do, and a chevron after the text is the
+     affordance people already read as "expand". `CaretDown` at Bold, per the icon
+     weight table in foundation/shared-components.md — nav-style carets are Bold, and
+     a text glyph is never a substitute for the real one. */
   details{margin-top:var(--gw-space-12)}
   summary{display:inline-flex;align-items:center;gap:var(--gw-space-4);cursor:pointer;
           font:var(--gw-text-body-12-med);color:var(--gw-color-primary-500);
           list-style:none;width:fit-content;border-radius:var(--gw-radius-4)}
   summary::-webkit-details-marker{display:none}
   summary:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
-  summary .gl{transition:transform var(--gw-motion-fast)}
-  details[open] summary .gl{transform:rotate(90deg)}
+  summary .gl{width:12px;height:12px;transition:transform var(--gw-motion-fast)}
+  details[open] summary .gl{transform:rotate(180deg)}
   details[open] summary{margin-bottom:var(--gw-space-8)}
 
   .meta{margin-top:var(--gw-space-16);display:flex;flex-wrap:wrap;
@@ -103,7 +109,27 @@
          color:var(--gw-color-neutral-500);text-decoration:none}
   .idx a:hover{background:var(--gw-color-neutral-25);color:var(--gw-color-neutral-900)}
   .idx a:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
-  .idx a.now{color:var(--gw-color-primary-500);background:var(--gw-color-primary-alpha-10)}
+  /* The release currently at the top of the page. Semibold is the signal; the tint only
+     supports it. `font-variant-numeric` is re-declared because the `font` shorthand
+     resets it, and losing tabular figures makes the whole column jitter. */
+  .idx a.now{font:var(--gw-text-body-12-sem);
+             letter-spacing:var(--gw-text-body-12-sem-tracking);
+             font-variant-numeric:tabular-nums;
+             color:var(--gw-color-primary-500);background:var(--gw-color-primary-alpha-10)}
+
+  /* Slim rounded scrollbar, thumb only — the default chrome is heavy next to 12px rows.
+     Both properties are needed: `scrollbar-width`/`-color` is the standard and covers
+     Firefox, `::-webkit-scrollbar` covers Safari and Chrome, and neither is a fallback
+     for the other. Applied to the page as well so the two never disagree. */
+  html{scrollbar-width:thin;scrollbar-color:var(--gw-color-neutral-200) transparent}
+  .idx{scrollbar-width:thin;scrollbar-color:var(--gw-color-neutral-200) transparent}
+  html::-webkit-scrollbar,.idx::-webkit-scrollbar{width:8px;height:8px}
+  html::-webkit-scrollbar-track,.idx::-webkit-scrollbar-track{background:transparent}
+  html::-webkit-scrollbar-thumb,.idx::-webkit-scrollbar-thumb{
+    background:var(--gw-color-neutral-200);border-radius:var(--gw-radius-full);
+    border:2px solid transparent;background-clip:content-box}
+  html::-webkit-scrollbar-thumb:hover,.idx::-webkit-scrollbar-thumb:hover{
+    background:var(--gw-color-neutral-300);background-clip:content-box}
 
   .note{grid-column:1 / -1;margin-top:var(--gw-space-40);padding:var(--gw-space-16);
         border-radius:var(--gw-radius-8);background:var(--gw-color-primary-25);
@@ -128,7 +154,7 @@
        stripping that wrapper drops it, which renders every path black. -->
   <symbol id="i-commit" viewBox="0 0 256 256" fill="currentColor"><path d="M248,120H183.42a56,56,0,0,0-110.84,0H8a8,8,0,0,0,0,16H72.58a56,56,0,0,0,110.84,0H248a8,8,0,0,0,0-16ZM128,168a40,40,0,1,1,40-40A40,40,0,0,1,128,168Z"/></symbol>
   <symbol id="i-chat" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></symbol>
-  <symbol id="i-caret" viewBox="0 0 256 256" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol>
+  <symbol id="i-caret" viewBox="0 0 256 256" fill="currentColor"><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"/></symbol>
 </svg>
 <div class="page">
   <header class="hd">
@@ -155,7 +181,7 @@
         <p class="body__sum">the changelog sheet is a reading page, not a table</p>
         <div class="prose"><p>Redesigned after Utsav pointed at code.claude.com/docs/en/changelog. What that page gets right is that a changelog is READ, not scanned like data — so the table is gone. Each release is now a version pill and date in a left rail with the change on the right, whitespace instead of rules, and a sticky version index down the side. Light theme only, by instruction: there is no dark variant and no prefers-color-scheme block.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>DETAIL NOW COMES FROM THE COMMIT BODY. The table could only ever show a subject; the sheet renders the body too, as paragraphs and bullet lists, with the <code>Session:</code> trailer stripped. The first block shows by default and the rest sits behind a Full notes disclosure, because bodies here run past twenty lines and thirty-seven of them expanded is not a page anyone reads. Write release commits accordingly: the subject is the sentence people read, the first paragraph is the summary they see.</p><p>Rendering moved to <code>scripts/_changelog_sheet.py</code> — bash derives, python renders. Markdown support is deliberately just backticks, ** and bare URLs: a changelog needing a full markdown engine is one whose commit messages have stopped being commit messages.</p><p>Three things this shook out:</p><ul><li><code>_releases.sh</code> gained a sixth field and <code>changelog.sh</code> still read five, so <code>read</code> folded the whole body into <code>session</code> and printed it inside the Session link. Every consumer of a record must read every field.</li><li>BSD <code>tr</code> does not understand <code>\x1e</code>. Encoding body newlines with it translated the literal characters <code>e</code>, <code>x</code> and <code>1</code> instead and shredded every body. It is <code>\036</code>, octal.</li><li>A <code>&lt;code&gt;</code> chip bound to a 14px token rendered small inside the 16px lede and knocked the line off its baseline. Chips now inherit size and line-height; weight and family are the only type properties they own.</li></ul></div>
         </details>
         <div class="meta">
@@ -174,7 +200,7 @@
         <p class="body__sum">the sheets are hosted, and publishing is one command</p>
         <div class="prose"><p><code>bash scripts/publish-sheets.sh</code> puts the review sheets on <a class="lnk" href="https://gushwork-design.vercel.app">https://gushwork-design.vercel.app</a> so anyone at Gushwork can read them without cloning the repo. Live now: the full review sheet, the component catalogue and the changelog.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>THE PAGES ARE NEVER EDITED. The script stages a copy in a temp directory and deploys that, keeping the repo&#x27;s own layout, so the URLs are /preview/&lt;sheet&gt;.html and not one line of any sheet had to change. <code>scripts/publish-index.html</code> is the entry point — a deploy needs one or the root 404s — and is the only page that exists solely to be hosted.</p><p>It refuses to ship a stale changelog: <code>release-log.sh --check</code> runs first. It also follows each sheet&#x27;s ../assets/ references, so a new sheet with assets publishes without editing the script — add its path to SHEETS and go.</p><p>The Vercel MCP cannot do this. <code>deploy_to_vercel</code> takes files inline in the tool call and this tree is 2.4 MB — three font TTFs plus a 490 KB review sheet — so the CLI is the only path. If <code>vercel whoami</code> fails, <code>vercel login</code>; never put a token on the command line.</p><p>Hosting is for reading and reviewing. The plugin is still how you build.</p></div>
         </details>
         <div class="meta">
@@ -194,7 +220,7 @@
         <p class="body__sum">the login screen&#x27;s Continue arrow was a layer name, not a path</p>
         <div class="prose"><p><code>preview/review-sheet.html</code> rendered the login screen&#x27;s Continue button with <code>&lt;path d=&quot;vector-element&quot;/&gt;</code> in all three places it appears. That is the <code>id</code> attribute of <code>assets/icons/arrow-right.svg</code>, not its <code>d</code> — whoever built the sheet copied the wrong attribute out of the harvested file. The browser threw &quot;Expected moveto path command&quot; three times per load and drew nothing, so every Continue button reviewed as arrowless.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Fixed from the measured geometry already in the repo, not redrawn: <code>exports/dashboard/login-screen.md</code> records the glyph as 14.065 x 11.816 centred in an 18px slot, harvested to <code>assets/icons/arrow-right.svg</code>. Its <code>d</code> is now inlined. Verified in the browser — three arrows, getBBox 14.06 x 11.82, console clean.</p><p>The fill stays on the parent &lt;svg&gt; and off the path, so the glyph keeps inheriting currentColor. Putting it on the path is the trap documented in the website-performance build: strip a wrapper that carries <code>fill</code> and every glyph renders black.</p></div>
         </details>
         <div class="meta">
@@ -213,7 +239,7 @@
         <p class="body__sum">the changelog is a sheet, and a release is a version bump</p>
         <div class="prose"><p>Two changes, one cause.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>THE SHEET. <code>preview/changelog-sheet.html</code> renders the release history on-brand: the measured table-row (padding 12/24, neutral-200 border, cells body-14-med neutral-600, header body-14-sem neutral-800, hover neutral-25), the section shell and the &quot;With Dropdown&quot; stat cells, all from tokens.css. Generated by <code>scripts/changelog-sheet.sh</code> — never hand-written, so it cannot drift.</p><p>Two additions, both new rules rather than new values, and both listed on the sheet itself: a sticky table header, and a primary badge reusing the primary-alpha-10 / primary-500 pairing the section icon tile already uses. No new colour, size, radius or shadow.</p><p>A RELEASE IS A VERSION BUMP, NOT A COMMIT SUBJECT. <code>changelog.sh</code> defined a release as a commit whose subject started <code>vX.Y.Z</code>. That convention began at v1.19.0, so the log carried 11 of 34 releases and silently dropped v1.20.0 — the login screen — because its commit was titled &quot;Add dashboard-login-screen&quot;. A subject is a habit; the version field in plugin.json is what <code>plugin update</code> actually compares. The derivation now reads that field, and nothing that shipped can be lost by writing a commit message the wrong way.</p><p><code>scripts/_releases.sh</code> holds that derivation once and both renderings consume it, so the markdown and the sheet cannot disagree. <code>scripts/release-log.sh</code> rebuilds both; <code>--check</code> fails if either is stale.</p></div>
         </details>
         <div class="meta">
@@ -248,7 +274,7 @@
         <p class="body__sum">the Session column is a claude://resume deep link</p>
         <div class="prose"><p>Utsav wanted the log to point at the chat, not the commit — a GitHub link tells you what changed but not the reasoning around it.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Claude.app registers a claude:// URL scheme with a <code>resume</code> route that reopens a CLI session and fails with &quot;its transcript may have been removed&quot; when the id does not resolve, so it addresses local sessions by uuid. The Session: trailer now carries &quot;&lt;uuid&gt; &lt;title&gt;&quot; and renders as [title](claude://resume/&lt;uuid&gt;).</p><p>The link only resolves on the machine holding the transcript, so it is a pointer for the maintainer; teammates use the commit link. Chat CONTENT stays out of the repo entirely — the repo is public. A uuid and a title leak nothing.</p><p>Backfilled the nine prior releases from first-hand knowledge only. Transcript greps looked tempting and are not trustworthy: forked sessions duplicate each other&#x27;s history, so a session that merely MENTIONS a version reads as its author. Two different greps produced two different, both-wrong attributions before I noticed.</p></div>
         </details>
         <div class="meta">
@@ -267,7 +293,7 @@
         <p class="body__sum">a derived changelog, so multi-chat releases stay traceable</p>
         <div class="prose"><p>Several chats push to this repo. On 8 Aug 2026 two shipped versions ten minutes apart and a third rebuilt a component that already existed, because its plugin copy was stale. &quot;What changed, when, and from where&quot; needed an answer that did not require reading git log.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>CHANGELOG.md is generated by scripts/changelog.sh from git history, so it cannot drift from what actually shipped. A row appears for every commit whose subject starts vX.Y.Z; the subject after the dash is the summary, and each row links to its commit on GitHub.</p><p>The Session column comes from a <code>Session:</code> trailer on the release commit, and holds the chat&#x27;s TITLE rather than a link. Chat sessions are machine-local ids with no shareable URL, so a link would be dead for anyone but its author — and this repo is public, so ids, transcript paths and chat content stay out of it.</p><p>stamp-release.sh now prints the commit shape to use, and CONTRIBUTING documents the two-step release. Backfilled all 8 prior releases; their Session column is blank, which is honest — they predate the convention.</p></div>
         </details>
         <div class="meta">
@@ -286,7 +312,7 @@
         <p class="body__sum">the creator stamp carries a time, and the login screen&#x27;s build rules</p>
         <div class="prose"><p>Completes what R12/R13 started, plus the three login-screen build lessons that were still only in a build and not in the system.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>creatorInfo carries a date AND a time (R12):</p><p>Created and owned by Utsav on 8 Aug 2026 at 5:47 pm.</p><p>Format is <code>D MMM YYYY at h:mm am/pm</code> — no leading zero on the day or the hour, three-letter month, lowercase meridiem. This is the only place the system writes a timestamp, so the format is fixed here rather than left to each build.</p><p>build-rules.md — two additions:</p><ul><li>dashboard-login-screen scales on BOTH axes. dashboard-build is fixed in width and fluid in height, so one factor from innerWidth is enough; the login screen is fixed at 1440x840 and its 800px panel has to stay square. A width-only factor stretches it vertically on a short viewport.</li><li>Guard the fit factor against a zero viewport. A tab that has not been laid out reports innerWidth/innerHeight 0, making the factor 0 and collapsing the screen to nothing — it renders blank rather than broken, which reads as a build failure.</li></ul><p>text-field.md — do not animate the label between 14 and 12. Nothing in the set specifies motion there, and font-size does not composite; in practice it held the old size until an unrelated repaint and reported 14px on a Filled field.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -305,7 +331,7 @@
         <p class="body__sum">R12/R13: the login screen&#x27;s text props have jobs, and the subtext is two lines</p>
         <div class="prose"><p>dashboard-login-screen documents its six text props by type and by measurement, and none of them by purpose. A prop whose purpose is undocumented gets filled with whatever sounds good — which is exactly what happened when this screen was first built from the export alone.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>R12 — two of the six are not free copy:</p><ul><li>creatorInfo is attribution, always &quot;Created and owned by {first name} on {date}.&quot;, both values off the dashboard record.</li><li>welcomeDescription says what the dashboard is and how to use it. Not a greeting (the title already greets) and not a status report on what happened while the user was away.</li></ul><p>R13 — the left panel&#x27;s geometry:</p><ul><li>Title to subtext is 24, not the measured 32. Moves welcomeDescription to y 96; the 600x355 block, creatorInfo at 405 and the panel tiling are unchanged. A Figma-side fix to report.</li><li>welcomeDescription is always exactly two lines — 56px reserved and clamped at two. The panel is a tiling that only closes if each block holds its height, so a one-line subtext collapses the rhythm and a three-line one pushes creatorInfo out of its box. The clamp is a backstop: the practical ceiling is ~121 chars at the 600 column, and it is punctuation-sensitive — 121 with a comma wraps to two, the same sentence at 122 with an em-dash wraps to three and truncates.</li></ul><p>Ruled by Utsav, 8 Aug 2026.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -325,7 +351,7 @@
         <p class="body__sum">stamp the mirror-divergence guard so it actually propagates</p>
         <div class="prose"><p>b49e702 added the CONTRIBUTING guard without a version bump, so <code>claude plugin update</code> would have compared 1.24.0 to 1.24.0 and fetched nothing. A change sitting in main that cannot reach anyone is the exact failure this commit documents.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -344,7 +370,7 @@
         <p class="body__sum">the dashboard surface is fully measured</p>
         <div class="prose"><p>The last two components read off their sets. All nineteen dashboard components have now been checked against Figma; seventeen had been recorded wrong.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>section/With Dropdown: the structure tree in sections.md came from annotations and was wrong in four places. The metric value is Vert Grotesk Display Medium 18, not 20px. The first data card holds 10 identical cells, not 6 plus 2 compact ones; the second holds 6, not 9. Its data card has no border, where section/Container&#x27;s inner card has a 1px neutral/50 one — two sections that read as siblings are built differently. Its data row is drawn 1036 wide inside a 1028 content box and is clipped by 8px, so build it width:100%. Its header control is section/section-element/dropdown 2142:583 at 466 wide, not controls/dropdown, and it carries two hand-built badges of which the second is a green Active status that is part of the component rather than example content.</p><p>section/table: 1084x674, tiling exactly as 12+28+16+606+12. The collapse caret is not vertically centred — the title block centres at y=14 and the caret at y=26, 12px apart, with the caret overflowing the 28-tall header by 4. section/Container centres the two correctly, so this is section/table alone. Build it centred.</p><p>Still provisional: table-row Type=Header remains ruled rather than measured, and is flagged as such. Of five rulings checked across these two passes, one held.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -363,7 +389,7 @@
         <p class="body__sum">six more dashboard components measured; chart palette blocker resolved</p>
         <div class="prose"><p>Second measurement pass. Six of the eight remaining unverified components read off their sets. Running total: 17 checked, 15 had been recorded wrong.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>controls/dropdown was wrong in five places. Both its sections had been RULED on the belief Figma recorded only sizes; Figma had everything. Menu border is neutral/50 not neutral-100, options are button-12-med not body-12-med, option hover is neutral/50 not neutral-25, and the menu is 160 wide against a 144 trigger, right-aligned rather than matching it. The fifth matters most: the ruling specified a 12px primary-500 Check for the selected option, and no check, tick or mark of any kind exists in the symbol. A build following it renders an affordance the design does not have. The Color=White ruling also described its border as matching &quot;how the Grey variant is constructed&quot; — Grey has no ring at all, it is a bare fill.</p><p>table-row: the ruled neutral/25 hover is correct, now confirmed rather than assumed. State=Selected was never recorded and is the same neutral/25 — a selected row is distinguished only by a 16px black checkbox, so hovering a selected row changes nothing. Cell text binds a raw #6a7077 (R4).</p><p>section/Container is fully correct. First component in either pass needing no correction.</p><p>The chart palette blocker was a misreading. Graph Type=Line has no second series: its data is four SVG assets, and the shape read as a colourless second series is the gradient area fill under the one line, #0070FF 30% to 0%. Line is single-series by design. Only Grouped Bar needed a palette, and R11 rules it — two of its three raw hexes sit within a few units of primary-200 and yellow-200 and are treated as those tokens unbound; the third is a violet with no ramp in the system, added as --gw-color-chart-violet. Three series is the ceiling.</p><p>Also found: an undocumented tooltip inside Graph Type=Line, now recorded; and two one-off colour drifts, one label in Bar and one in Grouped Bar, each a single element differing from its siblings.</p><p>Not done: section/With Dropdown and section/table remain unread, as does table-row Type=Header. Flagged provisional given the 15-of-17 rate.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -382,7 +408,7 @@
         <p class="body__sum">lock in every open decision; promote the text field to a shared atom</p>
         <div class="prose"><p>Everything the system had left hanging is now ruled in one place: DECISIONS.md, R0 through R10. Export files point at a ruling instead of restating the argument, so there is one place to read a decision and one place to change it.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>R0  spec vs Figma — the measurement wins; settles all four RECONCILIATION conflicts R1  input/text-field is a shared atom, foundation/text-field.md, both skills own it R2  the text field has no hover state — State=Hover is byte-identical to Default R3  the Google button is 48 / radius 12 / no arrow, in both variants R4  titles use --gw-color-neutral-black, never raw #000000 R5  sub-pixel borders round to 1px — scaled instances, not design values R6  Yellow Warning builds --gw-color-yellow-500, not the off-palette #c18c0b R7  avatar backgrounds are the -25 step of their own hue; Blue and Orange drifted R8  the image typos are a documentation bug, not a key bug R9  on dark surfaces text is at most --gw-color-neutral-400 R10 errors never auto-dismiss; the 4s timer pauses on hover and focus</p><p>The text field is measured across all 14 variants. Its fill is neutral/50 in every one — it never changes, not on hover, not on focus, not on error. State=Hover is identical to Default, so the field has no hover treatment, which is the one documented exception to &quot;every interactive element has a hover state&quot;; that rule is about click targets. It is a floating-label field whose label shrinks on Filled but not on Selected. A warning grows it 56 to 76, and 76 assumes the message fits one line at 400 wide. Feedback=Yellow Warning binds #c18c0b, which is in no ramp — R6 builds yellow-500. All 14 are on the review sheet, and the three status glyphs are harvested to assets/icons/.</p><p>Withdrawn: the text field hover ruled at neutral-100, a third answer Figma does not have. CONTRIBUTING.md now requires confirming the source is silent before filling the silence — open the exact symbol whose value you are about to rule. The mirror case matters as much: verifying the field&#x27;s hover really is identical turned &quot;no hover&quot; into a finding about the design rather than a gap to paper over.</p><p>Also a correction between two of our own files. component-library.md reported the image typos as variant keys, read out of a structure blob; images.md had checked the canvas and found the real keys spelled correctly. I drafted R8 backwards from the first before the second corrected it. Standing rule recorded: where two of our own files disagree, the one that measured the canvas wins.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -401,7 +427,7 @@
         <p class="body__sum">re-measure the login screen, correct all three Button hover values</p>
         <div class="prose"><p>Three defects were reported against the dashboard-login-screen render. Fixing them surfaced a fourth that reaches every dashboard build.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>The lattice had two causes, both mine: BG 2323:21853 carries opacity 0.3, which sits on the parent and so never appeared in a per-cell read; and 400 cells each bordered on four sides doubled every shared edge to 2px, because Figma centre-aligns strokes and CSS puts borders inside the box. Each cell now draws right and bottom only. Three cells are filled neutral/900 — (15,7) (14,8) (6,15) — which I had missed entirely.</p><p>The Google mark was a text &quot;G&quot; placeholder; the real four-path asset and the ArrowRight are harvested to assets/. The buttons and fields were rendering all along — hover states are now live, which is what made them look inert.</p><p>button.md carried three ruled hover values written on the belief that the State=Hover symbols had no fill. They do, and all three rulings were wrong: Primary neutral/850 not neutral-900, Outline neutral/35 not neutral-25, Ghost neutral/50 not neutral-25. Figma&#x27;s hovers are one step stronger than the guess every time. Anything built against the ruled values has slightly wrong hovers.</p><p>Also corrected from node coordinates: the black button is 50 tall, not 48 (py-16 around an 18px icon); its shadow is --gw-shadow-s3, not the raw value Tailwind reports after flattening spread; the field/button gap is 16; the right column is at x=900 with per-variant y of 263/292/200, all centring at 420. The Google variant&#x27;s y I had guessed at 314 — it is 292.</p><p>input/text-field 1562:705 is a web component. The dashboard library has no field of its own, so this dashboard screen is the one place in the set that reaches across the surface boundary. Flagged for a ruling, not resolved.</p><p>review-sheet.html had no meta charset, so every em-dash and arrow in it rendered as mojibake over HTTP.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -420,7 +446,7 @@
         <p class="body__sum">Add dashboard-login-screen — 3 variants, measured off all three symbols</p>
         <div class="prose"><p>New exports/dashboard/login-screen.md for 2325:1202. Split screen at 1440x840: an 800x800 black welcome panel at left 20 / top 20 — square, not full-height — carrying a dashed neutral/800 lattice, beside a 460-wide sign-in column centred on calc(50% + 410px) rather than on the remaining space.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Type=Password gives a field and a black Continue; Type=Google gives a single Google button and no field; Type=Google + Email gives both with an OR divider.</p><p>The black button matches the measured Button Large-plus-icon geometry exactly (pl-24 pr-20 py-16, radius 12) and adds a drop shadow the Button set does not carry.</p><p>Four things flagged rather than normalised, all in the notice: the Google button is 72/radius-16/with-arrow in one variant and 48/radius-12/no-arrow in the other; dashboardTitle binds a raw #000000 where the system uses neutral/black; the 0.81px border is a 1px border on a scaled instance; and the logo tile reports spacing/8 while rendering 15 because it is scaled 2x.</p><p>Also noted: Vert Grotesk Display Medium 60 has no token — the display ramp has h1 at 60 Bold, not Medium.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -439,7 +465,7 @@
         <p class="body__sum">lock in the rulings, fixes and components from the website-performance build</p>
         <div class="prose"><p>Rebased onto the 7 Aug re-measurement pass, which independently corroborated two of these rulings and supplied exact values for them:</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><ul><li>controls/toggle State=On measured neutral/900 — the &quot;blue is data, black is interaction state&quot; ruling and the Figma file already agreed; only builds were rendering it blue.</li><li>user-card has no background fill on any state; only the menu tile changes (neutral/50) — which is what &quot;the row is not a control&quot; means in measured form.</li></ul><p>Corrected against that pass: the toast message column is 276px, not 292 — it was computed from the padding this repo used to record inverted.</p><p>RULED (tokens.css gains a &quot;RULED, not harvested from Figma&quot; section):</p><ul><li>--gw-motion-fast 120ms with a reduced-motion guard.</li><li>--gw-focus-ring / --gw-focus-offset. No component in Figma defines focus, so keyboard users got whatever the browser did.</li><li>--gw-toast-dismiss 4000ms, closing a gap toast.md recorded as undefined.</li></ul><p>RULED in exports:</p><ul><li>Blue carries data and status; black carries interaction state.</li><li>1440 is the minimum dashboard width; below it scale the shell. Reflow, shrink and scroll each fail differently — all three recorded.</li><li>card-layout variants are never rearranged responsively.</li><li>Rail &quot;Dashboard title&quot; is the dashboard&#x27;s name, not the company&#x27;s.</li><li>Nav group label and user-card row are not interactive targets.</li></ul><p>NEW:</p><ul><li>controls/toggle Size=X-Small 36x20, extending the set&#x27;s own ramp.</li><li>exports/dashboard/states.md — focus, hover, empty and loading, none of which had an owner.</li><li>Appearances for dropdown Color=White, State=Open menus, Style=Calendar, table-row Type=Header and State=Hover, user-card State=Clicked menu.</li></ul><p>DEFECTS FIXED in preview/_meta_ads_app.css:</p><ul><li>.sec__caret sized its span but not its svg, so carets rendered 300x150.</li><li>.li:hover applied to the nav group label, which has no hover variant.</li><li>.cl--side .kpi{min-width:0} removed: it defeated the 286 floor.</li><li>.kpi took a fixed height while the analytics grid sized to content.</li></ul><p>Documents the icon-sprite trap in shared-components.md, and closes the notice with a Resolved block giving every item a verdict.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -458,7 +484,7 @@
         <p class="body__sum">Put the measured traps in the skill — after correcting three of them</p>
         <div class="prose"><p>Adds &quot;Values a sensible guess gets wrong&quot; to gushwork-dashboard: the eleven components re-measured this pass, with the specific value that was built wrong each time, plus the rule that when two exports disagree the one written from the set wins.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Double-checking before writing caught three claims that were themselves wrong, all extrapolated from a single Ghost symbol:</p><ul><li>Large is NOT always asymmetric. Large Text Only is px-24; only Large with an icon is pl-24 pr-20. Medium stays symmetric even with an icon.</li><li>Disabled does NOT simply dim the label. Primary swaps its fill to neutral/200 and keeps white text; only Outline and Ghost drop the label to neutral/250.</li><li>Small padding is px-12 py-8, which had been guessed at 0 16px.</li></ul><p>Button render and button.md rebuilt from the verified per-symbol reads.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -477,7 +503,7 @@
         <p class="body__sum">Measure section/header and re-verify the dashboard-build coordinates</p>
         <div class="prose"><p>section/header (2140:16372) is 1164 x 146 — the rules text says 164. White on a 1px neutral/50 bottom border, pt-40 pb-20 px-40, gap-20. Title is Vert Grotesk Semibold 32 on neutral/900, not neutral/black. Its row carries one controls/tab and three 120-wide Small Grey dropdowns on the left, and &quot;Updated 4s ago&quot; in Inter Medium 10 with a 28px refresh button on the right — a 2px-bordered icon button at a size the Button set does not offer.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>dashboard-build re-verified box by box off 2140:16479. The gap really is 0: 8 + 260 + 1164 + 8 = 1440, where the annotation&#x27;s gap:8 would give 1448. The rail is 880 and the container 872, so the rail runs 8px lower. side-panel carries gap:60, the user-card wrapper is 64 tall around a 48-tall card, and the gap within a list-group is 0.</p><p>Avatar Admin=true confirmed correct as rendered. The sample screen is rebuilt to these coordinates with the real header structure.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -496,7 +522,7 @@
         <p class="body__sum">Re-measure dashboard Button, progress-bar and user-card — nine of nine wrong</p>
         <div class="prose"><p>Button (2203:931), measured off the set rather than an instance: Primary is neutral/black #0d0d0d, not neutral/900. Outline is a 2px neutral/100 border, not 1px neutral/200. Large is radius 12 with asymmetric pl-24 pr-20 where every other size is radius 8 and symmetric. Disabled drops the label to neutral/250. All 27 Style x Size x Type combinations now drawn, plus the disabled states.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>progress-bar: the Target glyph is 12px inside a p-4 tile, not a 20px icon, and the label is Inter Semi Bold 14. Fill is a measured 814 wide.</p><p>user-card: no background fill on any state — the sheet had white. The menu tile picks up neutral/50 on Hover and Clicked, and Clicked opens a 140-wide dropdown-options above the row.</p><p>Nine components re-measured so far, nine had errors. button.md carries the corrected table with a note that its earlier values came from instances.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -515,7 +541,7 @@
         <p class="body__sum">Re-measure six dashboard components off their sets — all six were wrong</p>
         <div class="prose"><p>Every one of the six checked so far disagreed with what the sheet rendered:</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>kpi-card: the Mode names are inverted. Mode=light, Mode4 and Mode6 render on neutral/900; Mode=dark, Mode3 and Mode5 render on neutral/25. The sheet had it backwards and showed 3 of 6. Height is content-driven, not a fixed 198.</p><p>controls/toggle: On is neutral/900, not blue. Built as two white knobs with one at opacity 0, p-4 and gap-4, which is what produces 44x24, 52x28 and 60x32.</p><p>controls/tab: five tabs, not three. gap-8, and every label is neutral/900 — inactive tabs are not greyed. Selected carries a 16px drop shadow.</p><p>analytics-card: p-12 and gap-20, not p-16 and gap-8.</p><p>user-card: no background fill on any state; only Default was drawn.</p><p>dashboard Button: Large is radius 12 with asymmetric pl-24 pr-20, not radius 8.</p><p>Also fixes a patching bug of my own: the non-greedy regex used to swap a group stopped at the first nested &lt;/div&gt;&lt;/div&gt;&lt;/div&gt; and truncated the file. Group replacement now walks div depth. Restored from the last commit and re-applied.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -534,7 +560,7 @@
         <p class="body__sum">Measure the last four dashboard components, fix table-row columns</p>
         <div class="prose"><p>Adds dropdown-options (2124:199), section/section-element/dropdown (2142:584) and section/section-element/table (2205:15807) — three components absent from the exports entirely.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Fixes table-row: col-price is a fixed 200, not a flexible first column. The other five are 120 inside a flex-1 group with gap 40. The export said so; the render did not.</p><p>Confirms section/card-layout needs no change — its variants are 1084x198, 1084x198 and 1084x300, and the 1164x856 reported for the set is the wrapper frame with 40px padding.</p><p>Notice extended with the addendum, including the finding that every cell in section/section-element/table binds a raw #6a7077 rather than neutral/600.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -554,7 +580,7 @@
         <p class="body__sum">Fix toast: padding was inverted, error fill wrong, half the set missing</p>
         <div class="prose"><p>Re-measured the toast set (1579:614) off the dashboard page. Three defects:</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>toast.md described the padding as &quot;16px 8px&quot;. The component is px-16 py-8 — 8 vertical, 16 horizontal. As CSS shorthand the file said the opposite, and the review sheet was built from it, so every toast rendered with inverted padding.</p><p>The Error fill was rendered #fef2f2; the component binds red/25 #fff1f2.</p><p>The set has 8 variants, Mode x State. Only the four Light ones were drawn. Dark collapses all four fills to neutral/900 on a neutral/800 border and carries the state in the icon colour alone — now shown.</p><p>Also corrected in the export: the set node is 1579:614, not 2146:17848, and alignment is flex-start rather than centre.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -574,7 +600,7 @@
         <p class="body__sum">Draw the admin avatar and all five Colors</p>
         <div class="prose"><p>The Avatar group showed one cell and no admin variant, despite assets/avatar/admin-character.svg being committed and unused. It now renders all five Color fills plus Style=1, Color=Blue, Admin=true — the only admin variant that exists; every other Admin=true combination resolves to nothing.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Also uses the committed face-vector-4.svg at its measured 14.114 x 10.713 rotated 24.01 degrees, and puts the head at left calc(50% + 9px) rather than centred. Neither is guessable and both are load-bearing to the character.</p><p>The five fills make the two documented anomalies visible side by side: Blue&#x27;s background is primary-50 where Red, Yellow and Green use their -25 step, and Orange abandons its hue entirely for neutral-50.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -593,7 +619,7 @@
         <p class="body__sum">Draw the whole dashboard surface — 20 components</p>
         <div class="prose"><p>Adds the six that were still missing: section/header, section/card-layout at all three KPI splits, section/With Dropdown, section/table, and Graph at Type=Line and Type=Grouped Bar.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Every component documented in exports/dashboard/ is now rendered from its measured values. Checked by name against the export list — nothing missing.</p><p>Grouped Bar carries its three series colours as measured and labelled untokenised: #fed14a, #9784ff and #a1cdfe. The purple appears nowhere else in the system and there is no purple in the palette, which the sheet now shows rather than describes.</p><p>Line reproduces the measured vertical white grid rules and the sampled area gradient, #e4efff at the line through #eff6ff to #f9fbff at the baseline.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -613,7 +639,7 @@
         <p class="body__sum">Fix list-item weights at the source, and use the real logo symbol</p>
         <div class="prose"><p>dashboard-build.md&#x27;s appearance table claimed Inter Bold 14 for nav rows and Inter Bold 10 for group labels. Both wrong: that table was written from a design-context read of the list-item INSTANCE inside the shell, which reports Inter:Bold for text the set defines otherwise. Measured off the set (2102:13507): nav row is Inter Medium 500 at 14 on neutral/900, group label is Inter Semi Bold 600 at 10/15 on neutral/400.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>section-elements.md already documented this correctly and even warned about the instance conflict. Two exports disagreed and the wrong one was read, so the sample screen shipped a bold rail — the same defect this project already fixed once. dashboard-build.md now carries the corrected values and a note saying which file wins.</p><p>Also corrected there: it claimed list-item&#x27;s hover and selected fills were not measured. They are — neutral/25 and neutral/50.</p><p>The dashboard title tile was an invented lightning bolt. It is now the real gushwork-symbol-white.svg from assets/logo, in the measured black tile at radius 8 with 8px padding around a 16px symbol.</p><p>Audited the sample against the set: eleven checks, all passing, no Bold 700 anywhere in it.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -632,7 +658,7 @@
         <p class="body__sum">Draw the remaining dashboard elements and a full sample screen</p>
         <div class="prose"><p>Adds controls/tab, controls/dropdown at both Grey and White, controls/toggle, section/progress-bar, section/Container, Graph Type=Bar and table-row in all four states — fourteen groups now drawn from exports/dashboard/ values.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Adds a complete dashboard-build screen at its measured 1440 x 888: shell on neutral/100, rail 260 wide with no fill at radius 20, container 1164 white at radius 20, nav rows Inter Bold 14 on neutral/900 and group labels Inter Bold 10 uppercase on neutral/400 — the two values that were wrong twice before being measured. The KPI row uses the card-layout=1 split of 400 plus a six-cell analytics grid, and the header carries a Sample data badge because the numbers are invented.</p><p>Structure validated: ten nav targets all resolve, section and div tags balanced.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -651,7 +677,7 @@
         <p class="body__sum">Draw the dashboard surface, and account for every remaining set</p>
         <div class="prose"><p>03 Dashboard was an empty placeholder despite being the best-measured surface in the system. It now renders seven groups from the values in exports/dashboard/: Button at all 27 Style x Size x Type combinations, kpi-card, analytics-card, list-item including the Variant4 label row, user-card, Avatar and all four toast states.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>The 19 web/ component-library sets with no measured internals are now listed by name, node id and variant count rather than omitted — visible as gaps instead of silently absent. Same for the page shell: page-build, navbar, footer, announcement-banner and the 13 fold-elements, with a note that footer/.../list-item is a broken component set and cannot be read until fixed.</p><p>Nothing is drawn from annotations. Every render on the sheet traces to a measured value.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -670,7 +696,7 @@
         <p class="body__sum">Organise the review sheet by Figma&#x27;s hierarchy, add nav, require new work on it</p>
         <div class="prose"><p>The sheet now mirrors the file: 01 Core, 02 Web (component-library and pattern-library as separate pages), 03 Dashboard — with sections named after the Figma groups (button, badge, fold, footer/footer-elements) rather than names of my own, and a sticky nav down the left.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Wide content now scrolls inside its own container instead of pushing the page sideways: the folds render at a fixed 1000px and were overflowing once the nav took 206px of the width.</p><p>CONTRIBUTING gains the rule this was for: a measurement that has not been rendered has not been checked, so every new component, element or pattern goes on the sheet under its Figma page and group, with its node id, and with any unmeasured states left visibly empty. Never render from a guess — both CTA errors came from inferring rather than reading, and a plausible render is worse than an empty slot because it gets approved.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -689,7 +715,7 @@
         <p class="body__sum">Measure badge and Button, and transcribe all ten sets of usage rules</p>
         <div class="prose"><p>badge is a complete 2x6x3x3 matrix, 108 with no gaps. Sizes 24/33/45 tall, type scaling 12-med to 14-sem to 18-sem so the weight changes with the size. Light binds {Color}/Alpha/10 fill on {Color}/500 text, dark binds Alpha/20 on /300.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Button is 220 exactly: six styles at the full 3x3x4 matrix plus two Special styles with two variants each. Heights 36/44/56 and the widths are identical across all six full styles — except Large + Icon Only, which is 58x58 where every other Icon Only squares off against its row height.</p><p>Usage rules for all ten groups transcribed from their Info Frames, with the conflicts named now that they can be checked against measurement:</p><ul><li>badge&#x27;s rule calls the default &quot;Grey&quot; when the value is Neutral, and omits Blue, which is real and built</li><li>input-fields&#x27; four dropdown names match none of the actual values, and &quot;Success (green check)&quot; is the value Verified</li><li>the card rule cites &quot;the system-wide button rule&quot; for &quot;Book a demo&quot; while the button rule says &quot;Book a call&quot; — the cross-reference is false</li><li>the Special button instructions are unbuildable: both exist only at Large + Trailing, so &quot;Medium in all folds&quot; and any disabled state cannot resolve</li><li>ai-agents names nine agents against 20 variants, so the undocumented tenth is almost certainly <code>other</code></li><li>tooltip&#x27;s &quot;Arrow position&quot; is the property <code>Position</code></li><li>image says 47 options then lists 46 in the same blob; 46 is correct</li></ul><p>Also recorded: no Radius variable is bound anywhere in Button, so the 8 and 12 px corners are raw values and a variable change would not reach the most-used component in the system. And image&#x27;s [decide before handoff] on the startegy-and-pages and serivce-cards typos is still open and load-bearing, since those strings are variant keys.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -708,7 +734,7 @@
         <p class="body__sum">Read web/ component-library for the first time — 23 sets, 525 variants</p>
         <div class="prose"><p>The page that had never been read now reads. Full inventory in exports/web/component-library.md.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>It contains no second navbar and no second Button set, which disproves the README&#x27;s standing hypothesis that a second set would dissolve most of the RECONCILIATION conflicts into &quot;two components, document both&quot;, and confirms Utsav&#x27;s 6 Aug ruling by measurement rather than assertion. The conflicts are real disagreements and measured wins.</p><p>The &quot;21 component sets&quot; figure in earlier inventories was counting 21 stray hidden Frame 2147223955 nodes at the page root. The count was right, the interpretation was not.</p><p>Newly surfaced: badge carries 108 variants against a rule documenting six colours, and it is the component both surfaces share; input/card is an input type absent from the rules; and two unnamed sets ship inside input-fields as Frame 2147259995 and Frame 2147259996. image is confirmed at 46 variants, settling docs that variously claimed 47, 46 and a table summing to 45.</p><p>Stated plainly in the file: this is an inventory, not an appearance pass. None of the 23 sets has had its internals measured yet, and Button, badge and image are 374 of the 525 variants between them.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -727,7 +753,7 @@
         <p class="body__sum">Measure AI Agents and Hero — all 12 folds now done</p>
         <div class="prose"><p>AI Agents is four rows of nine Agent Cards with staggered offsets (none, pl-80, pr-120, pl-80) inside an overflow-clipped 1440 frame. The stagger plus the clip is the whole marquee effect; evenly aligned rows read as a plain grid. Its agent-icon is a generated glyph — 8px primary/300 squares on an 11/21/31/41 grid inside a 60px tile, a different dot pattern per agent — so it cannot be swapped for a Phosphor icon.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Hero Layout=Centered is tinted: neutral/25 fill, py-120 and gap-160, the largest spacing in the system. Its heading is h1 60 and its subhead uses neutral/700 where other folds use neutral/600. The primary is the black button on neutral/black, not blue and not neutral/900 — blue belongs to Type=Ads. It ships &quot;Book a demo&quot;, confirming the split against the six content folds.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -746,7 +772,7 @@
         <p class="body__sum">Figma is authoritative: stop correcting measured values, and measure four more</p>
         <div class="prose"><p>Reverted the export to the repo&#x27;s own rule — the component wins, and anything odd is a finding to report, never a value this file quietly fixes. Comparison Table&#x27;s 1242/337 and Cards Grid&#x27;s mismatched 8/10 row gaps are now recorded as the spec to build, with the oddity flagged for review rather than pre-empted. An export that tidies a value is worse than an odd number: the build then disagrees with the file everyone designs in.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Measured Cards Grid (small), fold-element/heading and Video.</p><p>Corrects my own earlier claim: the Show Card toggles do exist, on Cards Grid (small) — as Show Card 4 and Show Card 5, two booleans defaulting to false, so it renders three cards and tops out at five. The shared-toggles rule&#x27;s &quot;3-6&quot; was wrong on both the range and which fold it describes.</p><p>Also measured: the shared heading is 800 wide and Cards Grid overrides it to 620; Card Style=4 puts the icon in a filled black 40px tile where Style=1 uses a bare 24px glyph; and Video&#x27;s play button is glassmorphic — translucent black over a 2px translucent white border with a 2px backdrop blur — which does not survive being rebuilt as a plain button.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -765,7 +791,7 @@
         <p class="body__sum">Measure Testimonial and Timeline internals</p>
         <div class="prose"><p>fold/ Testimonial Style=Single and fold/Timeline Desktop measured off the rendered components. Six of twelve folds now have measured internals.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Two off-pattern findings on Testimonial, both left as measured with the decision flagged rather than silently normalised: the quote is Vert Grotesk Semibold 44, which is not a token — h3 is 44 Bold and the display ramp has no 44 Semibold — and it colours the quote neutral/900 where every other fold heading uses neutral/black.</p><p>Timeline is not a dark full-bleed fold as described but a dark rounded card: neutral/black at radius 20 with p-60. Its tabs are a staircase in 56px steps, which is the whole visual idea; even spacing would flatten it. The active tab is the fold&#x27;s single blue fill.</p><p>Avatar measurements confirm exports/web/avatar.md exactly — 64x48, radius 100, 72x48 photo in a 64 clip. Recorded that it was already correct.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -784,7 +810,7 @@
         <p class="body__sum">Measure all 12 folds, and correct what the annotations got wrong</p>
         <div class="prose"><p>Every fold now has measured frame geometry and a real variant matrix. Internals measured for With image, FAQs, CTA and Cards Grid.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Two corrections that change how folds get built:</p><ul><li>fold/ Cards Grid has no Show Card 3-6 properties. The shared-toggles rule says to use them instead of deleting instances; on the fold that rule most obviously describes they do not exist. Its real axes are Card Style (1-4), Card Image (With/Without) and Card Layout — where Grid is Desktop-only and Single/Stacked are Phone-only, so asking for Grid on Phone resolves to nothing. It hard-builds six cards in two rows of three.</li></ul><ul><li>Fold width is 1240/343, with three exceptions: Hero and AI Agents are full-bleed at 1440/375, and Comparison Table is 1242/337 for no reason — a defect, not to be reproduced.</li></ul><p>Also measured: Cards Grid&#x27;s two card rows use different gaps, 8 then 10, which makes row one&#x27;s cards 2px wider since they are flex-1. Recorded as a drawing slip with an instruction to use 10 for both rather than ship the misalignment. And Card Image=With roughly doubles the fold height, 1549 against 639-841.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -803,7 +829,7 @@
         <p class="body__sum">Measure the web pattern library, and fix letter-spacing system-wide</p>
         <div class="prose"><p>Started measuring folds off the rendered components instead of the page annotations. Three folds fully measured (With image, FAQs, CTA) plus Hero&#x27;s frame geometry; the other eight stay marked as annotation-only.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>The significant find is systemic: Figma&#x27;s letterSpacing magnitude is a PERCENT of font size, not px. body-18-med reports -0.2 and renders -0.036px at 18px; body-16-med renders -0.032px; body-18-sem reports -0.6 and renders -0.108px. tokens.css had read all of them as px, making every tracking value 5-6x too wide. All 18 converted to em, with the three confirmations recorded in the file so the wrong reading is not reintroduced.</p><p>Two corrections to the known-issues list: Body/body-18-med does exist, and colors/secondary/500-main (#111827) is a live collection bound by a shipping fold rather than a stray legacy value. colors/neutral/white has no token.</p><p>Also measured: fold headings bind colors/neutral/black #0d0d0d, not neutral-900 — the latter is the dashboard text colour, and mixing them is subtle enough to pass review.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -822,7 +848,7 @@
         <p class="body__sum">Make each skill report its own version and date</p>
         <div class="prose"><p>Both skills now announce &quot;v1.2.0, updated 7 Aug 2026&quot;. The stamp lives in the file, so a stale copy reports its own stale date instead of claiming to be current — drift becomes visible without anyone checking for it. When asked whether they are current, the skill runs a real git check against origin.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>scripts/stamp-release.sh writes the version and today&#x27;s date into all four places at once (both manifests, both announce lines) so they cannot drift apart. Tested: rejects a malformed version, updates all four, manifests still validate.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -841,7 +867,7 @@
         <p class="body__sum">Make the plugin installable and shareable</p>
         <div class="prose"><p>claude plugin install resolves a plugin name from a marketplace, not a git URL, so the documented install command never worked. Adds .claude-plugin/marketplace.json making this repo its own single-plugin marketplace; verified end to end with marketplace add / install / list / uninstall.</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><p>Also:</p><ul><li>ONBOARDING.md, the five-minute read that travels with the share link</li><li>foundation/output-targets.md — Next.js on Vercel, services on Railway, plain CSS over the tokens rather than a parallel Tailwind palette</li><li>CONTRIBUTING.md — the Figma measuring discipline, which is maintainer-only. Building needs exports/ and never Figma; both skills now say so, and the dashboard build sequence verifies against exports/ instead of Figma.</li><li>README gains the propagation chain: Figma alone ships nothing, both version fields must be bumped, and there is no auto-update.</li><li>gushwork-web states plainly that its unmeasured components are a draft.</li></ul><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -860,7 +886,7 @@
         <p class="body__sum">Add Gushwork design system as a Claude Code plugin</p>
         <div class="prose"><p>Two surface-scoped skills over one shared foundation, generated from the Gush Design System v2.0 Figma file (VKcb4fgVyOHKfQonMgN772).</p></div>
         <details>
-          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
           <div class="prose"><ul><li>foundation/ — 188 design tokens pulled from Figma *variables* (the canvas swatch labels have drifted from a superseded palette), plus voice and the atoms genuinely shared across both surfaces.</li><li>skills/gushwork-web — marketing surfaces. Composition ladder atoms → fold-elements → Folds → Page Build, with Brand/Ads as the governing page-level axis.</li><li>skills/gushwork-dashboard — product surfaces. section-elements → Sections → Dashboard Build. Black/outline/ghost actions, never a blue button fill.</li><li>exports/ — variant enumerations, dimensions and node IDs, kept out of the SKILL.md files so each stays lean enough to load on every invocation.</li></ul><p>Buttons, Avatars and Logos exist separately per surface by design; both skills carry a cross-surface pointer. Badge is shared. Both skills fall back rather than invent a component when a request has no match.</p><p>Figma inconsistencies are flagged inline rather than silently smoothed over — where a rule and its component disagree, the exports document the component, since that is what renders. No Figma variants were renamed.</p><p>Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
@@ -930,4 +956,39 @@
     &ldquo;Full notes&rdquo;.</p>
   </div>
 </div>
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.idx a'));
+  if (!links.length) return;
+  var idx = document.querySelector('.idx');
+  var arts = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  var active = 0;
+
+  function update() {
+    // Releases are in DOM order, newest first, so the last one whose top has passed the
+    // band is the one being read. Once one fails, every later one fails too.
+    var best = 0;
+    for (var i = 0; i < arts.length; i++) {
+      if (arts[i] && arts[i].getBoundingClientRect().top <= 80) best = i; else break;
+    }
+    if (best === active && links[active].classList.contains('now')) return;
+    links[active].classList.remove('now');
+    links[best].classList.add('now');
+    active = best;
+
+    var l = links[best].getBoundingClientRect(), box = idx.getBoundingClientRect();
+    if (l.top < box.top + 24) idx.scrollTop -= (box.top + 24 - l.top);
+    else if (l.bottom > box.bottom - 8) idx.scrollTop += (l.bottom - box.bottom + 8);
+  }
+
+  var ticking = false;
+  addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { ticking = false; update(); });
+  }, { passive: true });
+  addEventListener('resize', update, { passive: true });
+  update();
+})();
+</script>
 </body></html>

@@ -192,15 +192,20 @@ CSS = """
   .prose > :last-child{margin-bottom:0}
   .prose strong{font-weight:600;color:var(--gw-color-neutral-800)}
 
-  /* disclosure — bodies run past twenty lines, so only the lede is open by default */
+  /* disclosure — bodies run past twenty lines, so only the lede is open by default.
+     The caret follows the label and points DOWN at rest, flipping to up when open:
+     it describes what the control will do, and a chevron after the text is the
+     affordance people already read as "expand". `CaretDown` at Bold, per the icon
+     weight table in foundation/shared-components.md — nav-style carets are Bold, and
+     a text glyph is never a substitute for the real one. */
   details{margin-top:var(--gw-space-12)}
   summary{display:inline-flex;align-items:center;gap:var(--gw-space-4);cursor:pointer;
           font:var(--gw-text-body-12-med);color:var(--gw-color-primary-500);
           list-style:none;width:fit-content;border-radius:var(--gw-radius-4)}
   summary::-webkit-details-marker{display:none}
   summary:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
-  summary .gl{transition:transform var(--gw-motion-fast)}
-  details[open] summary .gl{transform:rotate(90deg)}
+  summary .gl{width:12px;height:12px;transition:transform var(--gw-motion-fast)}
+  details[open] summary .gl{transform:rotate(180deg)}
   details[open] summary{margin-bottom:var(--gw-space-8)}
 
   .meta{margin-top:var(--gw-space-16);display:flex;flex-wrap:wrap;
@@ -227,7 +232,27 @@ CSS = """
          color:var(--gw-color-neutral-500);text-decoration:none}
   .idx a:hover{background:var(--gw-color-neutral-25);color:var(--gw-color-neutral-900)}
   .idx a:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
-  .idx a.now{color:var(--gw-color-primary-500);background:var(--gw-color-primary-alpha-10)}
+  /* The release currently at the top of the page. Semibold is the signal; the tint only
+     supports it. `font-variant-numeric` is re-declared because the `font` shorthand
+     resets it, and losing tabular figures makes the whole column jitter. */
+  .idx a.now{font:var(--gw-text-body-12-sem);
+             letter-spacing:var(--gw-text-body-12-sem-tracking);
+             font-variant-numeric:tabular-nums;
+             color:var(--gw-color-primary-500);background:var(--gw-color-primary-alpha-10)}
+
+  /* Slim rounded scrollbar, thumb only — the default chrome is heavy next to 12px rows.
+     Both properties are needed: `scrollbar-width`/`-color` is the standard and covers
+     Firefox, `::-webkit-scrollbar` covers Safari and Chrome, and neither is a fallback
+     for the other. Applied to the page as well so the two never disagree. */
+  html{scrollbar-width:thin;scrollbar-color:var(--gw-color-neutral-200) transparent}
+  .idx{scrollbar-width:thin;scrollbar-color:var(--gw-color-neutral-200) transparent}
+  html::-webkit-scrollbar,.idx::-webkit-scrollbar{width:8px;height:8px}
+  html::-webkit-scrollbar-track,.idx::-webkit-scrollbar-track{background:transparent}
+  html::-webkit-scrollbar-thumb,.idx::-webkit-scrollbar-thumb{
+    background:var(--gw-color-neutral-200);border-radius:var(--gw-radius-full);
+    border:2px solid transparent;background-clip:content-box}
+  html::-webkit-scrollbar-thumb:hover,.idx::-webkit-scrollbar-thumb:hover{
+    background:var(--gw-color-neutral-300);background-clip:content-box}
 
   .note{grid-column:1 / -1;margin-top:var(--gw-space-40);padding:var(--gw-space-16);
         border-radius:var(--gw-radius-8);background:var(--gw-color-primary-25);
@@ -253,8 +278,66 @@ SPRITE = """
        stripping that wrapper drops it, which renders every path black. -->
   <symbol id="i-commit" viewBox="0 0 256 256" fill="currentColor"><path d="M248,120H183.42a56,56,0,0,0-110.84,0H8a8,8,0,0,0,0,16H72.58a56,56,0,0,0,110.84,0H248a8,8,0,0,0,0-16ZM128,168a40,40,0,1,1,40-40A40,40,0,0,1,128,168Z"/></symbol>
   <symbol id="i-chat" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></symbol>
-  <symbol id="i-caret" viewBox="0 0 256 256" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol>
+  <symbol id="i-caret" viewBox="0 0 256 256" fill="currentColor"><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"/></symbol>
 </svg>
+"""
+
+# The Gushwork symbol, inlined so the page carries its own mark and the favicon cannot
+# 404 on a host that did not copy assets/. Built from assets/logo/gushwork-symbol-original.svg
+# by stripping the five nested Figma <g> layer wrappers; the two paths and the brand blue
+# are untouched — that #0070FF is --gw-color-primary-500. Regenerate with the snippet in
+# scripts/_favicon.txt if the symbol ever changes.
+FAVICON = (
+    "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20"
+    "viewBox%3D%220%200%2080%2080%22%3E%3Cpath%20d%3D%22M76.6088%204.56344C77.5025%202."
+    "36058%2075.8495%200%2073.4723%200H9.14286C4.0934%200%200%204.0934%200%209.14286V66"
+    ".7778C0%2072.018%205.17081%2075.6829%209.9603%2073.5568C40.8494%2059.8449%2064.37"
+    "85%2034.7075%2076.6088%204.56344Z%22%20fill%3D%22%230070FF%22%2F%3E%3Cpath%20d%3D"
+    "%22M32.5161%2080C31.4022%2080%2030.9357%2078.5531%2031.8259%2077.8835C54.9007%2060"
+    ".5265%2071.4338%2035.8047%2078.7658%208.0522C78.9403%207.39154%2080%207.51618%2080"
+    "%208.19951V70.8571C80%2075.9066%2075.9066%2080%2070.8571%2080H32.5161Z%22%20fill%3D"
+    "%22%230070FF%22%2F%3E%3C%2Fsvg%3E"
+)
+
+# Scroll-spy for the release index. The version whose release sits at the top of the page
+# goes semibold, and the index scrolls to keep it in view — at thirty-eight entries the
+# active row is otherwise often off its own scroll box.
+SPY = """
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.idx a'));
+  if (!links.length) return;
+  var idx = document.querySelector('.idx');
+  var arts = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  var active = 0;
+
+  function update() {
+    // Releases are in DOM order, newest first, so the last one whose top has passed the
+    // band is the one being read. Once one fails, every later one fails too.
+    var best = 0;
+    for (var i = 0; i < arts.length; i++) {
+      if (arts[i] && arts[i].getBoundingClientRect().top <= 80) best = i; else break;
+    }
+    if (best === active && links[active].classList.contains('now')) return;
+    links[active].classList.remove('now');
+    links[best].classList.add('now');
+    active = best;
+
+    var l = links[best].getBoundingClientRect(), box = idx.getBoundingClientRect();
+    if (l.top < box.top + 24) idx.scrollTop -= (box.top + 24 - l.top);
+    else if (l.bottom > box.bottom - 8) idx.scrollTop += (l.bottom - box.bottom + 8);
+  }
+
+  var ticking = false;
+  addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { ticking = false; update(); });
+  }, { passive: true });
+  addEventListener('resize', update, { passive: true });
+  update();
+})();
+</script>
 """
 
 
@@ -275,6 +358,7 @@ def main():
     w('<html lang="en"><head><meta charset="utf-8">')
     w('<meta name="viewport" content="width=device-width, initial-scale=1">')
     w("<title>Gushwork design system — changelog</title>")
+    w('<link rel="icon" type="image/svg+xml" href="%s">' % FAVICON)
     w('<link rel="stylesheet" href="../foundation/tokens.css">')
     w("<style>%s</style></head>" % CSS)
     w("<body>")
@@ -325,7 +409,7 @@ def main():
             w('        <div class="prose">%s</div>' % render(lead))
         if rest:
             w("        <details>")
-            w('          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>')
+            w('          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>')
             w('          <div class="prose">%s</div>' % render(rest))
             w("        </details>")
         w('        <div class="meta">')
@@ -368,6 +452,7 @@ def main():
     w("    &ldquo;Full notes&rdquo;.</p>")
     w("  </div>")
     w("</div>")
+    w(SPY.strip())
     w("</body></html>")
 
     sys.stdout.write("\n".join(P) + "\n")
