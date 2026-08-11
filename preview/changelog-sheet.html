@@ -137,19 +137,38 @@
        Generated from git — a release is a commit that moved the version field in
        <code>plugin.json</code>, which is what <code>plugin update</code> compares.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">37</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.30.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">38</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.31.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
       <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">11 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-31-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.31.0</span>
+        <span class="when">11 Aug 2026</span>
+        <span class="when">17:53</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">the changelog sheet is a reading page, not a table</p>
+        <div class="prose"><p>Redesigned after Utsav pointed at code.claude.com/docs/en/changelog. What that page gets right is that a changelog is READ, not scanned like data — so the table is gone. Each release is now a version pill and date in a left rail with the change on the right, whitespace instead of rules, and a sticky version index down the side. Light theme only, by instruction: there is no dark variant and no prefers-color-scheme block.</p></div>
+        <details>
+          <summary><svg class="gl"><use href="#i-caret"/></svg>Full notes</summary>
+          <div class="prose"><p>DETAIL NOW COMES FROM THE COMMIT BODY. The table could only ever show a subject; the sheet renders the body too, as paragraphs and bullet lists, with the <code>Session:</code> trailer stripped. The first block shows by default and the rest sits behind a Full notes disclosure, because bodies here run past twenty lines and thirty-seven of them expanded is not a page anyone reads. Write release commits accordingly: the subject is the sentence people read, the first paragraph is the summary they see.</p><p>Rendering moved to <code>scripts/_changelog_sheet.py</code> — bash derives, python renders. Markdown support is deliberately just backticks, ** and bare URLs: a changelog needing a full markdown engine is one whose commit messages have stopped being commit messages.</p><p>Three things this shook out:</p><ul><li><code>_releases.sh</code> gained a sixth field and <code>changelog.sh</code> still read five, so <code>read</code> folded the whole body into <code>session</code> and printed it inside the Session link. Every consumer of a record must read every field.</li><li>BSD <code>tr</code> does not understand <code>\x1e</code>. Encoding body newlines with it translated the literal characters <code>e</code>, <code>x</code> and <code>1</code> instead and shredded every body. It is <code>\036</code>, octal.</li><li>A <code>&lt;code&gt;</code> chip bound to a 14px token rendered small inside the 16px lede and knocked the line off its baseline. Chips now inherit size and line-height; weight and family are the only type properties they own.</li></ul></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/8023f6e39a1e9e7c1372a129613be984664c7bbd"><svg class="gl"><use href="#i-commit"/></svg>8023f6e</a>
+          <a class="meta__l" href="claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7"><svg class="gl"><use href="#i-chat"/></svg>Changelog sheet</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-30-0">
       <div class="rail">
-        <span class="pill pill--now">v1.30.0</span>
+        <span class="pill">v1.30.0</span>
         <span class="when">11 Aug 2026</span>
         <span class="when">13:21</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">the sheets are hosted, and publishing is one command</p>
@@ -853,7 +872,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-30-0">v1.30.0</a>
+    <a class="now" href="#v1-31-0">v1.31.0</a>
+    <a class="" href="#v1-30-0">v1.30.0</a>
     <a class="" href="#v1-29-1">v1.29.1</a>
     <a class="" href="#v1-29-0">v1.29.0</a>
     <a class="" href="#v1-28-1">v1.28.1</a>
@@ -895,8 +915,8 @@
     <p><strong>Why this sheet exists alongside CHANGELOG.md.</strong> The markdown log
     renders the same data as a table; this one is for reading. Both come from
     <code>scripts/_releases.sh</code>, so they cannot disagree — and both now list
-    <strong>37</strong> releases. The earlier derivation keyed off the commit subject,
-    a convention that only started at v1.19.0, so it carried 37 of them and silently
+    <strong>38</strong> releases. The earlier derivation keyed off the commit subject,
+    a convention that only started at v1.19.0, so it carried 38 of them and silently
     dropped <strong>v1.20.0, the login screen</strong>.</p>
     <p><strong>The Session link only resolves on the machine holding the transcript.</strong>
     It is a pointer for the maintainer; for everyone else the commit link is the one that
