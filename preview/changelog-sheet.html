@@ -27,16 +27,18 @@
   /* ── header ── */
   .hd{grid-column:1 / -1;padding-bottom:var(--gw-space-32);
       border-bottom:1px solid var(--gw-color-neutral-100)}
-  /* Title left, brand badge right. The badge carries the "which system is this" job that an
-     eyebrow above the title used to do, without pushing the title down the page. h1 drops
-     its margin so the two align on their centres rather than around the heading's spacing. */
-  .hd__top{display:flex;align-items:center;justify-content:space-between;
-           gap:var(--gw-space-20);flex-wrap:wrap;margin-bottom:var(--gw-space-12)}
+  /* The badge sits BESIDE the title, not pushed to the far edge — it reads as part of the
+     title line, naming which system this changelog belongs to. No `justify-content`: the
+     gap holds them together, and flex-start lets the pair sit as one unit. h1 drops its
+     margin so the two align on their centres rather than around the heading's spacing. */
+  .hd__top{display:flex;align-items:center;gap:var(--gw-space-20);
+           flex-wrap:wrap;margin-bottom:var(--gw-space-12)}
   h1{margin:0;font:var(--gw-text-h4);
      letter-spacing:var(--gw-text-h4-tracking);color:var(--gw-color-neutral-900)}
   .brand{display:inline-flex;align-items:center;flex:none;
-         padding:var(--gw-space-4) var(--gw-space-12);border-radius:var(--gw-radius-full);
-         font:var(--gw-text-body-12-med);white-space:nowrap;
+         padding:var(--gw-space-8) var(--gw-space-16);border-radius:var(--gw-radius-12);
+         font:var(--gw-text-body-18-med);
+         letter-spacing:var(--gw-text-body-18-med-tracking);white-space:nowrap;
          background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500)}
   /* One sentence saying what this is, then the housekeeping as separate lines. They were
      one dense paragraph and nobody reads a description that also explains its own
@@ -177,7 +179,7 @@
   <header class="hd">
     <div class="hd__top">
       <h1>Changelog</h1>
-      <span class="brand">Gushwork Design</span>
+      <span class="brand">Gushwork Design Plugin</span>
     </div>
     <p class="lede">Release notes for the Gushwork design system, including new
        components, corrected measurements, and rulings by version.</p>
