@@ -187,19 +187,38 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">41</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.34.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">42</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.35.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
       <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">11 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-35-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.35.0</span>
+        <span class="when">11 Aug 2026</span>
+        <span class="when">18:31</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">links that leave the page open in a new tab</p>
+        <div class="prose"><p>Every commit link, repo link and bare URL in a release body now carries target=&quot;_blank&quot; — 43 of them on the changelog sheet, plus the three sheet cards and the repo link on the hosted index. Losing your place in a forty-release page to read one commit was the wrong trade.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>Two deliberate exceptions, and they are why this is not a <code>&lt;base target&gt;</code>:</p><ul><li>The release index&#x27;s <code>#v1-30-0</code> anchors are the same page. A new tab there would open a second copy of the sheet on every click.</li><li>The <code>claude://resume</code> links hand off to a protocol handler. The browser has no page to render, so a new tab is left blank.</li></ul><p><code>rel=&quot;noopener noreferrer&quot;</code> goes on every one. <code>target=&quot;_blank&quot;</code> alone hands the opened page a live <code>window.opener</code> handle back to this one.</p><p>Verified in the browser rather than by grep: of 102 anchors, all 43 external carry both attributes, and all 41 in-page anchors and all 18 protocol links carry neither.</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/f3635dbad93e3f2b5c6ede6d96d72afc77ccdd3e" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>f3635db</a>
+          <a class="meta__l" href="claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7"><svg class="gl"><use href="#i-chat"/></svg>Changelog sheet</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-34-0">
       <div class="rail">
-        <span class="pill pill--now">v1.34.0</span>
+        <span class="pill">v1.34.0</span>
         <span class="when">11 Aug 2026</span>
         <span class="when">18:28</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">the index has a scrollbar gutter, and the brand moves to a badge</p>
@@ -979,7 +998,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-34-0">v1.34.0</a>
+    <a class="now" href="#v1-35-0">v1.35.0</a>
+    <a class="" href="#v1-34-0">v1.34.0</a>
     <a class="" href="#v1-33-0">v1.33.0</a>
     <a class="" href="#v1-32-0">v1.32.0</a>
     <a class="" href="#v1-31-0">v1.31.0</a>
