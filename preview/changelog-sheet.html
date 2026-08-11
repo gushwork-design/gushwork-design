@@ -198,19 +198,38 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">43</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.36.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">44</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.37.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
       <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">11 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-37-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.37.0</span>
+        <span class="when">11 Aug 2026</span>
+        <span class="when">18:39</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">the brand badge is the library badge, Small</p>
+        <div class="prose"><p>It was hand-rolled, and hand-rolling got two of four properties wrong: radius 12 where the set is <code>Radius/8</code>, and Medium weight where Large is Semi Bold. The height and the colour pairing happened to be right, which is exactly how an invented value survives review.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>It is now <code>badge</code> 1582:628 at Theme=Light, Color=Blue, Icon=no, Size=Small, every value read off the measured table in exports/web/component-library.md: height 24, 8px horizontal padding, <code>Radius/8</code>, and the Light-theme pairing of {Color}/Alpha/10 fill with {Color}/500 text. <code>Blue</code> is a real value of the Color axis that the written rule never documented.</p><p>The trap worth restating: THE TYPE RAMP CHANGES WEIGHT WITH SIZE — body-12-med → body-14-sem → body-18-sem. Small is Medium, everything above it is Semi Bold. It is not one style at three sizes, and reading the size off the ramp without reading the weight is how the Large version came out wrong.</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/30203b95ec01f739f1b93ca31b5b03d75dc869c2" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>30203b9</a>
+          <a class="meta__l" href="claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7"><svg class="gl"><use href="#i-chat"/></svg>Changelog sheet</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-36-0">
       <div class="rail">
-        <span class="pill pill--now">v1.36.0</span>
+        <span class="pill">v1.36.0</span>
         <span class="when">11 Aug 2026</span>
         <span class="when">18:35</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">the brand badge sits beside the title, not at the far edge</p>
@@ -1028,7 +1047,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-36-0">v1.36.0</a>
+    <a class="now" href="#v1-37-0">v1.37.0</a>
+    <a class="" href="#v1-36-0">v1.36.0</a>
     <a class="" href="#v1-35-0">v1.35.0</a>
     <a class="" href="#v1-34-0">v1.34.0</a>
     <a class="" href="#v1-33-0">v1.33.0</a>
