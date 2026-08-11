@@ -45,6 +45,19 @@ version_at() {
     | head -1
 }
 
+# The commit body, newlines encoded as RS (0x1e) so a record stays one line. The `Session:`
+# trailer is dropped — it already has its own field, and it is metadata, not a change.
+# Never widen this to `%B`: chat CONTENT must not reach a public repo, and the body is the
+# one field an author writes freely.
+# Trailing RS is left on; the consumer strips it. `\036` is octal — BSD tr does NOT
+# understand `\x1e` and would silently translate the literal characters `e`, `x` and `1`
+# instead, which shredded every body the first time this was written.
+body_at() {
+  git log -1 --format='%b' "$1" \
+    | sed '/^Session:[[:space:]]/d' \
+    | tr '\n' '\036'
+}
+
 # Oldest-first, so each version can be compared against the one before it, then reversed.
 releases_asc() {
   git log --reverse --format='%H%x1f%ad%x1f%s%x1f%(trailers:key=Session,valueonly,separator=%x2c)' \
@@ -71,7 +84,8 @@ releases_asc() {
           *) session="$(backfill "$version")" ;;
         esac
 
-        printf '%s\x1f%s\x1f%s\x1f%s\x1f%s\n' "$version" "$sha" "$date" "$summary" "$session"
+        printf '%s\x1f%s\x1f%s\x1f%s\x1f%s\x1f%s\n' \
+          "$version" "$sha" "$date" "$summary" "$session" "$(body_at "$sha")"
       done
     }
 }

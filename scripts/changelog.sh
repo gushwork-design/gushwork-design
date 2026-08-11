@@ -80,7 +80,10 @@ HEAD
   printf '| Version | Date | What changed | Commit | Session |\n'
   printf '|---|---|---|---|---|\n'
 
-  releases | while IFS=$'\x1f' read -r version sha date summary session; do
+  # `body` must be read even though the markdown table has no column for it. `read` puts
+  # every leftover field in the LAST variable, so dropping it made `session` swallow the
+  # whole commit body and print it inside the Session link.
+  releases | while IFS=$'\x1f' read -r version sha date summary session body; do
     [ -z "${version:-}" ] && continue
     printf '| **v%s** | %s | %s | [`%s`](%s/commit/%s) | %s |\n' \
       "$version" "$date" "$summary" "${sha:0:7}" "$REPO" "$sha" "$(session_cell "$session")"
