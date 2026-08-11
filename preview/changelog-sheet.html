@@ -187,19 +187,38 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">40</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.33.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">41</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.34.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
       <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">11 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-34-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.34.0</span>
+        <span class="when">11 Aug 2026</span>
+        <span class="when">18:28</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">the index has a scrollbar gutter, and the brand moves to a badge</p>
+        <div class="prose"><p>THE SCROLLBAR NO LONGER SITS ON THE LIST. The release index&#x27;s row highlights ran underneath the thumb. Letting the scrollbar reserve its own width does not fix it — on macOS the scrollbar is an OVERLAY and floats above content, taking zero layout width, which is exactly what the page measures: offsetWidth minus clientWidth is 0. So the gutter is explicit <code>padding-right</code>, and rows now stop 12px short of the container edge. <code>scrollbar-gutter:stable</code> keeps the column from shifting when the bar appears, and <code>overscroll-behavior:contain</code> stops a flick inside the index from scrolling the page behind it.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>The sticky &quot;Releases&quot; label got the same treatment: its background is what hides rows passing under it, so it now reaches the gap below itself instead of letting a half-clipped version number show through.</p><p>THE BRAND IS A BADGE, RIGHT-ALIGNED WITH THE TITLE, replacing the eyebrow above it. Same job — saying which system this belongs to — without pushing the title down the page. h1 drops its bottom margin so the two align on their centres rather than around the heading&#x27;s spacing; measured, both centre on the same pixel and the badge sits flush with the header&#x27;s right edge.</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/57e8cddf90b71ff896fd15e8ece5b582d7448b89"><svg class="gl"><use href="#i-commit"/></svg>57e8cdd</a>
+          <a class="meta__l" href="claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7"><svg class="gl"><use href="#i-chat"/></svg>Changelog sheet</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-33-0">
       <div class="rail">
-        <span class="pill pill--now">v1.33.0</span>
+        <span class="pill">v1.33.0</span>
         <span class="when">11 Aug 2026</span>
         <span class="when">18:24</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">the header says what this is, and the mark is the app icon</p>
@@ -960,7 +979,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-33-0">v1.33.0</a>
+    <a class="now" href="#v1-34-0">v1.34.0</a>
+    <a class="" href="#v1-33-0">v1.33.0</a>
     <a class="" href="#v1-32-0">v1.32.0</a>
     <a class="" href="#v1-31-0">v1.31.0</a>
     <a class="" href="#v1-30-0">v1.30.0</a>

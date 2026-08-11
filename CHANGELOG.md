@@ -24,6 +24,7 @@ reports its own stale date.**
 
 | Version | Date | What changed | Commit | Session |
 |---|---|---|---|---|
+| **v1.34.0** | 11 Aug 2026 18:28 | the index has a scrollbar gutter, and the brand moves to a badge | [`57e8cdd`](https://github.com/utsav-gushwork/gushwork-design/commit/57e8cddf90b71ff896fd15e8ece5b582d7448b89) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.33.0** | 11 Aug 2026 18:24 | the header says what this is, and the mark is the app icon | [`e1767bc`](https://github.com/utsav-gushwork/gushwork-design/commit/e1767bceeb91bcaf7a699c9c0fdd5de79a1e3eca) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.32.0** | 11 Aug 2026 18:11 | the sheets carry the Gushwork mark, and the index follows the read | [`dbebdfc`](https://github.com/utsav-gushwork/gushwork-design/commit/dbebdfc0f77b0e4ba8d87816ddf57c73ff3dd37b) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.31.0** | 11 Aug 2026 17:53 | the changelog sheet is a reading page, not a table | [`8023f6e`](https://github.com/utsav-gushwork/gushwork-design/commit/8023f6e39a1e9e7c1372a129613be984664c7bbd) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
