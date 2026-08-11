@@ -60,12 +60,21 @@ def anchor(v):
 # commit messages have stopped being commit messages.
 URL = re.compile(r"(https?://[^\s<>()]+)")
 
+# Anything that navigates AWAY opens in a new tab, so a reader never loses their place in a
+# 40-release page. Two deliberate exceptions: the index's `#v1-30-0` anchors, which are the
+# same page, and the `claude://resume` links, where the protocol handler takes over and a
+# new tab would just be left blank. `rel` is not optional — `target="_blank"` without
+# `noopener` hands the opened page a live handle on this one.
+NEWTAB = ' target="_blank" rel="noopener noreferrer"'
+
 
 def inline(text):
     out = html.escape(text)
     out = re.sub(r"`([^`]+)`", r"<code>\1</code>", out)
     out = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", out)
-    out = URL.sub(lambda m: '<a class="lnk" href="%s">%s</a>' % (m.group(1), m.group(1)), out)
+    out = URL.sub(
+        lambda m: '<a class="lnk" href="%s"%s>%s</a>' % (m.group(1), NEWTAB, m.group(1)), out
+    )
     return out
 
 
@@ -393,7 +402,8 @@ def main():
     w('    <p class="lede">Release notes for the Gushwork design system, including new')
     w("       components, corrected measurements, and rulings by version.</p>")
     w('    <p class="hd__note">This page is generated from')
-    w('       <a class="lnk" href="%s/blob/main/CHANGELOG.md">CHANGELOG.md on GitHub</a>.</p>' % REPO)
+    w('       <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md on GitHub</a>.</p>'
+      % (REPO, NEWTAB))
     w('    <p class="hd__note">Every skill announces its own version at the start of a session —')
     w("       trust that line to check what you are running. <code>claude plugin list</code>")
     w("       lags a marketplace refresh and will under-report.</p>")
@@ -442,9 +452,9 @@ def main():
             w("        </details>")
         w('        <div class="meta">')
         w(
-            '          <a class="meta__l" href="%s/commit/%s">'
+            '          <a class="meta__l" href="%s/commit/%s"%s>'
             '<svg class="gl"><use href="#i-commit"/></svg>%s</a>'
-            % (REPO, r["sha"], r["sha"][:7])
+            % (REPO, r["sha"], NEWTAB, r["sha"][:7])
         )
         w("          %s" % session_cell(r["session"]))
         w("        </div>")
