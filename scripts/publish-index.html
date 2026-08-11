@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gushwork design system — sheets</title>
+<link rel="stylesheet" href="foundation/tokens.css">
+<style>
+  /* Every value is a token. This page is the deploy's entry point only — the sheets it
+     links to are generated from the repo and are not edited here. */
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--gw-color-neutral-100);
+       font:var(--gw-text-body-14-reg);color:var(--gw-color-black);
+       -webkit-font-smoothing:antialiased;display:flex;justify-content:center;
+       padding:var(--gw-space-56) var(--gw-space-20)}
+  .wrap{width:100%;max-width:720px}
+  h1{margin:0 0 var(--gw-space-8);font:var(--gw-text-h5);
+     letter-spacing:var(--gw-text-h5-tracking);color:var(--gw-color-neutral-900)}
+  .sub{margin:0 0 var(--gw-space-32);font:var(--gw-text-body-14-reg);
+       color:var(--gw-color-neutral-600)}
+  /* Two families only — the browser's default <code> face would be a third. */
+  code{font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-800)}
+
+  .list{display:flex;flex-direction:column;gap:var(--gw-space-12)}
+  .card{display:flex;align-items:center;gap:var(--gw-space-16);
+        padding:var(--gw-space-20);text-decoration:none;
+        background:var(--gw-color-white);border-radius:var(--gw-radius-12);
+        box-shadow:var(--gw-shadow-s2);
+        transition:box-shadow var(--gw-motion-fast),transform var(--gw-motion-fast)}
+  .card:hover{box-shadow:var(--gw-shadow-s3)}
+  .card:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
+  .card__ico{width:36px;height:36px;border-radius:var(--gw-radius-8);flex:none;
+             background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500);
+             display:flex;align-items:center;justify-content:center}
+  .card__ico svg{width:18px;height:18px;display:block}
+  .card__txt{min-width:0;display:flex;flex-direction:column;gap:var(--gw-space-2)}
+  .card__t{font:var(--gw-text-body-16-sem);color:var(--gw-color-neutral-900)}
+  .card__d{font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-600)}
+  .card__go{margin-left:auto;width:20px;height:20px;flex:none;
+            color:var(--gw-color-neutral-300)}
+  .card__go svg{width:20px;height:20px;display:block}
+  .card:hover .card__go{color:var(--gw-color-primary-500)}
+
+  .note{margin-top:var(--gw-space-32);padding:var(--gw-space-16);
+        border-radius:var(--gw-radius-8);background:var(--gw-color-primary-25);
+        border:1px solid var(--gw-color-primary-100);
+        font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-700)}
+  .note a{color:var(--gw-color-primary-500)}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-history" viewBox="0 0 256 256" fill="currentColor"><path d="M140,80v41.21l34.17,20.5a12,12,0,1,1-12.34,20.58l-40-24A12,12,0,0,1,116,128V80a12,12,0,0,1,24,0ZM128,28A99.38,99.38,0,0,0,57.24,57.34c-4.69,4.74-9,9.37-13.24,14V64a12,12,0,0,0-24,0v40a12,12,0,0,0,12,12H72a12,12,0,0,0,0-24H57.77C63,86,68.37,80.22,74.26,74.26a76,76,0,1,1,1.58,109,12,12,0,0,0-16.48,17.46A100,100,0,1,0,128,28Z"/></symbol>
+  <symbol id="i-checks" viewBox="0 0 256 256" fill="currentColor"><path d="M228,128a12,12,0,0,1-12,12H128a12,12,0,0,1,0-24h88A12,12,0,0,1,228,128ZM128,76h88a12,12,0,0,0,0-24H128a12,12,0,0,0,0,24Zm88,104H128a12,12,0,0,0,0,24h88a12,12,0,0,0,0-24ZM79.51,39.51,56,63l-7.51-7.52a12,12,0,0,0-17,17l16,16a12,12,0,0,0,17,0l32-32a12,12,0,0,0-17-17Zm0,64L56,127l-7.51-7.52a12,12,0,1,0-17,17l16,16a12,12,0,0,0,17,0l32-32a12,12,0,0,0-17-17Zm0,64L56,191l-7.51-7.52a12,12,0,1,0-17,17l16,16a12,12,0,0,0,17,0l32-32a12,12,0,0,0-17-17Z"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 256 256" fill="currentColor"><path d="M100,36H56A20,20,0,0,0,36,56v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,100,36ZM96,96H60V60H96ZM200,36H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,200,36Zm-4,60H160V60h36Zm-96,40H56a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,100,136Zm-4,60H60V160H96Zm104-60H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,200,136Zm-4,60H160V160h36Z"/></symbol>
+  <symbol id="i-go" viewBox="0 0 256 256" fill="currentColor"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"/></symbol>
+</svg>
+
+<div class="wrap">
+  <h1>Gushwork design system</h1>
+  <p class="sub">The review sheets, hosted. Everything here is generated from the
+     <code>gushwork-design</code> repo — read them, don't edit them.</p>
+
+  <div class="list">
+    <a class="card" href="preview/review-sheet.html">
+      <span class="card__ico"><svg><use href="#i-checks"/></svg></span>
+      <span class="card__txt">
+        <span class="card__t">Full review sheet</span>
+        <span class="card__d">Every measured component, rendered from its measured values</span>
+      </span>
+      <span class="card__go"><svg><use href="#i-go"/></svg></span>
+    </a>
+
+    <a class="card" href="preview/catalogue.html">
+      <span class="card__ico"><svg><use href="#i-grid"/></svg></span>
+      <span class="card__txt">
+        <span class="card__t">Component catalogue</span>
+        <span class="card__d">The browsable reference — what exists, and what each variant is for</span>
+      </span>
+      <span class="card__go"><svg><use href="#i-go"/></svg></span>
+    </a>
+
+    <a class="card" href="preview/changelog-sheet.html">
+      <span class="card__ico"><svg><use href="#i-history"/></svg></span>
+      <span class="card__txt">
+        <span class="card__t">Changelog</span>
+        <span class="card__d">Every release, derived from git — what changed, when, and from where</span>
+      </span>
+      <span class="card__go"><svg><use href="#i-go"/></svg></span>
+    </a>
+  </div>
+
+  <div class="note">
+    These are snapshots of the sheets as of the last deploy, not a live view of the repo.
+    The source of truth is
+    <a href="https://github.com/utsav-gushwork/gushwork-design">github.com/utsav-gushwork/gushwork-design</a>,
+    and the plugin is how you build with the system — hosting is for reading and reviewing.
+  </div>
+</div>
+</body></html>
