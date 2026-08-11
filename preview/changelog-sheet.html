@@ -163,19 +163,38 @@
        Generated from git — a release is a commit that moved the version field in
        <code>plugin.json</code>, which is what <code>plugin update</code> compares.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">38</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.31.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">39</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.32.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
       <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">11 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-32-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.32.0</span>
+        <span class="when">11 Aug 2026</span>
+        <span class="when">18:11</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">the sheets carry the Gushwork mark, and the index follows the read</p>
+        <div class="prose"><p>Four changes to the changelog sheet, three of them Utsav&#x27;s review notes.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>THE DISCLOSURE CARET FOLLOWS ITS LABEL. It was a right-caret before the words; it is now <code>CaretDown</code> after them, flipping 180 on open. A chevron after the text is the affordance people already read as &quot;expand&quot;, and down describes what the control will do. Bold weight per the icon table in foundation/shared-components.md — nav-style carets are Bold, and that same file forbids substituting a text glyph for the real one.</p><p>THE RELEASE INDEX FOLLOWS THE PAGE. The version whose release sits at the top goes semibold; the tint only supports it. The index also scrolls itself so the active row stays in view, which at thirty-eight entries it otherwise often was not. <code>font-variant-numeric</code> is re-declared on the active rule because the <code>font</code> shorthand resets it, and losing tabular figures made the column jitter as the weight changed.</p><p>SLIM ROUNDED SCROLLBARS on both the index and the page — the default chrome is heavy next to 12px rows. Both <code>scrollbar-width</code>/<code>-color</code> and <code>::-webkit-scrollbar</code> are declared: the first covers Firefox, the second Safari and Chrome, and neither is a fallback for the other.</p><p>THE GUSHWORK SYMBOL IS THE FAVICON, on all four hosted pages. Inlined as an SVG data URI rather than linked, so it cannot 404 on a host that did not copy assets/. Built from assets/logo/gushwork-symbol-original.svg by stripping the five nested Figma &lt;g&gt; layer wrappers; the two paths and the brand blue are untouched, and that #0070FF is exactly --gw-color-primary-500.</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/dbebdfc0f77b0e4ba8d87816ddf57c73ff3dd37b"><svg class="gl"><use href="#i-commit"/></svg>dbebdfc</a>
+          <a class="meta__l" href="claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7"><svg class="gl"><use href="#i-chat"/></svg>Changelog sheet</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-31-0">
       <div class="rail">
-        <span class="pill pill--now">v1.31.0</span>
+        <span class="pill">v1.31.0</span>
         <span class="when">11 Aug 2026</span>
         <span class="when">17:53</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">the changelog sheet is a reading page, not a table</p>
@@ -898,7 +917,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-31-0">v1.31.0</a>
+    <a class="now" href="#v1-32-0">v1.32.0</a>
+    <a class="" href="#v1-31-0">v1.31.0</a>
     <a class="" href="#v1-30-0">v1.30.0</a>
     <a class="" href="#v1-29-1">v1.29.1</a>
     <a class="" href="#v1-29-0">v1.29.0</a>
@@ -941,8 +961,8 @@
     <p><strong>Why this sheet exists alongside CHANGELOG.md.</strong> The markdown log
     renders the same data as a table; this one is for reading. Both come from
     <code>scripts/_releases.sh</code>, so they cannot disagree — and both now list
-    <strong>38</strong> releases. The earlier derivation keyed off the commit subject,
-    a convention that only started at v1.19.0, so it carried 38 of them and silently
+    <strong>39</strong> releases. The earlier derivation keyed off the commit subject,
+    a convention that only started at v1.19.0, so it carried 39 of them and silently
     dropped <strong>v1.20.0, the login screen</strong>.</p>
     <p><strong>The Session link only resolves on the machine holding the transcript.</strong>
     It is a pointer for the maintainer; for everyone else the commit link is the one that

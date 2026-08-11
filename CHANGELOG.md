@@ -24,6 +24,7 @@ reports its own stale date.**
 
 | Version | Date | What changed | Commit | Session |
 |---|---|---|---|---|
+| **v1.32.0** | 11 Aug 2026 18:11 | the sheets carry the Gushwork mark, and the index follows the read | [`dbebdfc`](https://github.com/utsav-gushwork/gushwork-design/commit/dbebdfc0f77b0e4ba8d87816ddf57c73ff3dd37b) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.31.0** | 11 Aug 2026 17:53 | the changelog sheet is a reading page, not a table | [`8023f6e`](https://github.com/utsav-gushwork/gushwork-design/commit/8023f6e39a1e9e7c1372a129613be984664c7bbd) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.30.0** | 11 Aug 2026 13:21 | the sheets are hosted, and publishing is one command | [`bd1aef2`](https://github.com/utsav-gushwork/gushwork-design/commit/bd1aef27385099265cd9ede90119adc5b1b2c9f1) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.29.1** | 11 Aug 2026 13:17 | the login screen's Continue arrow was a layer name, not a path | [`ab41ec7`](https://github.com/utsav-gushwork/gushwork-design/commit/ab41ec739ea97b80fca63cb4cb361e5d94273082) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
