@@ -17,13 +17,7 @@ cd "$(dirname "$0")/.."
 
 OUT="preview/changelog-sheet.html"
 
-build() {
-  # How far behind the subject-derived markdown log is. Counted, not asserted, so the note
-  # cannot go stale if changelog.sh is ever changed.
-  local md_rows
-  md_rows="$(grep -c '^| \*\*v' CHANGELOG.md 2>/dev/null || echo 0)"
-  releases | REPO="$REPO" MD_ROWS="$md_rows" python3 scripts/_changelog_sheet.py
-}
+build() { releases | REPO="$REPO" python3 scripts/_changelog_sheet.py; }
 
 if [ "${1:-}" = "--check" ]; then
   if ! diff -q <(build) "$OUT" >/dev/null 2>&1; then

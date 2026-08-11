@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gushwork design system — changelog</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Cpath%20d%3D%22M76.6088%204.56344C77.5025%202.36058%2075.8495%200%2073.4723%200H9.14286C4.0934%200%200%204.0934%200%209.14286V66.7778C0%2072.018%205.17081%2075.6829%209.9603%2073.5568C40.8494%2059.8449%2064.3785%2034.7075%2076.6088%204.56344Z%22%20fill%3D%22%230070FF%22%2F%3E%3Cpath%20d%3D%22M32.5161%2080C31.4022%2080%2030.9357%2078.5531%2031.8259%2077.8835C54.9007%2060.5265%2071.4338%2035.8047%2078.7658%208.0522C78.9403%207.39154%2080%207.51618%2080%208.19951V70.8571C80%2075.9066%2075.9066%2080%2070.8571%2080H32.5161Z%22%20fill%3D%22%230070FF%22%2F%3E%3C%2Fsvg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2220%22%20fill%3D%22%230d0d0d%22%2F%3E%3Cg%20transform%3D%22translate%2819.2%2019.2%29%20scale%280.52%29%22%3E%3Cpath%20d%3D%22M76.6088%204.56344C77.5025%202.36058%2075.8495%200%2073.4723%200H9.14286C4.0934%200%200%204.0934%200%209.14286V66.7778C0%2072.018%205.17081%2075.6829%209.9603%2073.5568C40.8494%2059.8449%2064.3785%2034.7075%2076.6088%204.56344Z%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Cpath%20d%3D%22M32.5161%2080C31.4022%2080%2030.9357%2078.5531%2031.8259%2077.8835C54.9007%2060.5265%2071.4338%2035.8047%2078.7658%208.0522C78.9403%207.39154%2080%207.51618%2080%208.19951V70.8571C80%2075.9066%2075.9066%2080%2070.8571%2080H32.5161Z%22%20fill%3D%22%23FFFFFF%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
 <link rel="stylesheet" href="../foundation/tokens.css">
 <style>
   /* LIGHT THEME ONLY, by instruction — there is no prefers-color-scheme block below.
@@ -27,10 +27,20 @@
   /* ── header ── */
   .hd{grid-column:1 / -1;padding-bottom:var(--gw-space-32);
       border-bottom:1px solid var(--gw-color-neutral-100)}
+  .eyebrow{display:block;margin-bottom:var(--gw-space-8);
+           font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
+           color:var(--gw-color-primary-500)}
   h1{margin:0 0 var(--gw-space-12);font:var(--gw-text-h4);
      letter-spacing:var(--gw-text-h4-tracking);color:var(--gw-color-neutral-900)}
+  /* One sentence saying what this is, then the housekeeping as separate lines. They were
+     one dense paragraph and nobody reads a description that also explains its own
+     derivation. */
   .lede{margin:0;max-width:64ch;font:var(--gw-text-body-16-reg);
         letter-spacing:var(--gw-text-body-16-reg-tracking);color:var(--gw-color-neutral-600)}
+  .hd__note{margin:var(--gw-space-16) 0 0;max-width:72ch;
+            font:var(--gw-text-body-14-reg);
+            letter-spacing:var(--gw-text-body-14-reg-tracking);
+            color:var(--gw-color-neutral-600)}
   .facts{margin-top:var(--gw-space-20);display:flex;flex-wrap:wrap;
          gap:var(--gw-space-8) var(--gw-space-24)}
   .fact{display:flex;align-items:baseline;gap:var(--gw-space-8)}
@@ -131,14 +141,6 @@
   html::-webkit-scrollbar-thumb:hover,.idx::-webkit-scrollbar-thumb:hover{
     background:var(--gw-color-neutral-300);background-clip:content-box}
 
-  .note{grid-column:1 / -1;margin-top:var(--gw-space-40);padding:var(--gw-space-16);
-        border-radius:var(--gw-radius-8);background:var(--gw-color-primary-25);
-        border:1px solid var(--gw-color-primary-100);
-        font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-700)}
-  .note p{margin:0 0 var(--gw-space-8);max-width:80ch}
-  .note p:last-child{margin:0}
-  .note code{background:var(--gw-color-white)}
-
   @media (max-width:1000px){
     .page{grid-template-columns:minmax(0,1fr);gap:0;
           padding:var(--gw-space-40) var(--gw-space-20) var(--gw-space-80)}
@@ -158,10 +160,15 @@
 </svg>
 <div class="page">
   <header class="hd">
+    <span class="eyebrow">Gushwork design system</span>
     <h1>Changelog</h1>
-    <p class="lede">Release notes for the Gushwork design system plugin, newest first.
-       Generated from git — a release is a commit that moved the version field in
-       <code>plugin.json</code>, which is what <code>plugin update</code> compares.</p>
+    <p class="lede">Release notes for the Gushwork design system, including new
+       components, corrected measurements, and rulings by version.</p>
+    <p class="hd__note">This page is generated from
+       <a class="lnk" href="https://github.com/utsav-gushwork/gushwork-design/blob/main/CHANGELOG.md">CHANGELOG.md on GitHub</a>.</p>
+    <p class="hd__note">Every skill announces its own version at the start of a session —
+       trust that line to check what you are running. <code>claude plugin list</code>
+       lags a marketplace refresh and will under-report.</p>
     <div class="facts">
       <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">39</span></span>
       <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.32.0</span></span>
@@ -957,24 +964,6 @@
     <a class="" href="#v1-1-0">v1.1.0</a>
     <a class="" href="#v1-0-0">v1.0.0</a>
   </nav>
-  <div class="note">
-    <p><strong>Why this sheet exists alongside CHANGELOG.md.</strong> The markdown log
-    renders the same data as a table; this one is for reading. Both come from
-    <code>scripts/_releases.sh</code>, so they cannot disagree — and both now list
-    <strong>39</strong> releases. The earlier derivation keyed off the commit subject,
-    a convention that only started at v1.19.0, so it carried 39 of them and silently
-    dropped <strong>v1.20.0, the login screen</strong>.</p>
-    <p><strong>The Session link only resolves on the machine holding the transcript.</strong>
-    It is a pointer for the maintainer; for everyone else the commit link is the one that
-    works. &ldquo;No session recorded&rdquo; means nobody could vouch for the attribution —
-    releases before v1.19.0 predate the <code>Session:</code> trailer, and guessing from
-    transcript greps is unreliable because forked sessions duplicate each other&rsquo;s
-    history.</p>
-    <p><strong>Detail comes from the commit body</strong>, with the trailer stripped. Write
-    release commits accordingly: the subject is the sentence people read, the first
-    paragraph is the summary they see, and everything after it sits behind
-    &ldquo;Full notes&rdquo;.</p>
-  </div>
 </div>
 <script>
 (function () {

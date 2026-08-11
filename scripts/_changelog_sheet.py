@@ -24,7 +24,6 @@ import re
 import sys
 
 REPO = os.environ.get("REPO", "")
-MD_ROWS = int(os.environ.get("MD_ROWS", "0"))
 
 
 # ── records ───────────────────────────────────────────────────────────────────────────
@@ -150,10 +149,20 @@ CSS = """
   /* ── header ── */
   .hd{grid-column:1 / -1;padding-bottom:var(--gw-space-32);
       border-bottom:1px solid var(--gw-color-neutral-100)}
+  .eyebrow{display:block;margin-bottom:var(--gw-space-8);
+           font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
+           color:var(--gw-color-primary-500)}
   h1{margin:0 0 var(--gw-space-12);font:var(--gw-text-h4);
      letter-spacing:var(--gw-text-h4-tracking);color:var(--gw-color-neutral-900)}
+  /* One sentence saying what this is, then the housekeeping as separate lines. They were
+     one dense paragraph and nobody reads a description that also explains its own
+     derivation. */
   .lede{margin:0;max-width:64ch;font:var(--gw-text-body-16-reg);
         letter-spacing:var(--gw-text-body-16-reg-tracking);color:var(--gw-color-neutral-600)}
+  .hd__note{margin:var(--gw-space-16) 0 0;max-width:72ch;
+            font:var(--gw-text-body-14-reg);
+            letter-spacing:var(--gw-text-body-14-reg-tracking);
+            color:var(--gw-color-neutral-600)}
   .facts{margin-top:var(--gw-space-20);display:flex;flex-wrap:wrap;
          gap:var(--gw-space-8) var(--gw-space-24)}
   .fact{display:flex;align-items:baseline;gap:var(--gw-space-8)}
@@ -254,14 +263,6 @@ CSS = """
   html::-webkit-scrollbar-thumb:hover,.idx::-webkit-scrollbar-thumb:hover{
     background:var(--gw-color-neutral-300);background-clip:content-box}
 
-  .note{grid-column:1 / -1;margin-top:var(--gw-space-40);padding:var(--gw-space-16);
-        border-radius:var(--gw-radius-8);background:var(--gw-color-primary-25);
-        border:1px solid var(--gw-color-primary-100);
-        font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-700)}
-  .note p{margin:0 0 var(--gw-space-8);max-width:80ch}
-  .note p:last-child{margin:0}
-  .note code{background:var(--gw-color-white)}
-
   @media (max-width:1000px){
     .page{grid-template-columns:minmax(0,1fr);gap:0;
           padding:var(--gw-space-40) var(--gw-space-20) var(--gw-space-80)}
@@ -282,21 +283,26 @@ SPRITE = """
 </svg>
 """
 
-# The Gushwork symbol, inlined so the page carries its own mark and the favicon cannot
-# 404 on a host that did not copy assets/. Built from assets/logo/gushwork-symbol-original.svg
-# by stripping the five nested Figma <g> layer wrappers; the two paths and the brand blue
-# are untouched — that #0070FF is --gw-color-primary-500. Regenerate with the snippet in
-# scripts/_favicon.txt if the symbol ever changes.
+# The internal mark: the Gushwork symbol knocked out in white on a black rounded square,
+# which is the app-icon form Utsav uses — not the bare brand-blue symbol, which disappears
+# against a light browser chrome at 16px. Composed from assets/logo/gushwork-symbol-white.svg
+# with its five nested Figma <g> layer wrappers stripped; the two paths are untouched, the
+# square is --gw-color-black at --gw-radius-20, and the symbol sits at 52% centred.
+# Inlined as a data URI rather than linked so it cannot 404 on a host that did not copy
+# assets/. scripts/_favicon.txt holds the same string for the hand-maintained sheets.
 FAVICON = (
-    "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20"
-    "viewBox%3D%220%200%2080%2080%22%3E%3Cpath%20d%3D%22M76.6088%204.56344C77.5025%202."
-    "36058%2075.8495%200%2073.4723%200H9.14286C4.0934%200%200%204.0934%200%209.14286V66"
-    ".7778C0%2072.018%205.17081%2075.6829%209.9603%2073.5568C40.8494%2059.8449%2064.37"
-    "85%2034.7075%2076.6088%204.56344Z%22%20fill%3D%22%230070FF%22%2F%3E%3Cpath%20d%3D"
-    "%22M32.5161%2080C31.4022%2080%2030.9357%2078.5531%2031.8259%2077.8835C54.9007%2060"
-    ".5265%2071.4338%2035.8047%2078.7658%208.0522C78.9403%207.39154%2080%207.51618%2080"
-    "%208.19951V70.8571C80%2075.9066%2075.9066%2080%2070.8571%2080H32.5161Z%22%20fill%3D"
-    "%22%230070FF%22%2F%3E%3C%2Fsvg%3E"
+    "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%"
+    "22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3"
+    "D%2280%22%20rx%3D%2220%22%20fill%3D%22%230d0d0d%22%2F%3E%3Cg%20transform%3D%"
+    "22translate%2819.2%2019.2%29%20scale%280.52%29%22%3E%3Cpath%20d%3D%22M76.608"
+    "8%204.56344C77.5025%202.36058%2075.8495%200%2073.4723%200H9.14286C4.0934%200"
+    "%200%204.0934%200%209.14286V66.7778C0%2072.018%205.17081%2075.6829%209.9603%"
+    "2073.5568C40.8494%2059.8449%2064.3785%2034.7075%2076.6088%204.56344Z%22%20fi"
+    "ll%3D%22%23FFFFFF%22%2F%3E%3Cpath%20d%3D%22M32.5161%2080C31.4022%2080%2030.9"
+    "357%2078.5531%2031.8259%2077.8835C54.9007%2060.5265%2071.4338%2035.8047%2078"
+    ".7658%208.0522C78.9403%207.39154%2080%207.51618%2080%208.19951V70.8571C80%20"
+    "75.9066%2075.9066%2080%2070.8571%2080H32.5161Z%22%20fill%3D%22%23FFFFFF%22%2"
+    "F%3E%3C%2Fg%3E%3C%2Fsvg%3E"
 )
 
 # Scroll-spy for the release index. The version whose release sits at the top of the page
@@ -365,10 +371,15 @@ def main():
     w(SPRITE.strip())
     w('<div class="page">')
     w('  <header class="hd">')
+    w('    <span class="eyebrow">Gushwork design system</span>')
     w("    <h1>Changelog</h1>")
-    w('    <p class="lede">Release notes for the Gushwork design system plugin, newest first.')
-    w("       Generated from git — a release is a commit that moved the version field in")
-    w("       <code>plugin.json</code>, which is what <code>plugin update</code> compares.</p>")
+    w('    <p class="lede">Release notes for the Gushwork design system, including new')
+    w("       components, corrected measurements, and rulings by version.</p>")
+    w('    <p class="hd__note">This page is generated from')
+    w('       <a class="lnk" href="%s/blob/main/CHANGELOG.md">CHANGELOG.md on GitHub</a>.</p>' % REPO)
+    w('    <p class="hd__note">Every skill announces its own version at the start of a session —')
+    w("       trust that line to check what you are running. <code>claude plugin list</code>")
+    w("       lags a marketplace refresh and will under-report.</p>")
     w('    <div class="facts">')
     for label, value in (
         ("Releases", str(total)),
@@ -433,24 +444,11 @@ def main():
         )
     w("  </nav>")
 
-    w('  <div class="note">')
-    w("    <p><strong>Why this sheet exists alongside CHANGELOG.md.</strong> The markdown log")
-    w("    renders the same data as a table; this one is for reading. Both come from")
-    w("    <code>scripts/_releases.sh</code>, so they cannot disagree — and both now list")
-    w("    <strong>%d</strong> releases. The earlier derivation keyed off the commit subject," % total)
-    w("    a convention that only started at v1.19.0, so it carried %d of them and silently" % MD_ROWS)
-    w("    dropped <strong>v1.20.0, the login screen</strong>.</p>")
-    w("    <p><strong>The Session link only resolves on the machine holding the transcript.</strong>")
-    w("    It is a pointer for the maintainer; for everyone else the commit link is the one that")
-    w("    works. &ldquo;No session recorded&rdquo; means nobody could vouch for the attribution —")
-    w("    releases before v1.19.0 predate the <code>Session:</code> trailer, and guessing from")
-    w("    transcript greps is unreliable because forked sessions duplicate each other&rsquo;s")
-    w("    history.</p>")
-    w("    <p><strong>Detail comes from the commit body</strong>, with the trailer stripped. Write")
-    w("    release commits accordingly: the subject is the sentence people read, the first")
-    w("    paragraph is the summary they see, and everything after it sits behind")
-    w("    &ldquo;Full notes&rdquo;.</p>")
-    w("  </div>")
+    # No footer note. It explained the sheet's own derivation to an audience that came here
+    # to read what changed, and its lead sentence went stale the moment changelog.sh was
+    # fixed — both logs now carry the same count, so it read "carried 39 of them and
+    # silently dropped v1.20.0", which is nonsense. That history belongs in CONTRIBUTING.md,
+    # where maintainers look, and it is there.
     w("</div>")
     w(SPY.strip())
     w("</body></html>")
