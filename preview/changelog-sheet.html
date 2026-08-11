@@ -27,11 +27,17 @@
   /* ── header ── */
   .hd{grid-column:1 / -1;padding-bottom:var(--gw-space-32);
       border-bottom:1px solid var(--gw-color-neutral-100)}
-  .eyebrow{display:block;margin-bottom:var(--gw-space-8);
-           font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
-           color:var(--gw-color-primary-500)}
-  h1{margin:0 0 var(--gw-space-12);font:var(--gw-text-h4);
+  /* Title left, brand badge right. The badge carries the "which system is this" job that an
+     eyebrow above the title used to do, without pushing the title down the page. h1 drops
+     its margin so the two align on their centres rather than around the heading's spacing. */
+  .hd__top{display:flex;align-items:center;justify-content:space-between;
+           gap:var(--gw-space-20);flex-wrap:wrap;margin-bottom:var(--gw-space-12)}
+  h1{margin:0;font:var(--gw-text-h4);
      letter-spacing:var(--gw-text-h4-tracking);color:var(--gw-color-neutral-900)}
+  .brand{display:inline-flex;align-items:center;flex:none;
+         padding:var(--gw-space-4) var(--gw-space-12);border-radius:var(--gw-radius-full);
+         font:var(--gw-text-body-12-med);white-space:nowrap;
+         background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500)}
   /* One sentence saying what this is, then the housekeeping as separate lines. They were
      one dense paragraph and nobody reads a description that also explains its own
      derivation. */
@@ -108,12 +114,21 @@
   .lnk:hover{text-decoration:underline}
 
   /* ── version index ── */
+  /* `padding-right` is the gutter the scrollbar sits in. Without it the row highlights run
+     underneath the thumb — on macOS the scrollbar is an OVERLAY and floats above content,
+     so it is not enough to let the classic scrollbar reserve its own width.
+     `scrollbar-gutter:stable` keeps the column from shifting when the bar appears. */
   .idx{position:sticky;top:var(--gw-space-40);align-self:start;
-       max-height:calc(100vh - 80px);overflow:auto;
+       max-height:calc(100vh - 80px);overflow-y:auto;overscroll-behavior:contain;
+       scrollbar-gutter:stable;padding-right:var(--gw-space-12);
        display:flex;flex-direction:column;gap:var(--gw-space-2)}
+  /* The label's background is what hides rows scrolling under it, so it has to reach the
+     gap below itself — otherwise a half-clipped version number shows through. */
   .idx__t{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
-          color:var(--gw-color-neutral-500);padding:var(--gw-space-4) var(--gw-space-8);
-          position:sticky;top:0;background:var(--gw-color-white)}
+          color:var(--gw-color-neutral-500);
+          padding:var(--gw-space-4) var(--gw-space-8) var(--gw-space-8);
+          margin-bottom:calc(-1 * var(--gw-space-2));
+          position:sticky;top:0;z-index:1;background:var(--gw-color-white)}
   .idx a{padding:var(--gw-space-4) var(--gw-space-8);border-radius:var(--gw-radius-4);
          font:var(--gw-text-body-12-med);font-variant-numeric:tabular-nums;
          color:var(--gw-color-neutral-500);text-decoration:none}
@@ -160,8 +175,10 @@
 </svg>
 <div class="page">
   <header class="hd">
-    <span class="eyebrow">Gushwork design system</span>
-    <h1>Changelog</h1>
+    <div class="hd__top">
+      <h1>Changelog</h1>
+      <span class="brand">Gushwork Design</span>
+    </div>
     <p class="lede">Release notes for the Gushwork design system, including new
        components, corrected measurements, and rulings by version.</p>
     <p class="hd__note">This page is generated from
