@@ -24,6 +24,7 @@ reports its own stale date.**
 
 | Version | Date | What changed | Commit | Session |
 |---|---|---|---|---|
+| **v1.30.0** | 11 Aug 2026 13:21 | the sheets are hosted, and publishing is one command | [`bd1aef2`](https://github.com/utsav-gushwork/gushwork-design/commit/bd1aef27385099265cd9ede90119adc5b1b2c9f1) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.29.1** | 11 Aug 2026 13:17 | the login screen's Continue arrow was a layer name, not a path | [`ab41ec7`](https://github.com/utsav-gushwork/gushwork-design/commit/ab41ec739ea97b80fca63cb4cb361e5d94273082) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.29.0** | 08 Aug 2026 18:34 | the changelog is a sheet, and a release is a version bump | [`76ab96d`](https://github.com/utsav-gushwork/gushwork-design/commit/76ab96d5ad81f1ec8aa79510fd6615b570b07310) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.28.1** | 08 Aug 2026 18:06 | fall back to the backfill table when a trailer has no uuid | [`5a8df70`](https://github.com/utsav-gushwork/gushwork-design/commit/5a8df70cce32dde46da01cfdabdc9cbae07972b5) | [Gushwork Design System plugin](claude://resume/5a7c696b-5bbf-4aee-adf8-603e744f9018) |
