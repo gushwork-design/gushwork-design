@@ -189,19 +189,38 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">42</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.35.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">43</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.36.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
       <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">11 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-36-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.36.0</span>
+        <span class="when">11 Aug 2026</span>
+        <span class="when">18:35</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">the brand badge sits beside the title, not at the far edge</p>
+        <div class="prose"><p>It was pinned to the header&#x27;s right edge by <code>justify-content:space-between</code>, which read as two unrelated things at opposite ends of a wide row. It now sits 20px after &quot;Changelog&quot; as part of the same title line — the gap holds them together and there is no justify-content at all.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>Bigger, to hold its own next to a 38px heading: <code>body-18-med</code> at <code>--gw-radius-12</code> with 8/16 padding, rather than the 12px pill it was. Reads &quot;Gushwork Design Plugin&quot; — the plugin is the thing being versioned here, and the old &quot;Gushwork Design&quot; named the wrong noun.</p><p>Measured: 20px gap, both centred on the same pixel, 45 high against a 38px title.</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/650fe02745e4768e5cc74802eba2dd072463bcdb" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>650fe02</a>
+          <a class="meta__l" href="claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7"><svg class="gl"><use href="#i-chat"/></svg>Changelog sheet</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-35-0">
       <div class="rail">
-        <span class="pill pill--now">v1.35.0</span>
+        <span class="pill">v1.35.0</span>
         <span class="when">11 Aug 2026</span>
         <span class="when">18:31</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">links that leave the page open in a new tab</p>
@@ -1000,7 +1019,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-35-0">v1.35.0</a>
+    <a class="now" href="#v1-36-0">v1.36.0</a>
+    <a class="" href="#v1-35-0">v1.35.0</a>
     <a class="" href="#v1-34-0">v1.34.0</a>
     <a class="" href="#v1-33-0">v1.33.0</a>
     <a class="" href="#v1-32-0">v1.32.0</a>
