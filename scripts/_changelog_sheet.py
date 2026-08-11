@@ -166,10 +166,19 @@ CSS = """
            flex-wrap:wrap;margin-bottom:var(--gw-space-12)}
   h1{margin:0;font:var(--gw-text-h4);
      letter-spacing:var(--gw-text-h4-tracking);color:var(--gw-color-neutral-900)}
+  /* This is the library `badge`, not a lookalike: set 1582:628 at
+     Theme=Light, Color=Blue, Icon=no, Size=Small. Every value is from the measured table in
+     exports/web/component-library.md — height 24 and the 8px horizontal padding are its
+     recorded geometry, `Radius/8` runs throughout the set, and Light theme pairs
+     {Color}/Alpha/10 fill with {Color}/500 text. `Blue` is a real value of the Color axis
+     that the written rule never documented.
+     The type ramp is body-12-med → body-14-sem → body-18-sem, so SMALL IS MEDIUM WEIGHT —
+     the weight changes with the size, it is not one style at three sizes. Hand-rolling this
+     badge first got the radius and the weight wrong; read the set. */
   .brand{display:inline-flex;align-items:center;flex:none;
-         padding:var(--gw-space-8) var(--gw-space-16);border-radius:var(--gw-radius-12);
-         font:var(--gw-text-body-18-med);
-         letter-spacing:var(--gw-text-body-18-med-tracking);white-space:nowrap;
+         height:24px;padding:0 var(--gw-space-8);border-radius:var(--gw-radius-8);
+         font:var(--gw-text-body-12-med);
+         letter-spacing:var(--gw-text-body-12-med-tracking);white-space:nowrap;
          background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500)}
   /* One sentence saying what this is, then the housekeeping as separate lines. They were
      one dense paragraph and nobody reads a description that also explains its own
