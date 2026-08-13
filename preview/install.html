@@ -121,22 +121,27 @@
     <div class="step">
       <span class="step__n">1</span>
       <div class="step__b">
-        <div class="step__t">Add the plugin</div>
-        <div class="step__d">Run this in a terminal.</div>
+        <div class="step__t">Install it</div>
+        <div class="step__d">Run this in a terminal. Both lines — the second turns on
+          auto-update, without which you stay on today's version forever, and stale versions
+          fail silently.</div>
         <div class="code">
-          <pre>claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin install gushwork-design@gushwork</pre>
+<pre>claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin install gushwork-design@gushwork
+python3 -c "import json,os;f=os.path.expanduser('~/.claude/plugins/known_marketplaces.json');d=json.load(open(f));d['gushwork']['autoUpdate']=True;json.dump(d,open(f,'w'),indent=2)"</pre>
           <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
         </div>
 
         <div class="or"><span>OR</span></div>
 
         <div class="step__d" style="margin-top:0">Don't want to use a terminal? Paste this into
-          Claude Code instead and approve what it runs.</div>
+          Claude Code instead and approve what it runs. Same result.</div>
         <div class="code">
 <pre>Set up the Gushwork Design System plugin for me:
 
 1. Run: claude plugin marketplace add utsav-gushwork/gushwork-design
-2. Run: claude plugin install gushwork-design@gushwork</pre>
+2. Run: claude plugin install gushwork-design@gushwork
+3. In ~/.claude/plugins/known_marketplaces.json, set "autoUpdate": true on the
+   "gushwork" entry. Leave everything else in that file alone.</pre>
           <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
         </div>
       </div>
@@ -146,22 +151,6 @@
   <div class="card">
     <div class="step">
       <span class="step__n">2</span>
-      <div class="step__b">
-        <div class="step__t">Turn on auto-update</div>
-        <div class="step__d">This is what keeps you current. Without it you stay on today's
-          version forever, and stale versions fail silently — they emit last month's colours
-          and spacing with full confidence. Paste this into Claude Code.</div>
-        <div class="code">
-<pre>In ~/.claude/plugins/known_marketplaces.json, set "autoUpdate": true on the "gushwork" entry. Leave everything else in that file alone.</pre>
-          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="step">
-      <span class="step__n">3</span>
       <div class="step__b">
         <div class="step__t">Restart Claude Code</div>
         <div class="step__d">The plugin does not take effect in the session you installed it
