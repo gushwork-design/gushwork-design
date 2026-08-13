@@ -31,6 +31,13 @@ The control is not a `Button` instance — the web `Button` set has no icon-plus
 at 28px, and `Special/ Glowing` exists only at `Size=Large, Icon Placement=Trailing`, the gap
 already recorded in the skill.
 
+It is pinned over the first line of the block, so the block reserves space for it:
+`min-width: --gw-space-80` on the control fixes its footprint at 80 (+8 offset = 88) and the
+block carries `padding-right: --gw-space-100`. Both are spacing tokens, not chosen numbers.
+The fixed width matters — the first build let the control size to its label, so it grew when
+the label changed to "Copied" and sat on top of the command. The tier-3 fallback label was
+shortened to `⌘C` / `Ctrl+C` for the same reason.
+
 ### `.step` — a numbered instruction row
 A 26px `--gw-radius-full` counter in `--gw-color-primary-500` beside a title and body.
 Nothing in `folds.md` or `fold-elements.md` covers ordered instructions — `fold/Timeline` is
@@ -75,7 +82,7 @@ most likely way a reader on a personal account fails, and the page is now silent
 
 ## Tokens
 
-42 custom properties used, all already defined in `foundation/tokens.css`. Verified
+43 custom properties used, all already defined in `foundation/tokens.css`. Verified
 mechanically — every `var(--gw-*)` in the file was diffed against the token definitions and
 the missing set was empty. No raw hex anywhere outside the shared favicon data-URI, which is
 copied verbatim from `scripts/_favicon.txt`.
