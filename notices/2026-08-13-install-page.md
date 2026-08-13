@@ -75,7 +75,20 @@ release. `scripts/_releases.sh` already derives both for `CHANGELOG.md` and
 `preview/changelog-sheet.html`; this page should be fed from the same source rather than
 hand-maintained. Flagged rather than hidden.
 
-**4. The page no longer states that Claude Code is a prerequisite.** A callout saying so —
+**4. The header does not claim the plugin auto-updates, because it cannot be made true.**
+`autoUpdate` is a per-machine key in `~/.claude/plugins/known_marketplaces.json`. Checked
+against the CLI, not assumed: `claude plugin marketplace add` exposes no flags at all and
+`claude plugin install` exposes only `--scope`, so nothing the publisher controls can set it.
+A marketplace granting itself silent auto-update on someone else's machine is exactly what
+that design prevents, so this is not a gap to work around.
+
+What changed instead: turning it on is now **its own step, reached by both install routes**.
+Previously it was step 3 inside the paste block only, so everyone who took the terminal
+one-liner — the faster and more likely route for the people this page is aimed at — silently
+never got it, and `scripts/enable-autoupdate.sh` is no help to someone who has not cloned the
+repo. That was the more consequential bug of the two.
+
+**5. The page no longer states that Claude Code is a prerequisite.** A callout saying so —
 and that pasting into claude.ai does nothing — was removed as clutter. That is the single
 most likely way a reader on a personal account fails, and the page is now silent on it.
 `INSTALL.md` still covers it. Worth confirming the trade is the one you want.
