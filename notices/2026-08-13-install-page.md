@@ -8,9 +8,11 @@ or the org-only Claude Code onboarding link. Neither reaches people joining on p
 Claude accounts. This is a public, copy-and-run page:
 `https://gushwork-design.vercel.app/preview/install.html`
 
-Four sections only — what this is, install, verify, changelog. An earlier draft carried
-numbered step cards, a troubleshooting table and a separate auto-update section; it was cut
-back because the page is read once, under mild time pressure, by someone who wants a command.
+**Two sections only — install, verify.** Earlier drafts carried a "what this is" section, a
+changelog list, numbered step cards, a troubleshooting table, a prerequisite callout and a
+separate auto-update section. All cut. The page is read once, by someone who wants a command,
+and every section that is not a command competes with the ones that are. Version, date and
+the changelog link now sit on one meta line under the header.
 
 ## Created
 
@@ -29,10 +31,17 @@ The control is not a `Button` instance — the web `Button` set has no icon-plus
 at 28px, and `Special/ Glowing` exists only at `Size=Large, Icon Placement=Trailing`, the gap
 already recorded in the skill.
 
-### `.rel` — a changelog row
-Version, description, date in one line. `fold-elements.md` has table rows, but they belong to
-`fold/Comparison Table` and carry its 4-column structure; this is a three-part list row on a
-utility page.
+### `.step` — a numbered instruction row
+A 26px `--gw-radius-full` counter in `--gw-color-primary-500` beside a title and body.
+Nothing in `folds.md` or `fold-elements.md` covers ordered instructions — `fold/Timeline` is
+the closest and is week-based, dark-themed and marketing-shaped, so it fits neither the
+content nor the surface.
+
+### `.or` — an either/or divider
+A centred `OR` on a `--gw-color-neutral-200` rule, separating two routes to the same outcome
+inside one step. The library has no element for branching instructions; the alternative was
+two numbered steps implying sequence, which would be wrong — you do one or the other, not
+both.
 
 ## Modified
 
@@ -54,23 +63,27 @@ Right for consistency, arguably wrong for a page whose purpose is reading comman
 `l`/`1` and `O`/`0` matter. Worth deciding whether mono becomes a sanctioned third family for
 code contexts only.
 
-**3. The changelog rows and the version number are hardcoded.** They will drift on the next
-release. Everything else on the page is version-independent, so the drift is contained — but
-`scripts/` already generates `CHANGELOG.md` and `preview/changelog-sheet.html` from
-`scripts/_releases.sh`, and this page should be fed from the same source rather than
-hand-maintained. Left as-is for now, flagged rather than hidden.
+**3. The version and date in the meta line are hardcoded** and will drift on the next
+release. `scripts/_releases.sh` already derives both for `CHANGELOG.md` and
+`preview/changelog-sheet.html`; this page should be fed from the same source rather than
+hand-maintained. Flagged rather than hidden.
+
+**4. The page no longer states that Claude Code is a prerequisite.** A callout saying so —
+and that pasting into claude.ai does nothing — was removed as clutter. That is the single
+most likely way a reader on a personal account fails, and the page is now silent on it.
+`INSTALL.md` still covers it. Worth confirming the trade is the one you want.
 
 ## Tokens
 
-43 custom properties used, all already defined in `foundation/tokens.css`. Verified
+42 custom properties used, all already defined in `foundation/tokens.css`. Verified
 mechanically — every `var(--gw-*)` in the file was diffed against the token definitions and
 the missing set was empty. No raw hex anywhere outside the shared favicon data-URI, which is
 copied verbatim from `scripts/_favicon.txt`.
 
 **Light surface only.** No dark block remains; the page has no `neutral-900`, `neutral-850`
-or `black` background. Colour is `primary-25/100/300/500`, `neutral-25/50/100/200/400/600/
-700/900`, `white`, `black` (text only). Type `h5`, `h7`, `body-16-reg`, `body-14-reg/med`,
-`body-12-reg/med/sem` with tracking pairs. Radius `8/10/12`. Shadow `s2`. Spacing
+or `black` background. Colour is `primary-300/500`, `neutral-25/50/100/200/500/600/900`,
+`white`, `black` (text only). Type `h5`, `h7`, `body-16-reg/sem`, `body-14-reg/med`,
+`body-12-reg/med/sem` with tracking pairs. Radius `8/10/12/full`. Shadow `s2`. Spacing
 `2/4/8/12/16/20/24/32/40/56/80`. Plus `--gw-motion-fast`, `--gw-focus-ring`,
 `--gw-focus-offset`, `--gw-font-body`, `--gw-font-display`.
 
