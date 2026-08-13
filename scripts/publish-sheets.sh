@@ -34,6 +34,13 @@ SHEETS=(
   preview/install.html
 )
 
+# Social card images. A page's og:image must be an absolute URL for crawlers to
+# resolve it, so it never matches the ../assets/ grep further down. List it here
+# or the card 404s and the link unfurls blank.
+SOCIAL=(
+  assets/og/install.png
+)
+
 # The changelog sheet is generated, so a publish must not ship a stale one.
 bash scripts/release-log.sh --check
 
@@ -53,6 +60,10 @@ cp scripts/publish-index.html "$STAGE/index.html"
 for s in "${SHEETS[@]}"; do cp "$s" "$STAGE/preview/"; done
 cp foundation/tokens.css "$STAGE/foundation/"
 cp fonts/*.ttf "$STAGE/fonts/"
+for a in "${SOCIAL[@]}"; do
+  [ -f "$a" ] || { echo "  MISSING social image: $a" >&2; exit 1; }
+  mkdir -p "$STAGE/$(dirname "$a")" && cp "$a" "$STAGE/$a"
+done
 
 # Any page that links tokens.css needs the real fonts; review-sheet and catalogue inline
 # their own. Copy whatever else the sheets reference, so a new sheet with assets just works.
