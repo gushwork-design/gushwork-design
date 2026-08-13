@@ -31,6 +31,7 @@ SHEETS=(
   preview/review-sheet.html
   preview/catalogue.html
   preview/changelog-sheet.html
+  preview/install.html
 )
 
 # The changelog sheet is generated, so a publish must not ship a stale one.

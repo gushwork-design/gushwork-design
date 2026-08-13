@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install the Gushwork design system</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2220%22%20fill%3D%22%230d0d0d%22%2F%3E%3Cg%20transform%3D%22translate%2819.2%2019.2%29%20scale%280.52%29%22%3E%3Cpath%20d%3D%22M76.6088%204.56344C77.5025%202.36058%2075.8495%200%2073.4723%200H9.14286C4.0934%200%200%204.0934%200%209.14286V66.7778C0%2072.018%205.17081%2075.6829%209.9603%2073.5568C40.8494%2059.8449%2064.3785%2034.7075%2076.6088%204.56344Z%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Cpath%20d%3D%22M32.5161%2080C31.4022%2080%2030.9357%2078.5531%2031.8259%2077.8835C54.9007%2060.5265%2071.4338%2035.8047%2078.7658%208.0522C78.9403%207.39154%2080%207.51618%2080%208.19951V70.8571C80%2075.9066%2075.9066%2080%2070.8571%2080H32.5161Z%22%20fill%3D%22%23FFFFFF%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<link rel="stylesheet" href="../foundation/tokens.css">
+<style>
+  /* ==========================================================================
+     Install page — hosted at /preview/install.html
+
+     Every colour, type style, radius, shadow and spacing value is a token from
+     foundation/tokens.css. No raw hex, no invented size.
+
+     NEW ELEMENTS, pending library review — see notices/2026-08-13-install-page.md:
+       .step      a numbered instruction row
+       .code      a copyable command block with a copy control
+     Nothing in the fold or card sets covers a terminal command someone has to
+     run, so both are built here from tokens rather than composed.
+
+     LAYOUT CHOICE (not from exports/): the 720px column follows
+     scripts/publish-index.html, the other hosted page, so the two read as one
+     site. It is not the 1240 marketing content column — this is a hosted
+     utility page in the sheets family, not a marketing fold stack.
+     ========================================================================== */
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--gw-color-neutral-100);
+       font:var(--gw-text-body-14-reg);letter-spacing:var(--gw-text-body-14-reg-tracking);
+       color:var(--gw-color-black);-webkit-font-smoothing:antialiased;
+       display:flex;justify-content:center;
+       padding:var(--gw-space-56) var(--gw-space-20) var(--gw-space-80)}
+  .wrap{width:100%;max-width:720px}
+
+  h1{margin:0 0 var(--gw-space-8);font:var(--gw-text-h5);
+     letter-spacing:var(--gw-text-h5-tracking);color:var(--gw-color-neutral-900)}
+  .sub{margin:0 0 var(--gw-space-40);font:var(--gw-text-body-16-reg);
+       color:var(--gw-color-neutral-600)}
+  h2{margin:var(--gw-space-40) 0 var(--gw-space-16);font:var(--gw-text-h7);
+     letter-spacing:var(--gw-text-h7-tracking);color:var(--gw-color-neutral-900)}
+  p{margin:0 0 var(--gw-space-16)}
+  a{color:var(--gw-color-primary-500)}
+  a:focus-visible,button:focus-visible{outline:var(--gw-focus-ring);
+       outline-offset:var(--gw-focus-offset)}
+  /* Two families only — the browser's default <code> face would be a third. */
+  code{font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-800)}
+  strong{font-weight:600}
+
+  .card{background:var(--gw-color-white);border-radius:var(--gw-radius-12);
+        box-shadow:var(--gw-shadow-s2);padding:var(--gw-space-24);
+        margin-bottom:var(--gw-space-12)}
+
+  /* NEW ELEMENT — .step */
+  .step{display:flex;gap:var(--gw-space-16);align-items:flex-start}
+  .step__n{width:28px;height:28px;flex:none;border-radius:var(--gw-radius-full);
+           background:var(--gw-color-primary-500);color:var(--gw-color-white);
+           font:var(--gw-text-body-14-sem);display:flex;align-items:center;
+           justify-content:center;margin-top:var(--gw-space-2)}
+  .step__b{min-width:0;flex:1}
+  .step__t{font:var(--gw-text-body-16-sem);color:var(--gw-color-neutral-900);
+           margin-bottom:var(--gw-space-8)}
+  .step__d{font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-600);
+           margin-bottom:var(--gw-space-16)}
+  .step__d:last-child{margin-bottom:0}
+
+  /* NEW ELEMENT — .code */
+  .code{position:relative;background:var(--gw-color-neutral-900);
+        border-radius:var(--gw-radius-10);padding:var(--gw-space-16);
+        padding-right:var(--gw-space-56)}
+  .code pre{margin:0;font:var(--gw-text-body-14-reg);color:var(--gw-color-white);
+            white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
+  .code__btn{position:absolute;top:var(--gw-space-8);right:var(--gw-space-8);
+             display:flex;align-items:center;gap:var(--gw-space-4);
+             height:28px;padding:0 var(--gw-space-8);cursor:pointer;
+             border:0;border-radius:var(--gw-radius-8);
+             background:var(--gw-color-neutral-alpha-10-white);
+             color:var(--gw-color-neutral-alpha-80-white);
+             font:var(--gw-text-body-12-med);
+             transition:background var(--gw-motion-fast),color var(--gw-motion-fast)}
+  .code__btn:hover{background:var(--gw-color-neutral-alpha-20-white);
+                   color:var(--gw-color-white)}
+  .code__btn svg{width:14px;height:14px;display:block;flex:none}
+  .code__btn[data-state="done"]{color:var(--gw-color-white)}
+
+  .note{display:flex;gap:var(--gw-space-12);padding:var(--gw-space-16);
+        border-radius:var(--gw-radius-8);background:var(--gw-color-primary-25);
+        border:1px solid var(--gw-color-primary-100);
+        font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-700);
+        margin-bottom:var(--gw-space-12)}
+  .note svg{width:16px;height:16px;flex:none;color:var(--gw-color-primary-500);
+            margin-top:var(--gw-space-2)}
+  .note--warn{background:var(--gw-color-yellow-25);
+              border-color:var(--gw-color-yellow-200)}
+  .note--warn svg{color:var(--gw-color-yellow-700)}
+
+  table{width:100%;border-collapse:collapse;font:var(--gw-text-body-14-reg)}
+  th{text-align:left;padding:var(--gw-space-8) var(--gw-space-12);
+     font:var(--gw-text-body-12-sem);color:var(--gw-color-neutral-600);
+     border-bottom:1px solid var(--gw-color-neutral-100)}
+  td{padding:var(--gw-space-12);vertical-align:top;
+     border-bottom:1px solid var(--gw-color-neutral-50);
+     color:var(--gw-color-neutral-700)}
+  tr:last-child td{border-bottom:0}
+  td:first-child{color:var(--gw-color-neutral-900);width:42%}
+
+  .foot{margin-top:var(--gw-space-32);padding-top:var(--gw-space-24);
+        border-top:1px solid var(--gw-color-neutral-200);
+        font:var(--gw-text-body-12-reg);color:var(--gw-color-neutral-600)}
+
+  @media (max-width:600px){
+    body{padding:var(--gw-space-32) var(--gw-space-16) var(--gw-space-56)}
+    td:first-child{width:auto}
+    table,tbody,tr,td,th{display:block}
+    thead{display:none}
+    tr{border-bottom:1px solid var(--gw-color-neutral-100);
+       padding:var(--gw-space-8) 0}
+    tr:last-child{border-bottom:0}
+    td{border-bottom:0;padding:var(--gw-space-4) 0}
+    td:first-child{font:var(--gw-text-body-14-sem)}
+  }
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-copy" viewBox="0 0 256 256" fill="currentColor"><path d="M216,28H88A12,12,0,0,0,76,40V76H40A12,12,0,0,0,28,88V216a12,12,0,0,0,12,12H168a12,12,0,0,0,12-12V180h36a12,12,0,0,0,12-12V40A12,12,0,0,0,216,28ZM156,204H52V100H156Zm48-48H180V88a12,12,0,0,0-12-12H100V52H204Z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 256 256" fill="currentColor"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 256 256" fill="currentColor"><path d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm16-40a12,12,0,0,1-12,12,20,20,0,0,1-20-20V128a4,4,0,0,1-4-4,12,12,0,0,1,0-24,20,20,0,0,1,20,20v36a4,4,0,0,1,4,4A12,12,0,0,1,144,172ZM112,76a16,16,0,1,1,16,16A16,16,0,0,1,112,76Z"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 256 256" fill="currentColor"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM116,104a12,12,0,0,1,24,0v40a12,12,0,0,1-24,0Zm12,88a16,16,0,1,1,16-16A16,16,0,0,1,128,192Z"/></symbol>
+</svg>
+
+<div class="wrap">
+  <h1>Install the Gushwork design system</h1>
+  <p class="sub">Five minutes. Works on any Claude account — personal or work. You don't
+     need to be in the Gushwork org, and nobody has to grant you access.</p>
+
+  <div class="note">
+    <svg><use href="#i-info"/></svg>
+    <span>This is a plugin for <strong>Claude Code</strong>, the terminal tool — not the
+      claude.ai website. Pasting these commands into the claude.ai chat box does nothing.</span>
+  </div>
+
+  <h2>Before you start</h2>
+  <div class="card">
+    <div class="step">
+      <span class="step__n">0</span>
+      <div class="step__b">
+        <div class="step__t">Check you have Claude Code</div>
+        <div class="step__d">Run this in a terminal. If you get a version number, you're set.
+          If you get “command not found”, install it first from
+          <a href="https://docs.claude.com/en/docs/claude-code/setup" target="_blank" rel="noopener noreferrer">the setup guide</a>.</div>
+        <div class="code">
+          <pre>claude --version</pre>
+          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>The easy way</h2>
+  <p>Paste this into Claude Code and approve the commands it runs. It does all four steps,
+     including the auto-update flag most people skip.</p>
+  <div class="card">
+    <div class="code">
+<pre>Set up the Gushwork Design System plugin for me:
+
+1. Run: claude plugin marketplace add utsav-gushwork/gushwork-design
+2. Run: claude plugin install gushwork-design@gushwork
+3. In ~/.claude/plugins/known_marketplaces.json, set "autoUpdate": true on the
+   "gushwork" entry. Leave everything else in that file alone.
+4. Verify with: claude plugin list
+
+Then tell me to restart Claude Code, and give me three lines on how to use it.</pre>
+      <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+    </div>
+  </div>
+
+  <h2>Or run it yourself</h2>
+  <div class="card">
+    <div class="step">
+      <span class="step__n">1</span>
+      <div class="step__b">
+        <div class="step__t">Add the marketplace, then install</div>
+        <div class="step__d">This repo is its own single-plugin marketplace, which is why
+          it's two commands — <code>claude plugin install</code> resolves a plugin name from
+          a marketplace, not a git URL. Installs at user scope, so it's live in every project
+          you open.</div>
+        <div class="code">
+          <pre>claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin install gushwork-design@gushwork</pre>
+          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="step">
+      <span class="step__n">2</span>
+      <div class="step__b">
+        <div class="step__t">Restart Claude Code</div>
+        <div class="step__d">This is the step people miss. The plugin does not take effect in
+          the session you installed it from. Quit Claude Code and start it again.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="step">
+      <span class="step__n">3</span>
+      <div class="step__b">
+        <div class="step__t">Confirm it's there</div>
+        <div class="step__d">You should see <code>gushwork-design</code> in the list.</div>
+        <div class="code">
+          <pre>claude plugin list</pre>
+          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Check that it actually fires</h2>
+  <p>Ask for something real. You never name the skills — they trigger on the work.</p>
+  <div class="card">
+    <div class="code">
+      <pre>Build a dashboard for the sales team to see show-ups over the week</pre>
+      <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+    </div>
+    <p style="margin:var(--gw-space-16) 0 0;font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-600)">
+      The reply must open with <strong>“Using the Gushwork dashboard skill.”</strong> If that
+      line is missing, it didn't fire — restart again, or ask for the skill by name. It will
+      ask two or three questions before building. That's deliberate, not a stall.</p>
+  </div>
+
+  <h2>Don't skip the auto-update flag</h2>
+  <div class="note note--warn">
+    <svg><use href="#i-warn"/></svg>
+    <span>Step 3 of the paste block sets <code>"autoUpdate": true</code>. It isn't required to
+      make the plugin work, which is exactly why it gets skipped — and then
+      <strong>stale versions fail silently.</strong> They emit last month's colours and
+      spacing with full confidence. No error, no warning, just quietly wrong output.</span>
+  </div>
+  <p>If you skipped it, update by hand whenever things look off. Restart after — a new version
+     takes effect on the next start, not the current one.</p>
+  <div class="card">
+    <div class="code">
+      <pre>claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork</pre>
+      <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+    </div>
+  </div>
+
+  <h2>If something isn't working</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td><code>claude: command not found</code></td><td>Claude Code isn't installed — see step 0</td></tr>
+        <tr><td>Nothing happened when I pasted the commands</td><td>You pasted into claude.ai instead of Claude Code</td></tr>
+        <tr><td><code>plugin list</code> doesn't show it</td><td>Run the install again — a declined plugin won't re-prompt on its own</td></tr>
+        <tr><td>No “Using the Gushwork … skill” line</td><td>You didn't restart, or ask for the skill by name</td></tr>
+        <tr><td><code>marketplace add</code> fails</td><td>Your work org may restrict marketplaces — try a personal account, or ask Utsav</td></tr>
+        <tr><td>Output looks generic</td><td>You're in a scratch folder, not a real product repo</td></tr>
+        <tr><td>Values don't match Figma</td><td>You're on a stale version — see auto-update above</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot">
+    Next: read
+    <a href="https://github.com/utsav-gushwork/gushwork-design/blob/main/ONBOARDING.md" target="_blank" rel="noopener noreferrer">ONBOARDING.md</a>
+    — five minutes, and it covers the four ways output goes off-system before you ship it.
+    Source of truth is
+    <a href="https://github.com/utsav-gushwork/gushwork-design" target="_blank" rel="noopener noreferrer">github.com/utsav-gushwork/gushwork-design</a>.
+    Rolling this out inside a shared repo? Commit a <code>.claude/settings.json</code> and it
+    installs itself — see
+    <a href="https://github.com/utsav-gushwork/gushwork-design/blob/main/ROLLOUT.md" target="_blank" rel="noopener noreferrer">ROLLOUT.md</a>.
+  </div>
+</div>
+
+<script>
+/* Copy control — three tiers, because navigator.clipboard fails silently in two
+   common cases: it needs a secure context (not file://) and real user activation.
+   Same ladder as foundation/new-component-notice.md prescribes. */
+(function(){
+  var MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+
+  function label(btn, text, state){
+    btn.querySelector('span').textContent = text;
+    btn.querySelector('use').setAttribute('href', state === 'done' ? '#i-check' : '#i-copy');
+    if (state) { btn.setAttribute('data-state', state); } else { btn.removeAttribute('data-state'); }
+  }
+
+  function reset(btn){
+    setTimeout(function(){ label(btn, 'Copy', null); }, 2000);
+  }
+
+  document.querySelectorAll('.code__btn').forEach(function(btn){
+    btn.addEventListener('click', async function(){
+      var pre = btn.parentElement.querySelector('pre');
+      var text = pre.textContent;
+
+      /* 1 — the real API */
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          label(btn, 'Copied', 'done'); reset(btn); return;
+        }
+      } catch (e) {}
+
+      /* 2 — hidden textarea, works on file:// */
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', '');
+        ta.style.position = 'absolute'; ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select(); ta.setSelectionRange(0, text.length);
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok) { label(btn, 'Copied', 'done'); reset(btn); return; }
+      } catch (e) {}
+
+      /* 3 — select it and name the shortcut, platform-correct */
+      try {
+        var sel = window.getSelection(); var range = document.createRange();
+        range.selectNodeContents(pre); sel.removeAllRanges(); sel.addRange(range);
+      } catch (e) {}
+      label(btn, MAC ? 'Press ⌘C' : 'Press Ctrl+C', 'done');
+      reset(btn);
+    });
+  });
+})();
+</script>
+</body></html>
