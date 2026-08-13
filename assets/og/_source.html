@@ -1,0 +1,34 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  /* OG card 1200x630 — measured from Figma Q9L6q38dEj3Qu1JkjiT13y node 299:4187 ("OG"),
+     not eyeballed from a screenshot.
+
+       frame bg     colors/neutral/black  #0d0d0d
+       pattern      299:4188 "Vector" — 1445x1001, centred, bleeds past the frame.
+                    Radial gradient #767676 -> #0D0D0D on the stroke at opacity 0.4.
+                    Used as the real exported vector; a CSS grid cannot reproduce it.
+       tile         299:4190 gushwork-logo-(internal-use)
+                      size    280 (138.272 mark + 69.136 padding x2 + 1.728 border x2)
+                      radius  69.136   (radius/8)
+                      border  1.728 solid colors/neutral/900 #262a2e
+                      shadow  0 138.272px 172.839px rgba(88,92,95,0.16)
+                      centre  (600, 315) — container 330 at left 435 top 150, centred
+       mark         138.272 */
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1200px;height:630px;overflow:hidden}
+  body{background:#0d0d0d;position:relative}
+  .pattern{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+           width:1445px;height:1001px}
+  .pattern img{display:block;width:100%;height:100%}
+  .tile{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+        width:280px;height:280px;border-radius:69.136px;
+        border:1.728px solid #262a2e;background:#0d0d0d;
+        display:flex;align-items:center;justify-content:center;
+        filter:drop-shadow(0px 138.272px 172.839px rgba(88,92,95,0.16))}
+  .tile img{display:block;width:138.272px;height:138.272px}
+</style></head>
+<body>
+  <div class="pattern"><img src="pattern.svg" alt=""></div>
+  <div class="tile"><img src="mark.svg" alt=""></div>
+</body></html>
