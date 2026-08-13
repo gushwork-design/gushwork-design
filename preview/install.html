@@ -63,14 +63,20 @@
   .step .code{margin-top:var(--gw-space-16)}
 
   /* NEW ELEMENT — .code (light) */
+  /* padding-right clears the copy control, which is pinned over the first line.
+     The control is min-width 80 + 8 offset = 88; 100 leaves margin so a longer
+     label state ("Copied") still cannot sit on top of the command. */
   .code{position:relative;background:var(--gw-color-neutral-25);
         border:1px solid var(--gw-color-neutral-100);
         border-radius:var(--gw-radius-10);padding:var(--gw-space-16);
-        padding-right:var(--gw-space-56)}
+        padding-right:var(--gw-space-100)}
   .code pre{margin:0;font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-900);
             white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
+  /* min-width fixes the control's footprint so the label changing to "Copied"
+     does not reflow it over the command text. */
   .code__btn{position:absolute;top:var(--gw-space-8);right:var(--gw-space-8);
-             display:flex;align-items:center;gap:var(--gw-space-4);
+             display:flex;align-items:center;justify-content:center;
+             gap:var(--gw-space-4);min-width:var(--gw-space-80);
              height:28px;padding:0 var(--gw-space-8);cursor:pointer;
              border:1px solid var(--gw-color-neutral-200);
              border-radius:var(--gw-radius-8);background:var(--gw-color-white);
@@ -104,7 +110,7 @@
   <h1>Gushwork design system</h1>
   <p class="sub">A Claude Code plugin. Install it once, and Claude builds Gushwork screens
      using the real components and tokens instead of guessing at them.</p>
-  <p class="meta"><strong>v1.37.0</strong> · last updated 11 Aug 2026 ·
+  <p class="meta"><strong>v1.37.0</strong> · last updated 11 Aug 2026, 18:39 ·
      <a href="changelog-sheet.html" target="_blank" rel="noopener noreferrer">changelog</a></p>
 
   <h2>Install</h2>
@@ -171,15 +177,12 @@ Then tell me to restart Claude Code.</pre>
       <span class="step__n">2</span>
       <div class="step__b">
         <div class="step__t">Check it fires</div>
-        <div class="step__d">Ask for something real. You never name the skills — they trigger
-          on the work.</div>
-        <div class="code">
-          <pre>Build a dashboard for the sales team to see show-ups over the week</pre>
-          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
-        </div>
+        <div class="step__d">Ask Claude to build something with the Gushwork design system —
+          a dashboard, a landing page, whatever you're working on. You never name the skills
+          themselves; they trigger on the work.</div>
         <div class="step__d">The reply must open with
-          <strong>“Using the Gushwork dashboard skill.”</strong> If that line is missing it
-          didn't fire — restart again, or ask for the skill by name. It will ask two or three
+          <strong>“Using the Gushwork … skill.”</strong> If that line is missing it didn't
+          fire — restart again, or ask for the skill by name. It will ask two or three
           questions before building. That's deliberate.</div>
       </div>
     </div>
@@ -233,7 +236,8 @@ Then tell me to restart Claude Code.</pre>
         var sel = window.getSelection(); var range = document.createRange();
         range.selectNodeContents(pre); sel.removeAllRanges(); sel.addRange(range);
       } catch (e) {}
-      label(btn, MAC ? 'Press ⌘C' : 'Press Ctrl+C', 'done');
+      /* kept short so the control stays inside its min-width footprint */
+      label(btn, MAC ? '⌘C' : 'Ctrl+C', 'done');
       reset(btn);
     });
   });
