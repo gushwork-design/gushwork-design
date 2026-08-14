@@ -134,17 +134,22 @@ accident. If someone wants a change in, they fork and open a PR, or they ask.
 your credentials, so any rule that lets you push lets it push. Server-side permissions cannot
 express "only the human". Two things narrow the gap:
 
-| Guard | What it actually stops |
-|---|---|
-| Branch protection on `main`, **enforced on admins** — no force-push, no deletion | History cannot be rewritten or the branch removed, by anyone, ever. Direct pushes still work, so the release flow below is unchanged |
-| `scripts/hooks/pre-push`, installed by `bash scripts/hooks/install.sh` | A plain `git push origin main` is refused. Authorise one deliberately: `GW_PUSH=1 git push origin main` |
+| Guard | What it stops | Applies to |
+|---|---|---|
+| Branch protection on `main`, `enforce_admins` — no force-push, no deletion | History can never be rewritten and the branch never removed | **everyone, Utsav included** |
+| Ruleset *“main: pull request required”*, bypass = repository admin | A direct push is rejected; changes must arrive as a reviewed PR | **everyone except repo admins** |
+| `scripts/hooks/pre-push` — `bash scripts/hooks/install.sh` | A plain `git push origin main` is refused locally. Authorise one: `GW_PUSH=1 git push origin main` | this clone |
 
-**The hook is a guard rail, not a boundary** — anything that can run git here can also set the
-variable. If you want a push to `main` to be genuinely impossible without your review, the only
-mechanism that achieves it is **branch protection requiring a reviewed pull request**, which
-makes the server reject the push and forces an approval in the GitHub UI. That is not enabled,
-because it would replace step 4 below with a PR for every release. Turning it on is a
-deliberate trade, not an oversight.
+So the release flow below still works for Utsav — admins bypass the PR rule — while any
+collaborator added later must open a PR. **Today that rule protects against nobody**, because the
+repo has one collaborator; it is insurance for the moment a second is added.
+
+**The hook is a guard rail, not a boundary.** Anything that can run git in this clone can also
+set `GW_PUSH=1` — that happened during the very commit that added it, when a force-push test
+turned out to be an ordinary fast-forward and pushed. If you want a push to `main` to be
+genuinely impossible without review **including by an agent using your token**, remove the
+`bypass_actors` entry from the ruleset. That is a deliberate trade: it makes every release a PR
+you approve in the GitHub UI.
 
 ## Shipping the change
 
