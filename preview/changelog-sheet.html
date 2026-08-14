@@ -198,19 +198,38 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">44</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.37.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">45</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.38.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
-      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">11 Aug 2026</span></span>
+      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">14 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-38-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.38.0</span>
+        <span class="when">14 Aug 2026</span>
+        <span class="when">14:40</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">dashboard v2 component set, measured from the shipped screens</p>
+        <div class="prose"><p>The GW Dashbords screens were built by detaching library components and overriding them (list-item detached 34 times into nine jobs), because the library&#x27;s dashboard components did not match what shipped. A measured component sheet now documents what actually renders, and the screens are ruled authoritative where the two disagreed — R14.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>exports/dashboard/v2/  26 sets + 1 component, 155 variants, 21 themed. Supersedes only what was replaced: Graph, toast, dashboard-build, login-screen, avatar, build-rules, the Sections ladder and every hover/focus/disabled ruling are untouched and still authoritative. Old files keep their filenames with supersession banners.</p><p>DECISIONS  R14 screens beat library · R15 the display ramp has no tokens, use the literal spec and say so · R16 dark is a Theme variant on surface-bearing components only.</p><p>preview/gtm-command-center.html  the overview screen built from frame 236:31785 and made interactive: sortable headers, real dropdown menus, working pagination, live filter, light/dark, sidebar collapse, tooltips. Colours and Inter type are pulled by name from tokens.css at build time — the generator exits rather than falling back.</p><p>preview/review-sheet.html  93 light + 21 dark specimens under 03 · Dashboard.</p><p>Two things stay open and are not silently closed: these components live in the product file and are not published to the library, and the display ramp still needs library variables.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/3b880f18a13f36db951026d1066710d654bb69a6" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>3b880f1</a>
+          <span class="none">no session recorded</span>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-37-0">
       <div class="rail">
-        <span class="pill pill--now">v1.37.0</span>
+        <span class="pill">v1.37.0</span>
         <span class="when">11 Aug 2026</span>
         <span class="when">18:39</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">the brand badge is the library badge, Small</p>
@@ -1047,7 +1066,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-37-0">v1.37.0</a>
+    <a class="now" href="#v1-38-0">v1.38.0</a>
+    <a class="" href="#v1-37-0">v1.37.0</a>
     <a class="" href="#v1-36-0">v1.36.0</a>
     <a class="" href="#v1-35-0">v1.35.0</a>
     <a class="" href="#v1-34-0">v1.34.0</a>
