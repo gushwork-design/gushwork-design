@@ -1,25 +1,40 @@
 # Install the Gushwork Design System
 
 Five minutes. Works on **any Claude account** — personal or work. You don't need to be in the
-Gushwork org, and nobody needs to grant you access.
+Gushwork org.
 
 After this, Claude builds Gushwork screens using the real components and tokens instead of
 guessing at them.
 
 ---
 
-## First, one prerequisite
+## First, two prerequisites
 
-You need **Claude Code** — the terminal tool, not the claude.ai website. Pasting the commands
-below into the claude.ai chat box does nothing.
-
-Check whether you already have it:
+**1. Claude Code** — the terminal tool, not the claude.ai website. Pasting the commands below
+into the claude.ai chat box does nothing.
 
 ```bash
 claude --version
 ```
 
 No output, or "command not found"? Install it first: https://docs.claude.com/en/docs/claude-code/setup
+
+**2. GitHub access to this repo.** The marketplace is a git clone, so you need to be able to
+reach the repo and have git authenticated on this machine:
+
+```bash
+git ls-remote https://github.com/utsav-gushwork/gushwork-design.git HEAD
+```
+
+A commit sha means you're set. An error means one of two things — **ask Utsav to add you as a
+collaborator**, and make sure git can authenticate:
+
+```bash
+gh auth login && gh auth setup-git
+```
+
+> The repo is public at the time of writing, so this check passes for everyone. It becomes a
+> real gate when the repo goes private — access will be granted per person.
 
 ---
 
@@ -105,7 +120,7 @@ Restart after. Either way, a new version takes effect on the **next** start, not
 | Nothing happened when I pasted the commands | You pasted into claude.ai instead of Claude Code |
 | `claude plugin list` doesn't show it | Run the install again — a declined plugin won't re-prompt on its own |
 | No "Using the Gushwork … skill" line | You didn't restart; or ask for the skill by name |
-| `marketplace add` fails | Your work org may restrict marketplaces — try a personal account, or ask Utsav |
+| `marketplace add` fails | Most likely **you don't have repo access yet, or git isn't authenticated** — the repo is private. Run `git ls-remote https://github.com/utsav-gushwork/gushwork-design.git HEAD`: an error means ask Utsav to add you, then `gh auth login && gh auth setup-git`. Failing that, your work org may restrict marketplaces |
 | Output looks generic | You're in a scratch folder, not a real product repo |
 | Values don't match Figma | You're on a stale version — see auto-update above |
 

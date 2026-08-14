@@ -30,8 +30,13 @@ gets the design system with no commands and no instructions to follow.
 **One command per repo.** Run this from the root of the repo you want it in:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/enable-in-repo.sh | bash
+gh api repos/utsav-gushwork/gushwork-design/contents/scripts/enable-in-repo.sh \
+  -H "Accept: application/vnd.github.raw" | bash
 ```
+
+That form works whether the repo is public or private, because `gh` sends your credentials.
+The shorter `curl … raw.githubusercontent.com/…` version only works while the repo is public —
+it returns 404, not a permission error, the moment it isn't.
 
 It merges into an existing `.claude/settings.json` rather than overwriting it, is safe to re-run,
 and refuses to touch the file if it isn't valid JSON. Then commit the result.
@@ -126,7 +131,8 @@ The flag lives per-machine in `~/.claude/plugins/known_marketplaces.json`:
 and `installLocation`. So either your MDM payload writes it, or people run this once:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/enable-autoupdate.sh | bash
+gh api repos/utsav-gushwork/gushwork-design/contents/scripts/enable-autoupdate.sh \
+  -H "Accept: application/vnd.github.raw" | bash
 ```
 
 That line is in [`ONBOARDING.md`](ONBOARDING.md) directly under the install, because it is the

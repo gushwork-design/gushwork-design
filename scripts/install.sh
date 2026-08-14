@@ -2,7 +2,12 @@
 #
 # One-command setup for the Gushwork Design System.
 #
+# While the repo is PUBLIC:
 #   curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/install.sh | bash
+#
+# Works either way, public or PRIVATE (needs the GitHub CLI, authenticated):
+#   gh api repos/utsav-gushwork/gushwork-design/contents/scripts/install.sh \
+#     -H "Accept: application/vnd.github.raw" | bash
 #
 # Adds the marketplace, installs the plugin, and turns on auto-update so new
 # versions arrive on their own. Safe to re-run — every step is idempotent.
@@ -19,6 +24,22 @@ fail() { printf '\n✘ %s\n' "$1" >&2; exit 1; }
 command -v claude >/dev/null 2>&1 || fail \
   "Claude Code isn't installed, or 'claude' isn't on your PATH.
   Install it first: https://claude.com/claude-code"
+
+# --- 0. access ------------------------------------------------------------
+# The marketplace is a git clone, so the only thing that matters is whether git can reach the
+# repo. Checking it here turns the private-repo case into a sentence you can act on, instead of
+# a bare "couldn't add the marketplace" three steps later.
+if ! git ls-remote --exit-code "https://github.com/$REPO.git" HEAD >/dev/null 2>&1; then
+  fail "git can't reach $REPO.
+
+  The repo is private, so you need two things:
+    1. access — ask Utsav to add you as a collaborator
+    2. authenticated git on this machine — the simplest route is:
+         gh auth login          (then: gh auth setup-git)
+
+  Check it with:
+    git ls-remote https://github.com/$REPO.git HEAD"
+fi
 
 # --- 1. marketplace -------------------------------------------------------
 if python3 -c "

@@ -59,7 +59,7 @@ someone else.
 |---|---|
 | No "Using the Gushwork … skill" line | restart; or say "use the Gushwork dashboard skill" explicitly |
 | `claude plugin list` doesn't show it | run the setup again — a declined plugin won't re-prompt on its own |
-| `marketplace add` fails | ping Utsav; your org may restrict marketplaces |
+| `marketplace add` fails | The repo is private — you probably need access, or authenticated git. Check with `git ls-remote https://github.com/utsav-gushwork/gushwork-design.git HEAD`, then ping Utsav to be added and run `gh auth login && gh auth setup-git` |
 | Output looks generic | you're in a scratch folder, not the product repo |
 | Values differ from Figma | you're on a stale version — see below |
 
