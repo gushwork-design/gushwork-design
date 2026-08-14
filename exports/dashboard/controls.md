@@ -1,5 +1,18 @@
 # Controls — tab, dropdown, toggle
 
+> ## ⚠ PARTLY SUPERSEDED — 13 Aug 2026
+>
+> | Component | Status |
+> |---|---|
+> | `controls/tab` | **Superseded** by `tab-group` + `tab-item` — [`v2/controls.md`](v2/controls.md). 28h→**36h**, `radius/8`→**12**, gap 8→**4** |
+> | `controls/dropdown` | **Superseded** by `control` `Kind=select` — white + `neutral/400` outlined, or `neutral/25` + `neutral/200` filled. Not `neutral/50` on `neutral/50` |
+> | `controls/toggle` | **Current — unchanged.** Reused as-is in the new sheet, including `State=On` = `neutral/900`, not blue |
+>
+> **Still authoritative here:** the **open-menu** spec (160 wide against a 144 trigger,
+> right-aligned, `neutral/50` border, no selected checkmark), `dropdown-options`
+> `Style=Calendar`, `Size=X-Small` 36×20 for dense rows, and the **blue-vs-black** rule. v2
+> defines no open state for `select`.
+
 Figma: group `control` (`1578:744`).
 
 Navigation, selection, and switching elements. Used inside `section/header`,

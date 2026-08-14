@@ -297,6 +297,73 @@ and silently truncates. Measure the copy; do not eyeball it.
 
 ---
 
+## R14 — where the dashboard screens and the library's dashboard components disagree, the screens win
+
+Ruled 13 Aug 2026, component by component.
+
+The GW Dashbords screens (`Q9L6q38dEj3Qu1JkjiT13y`) were built by **detaching library components
+and overriding them** — `list-item` detached 34 times into nine different jobs. That was not
+carelessness: the library's dashboard components did not fit. `Button` is 28/44h at `radius/8` with
+gap 8; the screens render **36h at `radius/12` with gap 4**. `table-row` is 44h with 14/20 text;
+the screens render **56h with 12/16**. `controls/dropdown` sits on `neutral/50` with a `neutral/50`
+stroke; the screens use **white with a `neutral/400` border**.
+
+So the measured screens become the dashboard spec — `exports/dashboard/v2/` — and the v1 exports
+stay in place, banner-flagged, because they are **what is published in the library** and remain
+correct for anything instancing from Figma.
+
+**This does not extend past what was replaced.** `Graph`, `toast`, `dashboard-build`,
+`login-screen`, `avatar`, `build-rules`, the Sections composition ladder, and every hover / focus /
+disabled ruling are untouched and still authoritative. Read the supersession map in
+`exports/dashboard/v2/README.md` rather than assuming v2 covers a component.
+
+Note R0 still governs: this is measurement beating measurement, resolved by **which surface
+actually ships**, not by measurement beating a spec document.
+
+---
+
+## R15 — the dashboard display ramp has no tokens; use the literal spec and comment it
+
+The dashboard's display type is five styles created 13 Aug 2026, local to the product file:
+44/120% Semibold, 36/120% Medium, 28/120% Medium, 22/100% Medium, 20/100% Semibold.
+
+**None maps to a `--gw-text-*` custom property.** `--gw-text-h3` is 44 at **700**, not 600.
+`--gw-text-h7` is 22 at line-height **1.4**, not 1.0 — a ~9px difference per card title. There is
+no 36, 28 or 20 display step at all.
+
+**Never silently substitute `h3` or `h7`.** Per `CONTRIBUTING.md`, a value with no variable is a
+gap to raise in Figma, not a line to add to `tokens.css`. Until these exist as library variables:
+emit the literal spec from `exports/dashboard/v2/README.md` and **comment that it has no token**,
+so a later reader cannot mistake it for a bound value.
+
+This is the highest-risk item in v2 because it fails quietly — the output looks right and is
+unbound.
+
+---
+
+## R16 — dark is a `Theme` variant, and only surface-bearing components carry it
+
+The `Brand` collection has **one mode, `Gushwork`**. There is no dark mode in variables, so the
+dark screens work by pointing each layer at a *different* token. Ruled 13 Aug 2026: encode that as
+a `Theme=light｜dark` variant, and **only on components that carry a fill or a border**.
+
+Components with no `Theme` variant — `badge`, `status-dot`, `progress-bar`, `divider`, `legend`,
+`table-cell` — inherit, and their dark overrides are listed per file. The alternative, a `Theme`
+on all 27, roughly doubles the sheet for no gain on components that are text and fills only.
+
+Two dark values a sensible guess gets wrong, both measured:
+
+- **The stat-card sub-line and percentage do not change.** They stay `neutral/500` in both themes.
+  Only the label steps (`neutral/700` → `neutral/400`) and the value inverts.
+- **The status dot does not step down.** It stays `green/400` where the progress bar it sits above
+  goes to `green/300`.
+
+And one inversion that is consistent everywhere: **dark primary is a white fill with a dark
+label** — the active tab, the checked checkbox and the primary button all do this. Never carry
+`neutral/black` into dark.
+
+---
+
 ## Withdrawn
 
 | Ruling | Why |
@@ -321,3 +388,23 @@ obviously right:
   Same destination, two names. A copy decision, not a system one.
 - **`dropdown-options` `Style=Calendar` has no range affordance.** Building one means designing
   it; report the gap rather than inventing a range picker.
+- **Whether the v2 components get promoted into the library.** They live in the product file
+  (`Q9L6q38dEj3Qu1JkjiT13y`) and are unpublished, so they cannot be instanced from any other Figma
+  file. Fine for generating code, wrong for anyone told to find them in the Assets panel. Promoting
+  them is a write to a shared library; accepting the split means saying so plainly. See
+  `notices/2026-08-13-dashboard-component-sheet-v2.md`.
+- ~~**The duplicated `toast`.**~~ **RESOLVED 14 Aug 2026 — renamed, not deleted.** The copy's keys
+  are now `Mode` × `State`, matching the library, and it is renamed `toast (local copy of the library
+  set)`. Deleting it was the first instinct, but the library's dashboard page is unpublished, so its
+  set cannot be imported into the product file — deleting would have left the Feedback section with
+  no toast and no way to instance the real one.
+- **`table-row` `Selected`.** v1 measures `Selected` ≡ `Hover` ≡ `neutral/25`, with selection shown
+  only by the checkbox. v2 rules `primary/alpha-10`, because no selected row exists in the screens
+  to measure. Two tables in the wild will disagree until this is settled.
+- ~~**Missing dark variants.**~~ **RESOLVED 14 Aug 2026.** `table-row` (14 variants), `table-cell`
+  (10), `icon-button` (6), `input` (12), `tab-group` (2) and `icon-toggle-group` (2) all carry
+  `Theme` now, and every dark composite points at dark children. 21 of 26 sets are themed; only
+  `status-dot`, `progress-bar`, `badge`, `divider` and `legend` inherit, per **R16**.
+  One value corrected in the process: dark table header text is **`neutral/100`**, not the
+  `neutral/400` first recorded. `input` dark is **derived** from the measured dark select, not
+  measured — the dark screen has no input.

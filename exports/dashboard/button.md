@@ -1,5 +1,26 @@
 # Dashboard Button
 
+> ## ⚠ SUPERSEDED — 13 Aug 2026
+>
+> **The dashboard button is now `control` `Kind=button` — see
+> [`v2/controls.md`](v2/controls.md).**
+>
+> | | This file (`Button` `2203:931`) | v2 (`control` `267:1810`) |
+> |---|---|---|
+> | Height | 28 · 44 · 48 | **36** (28/32 for dense rows) |
+> | Radius | 8 (12 at `Large`) | **12** at 36 |
+> | Gap | 8 | **4** |
+> | Styles | `Primary` · `Outline` · `Ghost` | `outlined` · `primary` · `plain` |
+>
+> The dashboard screens render 36h at `radius/12` with gap 4, and Utsav ruled the screens
+> authoritative on 13 Aug 2026. This component set is still what is **published in the library**,
+> so it remains correct for anything instancing from Figma — but new dashboard output should
+> follow v2.
+>
+> **Still authoritative here:** the `Disabled` treatments (they differ by `Style`), and the
+> **measured** hover fills — `Primary` `neutral/850`, `Outline` `neutral/35`, `Ghost`
+> `neutral/50`. v2 does not define hover or disabled states at all, so read them from this file.
+
 ## Which button?
 
 **This is the dashboard/product button.** There is a *different* component with the

@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.37.0, updated 11 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.38.0, updated 13 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -25,8 +25,9 @@ Any commits listed means they are behind: tell them to run
 
 | For | Read |
 |---|---|
+| **The v2 dashboard components — buttons, selects, tabs, tables, cards, chrome** | **`exports/dashboard/v2/README.md`** |
 | Every colour, size, radius, shadow, type style | `foundation/tokens.css` |
-| **Every standing ruling — R0 to R13** | `DECISIONS.md` |
+| **Every standing ruling — R0 to R16** | `DECISIONS.md` |
 | Voice, casing, banned words, CTA copy | `foundation/voice.md` |
 | Badge, Gushwork logo, Phosphor icons | `foundation/shared-components.md` |
 | **Text fields — shared with web, all 14 variants** | `foundation/text-field.md` |
@@ -47,12 +48,58 @@ that can't be followed gets ignored where it matters:
 3. **A layout dimension with no documented figure**: choose sensibly, but **say in one line
    that you chose it.** Don't pass your own number off as coming from the system.
 
+## The v2 component set — read the supersession map before you pick a component
+
+**13 Aug 2026.** The dashboard screens in the GW Dashbords file were built by detaching library
+components and overriding them — `list-item` detached 34 times into nine different jobs. The
+library's dashboard components **did not match what shipped**. A measured component sheet now
+documents what actually renders, and **the screens were ruled authoritative** where the two
+disagreed.
+
+**Do not reason about which is newer. Use this table.**
+
+| Need | Use | Read |
+|---|---|---|
+| Button | `control` `Kind=button` — **36h, `radius/12`, gap 4** | `v2/controls.md` |
+| Select / filter dropdown | `control` `Kind=select` — outlined (white + `neutral/400`) or filled | `v2/controls.md` |
+| Tabs | `tab-group` + `tab-item` — **36h, `radius/12`, gap 4** | `v2/controls.md` |
+| Nav row · account row | `control` `Kind=nav` · `Kind=user` | `v2/controls.md` |
+| Headline / supporting metric card | `stat-card` · `metric-card` | `v2/cards-and-chrome.md` |
+| Data table | `table-row` + `table-cell` — **56h data rows, 12/16 text** | `v2/data-table.md` |
+| Topbar · sidebar (incl. collapsed) | `topbar` · `sidebar` | `v2/cards-and-chrome.md` |
+| Page title block · section title | `page-header` · `section-header` | `v2/cards-and-chrome.md` |
+| Empty state · skeleton · tooltip · modal | new components | `v2/feedback.md` |
+| Inline search / dense text field | `input` | `v2/controls.md` |
+
+**Still the old files — v2 does not cover these:**
+
+| Need | Use | Read |
+|---|---|---|
+| **Any chart** | `Graph` — v2 has no chart at all | `section-elements.md` |
+| **Toast** | the library `toast` — ⚠ a duplicate exists on the sheet with renamed props; use the library one | `toast.md` |
+| **Focus rings, hover derivation** | the rulings — v2 defines hover only on `table-row` | `states.md` |
+| **Button hover and disabled** | measured values — v2 defines neither | `button.md` |
+| **The page shell and composition ladder** | `dashboard-build`, Sections | `dashboard-build.md`, `sections.md` |
+| **Login screen · Avatar · scroll and fill rules** | untouched by v2 | `login-screen.md`, `avatar.md`, `build-rules.md` |
+| **Open dropdown menu** | 160 wide vs a 144 trigger — v2 has no open state | `controls.md` |
+
+Two things to carry into every v2 build:
+
+- **The display type ramp has no tokens.** The five `Dashboard/display-*` styles (44/36/28/22/20)
+  match no `--gw-text-*` custom property — 44 is Semibold where `h3` is Bold, and 22 is
+  line-height 1.0 where `h7` is 1.4. Use the literal spec from `v2/README.md` **and comment that
+  it has no token.** Never silently substitute `h3` or `h7`.
+- **Dark is a `Theme` variant, not a mode.** The `Brand` collection has one mode. Only
+  surface-bearing components carry `Theme`; `badge`, `status-dot`, `progress-bar`, `divider`,
+  `legend` and `table-cell` inherit, and their dark overrides are listed per file. `table-row`,
+  `icon-button`, `input`, `tab-group` have **no dark variants yet** — that is a known gap.
+
 ## The build sequence — in this order, every time
 
 Skipping a step here is what produced every rebuild. **1 and 2 come before any markup.**
 
-1. **Read.** `tokens.css`, `build-rules.md`, `sections.md`, `section-elements.md`. Do not
-   start from memory of what a Gushwork dashboard looks like.
+1. **Read.** `v2/README.md` **first**, then `tokens.css`, `build-rules.md`, `sections.md`,
+   `section-elements.md`. Do not start from memory of what a Gushwork dashboard looks like.
 2. **Ask with options and wait** — one `AskUserQuestion` call, not a paragraph. See below. A
    dashboard is a set of decisions about what matters; guessing produces a screen that looks
    right and answers nothing.
@@ -237,8 +284,10 @@ Three hard rules:
 | Browsable product data — leads, campaigns, entries | `section/table` | `sections.md` |
 | A chart | `section/section-element/Graph` — `Bar` compares items, `Line` shows change over time, `Grouped Bar` shows several measures per item | `sections.md` |
 | Anything else, or custom content | `section/Container` **(the rules call it `section/Other` — the real name is `Container`)** | `sections.md` |
-| A button | `Primary` (black) / `Outline` / `Ghost` — **never a blue fill** | `button.md` |
-| Tabs, filter dropdown, toggle | `controls/tab`, `controls/dropdown`, `controls/toggle` | `controls.md` |
+| A button | **`control` `Kind=button`** — `outlined` / `primary` (black) / `plain`, 36h `radius/12` — **never a blue fill**. Hover and disabled from `button.md` | `v2/controls.md` |
+| Tabs | **`tab-group` + `tab-item`**, 36h `radius/12` gap 4 | `v2/controls.md` |
+| Filter dropdown | **`control` `Kind=select`** — outlined or filled. Open menu still `controls.md` | `v2/controls.md` |
+| A toggle | `controls/toggle` — **unchanged**, `State=On` is `neutral/900` not blue | `controls.md` |
 | Status feedback after an action | `toast` — `Error` / `Warning` / `Success` / `Info` | `toast.md` |
 | A status pill anywhere | **Badge** | `foundation/shared-components.md` |
 | A metric's direction | kpi-card `Type` = `Positive` / `Negative` / `Neutral` | `section-elements.md` |
@@ -334,6 +383,9 @@ cost a review round. **They are ruled. Follow the file.**
 
 | Question | Ruled | Where |
 |---|---|---|
+| Screens vs the library's dashboard components | the **screens** win, component by component — but only for what was actually replaced | **R14**, `v2/README.md` |
+| Dashboard display type | **no tokens exist.** Use the literal spec and comment it; never substitute `h3` or `h7` | **R15** |
+| Dark theme | a `Theme` variant on **surface-bearing components only**; dark primary is a **white fill with a dark label** | **R16** |
 | Toast auto-dismiss | **4s**, resets on a new toast, clears on manual dismiss | `toast.md` |
 | Toast message length | must fit the **276px** column — ~32 characters. Never widen the 360 | `toast.md` |
 | Blue vs black | blue = data/status, black = interaction state | `controls.md` |
@@ -476,9 +528,19 @@ official.
 
 ## Source of truth
 
-Figma — Gush Design System v2.0, file `VKcb4fgVyOHKfQonMgN772`, page
-`03 · Dashboard → ↳ dashboard/ component+pattern-library` (`1658:24112`).
+**Two files, and they are not equivalent.**
 
-The exports in `exports/dashboard/` are transcribed from that page's annotations, with the
-inconsistencies flagged inline. Where a rule and the actual component disagree, the exports
-document **the component** and note the discrepancy — the component is what renders.
+| Set | File | Page | Published? |
+|---|---|---|---|
+| v1 — everything in `exports/dashboard/*.md` | Gush Design System v2.0 · `VKcb4fgVyOHKfQonMgN772` | `03 · Dashboard → ↳ dashboard/ component+pattern-library` (`1658:24112`) | **yes** |
+| **v2 — `exports/dashboard/v2/*.md`** | **GW Dashbords · `Q9L6q38dEj3Qu1JkjiT13y`** | `Dashboard Components` (`257:371`) | **no** |
+
+The v1 exports are transcribed from that page's annotations, with the inconsistencies flagged
+inline. Where a rule and the actual component disagree, the exports document **the component** and
+note the discrepancy — the component is what renders.
+
+The v2 set was measured directly off node properties — paddings, gaps, radii, strokes and type
+read from the nodes, not from annotations and not from screenshots. **It is not in the published
+library**, so its components cannot be instanced from another Figma file. For generating code that
+does not matter; for telling someone where to find them in Figma it does. Promoting them into the
+library is an open item — see `notices/2026-08-13-dashboard-component-sheet-v2.md`.

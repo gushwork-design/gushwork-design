@@ -1,5 +1,21 @@
 # Section elements
 
+> ## ⚠ MOSTLY SUPERSEDED — 13 Aug 2026
+>
+> | Element | Status |
+> |---|---|
+> | `kpi-card` | **Superseded** by `stat-card` — [`v2/cards-and-chrome.md`](v2/cards-and-chrome.md). 286×198 pad 20 gap 80 → **218×132 pad 12 gap 16**. The inverted `Mode` names are gone |
+> | `analytics-card` | **Superseded** by `metric-card` — 160×94 → **274×124**, pad `spacing/16` |
+> | `table-row` | **Superseded** by `table-row` + `table-cell` — [`v2/data-table.md`](v2/data-table.md). 44h → **56h** data rows, 14/20 → **12/16** text, `selected` is now `primary/alpha-10` not `neutral/25` |
+> | `progress-bar` | **Superseded** by the hairline `progress-bar` — [`v2/primitives.md`](v2/primitives.md). 2px/4px, not a 32px labelled bar |
+> | `list-item` | **Superseded** by `control` `Kind=nav` — the unnamed `Property 1` / `Variant4` keys are gone |
+> | `user-card` | **Superseded** by `control` `Kind=user` — Avatar is a correct **32×32**, not the squashed 42.7×32 |
+> | `dropdown` | **Superseded** by `control` `Kind=select` |
+> | **`Graph`** | **CURRENT — not superseded.** v2 contains no chart component. The three sizes (280/400/456), `Line` being single-series, and `--gw-color-chart-1/2/3` all still apply |
+>
+> **Still authoritative here:** `Graph` in full, and the **hover rulings** for every element — v2
+> defines hover only on `table-row`.
+
 Figma: group `section-elements` (`2146:17719`).
 
 The reusable sub-components Sections are built from. The dashboard-side analog of

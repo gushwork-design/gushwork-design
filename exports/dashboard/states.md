@@ -1,5 +1,16 @@
 # States — focus, hover, empty, loading
 
+> ## ⚠ PARTLY SUPERSEDED — 13 Aug 2026
+>
+> | Ruling | Status |
+> |---|---|
+> | **Focus** — `--gw-focus-ring` on `:focus-visible`, mandatory everywhere | **CURRENT and unchanged.** No v2 component defines a focus ring; this ruling is the only thing that gives keyboard users anything |
+> | **Empty** — "compose from `section/Container`" | **Superseded** — there is now a real `empty-state` component. [`v2/feedback.md`](v2/feedback.md) |
+> | **Loading** — ruled per surface | **Partly superseded** — a `skeleton` component now exists for in-place table and card loading. The whole-screen `Loading & fetching data…` + progress bar pattern here is still current |
+> | **Hover** — "moves ONE step toward the selected state" | **CURRENT.** v2 defines hover only on `table-row` (`neutral/25`); for every other component this ruling is still how you derive it |
+>
+> v2 adds components for two of these states; it does not overturn the reasoning.
+
 **Everything in this file is RULED, not measured.** Figma defines none of it, and that absence
 was producing a different answer on every build. These are the answers. Use them; do not
 re-decide them.

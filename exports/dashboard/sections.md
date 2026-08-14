@@ -1,5 +1,20 @@
 # Sections — the section-level building blocks
 
+> ## ⚠ PARTLY SUPERSEDED — 13 Aug 2026
+>
+> | Section | Status |
+> |---|---|
+> | `section/header` | **Superseded** by `page-header` + `section-header` — [`v2/cards-and-chrome.md`](v2/cards-and-chrome.md). One 1164×146 header becomes two: a 1120×113 page header (44px title) and a 1120×24 section header (`body-16-sem` + qualifier) |
+> | `section/Container` | **Superseded** as a shell by `card-shell` (`lg`/`md`/`sm` radius tiers). Still current as a **composition slot** for custom content |
+> | `section/card-layout` | **Current.** The `KPI cards` = 1/2/3 decision is unchanged — but the cards inside it are now `stat-card` / `metric-card` |
+> | `section/table` | **Current** as a Section. Its rows are now `v2/data-table.md` |
+> | `section/progress-bar` | **Current.** A 1084×116 card with a 32px labelled blue bar — a genuinely different component from the v2 hairline bar. Both exist |
+> | `section/With Dropdown` | **Current — unchanged** |
+>
+> **The composition ladder is unchanged and still binding:**
+> `section-elements → Sections → Dashboard Build`. v2 supplies parts, not a new ladder. Never put
+> a v2 component loose in the Dashboard Build slot.
+
 Figma: group `sections` (`2146:17154`).
 
 Self-contained rows and panels that stack inside the Dashboard Build slot to compose a

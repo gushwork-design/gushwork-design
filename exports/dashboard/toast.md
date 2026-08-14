@@ -1,5 +1,18 @@
 # Toast
 
+> ## ⚠ THIS FILE IS AUTHORITATIVE — but a duplicate component now exists
+>
+> A second toast was built on the v2 sheet (`279:875`) with the **same geometry and colours** but
+> **renamed properties** — `Tone` × `Theme` instead of `State` × `Mode`. That rename was not
+> requested and is unresolved drift.
+>
+> **Use this component and this file.** The rulings here — 4s auto-dismiss, errors never
+> auto-dismiss (**R10**), the 276px / ~32-character ceiling — have no equivalent in v2, and this is
+> the set that is **published in the library**.
+>
+> Resolution needed: either delete the sheet copy, or rename its properties to match. See
+> [`v2/feedback.md`](v2/feedback.md).
+
 Set `1579:614` · **8 variants** · 360 wide.
 
 | Property | Values |
