@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+# Refuses to push `main` unless the push was deliberately authorised.
+#
+# Why this exists: nobody who *uses* the plugin can push — `claude plugin marketplace add`
+# clones read-only, and the repo has one collaborator. The real risk is different: an agent
+# session running in this clone pushes with your credentials, and GitHub cannot tell the two
+# apart. This makes a push to main an explicit act rather than an incidental one.
+#
+# Install:  bash scripts/hooks/install.sh
+# Authorise a single push:
+#
+#     GW_PUSH=1 git push origin main
+#
+# Be clear about what this is: a GUARD RAIL, not a security boundary. Anything that can run
+# git in this clone can also set the variable. The only thing that genuinely stops an
+# unreviewed push is server-side branch protection requiring a reviewed pull request — see
+# the note in CONTRIBUTING.md.
+
+set -uo pipefail
+PROTECTED="main"
+
+if [ "${GW_PUSH:-}" = "1" ]; then
+  exit 0
+fi
+
+blocked=""
+while read -r _local_ref local_sha remote_ref _remote_sha; do
+  [ -z "${remote_ref:-}" ] && continue
+  branch="${remote_ref#refs/heads/}"
+  # a delete is an empty local sha; protection already blocks it server-side, flag it anyway
+  case " $PROTECTED " in
+    *" $branch "*) blocked="$blocked $branch" ;;
+  esac
+done
+
+if [ -n "$blocked" ]; then
+  cat >&2 <<EOF
+
+✘ Push to$blocked blocked by scripts/hooks/pre-push
+
+  Pushing this branch is meant to be a deliberate act, because an agent session in this
+  clone pushes with your GitHub credentials and GitHub cannot distinguish it from you.
+
+  If you meant to do this:
+
+      GW_PUSH=1 git push origin$blocked
+
+  Working on something else? Push a branch and open a PR instead:
+
+      git switch -c my-change && git push -u origin my-change
+
+EOF
+  exit 1
+fi
+
+exit 0

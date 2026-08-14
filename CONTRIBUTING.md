@@ -119,6 +119,33 @@ claude plugin update gushwork-design@gushwork
 Then restart Claude Code. Check with `claude plugin list` — and trust the skill's announce line
 over any memory of having updated.
 
+## Who may push
+
+**Only Utsav pushes `main` — or an agent session with his explicit say-so for that push.**
+
+Two things make this less obvious than it sounds, so both are written down:
+
+**Using the plugin grants nobody write access.** `claude plugin marketplace add` clones
+read-only. Installing, updating and reading the skills all work without a single write
+permission, and the repo has one collaborator. A teammate cannot push a plugin version even by
+accident. If someone wants a change in, they fork and open a PR, or they ask.
+
+**GitHub cannot tell an agent apart from you.** A session running in your clone pushes with
+your credentials, so any rule that lets you push lets it push. Server-side permissions cannot
+express "only the human". Two things narrow the gap:
+
+| Guard | What it actually stops |
+|---|---|
+| Branch protection on `main`, **enforced on admins** — no force-push, no deletion | History cannot be rewritten or the branch removed, by anyone, ever. Direct pushes still work, so the release flow below is unchanged |
+| `scripts/hooks/pre-push`, installed by `bash scripts/hooks/install.sh` | A plain `git push origin main` is refused. Authorise one deliberately: `GW_PUSH=1 git push origin main` |
+
+**The hook is a guard rail, not a boundary** — anything that can run git here can also set the
+variable. If you want a push to `main` to be genuinely impossible without your review, the only
+mechanism that achieves it is **branch protection requiring a reviewed pull request**, which
+makes the server reject the push and forces an approval in the GitHub UI. That is not enabled,
+because it would replace step 4 below with a PR for every release. Turning it on is a
+deliberate trade, not an oversight.
+
 ## Shipping the change
 
 See the propagation table in [`README.md`](README.md). The short version:
