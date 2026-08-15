@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.38.0, updated 13 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.39.0, updated 15 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -70,6 +70,7 @@ disagreed.
 | Page title block · section title | `page-header` · `section-header` | `v2/cards-and-chrome.md` |
 | Empty state · skeleton · tooltip · modal | new components | `v2/feedback.md` |
 | Inline search / dense text field | `input` | `v2/controls.md` |
+| **Circular progress · dashboard switcher · date-range picker** | `ring` · `dashboard-switcher` · `date-range-picker` | **`v2/overlays.md`** |
 
 **Still the old files — v2 does not cover these:**
 
@@ -78,6 +79,9 @@ disagreed.
 | **Any chart** | `Graph` — v2 has no chart at all | `section-elements.md` |
 | **Toast** | the library `toast` — ⚠ a duplicate exists on the sheet with renamed props; use the library one | `toast.md` |
 | **Focus rings, hover derivation** | the rulings — v2 defines hover only on `table-row` | `states.md` |
+
+> **`tooltip` has a correction.** `feedback.md` binds the light bubble to an invert alias, which
+> resolves to `Neutral/black`. Measured, it is **`Neutral/900`** — see `v2/overlays.md`.
 | **Button hover and disabled** | measured values — v2 defines neither | `button.md` |
 | **The page shell and composition ladder** | `dashboard-build`, Sections | `dashboard-build.md`, `sections.md` |
 | **Login screen · Avatar · scroll and fill rules** | untouched by v2 | `login-screen.md`, `avatar.md`, `build-rules.md` |
@@ -443,6 +447,167 @@ least once, and none is visible in a screenshot. Check them before calling a bui
    slot are replaced. Test by navigating **away and back**.
 4. **Cards under their floor.** `kpi-card` 286 and `analytics-card` 160 are floors. Measure with
    `getBoundingClientRect()`, at more than one viewport.
+
+## Six traps from measuring a real screen — 15 Aug 2026
+
+Every one of these shipped in `preview/gtm-command-center.html` and had to be reported by the
+designer before it was found. None is visible in a screenshot, and four of them **read as correct
+when you sample the wrong node**.
+
+1. **Sample the rendered glyph, not the wrapper's `color`.** `.theme-toggle span` also matched the
+   nested `.ic` span that the icon helper emits — and a rule applied *directly* to an element beats
+   colour *inherited* from its parent. The active glyph painted the inactive colour in both themes
+   and was invisible on its own pill. `getComputedStyle(cell).color` said white the whole time;
+   `getComputedStyle(cell.querySelector('svg path')).fill` said otherwise. **Descendant selectors
+   inside a component leak onto its icon — scope to `>`.**
+
+2. **An icon is bound to the same variable as its label.** Confirmed on all 11 sidebar nav items
+   and on both topbar buttons in both frames. There *is* a muted icon colour in the system
+   (`Neutral/600`) but it belongs to standalone affordances like a caret — never to a glyph sitting
+   next to text. Default to `color: inherit`.
+
+3. **A hover fill must be a theme alias, never a literal.** Baking a measured *light* value in as an
+   absolute is correct in light and broken the moment the theme flips: it put white-on-near-white
+   (1.23:1) and `Neutral/50`-on-`Neutral/50` (1.00:1) into dark mode. Related: **an absolute fill
+   does not invert.** A button filled `Neutral/black` is black in *both* themes, so its hover stays
+   dark — do not rule it a light value because the surrounding theme went dark.
+
+4. **`arcData.innerRadius` defines a donut's band, not `strokeWeight`.** `innerRadius 0.8` on a 20px
+   ellipse is a 2px band. A 5px `INSIDE` stroke on a shape 2px thick cannot widen it. Reading the
+   stroke as the band drew it 2.5× too heavy.
+
+5. **`preserveAspectRatio="none"` scales stroke widths with the viewBox.** A measured 2px line
+   rendered under 1px and read as "too faint". Add `vector-effect: non-scaling-stroke` to every
+   stroked path in a stretched SVG — and position round things (dots, pills) as HTML, because a
+   `<circle>` in a stretched viewBox becomes an ellipse.
+
+6. **Figma merges consecutive cells in a range.** A calendar band is one wide fill, not seven
+   adjacent ones — so `space-between` on the day cells renders the range as strips. Contiguous
+   `1fr` columns, half-column bands at the endpoints, pill drawn on top.
+
+### And the one that moves every number by 2px
+
+**`strokesIncludedInLayout`.** It is a per-frame boolean and it decides whether a stroke is layout
+or paint. Read it — do not infer it from the numbers.
+
+- **`true`** — the stroke participates. A 1px `INSIDE` stroke eats FILL width and adds to a hug:
+  `dropdown-options` is 207 wide with `pad 4`, and its **FILL** rows come out **197**, not 199;
+  it hugs to **102** for 100 of content. → CSS `border` under `border-box`.
+- **`false`** — the stroke is paint only. `date-range-dropdown` carries the same 1px `INSIDE`
+  stroke and its panes still measure 228 + 332 = **560**. → CSS **inset box-shadow**.
+
+Both of those frames are *fixed width, hugging height* — identical sizing, opposite results. I
+first read this as "INSIDE consumes on HUG, not on FIXED", which fits the numbers and is wrong;
+building the component from that rule reproduced neither frame. **When two frames with the same
+sizing disagree, the difference is a property you have not read yet.**
+
+Buttons are the everyday case: a Figma button hugs label + padding, so a CSS `border` under
+`border-box` makes every one of them 2px wide. Use an inset shadow there.
+
+## Dark mode: five ways it breaks that light mode never shows
+
+All five shipped in the GTM build and all five were reported by the designer, not caught by me.
+
+1. **A theme alias declared in only one theme silently keeps the other's value.** `--tone-good-bg`
+   and `--tone-warn-bg` had no dark override, so green and amber badges painted their **light**
+   `/25` tints on a dark surface for weeks. Assert that every alias is declared in *both* blocks —
+   an omission is invisible in review because the light theme is correct.
+
+2. **Dark label tints are the `Alpha/10` steps, not the light solids.** Measured: `Behind` in dark
+   is `Colors/Red/Alpha/10` fill with a `Colors/Red/300` label. The pattern holds across tones —
+   light `/25`–`/50` solid + `/500` label, dark `<Tone>/Alpha/10` + `/300` label.
+
+3. **A hover needs two things: contrast against its text, AND separation from its surface.**
+   Checking only the first misses the hover that equals the surface it lands on and renders as *no
+   hover at all* — four of those shipped, three in dark. Check both, every time.
+
+4. **An absolute fill does not invert, and "keep it dark" is not one colour.** `Neutral/900` is
+   correct for the `Show both` track in light and vanishes in dark, because the card behind it *is*
+   `Neutral/900`. Same intent, two values: light `/900`, dark `Neutral/black`.
+
+5. **Measuring right after a theme flip reads the OLD theme.** Two separate false conclusions came
+   from this — once from a CSS transition still running, once from the page already being in dark
+   when the "light" sample was taken. **Disable transitions, set the theme explicitly rather than
+   toggling, and assert `data-theme` in the returned payload** so a stale read is obvious.
+
+## Three build-side guards the frames will never tell you about
+
+A static frame draws states, not rules. These are the rules.
+
+1. **A paired control must not reach a zero state.** Two column-group checkboxes that can both be
+   off collapse the table to one column showing no data — indistinguishable from a load failure.
+   Unchecking the last one hands the check to its pair.
+2. **A content column FILLS its slot; it is never pinned to the measured width.** The measured 1200
+   is what the slot happens to be with the sidebar open. Pinned, collapsing the rail leaves the
+   freed 176px as dead space instead of giving it to the content. Padding is the measured margin;
+   width is a result.
+3. **Do not reproduce a mark whose coordinates come from different geometry than your render.** The
+   two chart marker dots are measured as fractions of the design's plot box; the built curve is a
+   traced approximation, so the dots floated above the line marking nothing. Either derive the mark
+   from your own curve or leave it out.
+
+## Stamp every dashboard you build — it is how its owner finds out the design moved
+
+A dashboard is a static file that outlives the session that made it. There is no server and no
+record of who built what, so nothing can be *pushed* to its owner. The stamp is the substitute.
+
+**Every dashboard you build gets a `gushwork-build:{...}` comment** carrying the plugin version, who
+built it, when, the components it used, and the registry URL. `preview/_build_gtm_command_center.py`
+is the reference implementation — copy its `BUILD_STAMP` / `DRIFT_JS` block.
+
+Two things read it:
+
+- **`bash scripts/check-drift.sh <file-or-dir>`** — the agent path. Reports only the intersection of
+  *components that build uses* and *components that have changed*, split into MUST (renders wrong)
+  and MAY (improved).
+- **The page itself, on load** — the human path. Fetches
+  `exports/dashboard/component-registry.json` from the public Vercel deploy, and if anything drifted
+  shows its owner a notice naming what changed, with a `How to update` button that copies a
+  ready-to-paste prompt and a link to the changelog sheet.
+
+**When you change a component's spec, bump it in the registry in the same commit.** A change that is
+not registered is a change nobody is told about. Set `breaking: true` when an existing build renders
+*wrong* until updated, as opposed to merely missing an improvement — that is the difference between
+a red notice and an amber one.
+
+### Rules the notice must keep
+
+1. **It must never break the dashboard.** Offline, private host, blocked CORS, malformed JSON — every
+   failure path ends in silence. A dashboard that cannot phone home is still a working dashboard.
+2. **It fires once per change-set**, recorded when shown, not when dismissed. A notice is not a nag.
+   A *later* change is a different signature and earns one fresh showing.
+3. **Never `window.prompt`** as a clipboard fallback — it is modal and freezes the page. Reveal the
+   text in place, pre-selected.
+4. **The registry URL points at the public deploy, not `raw.githubusercontent.com`** — the check has
+   to keep working after the repo goes private.
+5. **Publishing is part of shipping.** `scripts/publish-sheets.sh` deploys the registry; until it
+   runs, every dashboard checks against the old one and nobody is told anything.
+
+### A trap that cost a silent failure
+
+`DRIFT_JS` is a **raw** Python string (`r"""`). Without the prefix, a JavaScript `\n` inside a string
+literal is interpreted by Python and written out as a real newline, which breaks the JS at parse
+time. The script then never runs — no error in the build, no notice on the page, nothing to see.
+Any time you embed JS in a Python builder, make the literal raw and run `node --check` on the
+extracted block.
+
+## Lock a measured build behind a verifier
+
+`preview/_verify_gtm_command_center.py` is the pattern. A build measured from Figma regresses
+**silently** — it still renders, it is just no longer the design — so assert the measurements as
+strings against the built file and re-run on every change:
+
+```bash
+python3 preview/_build_gtm_command_center.py && python3 preview/_verify_gtm_command_center.py
+```
+
+Two things make it worth the effort:
+
+- **Assert the pattern, not just the value.** "every hover fill resolves through a theme alias" is
+  one check that would have caught all three contrast bugs above; three separate colour assertions
+  would not have caught the fourth.
+- **A static check cannot see computed colour, contrast, scroll or parsing.** Verify those in the
+  browser against the live DOM, and write the numbers into the audit so the next pass can diff them.
 
 ## Known gaps in the source — do not paper over these
 

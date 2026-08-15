@@ -58,6 +58,17 @@ mkdir -p "$STAGE/preview" "$STAGE/foundation" "$STAGE/fonts"
 
 cp scripts/publish-index.html "$STAGE/index.html"
 for s in "${SHEETS[@]}"; do cp "$s" "$STAGE/preview/"; done
+
+# The component registry goes up too, and it is the ONE file here that is not for reading.
+# Every dashboard the skill builds fetches it on load to see whether the components it was built
+# from have moved on, and shows its owner a notice if they have. That check has to keep working
+# after the repo goes private, which is exactly why it points at this public deploy and not at
+# raw.githubusercontent.com. Deploying without it does not break a dashboard — the fetch fails
+# silently — it just means nobody is ever told.
+mkdir -p "$STAGE/exports/dashboard"
+cp exports/dashboard/component-registry.json "$STAGE/exports/dashboard/"
+python3 -c "import json,sys; json.load(open('exports/dashboard/component-registry.json'))" \
+  || { echo "  component-registry.json is not valid JSON — fix it before publishing" >&2; exit 1; }
 cp foundation/tokens.css "$STAGE/foundation/"
 cp fonts/*.ttf "$STAGE/fonts/"
 for a in "${SOCIAL[@]}"; do

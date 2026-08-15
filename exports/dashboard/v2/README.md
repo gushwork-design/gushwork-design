@@ -51,6 +51,7 @@ Only the parts genuinely replaced. Everything else in `exports/dashboard/` stays
 | `data-table.md` | `table-cell` · `table-row` · `pagination` |
 | `cards-and-chrome.md` | `stat-card` · `metric-card` · `card-shell` · `topbar` · `sidebar` · `page-header` · `section-header` · `legend` |
 | `feedback.md` | `tooltip` · `modal` · `empty-state` · `skeleton` |
+| `overlays.md` | `ring` · `dashboard-switcher` · `date-range-picker` — **added 15 Aug 2026**, plus a `tooltip` colour correction |
 
 ## Dark theme is variants, not a mode
 
@@ -120,3 +121,76 @@ visible, and `h7`'s 1.4 line-height adds ~9px per card title.
 Everything else in this set binds to real tokens. Of 515 painted fills across the sheet, **zero
 are unbound** on any authored node; the only unbound paints are inside imported library instances
 (`Avatar`, Phosphor icons).
+
+
+---
+
+## Corrections from the GTM Command Center build — 14–15 Aug 2026
+
+Building `preview/gtm-command-center.html` against `overview` 236:31785, `sidebar` 236:31801 and
+`lodaing` 409:11644 turned up measurements this set had wrong or missing. Full working in
+`dashboard-component-audit.md` sections 10–11.
+
+### Values corrected
+
+| Component | Was | Measured |
+|---|---|---|
+| `ring` (new) | — | band is **2px** from `arcData.innerRadius 0.8`, not the 5px `strokeWeight` |
+| `tooltip` light bubble | an invert alias → `Neutral/black` | **`Neutral/900`** |
+| sidebar nav icons | a muted icon colour | **the same variable as their label** — all 11 bound to `Neutral/900` |
+| topbar button glyphs | a muted icon colour | **the same variable as their label**, both buttons, both themes |
+| `Sync Now` label, dark | white | **`Neutral/50`** |
+| `Compare` | same treatment as `Sync Now` | **fill + stronger stroke**: white/`Neutral/400` light, `Neutral/800`/`Neutral/600` dark |
+| theme toggle | both cells `r8`, muted inactive glyph | active **`r8`**, inactive **`r4`**; glyphs `Neutral/900`/white light, `Neutral/50`/black dark |
+| sidebar footer divider | absent | a **per-side stroke** — `strokeTopWeight 1.5`, `Neutral/100` |
+| sidebar nav column | one scrolling list | `SPACE_BETWEEN` over **two** blocks; Settings + Admin pin to the bottom |
+| collapse control | 24×24 in a 32 row | **20×20** in a **28** row |
+| chart grid / target dash | 3/4 and 6/6 | **4/4** and **12/4** |
+| chart marker | one blue dot | **two** dots, 5×5, `Primary/500` on the curve and `Neutral/200` on the target |
+| card-header subtext | stacked under the title | **`AL:HORIZONTAL` gap 12** |
+| Channel Breakdown toolbar | a column-chooser icon button | a **`Showing for` select**, 116×32, `Neutral/400` stroke |
+| badge tints, dark | green + amber kept their **light** `/25` solids (no dark override existed) | **`<Tone>/Alpha/10`** fill with a **`<Tone>/300`** label |
+
+**This closes the `Compare` vs `Sync Now` dark-mode gap** recorded in `dashboard-component-audit.md`
+section 9 — both are now measured rather than ruled.
+
+### Things that were never in the source
+
+Recorded so nobody hunts for them:
+
+- **No dark frame for the date picker.** Every dark value in it is ruled.
+- **No solid vertical marker in the chart.** All twelve line nodes are dashed gridlines; a
+  "today" rule was invented by the build and removed.
+- **The collapsed sidebar was never designed** (v1 judgement call, 64 wide). The rail tooltips,
+  the stacked user card and the `Syncing` state are all build-side behaviour, not measurements.
+- **`CHAN_COLS[0]` is `channnel`** — three n's, a typo in the frame, transcribed verbatim.
+
+### Three inconsistencies inside the frames — reproduce, don't correct
+
+1. Loading bar draws **210 of 400 = 52.5%** under a **`58%`** label.
+2. Chart today-marker sits at **78%** while the page header reads `Day 18 of 30` (**60%**); the
+   tooltip reads `Actual 1104 / Target 1235` against an axis topping out at **340**.
+3. Date picker shows **`Last 30 days`** selected with a **Jul 15–31** range — seventeen days.
+
+### Column labels are inconsistently cased in the frames
+
+`DATE` · `Domain` · `assigned AE` · `channel` · `monthly` · `annual ARR` · `Status`, and
+`channnel` · `demos` · `Show-ups` · `Pending` · `Closes` · `ARR`. Invisible in a table header
+(CSS uppercases it) and glaring in a `Sort by` menu. Title-case for menus, keep acronyms whole
+(`ARR`, `AE`, `ROI`), and leave the transcribed strings alone.
+
+
+### Dark theme: declare every alias in both blocks
+
+`--tone-good-bg` and `--tone-warn-bg` were declared only in `:root`, so green and amber badges
+painted their **light** `/25` tints on a dark surface. An alias missing from the dark block does not
+fail — it silently keeps the light value, which is why this survived several review passes.
+
+Measured pattern, from `Behind` in `dark-mode` 236:33407:
+
+| | light | dark |
+|---|---|---|
+| badge fill | `<Tone>/25` (`/50` at `md`) | **`<Tone>/Alpha/10`** |
+| badge label | `<Tone>/500` | **`<Tone>/300`** |
+
+`preview/_verify_gtm_command_center.py` now asserts that all six tone aliases appear twice.
