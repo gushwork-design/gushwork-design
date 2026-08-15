@@ -198,19 +198,38 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">45</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.38.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">46</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.39.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
-      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">14 Aug 2026</span></span>
+      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">15 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-39-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.39.0</span>
+        <span class="when">15 Aug 2026</span>
+        <span class="when">19:29</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">the Figma comment pass, three new components, and drift notices</p>
+        <div class="prose"><p>Fifteen comments on the GW Dashbords file, each re-measured from node properties before anything changed. Two turned out to be my own inventions rather than mismatches: the chart&#x27;s solid &quot;today&quot; marker (all twelve line nodes in that plot are dashed gridlines) and the ? icon in the period pill (it is a 60% ring).</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>The corrections most likely to be in an existing build:</p><p>badge     dark tints are &lt;Tone&gt;/Alpha/10 with a &lt;Tone&gt;/300 label. Green and amber had NO dark override and were painting light /25 tints on a dark surface. topbar    a button glyph binds to the same variable as its label, not the muted icon colour. Sync Now is Neutral/50 in dark; Compare carries a fill and a stronger stroke. sidebar   nav column is SPACE_BETWEEN over two blocks; footer takes a 1.5px Neutral/100 top stroke; nav icons follow their label. ring      the band is 2px, from arcData.innerRadius 0.8 — not the 5px stroke. It was 2.5x too heavy. tooltip   the light bubble is Neutral/900, not black.</p><p>New: ring, dashboard-switcher and date-range-picker, specified in exports/dashboard/v2/overlays.md and built on the Figma sheet as 09-overlays.</p><p>New: build stamps and drift notices. A dashboard outlives the session that made it and nothing can be pushed to its owner, so every build now records the components it used and the version it used them at. scripts/check-drift.sh reads that for an agent; the page itself reads it on load and tells its owner what changed, with a prompt to paste and a link to the changelog. Every failure path is silent — a dashboard that cannot phone home is still a working dashboard.</p><p>Two rules that cost real time and are now written down:</p><p>strokesIncludedInLayout decides whether a stroke is layout or paint. Two frames with identical sizing gave opposite results. The note this repo used to carry — &quot;INSIDE consumes on HUG, not on FIXED&quot; — fitted the numbers and was wrong.</p><p>A hover needs contrast against its text AND separation from its surface. Checking only the first misses the hover that equals the surface it lands on and renders as no hover at all. Four of those shipped.</p><p>preview/_verify_gtm_command_center.py locks all of it behind 202 assertions.</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/cb4b177e07a76e305df3798be3335d91ac863f0b" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>cb4b177</a>
+          <a class="meta__l" href="claude://resume/1d76ea71-a078-4d02-a629-cbbfe1407b30"><svg class="gl"><use href="#i-chat"/></svg>Gushwork dashboard component sheet and GTM build</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-38-0">
       <div class="rail">
-        <span class="pill pill--now">v1.38.0</span>
+        <span class="pill">v1.38.0</span>
         <span class="when">14 Aug 2026</span>
         <span class="when">14:40</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">dashboard v2 component set, measured from the shipped screens</p>
@@ -1066,7 +1085,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-38-0">v1.38.0</a>
+    <a class="now" href="#v1-39-0">v1.39.0</a>
+    <a class="" href="#v1-38-0">v1.38.0</a>
     <a class="" href="#v1-37-0">v1.37.0</a>
     <a class="" href="#v1-36-0">v1.36.0</a>
     <a class="" href="#v1-35-0">v1.35.0</a>

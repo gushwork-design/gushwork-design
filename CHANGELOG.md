@@ -24,6 +24,7 @@ reports its own stale date.**
 
 | Version | Date | What changed | Commit | Session |
 |---|---|---|---|---|
+| **v1.39.0** | 15 Aug 2026 19:29 | the Figma comment pass, three new components, and drift notices | [`cb4b177`](https://github.com/utsav-gushwork/gushwork-design/commit/cb4b177e07a76e305df3798be3335d91ac863f0b) | [Gushwork dashboard component sheet and GTM build](claude://resume/1d76ea71-a078-4d02-a629-cbbfe1407b30) |
 | **v1.38.0** | 14 Aug 2026 14:40 | dashboard v2 component set, measured from the shipped screens | [`3b880f1`](https://github.com/utsav-gushwork/gushwork-design/commit/3b880f18a13f36db951026d1066710d654bb69a6) | — |
 | **v1.37.0** | 11 Aug 2026 18:39 | the brand badge is the library badge, Small | [`30203b9`](https://github.com/utsav-gushwork/gushwork-design/commit/30203b95ec01f739f1b93ca31b5b03d75dc869c2) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
 | **v1.36.0** | 11 Aug 2026 18:35 | the brand badge sits beside the title, not at the far edge | [`650fe02`](https://github.com/utsav-gushwork/gushwork-design/commit/650fe02745e4768e5cc74802eba2dd072463bcdb) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |
