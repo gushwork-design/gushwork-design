@@ -199,18 +199,37 @@
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
       <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">46</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.39.0</span></span>
-      <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
-      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">15 Aug 2026</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.40.0</span></span>
+      <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">07 Aug 2026</span></span>
+      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">26 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-40-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.40.0</span>
+        <span class="when">26 Aug 2026</span>
+        <span class="when">12:23</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">responsive dashboards, the phone shell, and three live bugs</p>
+        <div class="prose"><p>R17 narrows the &quot;scale, never reflow&quot; ruling instead of withdrawing it: it still governs at 1280 and above, where the measured composition survives. Below 1280 card-layout stacks and the rail pins to its measured 64 collapsed state; below 600 the nav becomes a drawer. The &gt;=1800 and &gt;=2200 rules were already specified and had simply never been built.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>exports/dashboard/v2/phone.md is new — the phone shell measured off GW Dashbords 515:2176 and 515:2343. This closes the &quot;no phone dashboard spec exists&quot; gap that every earlier version of exports/dashboard/ recorded.</p><p>Three bugs fixed in the shipped reference builder:</p><ul><li>tokens.css is not safe to flatten. --gw-motion-fast is declared twice, and a last-match-wins read emitted 0ms unconditionally: every transition dead for every user, reduced-motion guard discarded. Same exposure covers the whole --gw-bp-* set.</li><li>:focus-visible emitted 2px solid primary-500, bypassing the ruled --gw-focus-ring. Right geometry, wrong colour, and the reference was teaching the deviation.</li><li>A reduced-motion guard placed before :root loses to the later declaration at equal specificity and silently does nothing.</li></ul><p>A supplied reference now defines content AND structure, ruled after a one-page postmortem was rebuilt as a nine-page app — every figure faithful, every component on-system, still the wrong deliverable. The interview asks &quot;one page or many?&quot; first.</p><p>Dead controls: a measured component&#x27;s anatomy is not a checklist. page-header&#x27;s action button, control Kind=user&#x27;s sign-out and dashboard-switcher&#x27;s menu all shipped doing nothing.</p><p>Findings reported, not fixed: light badge tints fail 4.5:1 at their own label size (3.15 / 3.07 / 4.28); v2 metric-card cannot fit card-layout&#x27;s measured 196 analytics slot; the phone title is a sixth display size with no token; build-rules.md&#x27;s &quot;leave the first column unsized&quot; only holds in a shared grid.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/7d4b9d63ba32067a4efd7db0a68c22cd707a58c9" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>7d4b9d6</a>
+          <span class="none">no session recorded</span>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-39-0">
       <div class="rail">
-        <span class="pill pill--now">v1.39.0</span>
+        <span class="pill">v1.39.0</span>
         <span class="when">15 Aug 2026</span>
         <span class="when">19:29</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">the Figma comment pass, three new components, and drift notices</p>
@@ -1047,37 +1066,18 @@
     <article class="rel" id="v1-1-0">
       <div class="rail">
         <span class="pill">v1.1.0</span>
-        <span class="when">06 Aug 2026</span>
-        <span class="when">17:57</span>
+        <span class="when">07 Aug 2026</span>
+        <span class="when">15:40</span>
       </div>
       <div class="body">
-        <p class="body__sum">Make the plugin installable and shareable</p>
-        <div class="prose"><p>claude plugin install resolves a plugin name from a marketplace, not a git URL, so the documented install command never worked. Adds .claude-plugin/marketplace.json making this repo its own single-plugin marketplace; verified end to end with marketplace add / install / list / uninstall.</p></div>
+        <p class="body__sum">Make ONBOARDING.md work when it is executed, not just read</p>
+        <div class="prose"><p>The share link&#x27;s Copy button copies the whole file into Claude Code, so the file is a prompt as much as a document. Its setup section said &quot;paste this into Claude Code&quot;, which is circular once Claude is the one reading it.</p></div>
         <details>
           <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
-          <div class="prose"><p>Also:</p><ul><li>ONBOARDING.md, the five-minute read that travels with the share link</li><li>foundation/output-targets.md — Next.js on Vercel, services on Railway, plain CSS over the tokens rather than a parallel Tailwind palette</li><li>CONTRIBUTING.md — the Figma measuring discipline, which is maintainer-only. Building needs exports/ and never Figma; both skills now say so, and the dashboard build sequence verifies against exports/ instead of Figma.</li><li>README gains the propagation chain: Figma alone ships nothing, both version fields must be bumped, and there is no auto-update.</li><li>gushwork-web states plainly that its unmeasured components are a draft.</li></ul><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
+          <div class="prose"><p>Setup is now addressed to Claude directly, with a parenthetical for anyone reading it themselves. Same four actions either way.</p><p>Also adds scripts/install.sh from the previous commit as the terminal/MDM path.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
-          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/bc465978ca515115a132bf4af2328d397b8f0979" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>bc46597</a>
-          <span class="none">no session recorded</span>
-        </div>
-      </div>
-    </article>
-    <article class="rel" id="v1-0-0">
-      <div class="rail">
-        <span class="pill">v1.0.0</span>
-        <span class="when">06 Aug 2026</span>
-        <span class="when">09:35</span>
-      </div>
-      <div class="body">
-        <p class="body__sum">Add Gushwork design system as a Claude Code plugin</p>
-        <div class="prose"><p>Two surface-scoped skills over one shared foundation, generated from the Gush Design System v2.0 Figma file (VKcb4fgVyOHKfQonMgN772).</p></div>
-        <details>
-          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
-          <div class="prose"><ul><li>foundation/ — 188 design tokens pulled from Figma *variables* (the canvas swatch labels have drifted from a superseded palette), plus voice and the atoms genuinely shared across both surfaces.</li><li>skills/gushwork-web — marketing surfaces. Composition ladder atoms → fold-elements → Folds → Page Build, with Brand/Ads as the governing page-level axis.</li><li>skills/gushwork-dashboard — product surfaces. section-elements → Sections → Dashboard Build. Black/outline/ghost actions, never a blue button fill.</li><li>exports/ — variant enumerations, dimensions and node IDs, kept out of the SKILL.md files so each stays lean enough to load on every invocation.</li></ul><p>Buttons, Avatars and Logos exist separately per surface by design; both skills carry a cross-surface pointer. Badge is shared. Both skills fall back rather than invent a component when a request has no match.</p><p>Figma inconsistencies are flagged inline rather than silently smoothed over — where a rule and its component disagree, the exports document the component, since that is what renders. No Figma variants were renamed.</p><p>Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</p></div>
-        </details>
-        <div class="meta">
-          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/4a36d4847d61cf5990f1ff28627a8308d5d3ecb2" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>4a36d48</a>
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/655c39a4b6c8cd6d30c6d7e30f030eef65239a06" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>655c39a</a>
           <span class="none">no session recorded</span>
         </div>
       </div>
@@ -1085,7 +1085,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-39-0">v1.39.0</a>
+    <a class="now" href="#v1-40-0">v1.40.0</a>
+    <a class="" href="#v1-39-0">v1.39.0</a>
     <a class="" href="#v1-38-0">v1.38.0</a>
     <a class="" href="#v1-37-0">v1.37.0</a>
     <a class="" href="#v1-36-0">v1.36.0</a>
@@ -1130,7 +1131,6 @@
     <a class="" href="#v1-3-0">v1.3.0</a>
     <a class="" href="#v1-2-0">v1.2.0</a>
     <a class="" href="#v1-1-0">v1.1.0</a>
-    <a class="" href="#v1-0-0">v1.0.0</a>
   </nav>
 </div>
 <script>
