@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.39.0, updated 15 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.40.0, updated 26 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -71,6 +71,7 @@ disagreed.
 | Empty state · skeleton · tooltip · modal | new components | `v2/feedback.md` |
 | Inline search / dense text field | `input` | `v2/controls.md` |
 | **Circular progress · dashboard switcher · date-range picker** | `ring` · `dashboard-switcher` · `date-range-picker` | **`v2/overlays.md`** |
+| **The phone shell — topbar, right-hand drawer, bottom dock** | measured 26 Aug 2026 | **`v2/phone.md`** |
 
 **Still the old files — v2 does not cover these:**
 
@@ -189,6 +190,7 @@ Ask in **one** call with all the questions at once. Never interrogate across sev
 |---|---|---|
 | **What is this screen accountable for?** | the two or three metrics you inferred from their request, each as an option | which numbers become kpi-cards; everything else drops to supporting |
 | **What will they do with it?** | `Monitor` — is it on track · `Diagnose` — why is it off · `Act` — work a list | the Sections you reach for. Monitor → headline + trend. Diagnose → breakdowns + filters. Act → table with row actions |
+| **One page or many?** | `A single page` — one scrolling surface, no nav · `A few pages` · `A full app` — grouped nav rail | **ask this FIRST.** It decides whether the rail is navigation or just chrome, and it is the most expensive thing to get wrong |
 | **How many numbers genuinely lead?** | `One north-star` · `A natural pair` · `Three co-equal` | the `card-layout` variant — 1, 2 or 3 |
 | **Is there real data yet?** | `Yes, connected` · `Yes, I'll paste it` · `Not yet — use samples` | whether the header carries a `Sample data` badge |
 
@@ -203,10 +205,31 @@ times; four questions on a one-card change is friction.
 Then **state your read in two or three lines before building** — the KPI, the sections in
 order, the variant. Cheap to correct as a sentence, expensive after markup.
 
-**If the user supplies a reference — a screenshot, a URL, an existing tool — read it for
-CONTENT, never for layout.** Their KPIs, labels and data are the useful part. Their card
-arrangement, colour choices and type scale are not, and importing them produces something
-that looks Gushwork-ish while being off-system. Map the content onto the Sections below and
+### A supplied reference defines CONTENT and STRUCTURE. It does not define visual treatment.
+
+**If the user supplies a reference — an artifact, a screenshot, a URL, an existing tool — take
+its content AND its information architecture. Take none of its styling.**
+
+| From the reference | From this design system |
+|---|---|
+| the KPIs, labels, figures, wording | every colour, type style, radius, shadow, spacing |
+| **how many pages it is** | the Sections each page is built from |
+| **its section order and grouping** | card arrangement within a section |
+| what it chooses to lead with | the `card-layout` variant |
+
+**Not everything is an app.** A postmortem, a closeout, a weekly readout — plenty of real
+dashboards are **one scrolling page** with no navigation at all. If the reference is one page,
+build one page.
+
+**Ruled by Utsav, 26 Aug 2026, after this went wrong.** A one-page billboard postmortem was
+rebuilt as a nine-page dashboard with a grouped nav rail. Every number was faithful and every
+component was on-system, and it was still the wrong deliverable — the source was a document you
+read top to bottom, and it came back as an app you navigate. Re-architecting a reference is a
+**proposal to raise**, never a default. If you think it should be split into pages, say so in one
+line and let them decide.
+
+Importing their *styling*, on the other hand, remains wrong for the original reason: it produces
+something that looks Gushwork-ish while being off-system. Map the content onto the Sections and
 say what you changed.
 
 ## Choosing a `section/card-layout` variant
@@ -409,7 +432,7 @@ cost a review round. **They are ruled. Follow the file.**
 | A sub-pixel border or radius | round to **1px** — it is a scaled instance, not a design value | **R5** |
 | Spec vs Figma | the **measurement** wins, always | `RECONCILIATION.md`, **R0** |
 | Motion | `--gw-motion-fast` (120ms), reduced-motion guarded | `tokens.css` |
-| Below 1440 | scale the shell; never reflow, shrink or clip | `build-rules.md` |
+| Below 1440 | **NARROWED by R17** — scale to 1280, reflow below, drawer below 600 | **R17**, `build-rules.md`, `v2/phone.md` |
 | `card-layout` responsiveness | variants are **never** rearranged | `build-rules.md` |
 | Toggle in a dense row | `Size=X-Small` 36×20 | `controls.md` |
 | Nav group label | not a target — no hover, cursor or focus | `section-elements.md` |
@@ -438,6 +461,15 @@ grid line.
 
 The table above catches wrong *values*. These four are wrong *behaviour* — each has shipped at
 least once, and none is visible in a screenshot. Check them before calling a build done.
+
+0. **Dead controls.** A measured component's anatomy is not a checklist. `page-header` has a
+   button in its action slot, `control Kind=user` has a sign-out tile, `dashboard-switcher` has a
+   menu — and a static build can honour all three while none of them does anything. Three shipped
+   at once on 26 Aug 2026 for exactly that reason: the component drew the affordance, so the build
+   reproduced it. **Ship the affordance only if the function exists.** Two checks catch the whole
+   class: every `data-*` hook in the markup must also appear in the JS, and every `<button>` must
+   be reachable by a selector something binds to. And when you drop a component, drop it from the
+   build stamp too, or the drift notice reports on something the file no longer uses.
 
 1. **Black icons.** Building a `<symbol>` sprite drops the `fill="currentColor"` that sits on the
    source file's outer `<svg>`. Sample the computed colour; don't eyeball it.

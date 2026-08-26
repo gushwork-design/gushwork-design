@@ -107,6 +107,25 @@ the 20h shape matters; use shared Badge for `Sample data` and anything a web sur
 
 **Dark:** inherits. Override the tint if the surface demands it.
 
+### ⚠ FINDING — the light tints fail contrast at their own label size
+
+Measured 26 Aug 2026, each foreground composited over the real card fill it sits on, against the
+12px medium label the component specifies:
+
+| Tone | Light | Dark |
+|---|---|---|
+| `success` | **3.15** | 6.99 |
+| `warning` | **3.07** | 7.24 |
+| `danger` | **4.28** | 4.90 |
+
+All three light tones are under 4.5:1. Dark passes comfortably, because the `<Tone>/Alpha/10` +
+`/300` pattern separates better than the light `/25` + `/500` one.
+
+**Reported, not fixed** — silently changing a measured tint is exactly what this system forbids.
+If the `sm` badge should take the `/50` tint in light, or the label should drop to `/600`, that is
+a one-line change here and a registry bump. Until then, badges are the one place the system ships
+a known contrast failure.
+
 ---
 
 ## `checkbox`

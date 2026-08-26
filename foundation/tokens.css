@@ -418,6 +418,20 @@
    9. There is a bare top-level `White` variable (#ffffff) alongside
       `Colors/Neutral/white`. Prefer --gw-color-white.
 
+  11. THIS FILE IS NOT SAFE TO FLATTEN. Some names are declared TWICE — the base value in
+      :root and an override inside a media query:
+
+        :root                                  --gw-motion-fast: 120ms ease
+        @media (prefers-reduced-motion:reduce) --gw-motion-fast: 0ms
+        @media (max-width:767px)               every --gw-bp-*, and --gw-content-width
+
+      A generator that builds a lookup with "last match wins" — the obvious
+      `dict(re.findall(...))` — therefore emits --gw-motion-fast: 0ms UNCONDITIONALLY. Every
+      transition is dead for every user and the reduced-motion guard is silently discarded. It
+      renders plausibly and is completely wrong. Take the FIRST occurrence of each name and
+      re-emit the guards you need. Found 26 Aug 2026 in two separate builders, including the
+      reference one in preview/.
+
   10. No motion tokens exist in FIGMA. They now exist here — RULED, not
       harvested. See the RULED section at the end of this file. Never write a
       raw duration into a component; use --gw-motion-fast.

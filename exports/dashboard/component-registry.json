@@ -2,53 +2,208 @@
   "$comment": [
     "Per-component versions. The plugin version tells someone the PLUGIN is stale; this tells them",
     "which of the components THEY used actually changed, which is the only thing that makes them",
-    "act. Bump a component's version in the same commit that changes its spec — scripts/check-drift.sh",
+    "act. Bump a component's version in the same commit that changes its spec \u2014 scripts/check-drift.sh",
     "reads this file and a build's stamp, and reports the intersection.",
     "",
     "version = the plugin version in which that component's spec last changed.",
     "breaking = true when a build using it will render WRONG until updated, as opposed to merely",
     "missing an improvement. Drift on a breaking change is reported as MUST, everything else as MAY."
   ],
-  "registryVersion": "1.39.0",
+  "registryVersion": "1.40.0",
   "components": {
-    "status-dot":         { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/primitives.md" },
-    "progress-bar":       { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/primitives.md" },
-    "checkbox":           { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/primitives.md" },
-    "divider":            { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/primitives.md" },
-    "control":            { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/controls.md" },
-    "icon-button":        { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/controls.md" },
-    "tab-item":           { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/controls.md" },
-    "tab-group":          { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/controls.md" },
-    "input":              { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/controls.md" },
-    "table-cell":         { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/data-table.md" },
-    "table-row":          { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/data-table.md" },
-    "pagination":         { "version": "1.39.0", "changed": "2026-08-15", "breaking": false, "doc": "v2/data-table.md",
-                            "note": "page-size options now start at 5" },
-    "stat-card":          { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/cards-and-chrome.md" },
-    "card-shell":         { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/cards-and-chrome.md" },
-    "legend":             { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/cards-and-chrome.md" },
-    "modal":              { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/feedback.md" },
-    "empty-state":        { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/feedback.md" },
-    "skeleton":           { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "v2/feedback.md" },
-    "toast":              { "version": "1.38.0", "changed": "2026-08-13", "breaking": false, "doc": "toast.md" },
-
-    "badge":              { "version": "1.39.0", "changed": "2026-08-15", "breaking": true,  "doc": "v2/primitives.md",
-                            "note": "dark tints are <Tone>/Alpha/10 with a <Tone>/300 label. Green and amber had NO dark override and were painting light /25 tints on a dark surface." },
-    "metric-card":        { "version": "1.39.0", "changed": "2026-08-15", "breaking": true,  "doc": "v2/overlays.md",
-                            "note": "the sub-line carries a 20px ring; its band is 2px from arcData.innerRadius, not the 5px stroke" },
-    "topbar":             { "version": "1.39.0", "changed": "2026-08-15", "breaking": true,  "doc": "v2/cards-and-chrome.md",
-                            "note": "button glyphs follow their label, not --t-icon; Sync Now is Neutral/50 in dark; Compare carries a fill and a stronger stroke; theme toggle cells are r8 active / r4 inactive" },
-    "sidebar":            { "version": "1.39.0", "changed": "2026-08-15", "breaking": true,  "doc": "v2/cards-and-chrome.md",
-                            "note": "nav column is SPACE_BETWEEN over two blocks; footer carries a 1.5px Neutral/100 top stroke; nav icons bind to their label's variable; collapsed rail shows tooltips" },
-    "page-header":        { "version": "1.39.0", "changed": "2026-08-15", "breaking": false, "doc": "v2/overlays.md",
-                            "note": "the period pill ends in a 60% ring, not an icon" },
-    "section-header":     { "version": "1.39.0", "changed": "2026-08-15", "breaking": false, "doc": "v2/cards-and-chrome.md",
-                            "note": "card-header subtext sits beside the title, gap 12 — not stacked under it" },
-    "tooltip":            { "version": "1.39.0", "changed": "2026-08-15", "breaking": true,  "doc": "v2/overlays.md",
-                            "note": "light bubble is Neutral/900, not Neutral/black" },
-
-    "ring":               { "version": "1.39.0", "changed": "2026-08-15", "breaking": false, "doc": "v2/overlays.md", "added": true },
-    "dashboard-switcher": { "version": "1.39.0", "changed": "2026-08-15", "breaking": false, "doc": "v2/overlays.md", "added": true },
-    "date-range-picker":  { "version": "1.39.0", "changed": "2026-08-15", "breaking": false, "doc": "v2/overlays.md", "added": true }
+    "badge": {
+      "version": "1.40.0",
+      "changed": "2026-08-26",
+      "breaking": false,
+      "doc": "v2/primitives.md",
+      "note": "FINDING: light tints fail 4.5:1 at their own 12px label \u2014 success 3.15, warning 3.07, danger 4.28 composited. Dark passes. Reported, not changed."
+    },
+    "card-shell": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/cards-and-chrome.md"
+    },
+    "checkbox": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/primitives.md"
+    },
+    "control": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/controls.md"
+    },
+    "dashboard-switcher": {
+      "version": "1.39.0",
+      "changed": "2026-08-15",
+      "breaking": false,
+      "doc": "v2/overlays.md",
+      "added": true
+    },
+    "date-range-picker": {
+      "version": "1.39.0",
+      "changed": "2026-08-15",
+      "breaking": false,
+      "doc": "v2/overlays.md",
+      "added": true
+    },
+    "divider": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/primitives.md"
+    },
+    "empty-state": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/feedback.md"
+    },
+    "icon-button": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/controls.md"
+    },
+    "icon-toggle-group": {
+      "version": "1.40.0",
+      "changed": "2026-08-26",
+      "breaking": false,
+      "doc": "v2/phone.md",
+      "added": true,
+      "note": "was never registered. On phone the toggle moves OUT of the topbar to a bottom-left dock at 20/20 and carries a white fill, a 1px neutral/200 border and Shadows/S3 \u2014 the desktop version has none of the three."
+    },
+    "input": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/controls.md"
+    },
+    "legend": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/cards-and-chrome.md"
+    },
+    "metric-card": {
+      "version": "1.40.0",
+      "changed": "2026-08-26",
+      "breaking": false,
+      "doc": "v2/overlays.md",
+      "note": "FINDING: does not fit card-layout's measured 196 analytics slot \u2014 content bottoms out ~104 against the 94 floor, so the pair lands ~214 and the lead exceeds its 198 ceiling."
+    },
+    "modal": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/feedback.md"
+    },
+    "page-header": {
+      "version": "1.39.0",
+      "changed": "2026-08-15",
+      "breaking": false,
+      "doc": "v2/overlays.md",
+      "note": "the period pill ends in a 60% ring, not an icon"
+    },
+    "pagination": {
+      "version": "1.39.0",
+      "changed": "2026-08-15",
+      "breaking": false,
+      "doc": "v2/data-table.md",
+      "note": "page-size options now start at 5"
+    },
+    "progress-bar": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/primitives.md"
+    },
+    "ring": {
+      "version": "1.39.0",
+      "changed": "2026-08-15",
+      "breaking": false,
+      "doc": "v2/overlays.md",
+      "added": true
+    },
+    "section-header": {
+      "version": "1.39.0",
+      "changed": "2026-08-15",
+      "breaking": false,
+      "doc": "v2/cards-and-chrome.md",
+      "note": "card-header subtext sits beside the title, gap 12 \u2014 not stacked under it"
+    },
+    "sidebar": {
+      "version": "1.40.0",
+      "changed": "2026-08-26",
+      "breaking": false,
+      "doc": "v2/cards-and-chrome.md",
+      "note": "phone drawer measured: 240 anchored RIGHT below the topbar, 1.5px LEFT border, list-groups padding 12, no scrim, no user-card."
+    },
+    "skeleton": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/feedback.md"
+    },
+    "stat-card": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/cards-and-chrome.md"
+    },
+    "status-dot": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/primitives.md"
+    },
+    "tab-group": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/controls.md"
+    },
+    "tab-item": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/controls.md"
+    },
+    "table-cell": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "v2/data-table.md"
+    },
+    "table-row": {
+      "version": "1.40.0",
+      "changed": "2026-08-26",
+      "breaking": true,
+      "doc": "v2/data-table.md",
+      "note": "build rule corrected: 'leave the first column unsized' only holds in a SHARED grid. Where each row is its own grid, give every non-first track minmax(floor,1fr) or rows land on different column boundaries."
+    },
+    "toast": {
+      "version": "1.38.0",
+      "changed": "2026-08-13",
+      "breaking": false,
+      "doc": "toast.md"
+    },
+    "tooltip": {
+      "version": "1.39.0",
+      "changed": "2026-08-15",
+      "breaking": true,
+      "doc": "v2/overlays.md",
+      "note": "light bubble is Neutral/900, not Neutral/black"
+    },
+    "topbar": {
+      "version": "1.40.0",
+      "changed": "2026-08-26",
+      "breaking": false,
+      "doc": "v2/cards-and-chrome.md",
+      "note": "phone variant measured: 375x60, 1.5px border, 20x20 scaled logo tile, 36x36 drawer trigger alone at right, Semibold 16 title (a sixth display size, no token)."
+    }
   }
 }

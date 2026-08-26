@@ -70,3 +70,42 @@ reports its own stale date.**
 | **v1.2.0** | 07 Aug 2026 15:52 | Make each skill report its own version and date | [`364eeb1`](https://github.com/utsav-gushwork/gushwork-design/commit/364eeb13153cd5289e7353eeedcfdde0d3e278a7) | — |
 | **v1.1.0** | 06 Aug 2026 17:57 | Make the plugin installable and shareable | [`bc46597`](https://github.com/utsav-gushwork/gushwork-design/commit/bc465978ca515115a132bf4af2328d397b8f0979) | — |
 | **v1.0.0** | 06 Aug 2026 09:35 | Add Gushwork design system as a Claude Code plugin | [`4a36d48`](https://github.com/utsav-gushwork/gushwork-design/commit/4a36d4847d61cf5990f1ff28627a8308d5d3ecb2) | — |
+
+## 1.40.0 — responsive dashboards, the phone shell, and three live bugs
+
+**R17 — dashboards reflow below 1280.** The "scale, never reflow" ruling is NARROWED, not
+withdrawn: it still governs at 1280 and above, where the measured composition survives. Below
+1280 `card-layout` stacks and the rail pins to its measured 64 collapsed state; below 600 the nav
+becomes a drawer. The ≥1800 and ≥2200 wide-screen rules were already specified and had simply
+never been built.
+
+**`exports/dashboard/v2/phone.md` — new.** The phone shell measured off GW Dashbords `515:2176`
+and `515:2343`. This closes the "no phone or tablet dashboard spec exists" gap that every earlier
+version of `exports/dashboard/` recorded. Topbar 375x60 with 1.5px borders, a 62.5%-scaled 20x20
+logo tile, a 36x36 trigger alone at the right, a 240-wide drawer anchored RIGHT with no scrim, and
+a bottom-left dock where the theme toggle carries a fill and Shadows/S3.
+
+**Three bugs fixed in the shipped reference builder.**
+
+- `tokens.css` is not safe to flatten: `--gw-motion-fast` is declared twice, and a last-match-wins
+  read emitted `0ms` unconditionally — every transition dead for every user, reduced-motion guard
+  discarded. `preview/_build_gtm_command_center.py` had exactly that. Same exposure covers the
+  whole `--gw-bp-*` set. Warned in `tokens.css`, fixed in the builder.
+- The reference `:focus-visible` emitted `2px solid primary-500`, bypassing the ruled
+  `--gw-focus-ring`. Right geometry, wrong colour, and the reference was teaching the deviation.
+- A reduced-motion guard placed BEFORE `:root` loses to the later declaration at equal
+  specificity and silently does nothing. It has to come after.
+
+**A supplied reference defines content AND structure.** Ruled after a one-page postmortem was
+rebuilt as a nine-page app: every figure faithful, every component on-system, still the wrong
+deliverable. Not everything is an app. The interview now asks "one page or many?" first.
+
+**Dead controls.** A measured component's anatomy is not a checklist — `page-header`'s action
+button, `control Kind=user`'s sign-out and `dashboard-switcher`'s menu all shipped doing nothing.
+Ship the affordance only if the function exists, and drop dropped components from the build stamp.
+
+**Findings reported, not fixed.** Light badge tints fail 4.5:1 at their own label size (success
+3.15, warning 3.07, danger 4.28). v2 `metric-card` cannot fit `card-layout`'s measured 196
+analytics slot. The phone topbar title is a sixth display size with no token. `build-rules.md`'s
+"leave the first column unsized" only holds in a shared grid.
+

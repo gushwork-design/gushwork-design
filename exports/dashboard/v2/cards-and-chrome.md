@@ -61,6 +61,17 @@ Set `275:546` · **2 variants** (`Theme`). **274 × 124** — the run-rate card.
 ⚠ The padding difference between the two cards is measured, not an error. `stat-card` is 12,
 `metric-card` is 16.
 
+⚠ **`metric-card` does not fit `card-layout`'s analytics slot.** That slot's measured grid height
+is **196** — two rows of the v1 `analytics-card` 94 floor plus the 8 gap. `metric-card`'s content
+(a `body-12-med` label, a `Dashboard/display-28-med` value and a sub-line) bottoms out around
+**104** at `p-12`, so two rows come to ~214 and the stretched lead `stat-card` is dragged ~16px
+past its own 198 ceiling. Measured 17 Aug 2026.
+
+The 196 was measured with `analytics-card`, whose value is smaller. There is no combination of
+v2 cards that reproduces it. Either the slot's height is no longer 196 in a v2 build, or the
+analytics slot needs a card that is not `metric-card`. **Unresolved** — flag it in the build
+rather than shrinking the type to force the old number.
+
 ---
 
 ## `card-shell`

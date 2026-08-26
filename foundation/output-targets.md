@@ -76,6 +76,31 @@ numbers arrive — always. So:
 Never render a zero, a dash, or a plausible-looking number while data is in flight. A `0` that
 means "not loaded yet" is read as "we got no leads", and that misreading is expensive.
 
+## Publishing a dashboard as a hosted Artifact
+
+A static file is often shared as an Artifact rather than deployed. Three things bite, all found
+26 Aug 2026 and none visible until the page is actually in the frame.
+
+**The wrapper is supplied.** The host wraps the file in its own `<!doctype html><head></head>
+<body>`, so the file must contain none of those tags. Guard the check with a boundary — a bare
+`<head` search also matches `<header class="topbar">`, and a comment containing a literal tag
+name will trip it too.
+
+**A viewport-relative height inside a content-sized frame resolves to ZERO.** The host sizes the
+frame from the content height the page reports. A dashboard shell locks `html, body { overflow:
+hidden }` and derives its height from `100vh`, which is circular there: reported height is 0, the
+frame collapses, and the page renders **blank rather than broken** — easy to misread as a build
+failure. Use `100dvh`, which resolves against the frame's own viewport, and keep a fixed canvas
+only as a fallback applied by MEASUREMENT (`root.clientHeight < 200`). Do **not** pin a fixed
+height unconditionally: in any frame shorter than it, the overflow sits outside the viewport with
+`overflow: hidden` and is both clipped and unreachable.
+
+**The host owns `data-theme`.** It stamps that attribute on the root element to carry the reader's
+light/dark preference. Any dashboard using the same attribute for its own theme toggle collides
+with it. Read the host's attribute as one input, write your own under a different name, and
+declare both directions so the in-page control can still override — with the in-page selector
+LAST, since the two have equal specificity.
+
 ## What stays out of scope
 
 The design system covers **what a screen looks like**. It has no opinion on data fetching,
