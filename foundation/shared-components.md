@@ -56,6 +56,13 @@ Never use colour decoratively. A green badge on a falling metric is a bug.
 Each colour has a light and a dark treatment. **Match the surface the badge sits
 on** — light badge on a light surface, dark on dark. Do not mix.
 
+**Light labels are the `/600` step — see `DECISIONS.md` R18.** The `/500` label this file used
+to imply fails WCAG AA at `body-12-med` on all three signal colours (red 4.28:1, yellow
+3.07:1, green 3.15:1 against a 4.5:1 threshold). Fills are unchanged. **Figma still ships the
+`/500` label**, so an instance pulled from the file will disagree with this line until the set
+is updated. The dark treatment (`{Colour}/Alpha/10` + `/300` label) has not been measured and
+is still open.
+
 ### Notes on the source
 
 - The rule (`1979:10774`) calls the default colour **"Grey"**; the actual variant

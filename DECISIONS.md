@@ -408,3 +408,36 @@ obviously right:
   One value corrected in the process: dark table header text is **`neutral/100`**, not the
   `neutral/400` first recorded. `input` dark is **derived** from the measured dark select, not
   measured — the dark screen has no input.
+
+---
+
+## R18 — badge light labels are the `/600` step, not `/500`
+
+**A light badge pairs a `{Colour}/25` fill with a `{Colour}/600` label.** The previously
+documented `/500` label fails WCAG AA at the component's own `body-12-med`. **Ruled 27 Aug 2026
+by Utsav**, as a Promote on `notices/2026-08-27-backlog-board.md`.
+
+**Why.** Measured against the 4.5:1 threshold for small text:
+
+| Pair | Ratio | AA |
+|---|---|---|
+| `red-25` / `red-500` | 4.28:1 | fail |
+| `yellow-25` / `yellow-500` | 3.07:1 | fail |
+| `green-25` / `green-500` | 3.15:1 | fail |
+| `red-25` / `red-600` | 5.72:1 | pass |
+| `yellow-25` / `yellow-600` | 4.84:1 | pass |
+| `green-25` / `green-600` | 4.79:1 | pass |
+
+All three signal colours failed as documented — this was not a near miss on one hue. The fills
+are unchanged; only the label moves one step darker.
+
+**What this does not change.** `Neutral` (`neutral-50` / `neutral-700`, 6.24:1) and `Black`
+(`neutral-900` / white, 14.45:1) already passed and are untouched. The dark treatment is
+separate: it pairs `{Colour}/Alpha/10` with a `{Colour}/300` label and was not measured here —
+**that is still open.**
+
+**Still to land in Figma.** This is recorded ahead of the component. Until the `badge` set is
+updated, an instance pulled from Figma will still carry the `/500` label and disagree with this
+file. R0 says the measurement wins over the spec — that does not apply here, because this is a
+*defect* in the source rather than a conflict, and R0's own carve-out is for a measurement that
+is "wrong on its own terms".
