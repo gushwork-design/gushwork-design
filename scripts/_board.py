@@ -270,17 +270,35 @@ CSS = """
   .tab__n{font-variant-numeric:tabular-nums;opacity:.6}
   .tab[aria-selected="true"] .tab__n{opacity:.7}
 
-  /* ── input (v2) — dense inline field, 36h to match the controls beside it ── */
-  .find{display:inline-flex;align-items:center;gap:var(--gw-space-8);height:36px;
-        padding:0 var(--gw-space-12);border-radius:var(--gw-radius-12);
-        background:var(--gw-color-white);
-        border:1px solid var(--gw-color-neutral-200)}
-  .find svg{width:14px;height:14px;color:var(--gw-color-neutral-500)}
-  .find input{border:0;outline:0;background:none;width:180px;
-              font:var(--gw-text-body-12-med);
-              letter-spacing:var(--gw-text-body-12-med-tracking);
-              color:var(--gw-color-neutral-900)}
-  .find input::placeholder{color:var(--gw-color-neutral-400)}
+  /* ── control Kind=select (v2) — 36h, radius/12, gap 4. Outlined is white with a
+     neutral/400 border. Never a blue fill: blue is data and status on this surface. ── */
+  .sel{position:relative;display:inline-block}
+  .sel__t{display:inline-flex;align-items:center;gap:var(--gw-space-4);height:36px;
+          min-width:144px;padding:0 var(--gw-space-12);border-radius:var(--gw-radius-12);
+          cursor:pointer;font:var(--gw-text-button-12);white-space:nowrap;
+          background:var(--gw-color-white);color:var(--gw-color-neutral-900);
+          border:1px solid var(--gw-color-neutral-400)}
+  /* Hover on a control moves ONE step toward its selected state. */
+  .sel__t:hover{background:var(--gw-color-neutral-35)}
+  .sel__t svg{width:14px;height:14px;color:var(--gw-color-neutral-600)}
+  .sel__t .cd{width:12px;height:12px;margin-left:auto;
+              transition:transform var(--gw-motion-fast)}
+  .sel__t[aria-expanded="true"] .cd{transform:rotate(180deg)}
+
+  /* controls/dropdown, open menu. THE MENU IS WIDER THAN ITS TRIGGER — 160 against 144 —
+     and right-aligned. Border neutral/50, options button-12-med, option hover neutral/50.
+     THERE IS NO SELECTED CHECKMARK: an earlier ruling invented one; the component has none.
+     The current value is carried by the trigger's label instead. */
+  .menu{position:absolute;top:calc(100% + var(--gw-space-4));right:0;z-index:20;width:160px;
+        padding:var(--gw-space-4);border-radius:var(--gw-radius-12);
+        background:var(--gw-color-white);border:1px solid var(--gw-color-neutral-50);
+        box-shadow:var(--gw-shadow-s3)}
+  .menu button{display:block;width:100%;text-align:left;border:0;background:none;
+               cursor:pointer;padding:var(--gw-space-8);border-radius:var(--gw-radius-8);
+               font:var(--gw-text-button-12);color:var(--gw-color-neutral-900);
+               white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .menu button:hover{background:var(--gw-color-neutral-50)}
+  .menu button[aria-selected="true"]{background:var(--gw-color-neutral-50)}
 
   /* ── control Kind=button (v2) — 36h, radius/12, gap 4. `outlined` is white with a
      neutral/400 border. Never a blue fill: blue is data and status on this surface. ── */
@@ -470,30 +488,7 @@ CSS = """
   .empty__b{font:var(--gw-text-body-12-med);
             letter-spacing:var(--gw-text-body-12-med-tracking);color:var(--gw-color-neutral-500)}
 
-  /* A live region for the copy result. Never window.prompt — it is modal and freezes the
-     page (new-component-notice.md). */
-  .toastish{position:fixed;left:50%;bottom:var(--gw-space-24);transform:translateX(-50%);
-            max-width:min(560px,calc(100vw - 32px));
-            padding:var(--gw-space-8) var(--gw-space-16);border-radius:var(--gw-radius-12);
-            background:var(--gw-color-neutral-900);color:var(--gw-color-white);
-            font:var(--gw-text-body-12-med);
-            letter-spacing:var(--gw-text-body-12-med-tracking);
-            /* s4 is the deepest real shadow step; there is no larger one. */
-            box-shadow:var(--gw-shadow-s4);
-            opacity:0;pointer-events:none;transition:opacity var(--gw-motion-fast)}
-  .toastish[data-on]{opacity:1}
-  .fallback{position:fixed;left:50%;bottom:var(--gw-space-24);transform:translateX(-50%);
-            width:min(560px,calc(100vw - 32px));padding:var(--gw-space-12);
-            border-radius:var(--gw-radius-12);background:var(--gw-color-white);
-            border:1px solid var(--gw-color-neutral-200);
-            box-shadow:var(--gw-shadow-s4)}
-  .fallback textarea{width:100%;min-height:96px;resize:vertical;
-                     border:1px solid var(--gw-color-neutral-100);
-                     border-radius:var(--gw-radius-8);padding:var(--gw-space-8);
-                     font-family:var(--gw-font-body);font-size:12px;
-                     color:var(--gw-color-neutral-900)}
-  .fallback p{margin:0 0 var(--gw-space-8);font:var(--gw-text-body-12-med);
-              color:var(--gw-color-neutral-600)}
+
 
   @media (max-width:640px){
     .wrap{padding:var(--gw-space-20) 0 var(--gw-space-56)}
@@ -508,19 +503,18 @@ CSS = """
 
 # Phosphor, Regular weight — the icons the components actually specify, not stand-ins.
 ICONS = """<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-<symbol id="i-file" viewBox="0 0 256 256"><path fill="none" stroke="currentColor"
- stroke-width="18" stroke-linecap="round" stroke-linejoin="round"
- d="M208 88h-56V32M200 224H56a8 8 0 0 1-8-8V40a8 8 0 0 1 8-8h96l56 56v128a8 8 0 0 1-8 8Z"/></symbol>
 <symbol id="i-caret" viewBox="0 0 256 256"><path fill="none" stroke="currentColor"
  stroke-width="20" stroke-linecap="round" stroke-linejoin="round" d="m96 48 80 80-80 80"/></symbol>
 <symbol id="i-plus" viewBox="0 0 256 256"><path fill="none" stroke="currentColor"
  stroke-width="20" stroke-linecap="round" stroke-linejoin="round" d="M40 128h176M128 40v176"/></symbol>
+<symbol id="i-funnel" viewBox="0 0 256 256"><path fill="none" stroke="currentColor"
+ stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
+ d="M32 48h192l-72 88v72l-48-24v-48Z"/></symbol>
+<symbol id="i-down" viewBox="0 0 256 256"><path fill="none" stroke="currentColor"
+ stroke-width="24" stroke-linecap="round" stroke-linejoin="round" d="m208 96-80 80-80-80"/></symbol>
 <symbol id="i-search" viewBox="0 0 256 256"><path fill="none" stroke="currentColor"
  stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
  d="M112 176a64 64 0 1 0 0-128 64 64 0 0 0 0 128ZM160 160l48 48"/></symbol>
-<symbol id="i-copy" viewBox="0 0 256 256"><path fill="none" stroke="currentColor"
- stroke-width="18" stroke-linecap="round" stroke-linejoin="round"
- d="M168 168h40V48H88v40M48 88h120v120H48z"/></symbol>
 <symbol id="i-sort" viewBox="0 0 256 256"><path fill="none" stroke="currentColor"
  stroke-width="20" stroke-linecap="round" stroke-linejoin="round"
  d="M80 224V32M32 176l48 48 48-48M176 32v192M128 80l48-48 48 48"/></symbol>
@@ -643,13 +637,50 @@ def render_card(card, lane):
                  % (" stat--od" if od else "", ico("clock"),
                     esc(age_label(d).replace(" days", "d").replace(" day", "d"))))
 
-    return ('<article class="card" data-find="%s">%s<h3 class="card__t">%s</h3>%s'
+    return ('<article class="card" data-areas="%s">%s<h3 class="card__t">%s</h3>%s'
             '<div class="card__ft">%s</div></article>'
-            % (esc((card["title"] + " " + card["keys"].get("surface", "")).lower()),
+            % (esc("|".join(a) if a else "—"),
                area, esc(card["title"]), card_badges(card, lane), "".join(stats)))
 
 
+def render_filter(sections):
+    """Icon + dropdown over Area — the derived top-level directory a card touches.
+
+    Options are only the areas that exist on this board, so the menu can never offer a filter
+    that returns nothing. Cards whose `surface:` names no directory at all are reachable under
+    "No area".
+    """
+    present, has_none = [], False
+    for name in LANES:
+        for c in sections[name]:
+            a = areas(c)
+            if not a:
+                has_none = True
+            for seg in a:
+                if seg not in present:
+                    present.append(seg)
+    present.sort()
+
+    opts = [("", "All areas")] + [(s, s) for s in present]
+    if has_none:
+        opts.append(("—", "No area"))
+
+    return ('<div class="sel">'
+            '<button class="sel__t" type="button" data-fx-trigger aria-haspopup="listbox"'
+            ' aria-expanded="false">%s<span data-fx-label>All areas</span>'
+            '<svg class="cd" aria-hidden="true"><use href="#i-down"/></svg></button>'
+            '<div class="menu" data-fx-menu role="listbox" aria-label="Filter by area" hidden>'
+            '%s</div></div>'
+            % (ico("funnel"),
+               "".join('<button type="button" role="option" data-fx="%s" aria-selected="%s">'
+                       '%s</button>' % (esc(v), "true" if v == "" else "false", esc(l))
+                       for v, l in opts)))
+
+
 def render_board(sections):
+    # `+ Add new` carries no function, by instruction. It is a <p>, not a <button>: a control
+    # announced to a screen reader that does nothing when activated is worse than a label
+    # which never claimed to be one.
     lanes = []
     for name in LANES:
         cards = sections[name]
@@ -661,10 +692,10 @@ def render_board(sections):
             '<div class="lane__hd"><span class="lane__bar" style="background:%s"></span>'
             '<span class="lane__t">%s</span><span class="lane__n">%d</span></div>'
             '<div class="lane__list">%s</div>'
-            '<button class="add" type="button" data-add="%s">%sAdd new</button>'
+            '<p class="add">%sAdd new</p>'
             '</section>'
             % (esc(name), esc(name), LANE_ACCENT[name], esc(name), len(cards), body,
-               esc(name), ico("plus")))
+               ico("plus")))
     return '<div class="board">%s</div>' % "".join(lanes)
 
 
@@ -699,11 +730,11 @@ def render_list(sections):
                 '<span class="td-sub"><b>%s</b> %s</span>' % (esc(k), esc(c["keys"][k]))
                 for k in ROW_DETAIL if c["keys"].get(k))
             rows.append(
-                '<tr data-age="%d" data-lane="%d" data-find="%s">'
+                '<tr data-age="%d" data-lane="%d" data-areas="%s">'
                 '<td><span class="td-label">%s</span>%s</td><td>%s</td>'
                 '<td><span class="td-num">%s</span></td><td>%s</td></tr>'
                 % (-1 if d is None else d, LANES.index(name),
-                   esc((c["title"] + " " + c["keys"].get("surface", "")).lower()),
+                   esc("|".join(areas(c)) or "—"),
                    esc(c["title"]), detail,
                    badge(name, "black" if name == "P0" else ""),
                    esc(age_label(d)), status or '<span class="td-num">—</span>'))
@@ -786,26 +817,64 @@ SCRIPT = r"""
   try { saved = localStorage.getItem('gw-board-view'); } catch (e) {}
   show(saved && panels[saved] ? saved : 'kanban');
 
-  /* ── filter ── one input, both the board and the list. Matches title + surface, which is
-     what data-find carries pre-lowercased. Lane counts are NOT rewritten: a count that
-     changes with a filter stops meaning "how much work is in this lane". */
-  var find = $('[data-find-input]');
-  if (find) {
-    find.addEventListener('input', function () {
-      var q = find.value.trim().toLowerCase();
-      $$('[data-find]').forEach(function (el) {
-        el.hidden = q !== '' && el.getAttribute('data-find').indexOf(q) === -1;
+  /* ── filter ── icon + dropdown over Area. Applies to the board and the list at once.
+     Lane counts are NOT rewritten: a count that moves with a filter stops meaning "how much
+     work is in this lane". */
+  var fxT = $('[data-fx-trigger]'), fxM = $('[data-fx-menu]'), fxL = $('[data-fx-label]');
+  var fxValue = '';
+
+  function apply() {
+    $$('[data-areas]').forEach(function (el) {
+      var list = el.getAttribute('data-areas').split('|');
+      el.hidden = fxValue !== '' && list.indexOf(fxValue) === -1;
+    });
+    /* A lane emptied BY the filter must say so rather than go blank — that reads as broken.
+       Every lane carries a placeholder; this reveals it and words it for the case at hand. */
+    $$('.lane').forEach(function (lane) {
+      var none = $('[data-none]', lane);
+      if (!none) return;
+      var any = $$('.card', lane).some(function (c) { return !c.hidden; });
+      none.hidden = any;
+      none.textContent = fxValue === '' ? 'Nothing here' : 'No match';
+    });
+  }
+
+  function openMenu(on) {
+    if (!fxM) return;
+    fxM.hidden = !on;
+    fxT.setAttribute('aria-expanded', String(on));
+    if (on) { var f = $('button', fxM); if (f) f.focus(); }
+  }
+
+  if (fxT && fxM) {
+    fxT.addEventListener('click', function (e) {
+      e.stopPropagation();
+      openMenu(fxM.hidden);
+    });
+    $$('[data-fx]', fxM).forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        fxValue = opt.getAttribute('data-fx');
+        fxL.textContent = opt.textContent;
+        $$('[data-fx]', fxM).forEach(function (o) {
+          o.setAttribute('aria-selected', String(o === opt));
+        });
+        apply();
+        openMenu(false);
+        fxT.focus();
       });
-      /* A lane emptied BY the filter must say so rather than go blank — that reads as
-         broken. Every lane carries a placeholder; this reveals it and words it for the
-         case at hand. */
-      $$('.lane').forEach(function (lane) {
-        var none = $('[data-none]', lane);
-        if (!none) return;
-        var anyCard = $$('.card', lane).some(function (c) { return !c.hidden; });
-        none.hidden = anyCard;
-        none.textContent = q === '' ? 'Nothing here' : 'No match';
-      });
+    });
+    /* Every way out of an open menu, or it becomes a state you cannot leave. */
+    document.addEventListener('click', function (e) {
+      if (!fxM.hidden && !fxM.contains(e.target) && e.target !== fxT) openMenu(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (fxM.hidden) return;
+      var items = $$('[data-fx]', fxM), i = items.indexOf(document.activeElement);
+      if (e.key === 'Escape') { openMenu(false); fxT.focus(); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); items[Math.min(i + 1, items.length - 1)].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); items[Math.max(i - 1, 0)].focus(); }
+      else if (e.key === 'Home') { e.preventDefault(); items[0].focus(); }
+      else if (e.key === 'End') { e.preventDefault(); items[items.length - 1].focus(); }
     });
   }
 
@@ -838,79 +907,6 @@ SCRIPT = r"""
     });
   }
 
-  /* ── copy a card template ──
-     THREE TIERS, per foundation/new-component-notice.md. navigator.clipboard needs a secure
-     context, and this file is opened from file:// every time someone double-clicks it, so
-     tier 1 fails in the common case. Tier 2 is a hidden textarea + execCommand, which works
-     on file://. Tier 3 reveals the text pre-selected with the platform-correct shortcut.
-     A modal browser dialog is never the fallback — it freezes the page. */
-  var TODAY = document.documentElement.getAttribute('data-today') || '';
-  function template(lane) {
-    var t = '- [ ] \n      surface: \n      constraint: \n      done: \n'
-          + '      added: ' + TODAY + '\n';
-    if (lane === 'Waiting on you') {
-      t = '- [ ] \n      options: \n      rec: \n      since: ' + TODAY + '\n';
-    }
-    return '## ' + lane + '\n' + t;
-  }
-  function say(msg) {
-    var el = $('[data-toast]');
-    if (!el) return;
-    el.textContent = msg;
-    el.setAttribute('data-on', '');
-    clearTimeout(say._t);
-    /* 4s, matching --gw-toast-dismiss. */
-    say._t = setTimeout(function () { el.removeAttribute('data-on'); }, 4000);
-  }
-  function reveal(text) {
-    var host = $('[data-fallback]');
-    if (!host) return;
-    host.hidden = false;
-    var ta = $('textarea', host);
-    ta.value = text;
-    ta.focus();
-    ta.select();
-    var mac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
-    $('p', host).textContent = 'Copy it yourself: ' + (mac ? '⌘C' : 'Ctrl+C')
-      + ' — the clipboard is blocked here.';
-  }
-  function copy(text, label) {
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(function () {
-        say(label + ' copied — paste it into BACKLOG.md');
-      }, function () { legacy(text, label); });
-    } else { legacy(text, label); }
-  }
-  function legacy(text, label) {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
-    document.body.appendChild(ta);
-    ta.select();
-    var ok = false;
-    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
-    document.body.removeChild(ta);
-    if (ok) { say(label + ' copied — paste it into BACKLOG.md'); }
-    else { reveal(text); }
-  }
-
-  $$('[data-add]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var lane = btn.getAttribute('data-add');
-      copy(template(lane), lane + ' card template');
-    });
-  });
-  var pathBtn = $('[data-copy-path]');
-  if (pathBtn) {
-    pathBtn.addEventListener('click', function () {
-      copy(pathBtn.getAttribute('data-copy-path'), 'Rebuild command');
-    });
-  }
-  var close = $('[data-fallback-close]');
-  if (close) {
-    close.addEventListener('click', function () { $('[data-fallback]').hidden = true; });
-  }
 })();
 """
 
@@ -1003,7 +999,7 @@ def main():
   <header class="ph col-1120">
     <div>
       <nav class="crumb" aria-label="Source">
-        %(i_file)s<span>gushwork-design</span>%(i_caret)s<span>preview</span>%(i_caret)s
+        <span>gushwork-design</span>%(i_caret)s<span>preview</span>%(i_caret)s
         <span class="crumb__leaf">board.html</span>
       </nav>
       <h1 class="ph__t">Backlog</h1>
@@ -1012,15 +1008,7 @@ def main():
     <div class="bar">
       <div class="tabs" role="tablist" aria-label="View">%(tabs)s</div>
       <span class="bar__sep" aria-hidden="true"></span>
-      <div class="bar__r">
-        <label class="find">%(i_search)s
-          <input type="search" data-find-input placeholder="Filter cards"
-                 aria-label="Filter cards by title or surface">
-        </label>
-        <button class="btn" type="button"
-                data-copy-path="cd ~/Downloads/gushwork-design &amp;&amp; bash scripts/board.sh"
-        >%(i_copy)sCopy rebuild command</button>
-      </div>
+      <div class="bar__r">%(filter)s</div>
     </div>
   </header>
 
@@ -1044,13 +1032,6 @@ def main():
 
 </div>
 
-<div class="toastish" data-toast role="status" aria-live="polite"></div>
-<div class="fallback" data-fallback hidden>
-  <p></p>
-  <textarea readonly aria-label="Card template to copy"></textarea>
-  <button class="btn" type="button" data-fallback-close
-          style="margin-top:var(--gw-space-8)">Close</button>
-</div>
 <script>%(script)s</script>
 </body>
 </html>""" % dict(
@@ -1059,13 +1040,14 @@ def main():
         css=CSS,
         stamp=stamp,
         icons=ICONS,
-        i_file=ico("file"), i_caret=ico("caret"), i_search=ico("search"), i_copy=ico("copy"),
+        i_caret=ico("caret"),
         tabs="".join(
             '<button class="tab" type="button" role="tab" data-view="%s" aria-selected="%s">'
             '%s<span class="tab__n">%d</span></button>'
             % (k, "true" if k == "kanban" else "false", esc(label), n)
             for k, label, n in tabs),
         meta=esc(" · ".join(bits)),
+        filter=render_filter(sections),
         board=render_board(sections),
         list=render_list(sections),
         shipped=render_shipped(sections[DONE]),
