@@ -24,6 +24,7 @@ reports its own stale date.**
 
 | Version | Date | What changed | Commit | Session |
 |---|---|---|---|---|
+| **v1.41.0** | 26 Aug 2026 13:20 | updates that find you, a public version manifest, and a one-line install | [`f194df8`](https://github.com/utsav-gushwork/gushwork-design/commit/f194df864fa5b34c5eb37b0754fa2b43e2409aab) | [Learning from shadcn's install and update model](claude://resume/79ae8e54-cda3-4da9-9b12-c5875098cfcc) |
 | **v1.40.0** | 26 Aug 2026 12:23 | responsive dashboards, the phone shell, and three live bugs | [`7d4b9d6`](https://github.com/utsav-gushwork/gushwork-design/commit/7d4b9d63ba32067a4efd7db0a68c22cd707a58c9) | — |
 | **v1.39.0** | 15 Aug 2026 19:29 | the Figma comment pass, three new components, and drift notices | [`cb4b177`](https://github.com/utsav-gushwork/gushwork-design/commit/cb4b177e07a76e305df3798be3335d91ac863f0b) | [Gushwork dashboard component sheet and GTM build](claude://resume/1d76ea71-a078-4d02-a629-cbbfe1407b30) |
 | **v1.38.0** | 14 Aug 2026 14:40 | dashboard v2 component set, measured from the shipped screens | [`3b880f1`](https://github.com/utsav-gushwork/gushwork-design/commit/3b880f18a13f36db951026d1066710d654bb69a6) | — |
@@ -69,4 +70,5 @@ reports its own stale date.**
 | **v1.4.0** | 07 Aug 2026 16:07 | Measure all 12 folds, and correct what the annotations got wrong | [`94d9c7e`](https://github.com/utsav-gushwork/gushwork-design/commit/94d9c7e102baa3d208056d8875d49cab3e2d36a8) | — |
 | **v1.3.0** | 07 Aug 2026 16:02 | Measure the web pattern library, and fix letter-spacing system-wide | [`d7299f5`](https://github.com/utsav-gushwork/gushwork-design/commit/d7299f58f631766bddcd4104eeb2346baca162be) | — |
 | **v1.2.0** | 07 Aug 2026 15:52 | Make each skill report its own version and date | [`364eeb1`](https://github.com/utsav-gushwork/gushwork-design/commit/364eeb13153cd5289e7353eeedcfdde0d3e278a7) | — |
-| **v1.1.0** | 07 Aug 2026 15:40 | Make ONBOARDING.md work when it is executed, not just read | [`655c39a`](https://github.com/utsav-gushwork/gushwork-design/commit/655c39a4b6c8cd6d30c6d7e30f030eef65239a06) | — |
+| **v1.1.0** | 06 Aug 2026 17:57 | Make the plugin installable and shareable | [`bc46597`](https://github.com/utsav-gushwork/gushwork-design/commit/bc465978ca515115a132bf4af2328d397b8f0979) | — |
+| **v1.0.0** | 06 Aug 2026 09:35 | Add Gushwork design system as a Claude Code plugin | [`4a36d48`](https://github.com/utsav-gushwork/gushwork-design/commit/4a36d4847d61cf5990f1ff28627a8308d5d3ecb2) | — |

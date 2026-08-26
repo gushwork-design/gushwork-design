@@ -198,19 +198,38 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">46</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.40.0</span></span>
-      <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">07 Aug 2026</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">48</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.41.0</span></span>
+      <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
       <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">26 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-41-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.41.0</span>
+        <span class="when">26 Aug 2026</span>
+        <span class="when">13:20</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">updates that find you, a public version manifest, and a one-line install</p>
+        <div class="prose"><p>Three gaps that were documented but had no code behind them.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>1. A SessionStart hook, shipped inside the plugin (hooks/hooks.json -&gt; scripts/check-update.sh). ROLLOUT.md said autoUpdate is per-machine, unsettable from repo settings, so &quot;either your MDM payload writes it, or people run this once&quot; — and a skipped flag means emitting last month&#x27;s colours with full confidence. The hook arrives with the plugin, so it runs whether or not anyone flipped anything: it sets the flag once, and names the components that changed and which are breaking for a screen built on the old ones. It also closes the other half of that gap — auto-update lands a version but takes effect only on the NEXT start, so the session that could warn you is the one that did not know.</p><p>It is silent when there is nothing to say, capped at a 10s hook timeout with a 3s fetch and a 6h cache, and every failure path exits 0. check-drift.sh said push was impossible for a git-clone plugin; a pull at session start is the closest honest thing, and it needs no stamp in the file.</p><p>2. version.json, generated at publish time by scripts/version-json.sh and served from the root of the deploy. Never committed — it is a projection of marketplace.json and component-registry.json, so a committed copy could only be a second thing to go stale. The hook reads it over HTTPS and falls back to a git fetch in the marketplace clone. Reading a public URL is the point: the thing that tells you that you are behind must not require the access that being behind might have cost you. Same reasoning that already puts component-registry.json on that deploy.</p><p>3. One-line install. scripts/install.sh already did all three steps idempotently; nothing pointed at it. It now leads INSTALL.md, ROLLOUT.md and the install page, and the raw python one-liner that hand-edited known_marketplaces.json is gone from both routes — the hook does that now. The page gains a &quot;Staying current&quot; section, reusing existing classes and no new tokens.</p><p>Also repairs a live skew: v1.40.0 moved plugin.json and both SKILL.md announce lines but not marketplace.json or preview/install.html, because stamp-release.sh was never run for it. The marketplace advertised 1.39.0 for ten days and the live install page told readers that anything below 1.39.0 was stale. publish-sheets.sh now refuses to deploy when those version fields disagree, which is the gate that would have caught it.</p><p>scripts/check-update.test.sh covers the hook: 13 assertions over behind/current/ ahead, breaking-component reporting, malformed payloads, a missing plugin root, a dead endpoint under a time cap, and the autoUpdate flip being idempotent and refusing an unparseable config. It caught two real bugs on the first pass — an ERR trap that swallowed the git fallback, and a backgrounded timeout that held stdout open for the full timeout on every capped call.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/f194df864fa5b34c5eb37b0754fa2b43e2409aab" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>f194df8</a>
+          <a class="meta__l" href="claude://resume/79ae8e54-cda3-4da9-9b12-c5875098cfcc"><svg class="gl"><use href="#i-chat"/></svg>Learning from shadcn&#x27;s install and update model</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-40-0">
       <div class="rail">
-        <span class="pill pill--now">v1.40.0</span>
+        <span class="pill">v1.40.0</span>
         <span class="when">26 Aug 2026</span>
         <span class="when">12:23</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">responsive dashboards, the phone shell, and three live bugs</p>
@@ -1066,18 +1085,37 @@
     <article class="rel" id="v1-1-0">
       <div class="rail">
         <span class="pill">v1.1.0</span>
-        <span class="when">07 Aug 2026</span>
-        <span class="when">15:40</span>
+        <span class="when">06 Aug 2026</span>
+        <span class="when">17:57</span>
       </div>
       <div class="body">
-        <p class="body__sum">Make ONBOARDING.md work when it is executed, not just read</p>
-        <div class="prose"><p>The share link&#x27;s Copy button copies the whole file into Claude Code, so the file is a prompt as much as a document. Its setup section said &quot;paste this into Claude Code&quot;, which is circular once Claude is the one reading it.</p></div>
+        <p class="body__sum">Make the plugin installable and shareable</p>
+        <div class="prose"><p>claude plugin install resolves a plugin name from a marketplace, not a git URL, so the documented install command never worked. Adds .claude-plugin/marketplace.json making this repo its own single-plugin marketplace; verified end to end with marketplace add / install / list / uninstall.</p></div>
         <details>
           <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
-          <div class="prose"><p>Setup is now addressed to Claude directly, with a parenthetical for anyone reading it themselves. Same four actions either way.</p><p>Also adds scripts/install.sh from the previous commit as the terminal/MDM path.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
+          <div class="prose"><p>Also:</p><ul><li>ONBOARDING.md, the five-minute read that travels with the share link</li><li>foundation/output-targets.md — Next.js on Vercel, services on Railway, plain CSS over the tokens rather than a parallel Tailwind palette</li><li>CONTRIBUTING.md — the Figma measuring discipline, which is maintainer-only. Building needs exports/ and never Figma; both skills now say so, and the dashboard build sequence verifies against exports/ instead of Figma.</li><li>README gains the propagation chain: Figma alone ships nothing, both version fields must be bumped, and there is no auto-update.</li><li>gushwork-web states plainly that its unmeasured components are a draft.</li></ul><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
         </details>
         <div class="meta">
-          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/655c39a4b6c8cd6d30c6d7e30f030eef65239a06" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>655c39a</a>
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/bc465978ca515115a132bf4af2328d397b8f0979" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>bc46597</a>
+          <span class="none">no session recorded</span>
+        </div>
+      </div>
+    </article>
+    <article class="rel" id="v1-0-0">
+      <div class="rail">
+        <span class="pill">v1.0.0</span>
+        <span class="when">06 Aug 2026</span>
+        <span class="when">09:35</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">Add Gushwork design system as a Claude Code plugin</p>
+        <div class="prose"><p>Two surface-scoped skills over one shared foundation, generated from the Gush Design System v2.0 Figma file (VKcb4fgVyOHKfQonMgN772).</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><ul><li>foundation/ — 188 design tokens pulled from Figma *variables* (the canvas swatch labels have drifted from a superseded palette), plus voice and the atoms genuinely shared across both surfaces.</li><li>skills/gushwork-web — marketing surfaces. Composition ladder atoms → fold-elements → Folds → Page Build, with Brand/Ads as the governing page-level axis.</li><li>skills/gushwork-dashboard — product surfaces. section-elements → Sections → Dashboard Build. Black/outline/ghost actions, never a blue button fill.</li><li>exports/ — variant enumerations, dimensions and node IDs, kept out of the SKILL.md files so each stays lean enough to load on every invocation.</li></ul><p>Buttons, Avatars and Logos exist separately per surface by design; both skills carry a cross-surface pointer. Badge is shared. Both skills fall back rather than invent a component when a request has no match.</p><p>Figma inconsistencies are flagged inline rather than silently smoothed over — where a rule and its component disagree, the exports document the component, since that is what renders. No Figma variants were renamed.</p><p>Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/4a36d4847d61cf5990f1ff28627a8308d5d3ecb2" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>4a36d48</a>
           <span class="none">no session recorded</span>
         </div>
       </div>
@@ -1085,7 +1123,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-40-0">v1.40.0</a>
+    <a class="now" href="#v1-41-0">v1.41.0</a>
+    <a class="" href="#v1-40-0">v1.40.0</a>
     <a class="" href="#v1-39-0">v1.39.0</a>
     <a class="" href="#v1-38-0">v1.38.0</a>
     <a class="" href="#v1-37-0">v1.37.0</a>
@@ -1131,6 +1170,7 @@
     <a class="" href="#v1-3-0">v1.3.0</a>
     <a class="" href="#v1-2-0">v1.2.0</a>
     <a class="" href="#v1-1-0">v1.1.0</a>
+    <a class="" href="#v1-0-0">v1.0.0</a>
   </nav>
 </div>
 <script>
