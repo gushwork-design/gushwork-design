@@ -12,14 +12,23 @@ binary's own schema, not from guesswork.
 | **2. Commit `.claude/settings.json`** | a team working in known repos — **the default** | **nothing** |
 | **3. Managed settings via MDM** | everyone in the org, including repos we don't control | **nothing** |
 
-## 1. Two commands
+## 1. One command
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/install.sh | bash
+```
+
+Marketplace, plugin, and auto-update in one idempotent pass — `scripts/install.sh` checks the two
+prerequisites up front and names the missing one instead of failing three steps later. The
+underlying commands, if you'd rather run them yourself:
 
 ```bash
 claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin install gushwork-design@gushwork
 ```
 
 Fine for a handful of people. It does not scale, and it is invisible — you cannot tell who ran
-it, so you cannot tell who is on a stale version.
+it. You *can* now tell whether they are stale, though: from v1.41.0 their own session tells them,
+which is the closest this gets to a report you don't have to chase.
 
 ## 2. Commit `.claude/settings.json` to the product repos — start here
 
@@ -112,9 +121,9 @@ allow-list, list both.
 
 ## Keeping everyone current
 
-**Auto-update exists, and it is off by default for third-party marketplaces.** Official
-Anthropic marketplaces auto-update; yours does not until the flag is set. Without it, a
-teammate runs whatever version they installed, indefinitely, with no warning.
+**Auto-update exists, and it is off by default for third-party marketplaces.** Official Anthropic
+marketplaces auto-update; yours does not until the flag is set. Without it, a teammate runs
+whatever version they installed, indefinitely, with no warning.
 
 The flag lives per-machine in `~/.claude/plugins/known_marketplaces.json`:
 
@@ -127,16 +136,48 @@ The flag lives per-machine in `~/.claude/plugins/known_marketplaces.json`:
 }
 ```
 
-**It is not settable from repo settings** — `extraKnownMarketplaces` entries only carry `source`
-and `installLocation`. So either your MDM payload writes it, or people run this once:
+**It is still not settable from repo settings** — `extraKnownMarketplaces` entries only carry
+`source` and `installLocation`. What changed in v1.41.0 is that it no longer has to be a step
+anyone remembers.
+
+### The plugin now sets it, and tells people when they're behind
+
+`hooks/hooks.json` registers a `SessionStart` hook — `scripts/check-update.sh` — that ships inside
+the plugin, so it arrives with the plugin and runs whether or not anyone flipped a flag. On each
+start it:
+
+1. reads the version of the copy actually running, from the installed tree's own `plugin.json`;
+2. fetches `https://gushwork-design.vercel.app/version.json`, falling back to a `git fetch` in the
+   marketplace clone if the deploy is unreachable;
+3. if the published version is newer, names the components that changed and which are **breaking**
+   for a screen built on the old ones — the same comparison `check-drift.sh` makes against a
+   stamped artifact, but for the plugin itself;
+4. sets `autoUpdate: true` if it isn't already, atomically, and refuses to touch the file if it
+   isn't valid JSON.
+
+Three properties worth knowing before you rely on it:
+
+- **It is silent when there is nothing to say.** No news is the common case and produces no output.
+- **It cannot make a session slow.** 10s hook timeout, a 3s cap on the fetch, the network call
+  cached for 6h, and every failure path exits 0. A hook that hangs is a hook that gets ripped out.
+- **The notice path needs no repo access.** It reads a public URL, so it keeps working for someone
+  who has lost — or never had — git access to the source. That is deliberate: the thing that tells
+  you that you are behind must not require the access that being behind might have cost you. Same
+  reasoning that already puts `component-registry.json` on that deploy.
+
+`version.json` is generated at publish time by `scripts/version-json.sh` and never committed — it
+is a projection of `marketplace.json` and `component-registry.json`, so a committed copy could
+only be a second thing to go stale. `publish-sheets.sh` refuses to deploy if those version fields
+disagree, which is the gate that would have caught v1.40.0 shipping with the marketplace still
+advertising 1.39.0.
+
+For an MDM payload, or to set the flag before anyone has started a session, the standalone script
+still works:
 
 ```bash
 gh api repos/utsav-gushwork/gushwork-design/contents/scripts/enable-autoupdate.sh \
   -H "Accept: application/vnd.github.raw" | bash
 ```
-
-That line is in [`ONBOARDING.md`](ONBOARDING.md) directly under the install, because it is the
-difference between a system that stays current and one that quietly doesn't.
 
 ### What auto-update does and doesn't cover
 
@@ -178,9 +219,10 @@ instructions — send this:
 > for X", "add a KPI row" — and Claude uses the real components and tokens. It'll ask a couple of
 > questions first; that's on purpose.
 >
-> Restart Claude Code once so it loads. Two things to know: if the reply doesn't open with "Using
-> the Gushwork … skill" it didn't fire, and if a dashboard shows a `Sample data` badge the numbers
-> are illustrative — don't put it in a deck yet.
+> Restart Claude Code once so it loads. Three things to know: if the reply doesn't open with
+> "Using the Gushwork … skill" it didn't fire; if a dashboard shows a `Sample data` badge the
+> numbers are illustrative — don't put it in a deck yet; and if a session opens by telling you a
+> newer version is out, take it before you build, because the components it names have moved.
 >
 > Detail if you want it: https://github.com/utsav-gushwork/gushwork-design/blob/main/ONBOARDING.md
 

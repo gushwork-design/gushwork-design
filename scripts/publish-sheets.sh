@@ -44,6 +44,12 @@ SOCIAL=(
 # The changelog sheet is generated, so a publish must not ship a stale one.
 bash scripts/release-log.sh --check
 
+# And the version fields must agree before anything goes out, because version.json below becomes
+# the number every machine compares itself against. v1.40.0 shipped with plugin.json at 1.40.0
+# and marketplace.json still at 1.39.0 — stamp-release.sh writes both, so it had not been run —
+# and the live install page advertised 1.39.0 for ten days. This is the gate that catches it.
+bash scripts/version-json.sh --check
+
 command -v vercel >/dev/null || { echo "vercel CLI not installed — brew install vercel" >&2; exit 1; }
 if [ "$DRY" = 0 ] && ! vercel whoami >/dev/null 2>&1; then
   echo "Vercel CLI is not authenticated. Run:  vercel login" >&2
@@ -70,6 +76,19 @@ cp exports/dashboard/component-registry.json "$STAGE/exports/dashboard/"
 python3 -c "import json,sys; json.load(open('exports/dashboard/component-registry.json'))" \
   || { echo "  component-registry.json is not valid JSON — fix it before publishing" >&2; exit 1; }
 cp foundation/tokens.css "$STAGE/foundation/"
+
+# version.json — the other file here that is not for reading. The SessionStart hook in
+# hooks/hooks.json fetches it to find out whether the copy someone is running has been
+# superseded, and which components broke on the way. It sits at the ROOT of the deploy, so the
+# URL stays https://gushwork-design.vercel.app/version.json for good. Generated, never
+# committed; scripts/version-json.sh is the only thing that writes it.
+bash scripts/version-json.sh > "$STAGE/version.json"
+python3 - "$STAGE/version.json" <<'VJ'
+import json, sys
+d = json.load(open(sys.argv[1]))
+v, n = d["version"], len(d["components"])
+print(f"  version.json -> v{v}, {n} components")
+VJ
 cp fonts/*.ttf "$STAGE/fonts/"
 for a in "${SOCIAL[@]}"; do
   [ -f "$a" ] || { echo "  MISSING social image: $a" >&2; exit 1; }

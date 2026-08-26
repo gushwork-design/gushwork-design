@@ -1,0 +1,32 @@
+{
+  "$comment": [
+    "Claude Code hooks for the Gushwork design system. NOT the same thing as scripts/hooks/,",
+    "which holds this repo's git hooks — those guard pushing, these run on a teammate's machine.",
+    "",
+    "One hook, and it exists because two documented gaps had no code behind them: autoUpdate is",
+    "per-machine and unsettable from repo settings, so it got skipped; and auto-update takes",
+    "effect only on the NEXT start, so the session that could warn you is the one that does not",
+    "know yet. See the header of scripts/check-update.sh.",
+    "",
+    "startup|resume only. clear and compact re-fire inside a session someone is already working",
+    "in, and a second copy of the same notice reads as a bug. The script caches the network call",
+    "for 6h and stays silent when there is nothing to say, so a repeated start is cheap.",
+    "",
+    "timeout 10: the default is 600s. This runs before anyone can type, on every session, on",
+    "someone else's machine. It must never be the reason a session feels slow."
+  ],
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/check-update.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
