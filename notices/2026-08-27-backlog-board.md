@@ -55,6 +55,13 @@ List rows carry the full card anatomy (surface, constraint, done, options, rec),
 past 56. The measured value is still the floor. Consistent with build-rule 4, where a vertical
 measured value is the ceiling of a clamp against *compression*, not a cap on content.
 
+### The board scrolls sideways, and holds a 288px lane floor
+Five fitted lanes inside the measured 1120 came out at **198px**, which is not a card. Lanes
+are now a fixed 288 and the board scrolls horizontally, as the reference does. This is a
+second scroll region on the other axis from the page — build-rule 1 ("exactly one region
+scrolls") governs the 260-rail app shell, and this is a single surface with no rail. Stated,
+not assumed.
+
 ### Content column — measured 1120 → 1376 for the board only
 `page-header`, `section-header`, `card-shell` and `table-row` are all measured against 1120,
 and the header, list and timeline all sit at 1120. The board does not: five lanes inside 1120
@@ -73,6 +80,42 @@ board would need values that do not exist. Light only, matching `changelog-sheet
 
 A blue badge. `Blue` is undefined in the badge rule, so it is unused rather than pressed into
 meaning "info".
+
+## Redesigned the same day, from a supplied reference
+
+Utsav supplied a Taskk screenshot and asked for layout reference, clarifying it is **not a
+dashboard — "you can take some reference"**. Taken as loose inspiration, not a spec:
+
+**Taken (structure and content):** breadcrumb over title over toolbar; tabs, a rule, then
+actions; columns as tinted *surfaces* carrying an accent bar, a count pill and a per-column
+add; a four-tier card — grouping meta, title, chips, stat footer; columns scrolling sideways
+with the last one visibly cut off, which is the affordance.
+
+**Not taken (visual treatment):** every colour, type style, radius, shadow and spacing is a
+Gushwork token, and the parts are the measured v2 components. Its side panel was excluded on
+instruction.
+
+**Not taken (dead controls).** The reference draws `Import`, `+ New Board` and a per-column
+`⋮`. A static file generated from a markdown source cannot create a board or import anything,
+so none of them is drawn. They are replaced by controls that work: a filter over title and
+surface, a `Copy rebuild command` button, and `+ Add new` per lane which copies a card
+template pre-headed with that lane's section. Clipboard uses the three tiers from
+`new-component-notice.md` — this file is opened from `file://` every time someone
+double-clicks it, so `navigator.clipboard` fails in the common case.
+
+**Its card slots, filled with derived data rather than invented data.** The reference's
+`Client: Stellar` becomes `Area`, the top-level directory of every path in `surface:`. Its
+category tag pills are dropped. Its assignee row is dropped: there is no assignee in this
+system and an avatar would be fake data. Its three footer stats become the count of files the
+card touches, how many of its required keys are filled, and its age.
+
+`surface:` is free prose with paths in it, not a list — real values include *"scripts/_board.py,
+copy the DRIFT_JS block from preview/_build_x.py"*. Splitting on commas produced areas called
+"patterned on preview". Paths are extracted by regex and only the top-level segment is kept.
+
+**No lane badge on a board card.** The column already states the state, and a `P2` chip on
+every card in the P2 column made all of them look flagged — which is exactly when a real flag
+stops being visible. The List view keeps its lane badge; there is no column there to imply it.
 
 ## Worth a decision
 
