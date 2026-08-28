@@ -8,7 +8,7 @@ description: Builds Gushwork product and dashboard interfaces on-brand — dashb
 You are building a **logged-in product surface** for Gushwork. Dense, gray-canvas,
 black-and-outline actions, blue reserved for signals. This is not the marketing site.
 
-Announce at the start: **"Using the Gushwork dashboard skill — v1.41.1, updated 28 Aug 2026."**
+Announce at the start: **"Using the Gushwork dashboard skill — v1.42.0, updated 28 Aug 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -319,7 +319,7 @@ Three hard rules:
 | A status pill anywhere | **Badge** | `foundation/shared-components.md` |
 | A metric's direction | kpi-card `Type` = `Positive` / `Negative` / `Neutral` | `section-elements.md` |
 | Nav rail grouping | `list-item` with `Property 1=Variant4, Label=yes` for the uppercase group header | `section-elements.md` |
-| **Focus, hover, empty and loading states** | ruled values for all of them | **`states.md`** |
+| **Focus, hover, empty, loading and unavailable states** | ruled values for all of them | **`states.md`** |
 | **An account / sign-out menu** | `user-card` `State=Clicked` → `dropdown-options` `Style=Icon` | `section-elements.md` |
 | **A date range on a header** | `dropdown-options` `Style=Calendar` — single-select; no range affordance exists | `controls.md` |
 | **A toggle in a dense row** | `controls/toggle` `Size=X-Small` (36×20) | `controls.md` |
@@ -438,7 +438,7 @@ cost a review round. **They are ruled. Follow the file.**
 | Nav group label | not a target — no hover, cursor or focus | `section-elements.md` |
 | user-card row | not a target — only the menu tile, `neutral/50` | `section-elements.md` |
 | Rail `Dashboard title` | the dashboard's name, not the company's | `dashboard-build.md` |
-| Empty and loading states | ruled; compose from `section/Container` | `states.md` |
+| Empty, loading and unavailable states | ruled. A quantity that cannot be read is **removed, never zeroed** | `states.md` |
 
 ## Two traps when you measure
 

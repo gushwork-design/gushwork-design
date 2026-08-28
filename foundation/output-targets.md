@@ -13,7 +13,7 @@ repos — not a standalone file someone has to translate first.
 | **Framework** | **Next.js App Router**, React function components | What Vercel deploys with no configuration |
 | **Language** | TypeScript if the repo has it, otherwise JS | Never introduce TS into a JS repo to satisfy this file |
 | **Styling** | **Plain CSS + the `tokens.css` custom properties** | The tokens already *are* CSS custom properties |
-| **Components** | `components/dashboard/` in this repo | Measured once, imported everywhere |
+| **Components** | **None shipped** — build each from its measured spec in `exports/` | The React set was intended and never built; see *Where the pieces live* |
 | **Fonts** | self-hosted from `fonts/`, via `next/font/local` | No network font fetch; both faces are committed |
 
 ### Not Tailwind — and this is a decision, not an oversight
@@ -45,14 +45,22 @@ outcome: a correct design delivered in a form the codebase cannot accept.
 
 ```
 foundation/tokens.css          import once, in the root layout
-components/dashboard/          measured React components — the dashboard surface
+exports/dashboard/**.md        the measured specs — build components from these
 fonts/                         both variable faces, committed, licensed
 preview/*.html                 static reference builds, not importable
 ```
 
-`components/dashboard/README.md` lists what exists. **Import from there before writing a
-component** — a hand-rolled kpi-card that looks right is the exact failure this repo exists
-to prevent.
+**There is no `components/dashboard/` in this repo.** Until 28 Aug 2026 this file told every
+build to import from it before writing a component. The folder was never built — there is not
+one `.tsx` or `.jsx` in the plugin — so that instruction sent people looking for something that
+does not exist. Reported by a teammate on 28 Aug 2026 and corrected the same day.
+
+Build each component from its **measured spec** instead: `exports/dashboard/v2/*.md` for the v2
+set, `exports/dashboard/*.md` for what v2 does not cover. Those specs are the source of truth in
+either case — a components folder would only ever have been the specs, compiled once.
+
+The reason the old line gave still stands, and it is why the specs are not optional: a
+hand-rolled kpi-card that looks right is the exact failure this repo exists to prevent.
 
 ## Deploying — the two that bite
 
