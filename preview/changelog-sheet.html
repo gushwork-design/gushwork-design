@@ -198,19 +198,39 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">49</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.41.1</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">50</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.42.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
       <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">28 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-42-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.42.0</span>
+        <span class="when">28 Aug 2026</span>
+        <span class="when">14:04</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">the unavailable state, and a doc that pointed at nothing</p>
+        <div class="prose"><p>Two findings from a teammate building a dashboard over five separate stores.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>1. There was no ruling for &quot;we could not read this&quot;. states.md ruled empty and loading on 7 Aug and stopped there, but failed is a third condition, not a shade of either: empty means we read the source and it held nothing; unavailable means we could not read it at all. With five stores behind one page, any one can fail while the others are fine, so the state belongs to the card that failed rather than to the page.</p><p>The ruling is one line — an element that encodes a quantity is REMOVED, never zeroed. A progress bar at 0%, a percentage of 0%, a sub-line of &quot;of 0&quot; and a value of &quot;—&quot; are all measurements; they say &quot;we looked, and the answer is nothing&quot;, which is a different claim from &quot;we could not look&quot; and is the one a reader acts on.</p><p>The principle was already half-ruled. The loading section says never render a 0 or a dash while data is in flight, because a 0 that means &quot;not loaded&quot; reads as &quot;we got no leads&quot;. What was missing was its scope, not its reasoning. R10 points the same way for toasts.</p><p>Scope is any data-bearing card or section, ruled ahead of Figma as the rest of states.md already is. The card keeps its surface, radius, padding, label and footprint so the page does not change shape when a store goes down; only the parts carrying a quantity change. No new token of any kind — status-dot Status=behind, Badge Color=Red, and the value dropping to body-14-med on neutral-500 are all existing variants. The proposal specified Badge Tone=danger; Badge has no Tone property, and the correction is recorded.</p><p>2. output-targets.md told every build to import from components/dashboard/ before writing a component. That folder does not exist and never did — there is not one .tsx or .jsx in the plugin — so anyone following the instruction hit a wall. It now points at the measured specs in exports/, which is what the folder would have been compiled from. Whether to build it for real is a separate decision and is in the backlog, not settled here.</p><p>stat-card and metric-card bump to 1.42.0, breaking: false — existing builds render correctly, they simply have no failure treatment, so owners get the amber notice rather than the red one. metric-card&#x27;s existing card-layout FINDING is preserved alongside the new note. kpi-card and analytics-card are in scope for the ruling but are v1 section-elements and absent from the registry, so nothing was bumped there.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/6aadb8bf59783e607318cf349541eaa59c7beb34" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>6aadb8b</a>
+          <a class="meta__l" href="claude://resume/59c33991-9d00-4350-80e6-a4ccfe4ff66b"><svg class="gl"><use href="#i-chat"/></svg>Gushwork design plugin fails to load</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-41-1">
       <div class="rail">
-        <span class="pill pill--now">v1.41.1</span>
+        <span class="pill">v1.41.1</span>
         <span class="when">28 Aug 2026</span>
         <span class="when">10:43</span>
-        <span class="tag">current</span>
+        <span class="tag">patch</span>
       </div>
       <div class="body">
         <p class="body__sum">the plugin loads again: drop the duplicate hooks declaration</p>
@@ -1142,7 +1162,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-41-1">v1.41.1</a>
+    <a class="now" href="#v1-42-0">v1.42.0</a>
+    <a class="" href="#v1-41-1">v1.41.1</a>
     <a class="" href="#v1-41-0">v1.41.0</a>
     <a class="" href="#v1-40-0">v1.40.0</a>
     <a class="" href="#v1-39-0">v1.39.0</a>

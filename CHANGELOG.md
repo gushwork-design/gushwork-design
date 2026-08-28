@@ -24,6 +24,7 @@ reports its own stale date.**
 
 | Version | Date | What changed | Commit | Session |
 |---|---|---|---|---|
+| **v1.42.0** | 28 Aug 2026 14:04 | the unavailable state, and a doc that pointed at nothing | [`6aadb8b`](https://github.com/utsav-gushwork/gushwork-design/commit/6aadb8bf59783e607318cf349541eaa59c7beb34) | [Gushwork design plugin fails to load](claude://resume/59c33991-9d00-4350-80e6-a4ccfe4ff66b) |
 | **v1.41.1** | 28 Aug 2026 10:43 | the plugin loads again: drop the duplicate hooks declaration | [`3d44b20`](https://github.com/utsav-gushwork/gushwork-design/commit/3d44b207153d058832722cc146f30111d80100ff) | [Gushwork design plugin fails to load](claude://resume/59c33991-9d00-4350-80e6-a4ccfe4ff66b) |
 | **v1.41.0** | 26 Aug 2026 13:20 | updates that find you, a public version manifest, and a one-line install | [`f194df8`](https://github.com/utsav-gushwork/gushwork-design/commit/f194df864fa5b34c5eb37b0754fa2b43e2409aab) | [Learning from shadcn's install and update model](claude://resume/79ae8e54-cda3-4da9-9b12-c5875098cfcc) |
 | **v1.40.0** | 26 Aug 2026 12:23 | responsive dashboards, the phone shell, and three live bugs | [`7d4b9d6`](https://github.com/utsav-gushwork/gushwork-design/commit/7d4b9d63ba32067a4efd7db0a68c22cd707a58c9) | — |
