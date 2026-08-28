@@ -198,19 +198,38 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">48</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.41.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">49</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.41.1</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
-      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">26 Aug 2026</span></span>
+      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">28 Aug 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-41-1">
+      <div class="rail">
+        <span class="pill pill--now">v1.41.1</span>
+        <span class="when">28 Aug 2026</span>
+        <span class="when">10:43</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">the plugin loads again: drop the duplicate hooks declaration</p>
+        <div class="prose"><p>v1.41.0 shipped hooks/hooks.json AND declared it in the manifest. Claude Code loads hooks/hooks.json from the standard path unconditionally, then checks each manifest.hooks entry against what it has already loaded — so that declaration could only ever collide with itself:</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>Hook load failed: Duplicate hooks file detected: ./hooks/hooks.json resolves to already-loaded file .../gushwork-design/1.41.0/hooks/hooks.json</p><p>The whole plugin fails to load, not just the hook — both skills go with it. So the one release whose headline was &quot;updates that find you&quot; is the release that silently takes the design system away from anyone who installs it. Anyone already running autoUpdate got it at their next start; the hook meant to turn autoUpdate on for everyone else cannot run, because it lives inside the plugin that no longer loads.</p><p>The fix is to delete the key. hooks/hooks.json does not move and is not renamed — it loads from the standard path, which is where it already was. manifest.hooks is only for ADDITIONAL hook files. check-update.test.sh still passes 13/13.</p><p>Bumped rather than corrected in place on 1.41.0: the cache is keyed by version (~/.claude/plugins/cache/&lt;marketplace&gt;/&lt;plugin&gt;/&lt;version&gt;/) and version is the field <code>plugin update</code> compares, so a fix that does not move it does not reach a machine already holding a broken 1.41.0.</p><p>One thing to carry into the next release: <code>claude plugin validate .</code> does NOT catch this. It finds .claude-plugin/marketplace.json first, validates the marketplace manifest and returns before any plugin-level check runs — it passes cleanly on the broken 1.41.0. Step 5 of the release flow in CONTRIBUTING.md cannot be trusted for plugin-manifest errors. <code>claude plugin list</code> reading &quot;enabled&quot; after an install is the check that would have caught it in seconds.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/3d44b207153d058832722cc146f30111d80100ff" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>3d44b20</a>
+          <a class="meta__l" href="claude://resume/59c33991-9d00-4350-80e6-a4ccfe4ff66b"><svg class="gl"><use href="#i-chat"/></svg>Gushwork design plugin fails to load</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-41-0">
       <div class="rail">
-        <span class="pill pill--now">v1.41.0</span>
+        <span class="pill">v1.41.0</span>
         <span class="when">26 Aug 2026</span>
         <span class="when">13:20</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">updates that find you, a public version manifest, and a one-line install</p>
@@ -1123,7 +1142,8 @@
   </main>
   <nav class="idx" aria-label="Releases">
     <span class="idx__t">Releases</span>
-    <a class="now" href="#v1-41-0">v1.41.0</a>
+    <a class="now" href="#v1-41-1">v1.41.1</a>
+    <a class="" href="#v1-41-0">v1.41.0</a>
     <a class="" href="#v1-40-0">v1.40.0</a>
     <a class="" href="#v1-39-0">v1.39.0</a>
     <a class="" href="#v1-38-0">v1.38.0</a>
