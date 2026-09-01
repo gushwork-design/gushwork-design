@@ -1,0 +1,959 @@
+/* ============================================================================
+   shell.css — the topbar + sidebar chrome worn by every page on
+   gushwork-design.vercel.app.
+
+   EVERY number here was read off Figma node properties in
+   `Q9L6q38dEj3Qu1JkjiT13y` → page `Gushwork Design` → frame `overview`
+   (478:14788). Nothing was eyeballed from a screenshot. Where a value could
+   not be measured, the rule says so and names it a RULING, not a measurement.
+
+   Sources:
+     topbar   478:14789
+     sidebar  478:14805
+     content  478:14832
+     dark     dashboard-component-audit.md §5 (measured off frame 236:33407)
+
+   Load order on a page:
+     <link rel="stylesheet" href="/foundation/tokens.css">
+     <link rel="stylesheet" href="/shell.css">
+     <script src="/shell.js" defer></script>
+   ========================================================================= */
+
+/* ---------------------------------------------------------------------------
+   0. Box model
+
+   Every measured number here — topbar 60, sidebar 240, nav row 32, search
+   400x36 — is an OUTER size in Figma, padding and stroke included. Under the
+   browser default (content-box) the topbar's 60 plus its 14/14 padding and
+   1.5 border renders 89.5 instead. All four generated sheets already set this
+   same reset for themselves, so this is consistent with them, not a change.
+   ------------------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ---------------------------------------------------------------------------
+   1. Theme alias layer
+
+   The Brand variable collection has ONE mode ("Gushwork") — there is no
+   light/dark mode in Figma. Dark is built the way the dashboard builds it:
+   each layer is re-pointed at a different token in the same single-mode
+   collection. Every mapping below is tagged with where it came from.
+   ------------------------------------------------------------------------ */
+:root,
+:root[data-theme="light"] {
+  --s-page-bg:       var(--gw-color-neutral-25);   /* measured: screen 478:14788 fill */
+  --s-chrome-bg:     var(--gw-color-neutral-50);   /* measured: topbar + sidebar fill */
+  --s-chrome-border: var(--gw-color-neutral-100);  /* measured: 1.5px stroke */
+
+  --s-heading:       var(--gw-color-black);        /* measured: wordmark, h6 */
+  --s-body:          var(--gw-color-neutral-600);  /* measured: body copy */
+
+  --s-nav-label:     var(--gw-color-neutral-900);  /* measured: nav row label + icon */
+  --s-nav-sel:       var(--gw-color-neutral-100);  /* measured: selected row fill */
+  --s-nav-hover:     var(--gw-color-neutral-25);   /* measured: audit §12 row 2 */
+  --s-group-label:   var(--gw-color-neutral-400);  /* measured: list label fill */
+
+  --s-field-bg:      var(--gw-color-neutral-25);   /* measured: search field fill */
+  --s-field-border:  var(--gw-color-neutral-200);  /* measured: search + toggle stroke */
+  --s-placeholder:   var(--gw-color-neutral-400);  /* measured: placeholder fill */
+  --s-field-icon:    var(--gw-color-neutral-600);  /* measured: MagnifyingGlass vector */
+
+  --s-lock-bg:       var(--gw-color-neutral-100);  /* measured: lock badge fill */
+  --s-lock-icon:     var(--gw-color-neutral-400);  /* measured: LockSimple vector */
+
+  --s-thumb-bg:      var(--gw-color-black);        /* measured: active toggle cell fill */
+  --s-thumb-icon:    var(--gw-color-white);        /* measured: SunDim vector */
+  --s-thumb-idle:    var(--gw-color-neutral-900);  /* measured: Moon vector */
+
+  --s-card-bg:       var(--gw-color-white);        /* measured: audit §5 card fill */
+  --s-card-border:   var(--gw-color-neutral-100);  /* measured: audit §5 card border */
+  --s-danger:        var(--gw-color-red-400);      /* measured: audit §5 Danger */
+}
+
+/* System dark. The artifact's theme system has FOUR blocks, not two: bare
+   :root is light, this follows the OS, and the two [data-theme] blocks are
+   the user's explicit override in either direction. Without this block the
+   page can only be dark once JS has written an attribute, so an OS-dark user
+   gets a white flash on every load and never follows a live OS change. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* measured — audit §5, read off frame 236:33407 */
+    --s-chrome-bg:     var(--gw-color-neutral-900);  /* topbar / sidebar → Neutral/900 */
+    --s-chrome-border: var(--gw-color-neutral-800);  /* border → Neutral/800 */
+    --s-heading:       var(--gw-color-white);        /* all Vert Grotesk headings → white */
+    --s-body:          var(--gw-color-neutral-300);  /* muted icon/text → Neutral/300 */
+    --s-card-bg:       var(--gw-color-neutral-900);  /* card fill → Neutral/900 */
+    --s-card-border:   var(--gw-color-neutral-800);  /* card border → Neutral/800 */
+    --s-page-bg:       var(--gw-color-black);        /* table body row → Neutral/black */
+
+    /* measured — audit §12 row "the selected stat in dark mode is neutral-600
+       and hover should be 700", confirmed by Utsav against the dark frame */
+    --s-nav-sel:       var(--gw-color-neutral-600);
+    --s-nav-hover:     var(--gw-color-neutral-700);
+
+    /* measured — audit line 358: the nav label tracks to white in dark */
+    --s-nav-label:     var(--gw-color-white);
+
+    /* measured — audit §9: dark primary button is a white fill with Neutral/900
+       text, which is the same inversion the dark tab-active uses */
+    --s-thumb-bg:      var(--gw-color-white);
+    --s-thumb-icon:    var(--gw-color-neutral-900);
+    --s-thumb-idle:    var(--gw-color-neutral-300);
+    --s-danger:        var(--gw-color-red-300);      /* measured: audit §5 Danger → Red/300 */
+
+    /* RULINGS — not measured anywhere. The dark frame has no search field and
+       no lock badge, so these follow the mappings above rather than a source.
+       Flagged to Utsav; replace with measured values when the dark screen
+       grows a search field. */
+    --s-field-bg:      var(--gw-color-black);
+    --s-field-border:  var(--gw-color-neutral-800);
+    --s-lock-bg:       var(--gw-color-neutral-800);
+    --s-group-label:   var(--gw-color-neutral-400);  /* unchanged; legible on /900 */
+    --s-placeholder:   var(--gw-color-neutral-400);
+    --s-field-icon:    var(--gw-color-neutral-300);
+  }
+}
+
+:root[data-theme="dark"] {
+  /* measured — audit §5, read off frame 236:33407 */
+  --s-chrome-bg:     var(--gw-color-neutral-900);  /* topbar / sidebar → Neutral/900 */
+  --s-chrome-border: var(--gw-color-neutral-800);  /* border → Neutral/800 */
+  --s-heading:       var(--gw-color-white);        /* all Vert Grotesk headings → white */
+  --s-body:          var(--gw-color-neutral-300);  /* muted icon/text → Neutral/300 */
+  --s-card-bg:       var(--gw-color-neutral-900);  /* card fill → Neutral/900 */
+  --s-card-border:   var(--gw-color-neutral-800);  /* card border → Neutral/800 */
+  --s-page-bg:       var(--gw-color-black);        /* table body row → Neutral/black */
+
+  /* measured — audit §12 row "the selected stat in dark mode is neutral-600
+     and hover should be 700", confirmed by Utsav against the dark frame */
+  --s-nav-sel:       var(--gw-color-neutral-600);
+  --s-nav-hover:     var(--gw-color-neutral-700);
+
+  /* measured — audit line 358: the nav label tracks to white in dark */
+  --s-nav-label:     var(--gw-color-white);
+
+  /* measured — audit §9: dark primary button is a white fill with Neutral/900
+     text, which is the same inversion the dark tab-active uses */
+  --s-thumb-bg:      var(--gw-color-white);
+  --s-thumb-icon:    var(--gw-color-neutral-900);
+  --s-thumb-idle:    var(--gw-color-neutral-300);
+  --s-danger:        var(--gw-color-red-300);      /* measured: audit §5 Danger → Red/300 */
+
+  /* RULINGS — not measured anywhere. The dark frame has no search field and
+     no lock badge, so these follow the mappings above rather than a source.
+     Flagged to Utsav; replace with measured values when the dark screen
+     grows a search field. */
+  --s-field-bg:      var(--gw-color-black);
+  --s-field-border:  var(--gw-color-neutral-800);
+  --s-lock-bg:       var(--gw-color-neutral-800);
+  --s-group-label:   var(--gw-color-neutral-400);  /* unchanged; legible on /900 */
+  --s-placeholder:   var(--gw-color-neutral-400);
+  --s-field-icon:    var(--gw-color-neutral-300);
+}
+
+/* ---------------------------------------------------------------------------
+   2. Page frame
+   ------------------------------------------------------------------------ */
+.gw-shell-ready body { background: var(--s-page-bg); }
+
+/* The generated sheets set their own body background. Only pages that opt in
+   with data-gw-page get the shell's canvas colour. */
+.gw-shell-ready body[data-gw-page] {
+  margin: 0;
+  background: var(--s-page-bg);
+  color: var(--s-body);
+  font: var(--gw-text-body-18-med);
+  letter-spacing: var(--gw-text-body-18-med-tracking);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* shell.js moves the page's original children in here. */
+.gw-main {
+  margin-top: 60px;    /* measured: topbar height */
+  margin-left: 240px;  /* measured: sidebar width */
+  min-height: calc(100vh - 60px);
+}
+
+/* Content column — measured 478:14832: 1200 wide, pad 60/40, gap 60.
+   1200 − 80 = 1120 inner, which is what the hero and sections are. */
+.gw-col {
+  max-width: 1200px;
+  padding: var(--gw-space-60) var(--gw-space-40);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gw-space-60);
+}
+/* Body sections sit at pad 0/40 inside the 1120 column, and their text runs
+   to 820. Measured off 478:14832 → Frame 2147260245 / 2147260246. */
+.gw-section { padding: 0 var(--gw-space-40); }
+.gw-prose   { max-width: 820px; }
+.gw-prose p {
+  margin: 0;
+  font: var(--gw-text-body-18-med);
+  letter-spacing: var(--gw-text-body-18-med-tracking);
+  color: var(--s-body);
+}
+/* No margin — the gap comes from the .gw-stack-* flex container, which is how
+   Figma spaces it (Frame 2147260246, gap 20). Carrying both would double it. */
+.gw-prose h2 {
+  margin: 0;
+  font: var(--gw-text-h6);              /* measured: Vert Grotesk Semibold 26/120% */
+  letter-spacing: var(--gw-text-h6-tracking);
+  color: var(--s-heading);
+}
+.gw-stack-20 { display: flex; flex-direction: column; gap: var(--gw-space-20); }
+.gw-stack-40 { display: flex; flex-direction: column; gap: var(--gw-space-40); }
+
+/* ---------------------------------------------------------------------------
+   3. Topbar — measured 478:14789
+      1440x60 · AL HORIZONTAL · pad 14/40 · SPACE_BETWEEN|CENTER
+      fill Neutral/50 · strokeBottomWeight 1.5 Neutral/100
+   ------------------------------------------------------------------------ */
+.gw-topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px var(--gw-space-40);
+  background: var(--s-chrome-bg);
+  border-bottom: 1.5px solid var(--s-chrome-border);
+}
+
+/* dashboard-title 478:14790 — HUG, gap 8 */
+.gw-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-space-8);
+  text-decoration: none;
+}
+/* logo chip 478:14791 — 32x32, pad 8, r8, fill Primary/500-main */
+.gw-brand__chip {
+  width: 32px; height: 32px;
+  flex: none;
+  display: grid; place-items: center;
+  border-radius: var(--gw-radius-8);
+  background: var(--gw-color-primary-500);
+}
+.gw-brand__chip svg { width: 16px; height: 16px; display: block; }
+/* wordmark 478:14792 — Vert Grotesk Display Semibold 20/100%, ls 0, black.
+   No text style is bound in Figma, so this is spelled out rather than
+   pointed at a --gw-text-* token. */
+.gw-brand__name {
+  font: 600 20px/1 var(--gw-font-display);
+  letter-spacing: 0;
+  color: var(--s-heading);
+}
+
+/* Frame 2147260244 — HUG, gap 16, MAX|CENTER */
+.gw-topbar__right { display: flex; align-items: center; gap: var(--gw-space-16); }
+
+/* search 478:14794 — 400x36, pad 8/12, gap 8, r12,
+   fill Neutral/25, 1px Neutral/200 */
+.gw-search {
+  width: 400px; height: 36px;
+  display: flex; align-items: center;
+  gap: var(--gw-space-8);
+  padding: var(--gw-space-8) var(--gw-space-12);
+  border-radius: var(--gw-radius-12);
+  background: var(--s-field-bg);
+  border: 1px solid var(--s-field-border);
+}
+.gw-search svg { width: 16px; height: 16px; flex: none; color: var(--s-field-icon); }
+.gw-search input {
+  flex: 1; min-width: 0;
+  border: 0; background: none; padding: 0;
+  font: var(--gw-text-button-14);          /* measured: Button/button-14-med */
+  letter-spacing: 0;
+  color: var(--s-nav-label);
+}
+.gw-search input::placeholder { color: var(--s-placeholder); }
+.gw-search input:focus { outline: none; }
+.gw-search:focus-within { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
+/* Search is not wired up this pass — Utsav chose dark mode only. The control
+   renders as designed and is disabled so it cannot look broken. */
+.gw-search[data-inert="true"] { cursor: not-allowed; }
+.gw-search[data-inert="true"] input { pointer-events: none; }
+
+/* theme toggle 478:14798 — controls/tab 66x36, pad 4, gap 2, r12,
+   1px Neutral/200, no fill. Cells 28x28, pad 8, r8. */
+.gw-theme {
+  display: flex; align-items: center;
+  gap: var(--gw-space-2);
+  padding: var(--gw-space-4);
+  border-radius: var(--gw-radius-12);
+  /* The control has no declared size — 4 + 28 + 2 + 28 + 4 hugs to exactly
+     the measured 66x36. Figma centre-aligns strokes, so its 1px does not grow
+     the frame; a CSS border would, giving 68x38. An inset shadow draws the
+     same line without touching layout. */
+  box-shadow: inset 0 0 0 1px var(--s-field-border);
+  border: 0;
+  background: none;
+}
+.gw-theme__btn {
+  width: 28px; height: 28px;
+  flex: none;
+  display: grid; place-items: center;
+  padding: var(--gw-space-8);
+  border: 0;
+  border-radius: var(--gw-radius-8);
+  background: none;
+  color: var(--s-thumb-idle);
+  cursor: pointer;
+  transition: background var(--gw-motion-fast), color var(--gw-motion-fast);
+}
+.gw-theme__btn svg { width: 12px; height: 12px; display: block; }
+.gw-theme__btn[aria-pressed="true"] {
+  background: var(--s-thumb-bg);
+  color: var(--s-thumb-icon);
+}
+.gw-theme__btn:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
+
+/* ---------------------------------------------------------------------------
+   4. Sidebar — measured 478:14805
+      240 wide · fill Neutral/50 · strokeRightWeight 1.5 Neutral/100
+      SPACE_BETWEEN over a top block and an end block — the same pattern the
+      dashboard uses to keep admin and the user card at the bottom.
+   ------------------------------------------------------------------------ */
+.gw-sidebar {
+  position: fixed;
+  top: 60px; left: 0; bottom: 0;
+  z-index: 30;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--s-chrome-bg);
+  border-right: 1.5px solid var(--s-chrome-border);
+  overflow-y: auto;
+}
+
+/* list-groups 478:14808 — measured pad 24/20, gap 24.
+   The vertical padding is 40, not the measured 24: Utsav's call, so the space
+   above GETTING STARTED and the space below the last admin row match. */
+.gw-navgroups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gw-space-24);
+  padding: var(--gw-space-40) var(--gw-space-20) var(--gw-space-24);
+}
+/* list-group 478:14809 — vertical, gap 0 */
+.gw-navgroup { display: flex; flex-direction: column; gap: 0; }
+
+/* group label 478:14810 — 200x23, pad 4/8, Inter Semi Bold 10/15px, ls 0,
+   Neutral/400, textCase UPPER. Matches Body/body-10-sem exactly. */
+.gw-navlabel {
+  padding: var(--gw-space-4) var(--gw-space-8);
+  font: var(--gw-text-body-10-sem);
+  letter-spacing: var(--gw-text-body-10-sem-tracking);
+  text-transform: uppercase;
+  color: var(--s-group-label);
+}
+
+/* nav row — 200x32, pad 8, gap 8, r8.
+   Icon and label are both Neutral/900, so the icon inherits the row colour
+   rather than carrying its own (audit line 357). */
+.gw-navitem {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-space-8);
+  height: 32px;
+  padding: var(--gw-space-8);
+  border-radius: var(--gw-radius-8);
+  text-decoration: none;
+  color: var(--s-nav-label);
+  font: var(--gw-text-button-14);
+  letter-spacing: 0;
+  background: none;
+  border: 0;
+  width: 100%;
+  cursor: pointer;
+  transition: background var(--gw-motion-fast);
+}
+.gw-navitem svg { width: 16px; height: 16px; flex: none; display: block; }
+/* line-height MUST be re-set here. --gw-text-button-14 is `500 14px/1`, which
+   gives a 14px font a 14px line box — and `overflow:hidden` (needed for the
+   ellipsis) then shears the descenders off g, y and p. Figma's 100% line
+   height has the same number but lets glyphs paint outside the box, so the
+   design does not show the problem. 20px is the DS line height for 14px Inter
+   (--gw-text-body-14-*). The row stays 32 tall: it is a fixed height with
+   align-items:center, so a taller line box only eats into the 8px padding. */
+.gw-navitem__text {
+  flex: 1; min-width: 0; text-align: left;
+  line-height: 20px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.gw-navitem:hover { background: var(--s-nav-hover); }
+.gw-navitem[aria-current="page"] { background: var(--s-nav-sel); }
+.gw-navitem:focus-visible { outline: var(--gw-focus-ring); outline-offset: -2px; }
+
+/* lock badge 478:14814 — 20x20, pad 4, r4, fill Neutral/100,
+   LockSimple Bold 12 in Neutral/400 */
+.gw-lock {
+  width: 20px; height: 20px;
+  flex: none;
+  display: grid; place-items: center;
+  border-radius: var(--gw-radius-4);
+  background: var(--s-lock-bg);
+  color: var(--s-lock-icon);
+}
+.gw-lock svg { width: 12px; height: 12px; display: block; }
+
+/* End block — admin group + user card, pinned to the bottom by the
+   sidebar's space-between. Footer padding 20/20/32 is the dashboard's
+   measured footer (audit line 349). */
+.gw-navend { display: flex; flex-direction: column; }
+/* 40 below the last admin row, matching the 40 above GETTING STARTED so the
+   rail is symmetrically inset top and bottom. */
+.gw-navend .gw-navgroups {
+  padding-top: var(--gw-space-24);
+  padding-bottom: var(--gw-space-40);
+}
+
+.gw-user {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-space-8);
+  padding: var(--gw-space-20) var(--gw-space-20) var(--gw-space-32);
+  border-top: 1.5px solid var(--s-chrome-border);
+}
+.gw-user__av {
+  width: 32px; height: 32px; flex: none;
+  border-radius: var(--gw-radius-full);
+  background: var(--gw-color-primary-500);
+  color: var(--gw-color-white);
+  display: grid; place-items: center;
+  font: var(--gw-text-button-12);
+  overflow: hidden;
+}
+.gw-user__av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gw-user__txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+/* name Button/button-12-med, role Button/button-10-med Neutral/400 — the
+   dashboard's measured user card (audit §4.15) */
+/* Same descender clipping as the nav label — see the note there. */
+.gw-user__name {
+  font: var(--gw-text-button-12);
+  line-height: 16px;
+  color: var(--s-nav-label);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.gw-user__role {
+  font: var(--gw-text-button-10);
+  line-height: 15px;
+  color: var(--s-group-label);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.gw-user__out {
+  width: 28px; height: 28px; flex: none;
+  display: grid; place-items: center;
+  border: 0; border-radius: var(--gw-radius-8);
+  background: none; color: var(--s-body); cursor: pointer;
+  transition: background var(--gw-motion-fast);
+}
+.gw-user__out svg { width: 16px; height: 16px; display: block; }
+.gw-user__out:hover { background: var(--s-nav-hover); }
+.gw-user__out:focus-visible { outline: var(--gw-focus-ring); outline-offset: -2px; }
+
+/* Signed-out footer: a plain sign-in row in the same slot as the user card. */
+.gw-signin {
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--gw-space-8);
+  margin: var(--gw-space-20);
+  height: 36px;
+  border-radius: var(--gw-radius-10);
+  border: 1px solid var(--s-field-border);
+  background: var(--s-card-bg);
+  color: var(--s-nav-label);
+  font: var(--gw-text-button-14);
+  cursor: pointer;
+  transition: background var(--gw-motion-fast);
+}
+.gw-signin:hover { background: var(--s-nav-hover); }
+.gw-signin svg { width: 16px; height: 16px; display: block; }
+.gw-signin:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
+
+/* ---------------------------------------------------------------------------
+   5. Hero — measured 478:14833 `the-playbook-cover/default`
+      1120x200 · pad 40 · gap 20 · r20 · clip · fill Primary/500-main
+      · 2px Primary/600 stroke
+      Grid layer: 224 cells of 40x40, each a 1px Primary/600 stroke.
+      Drawn as a repeating-linear-gradient rather than 224 nodes.
+   ------------------------------------------------------------------------ */
+.gw-hero {
+  position: relative;
+  overflow: hidden;
+  /* FIXED 200 in Figma, not a minimum. The measured content stacks to 188.8
+     (40 + 60 + 20 + 28.8 + 40), so it fits — and holding the height is what
+     clips the third filled grid cell at y=200, exactly as the design does. */
+  box-sizing: border-box;
+  height: 200px;
+  padding: var(--gw-space-40);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* measured: primaryAxisAlignItems CENTER */
+  gap: var(--gw-space-20);
+  border-radius: var(--gw-radius-20);
+  background: var(--gw-color-primary-500);
+  border: 2px solid var(--gw-color-primary-600);
+}
+.gw-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--gw-color-primary-600) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--gw-color-primary-600) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+/* The two filled cells in the measured grid (Rectangle 42844, 43908) — the
+   design has exactly two, offset from each other. */
+.gw-hero__cell {
+  position: absolute;
+  width: 40px; height: 40px;
+  background: var(--gw-color-primary-600);
+  pointer-events: none;
+}
+/* Lift the text above the ::before grid. Must exclude the cells — they are
+   absolutely positioned, and a blanket `.gw-hero > *` turns them back into
+   flex items that push the title down the column. */
+.gw-hero > :not(.gw-hero__cell) { position: relative; }
+/* title — Vert Grotesk Display Semibold 60/100%, ls 0, white. No text style
+   bound in Figma; --gw-text-h1 is 700/1.2 so it does NOT match. */
+.gw-hero__title {
+  margin: 0;
+  font: 600 60px/1 var(--gw-font-display);
+  letter-spacing: 0;
+  color: var(--gw-color-white);
+}
+/* meta — Body/body-18-med, Neutral/Alpha/60-white */
+.gw-hero__meta {
+  margin: 0;
+  font: var(--gw-text-body-18-med);
+  letter-spacing: var(--gw-text-body-18-med-tracking);
+  color: var(--gw-color-neutral-alpha-60-white);
+}
+
+/* ---------------------------------------------------------------------------
+   6. Login modal
+      No design exists in Figma yet — Utsav is sending one. Built from tokens
+      so restyling it is a matter of swapping values, not rebuilding markup.
+   ------------------------------------------------------------------------ */
+.gw-modal[hidden] { display: none; }
+.gw-modal {
+  position: fixed; inset: 0; z-index: 100;
+  display: grid; place-items: center;
+  padding: var(--gw-space-20);
+  background: var(--gw-color-neutral-alpha-50-black);
+}
+.gw-modal__box {
+  width: 100%; max-width: 420px;
+  padding: var(--gw-space-32);
+  border-radius: var(--gw-radius-16);
+  background: var(--s-card-bg);
+  border: 1px solid var(--s-card-border);
+  box-shadow: var(--gw-shadow-s4);
+  text-align: center;
+  position: relative;
+}
+.gw-modal__x {
+  position: absolute; top: var(--gw-space-12); right: var(--gw-space-12);
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  border: 0; border-radius: var(--gw-radius-8);
+  background: none; color: var(--s-body); cursor: pointer;
+}
+.gw-modal__x svg { width: 14px; height: 14px; display: block; }
+.gw-modal__x:hover { background: var(--s-nav-hover); }
+.gw-modal__chip {
+  width: 48px; height: 48px; margin: 0 auto var(--gw-space-20);
+  display: grid; place-items: center;
+  border-radius: var(--gw-radius-12);
+  background: var(--gw-color-primary-500);
+}
+.gw-modal__chip svg { width: 24px; height: 24px; display: block; }
+.gw-modal__title {
+  margin: 0 0 var(--gw-space-8);
+  font: var(--gw-text-h7);
+  letter-spacing: var(--gw-text-h7-tracking);
+  color: var(--s-heading);
+}
+.gw-modal__sub {
+  margin: 0 0 var(--gw-space-24);
+  font: var(--gw-text-body-14-reg);
+  letter-spacing: var(--gw-text-body-14-reg-tracking);
+  color: var(--s-body);
+}
+.gw-modal__btn {
+  width: 100%; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  gap: var(--gw-space-12);
+  border-radius: var(--gw-radius-10);
+  border: 1px solid var(--s-field-border);
+  background: var(--gw-color-white);
+  color: var(--gw-color-black);
+  font: var(--gw-text-button-14);
+  cursor: pointer;
+  text-decoration: none;
+  transition: box-shadow var(--gw-motion-fast);
+}
+.gw-modal__btn:hover { box-shadow: var(--gw-shadow-s2); }
+/* Primary treatment for the password submit — the Google button has to stay
+   white with its own mark, so the two cannot share one look. */
+.gw-modal__btn--primary {
+  background: var(--gw-color-primary-500);
+  border-color: var(--gw-color-primary-600);
+  color: var(--gw-color-white);
+}
+.gw-modal__btn--primary:hover { background: var(--gw-color-primary-600); }
+.gw-modal__btn--primary:disabled { opacity: .6; cursor: progress; }
+
+.gw-modal__or {
+  display: flex; align-items: center; gap: var(--gw-space-12);
+  margin: var(--gw-space-16) 0;
+  font: var(--gw-text-body-12-reg); color: var(--s-group-label);
+}
+.gw-modal__or::before, .gw-modal__or::after {
+  content: ""; flex: 1; height: 1px; background: var(--s-card-border);
+}
+
+.gw-modal__form { display: flex; flex-direction: column; gap: var(--gw-space-8); text-align: left; }
+.gw-modal__label {
+  font: var(--gw-text-body-12-sem);
+  letter-spacing: var(--gw-text-body-12-sem-tracking);
+  color: var(--s-nav-label);
+}
+/* Same field geometry as the topbar search: 36 tall, r12, 1px border. */
+.gw-modal__input {
+  height: 40px;
+  padding: var(--gw-space-8) var(--gw-space-12);
+  border-radius: var(--gw-radius-12);
+  border: 1px solid var(--s-field-border);
+  background: var(--s-field-bg);
+  color: var(--s-nav-label);
+  font: var(--gw-text-body-14-reg);
+}
+.gw-modal__input::placeholder { color: var(--s-placeholder); }
+.gw-modal__input:focus-visible {
+  outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset);
+}
+.gw-modal__err {
+  margin: 0;
+  font: var(--gw-text-body-12-reg);
+  color: var(--s-danger);
+}
+.gw-modal__err[hidden] { display: none; }
+.gw-modal__form .gw-modal__btn { margin-top: var(--gw-space-4); }
+.gw-modal__btn:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
+.gw-modal__btn svg { width: 18px; height: 18px; display: block; }
+.gw-modal__note {
+  margin: var(--gw-space-16) 0 0;
+  font: var(--gw-text-body-12-reg);
+  color: var(--s-group-label);
+}
+
+/* ---------------------------------------------------------------------------
+   6b. "On this page" rail
+
+   Measured off the styleguide TOC (478:15070 → Frame 2147260252): 260 wide,
+   stack gap 16; a 22x22 r8 caret button filled Neutral/100 with a 1px
+   Neutral/200 stroke, a 16px List glyph, the label at Button/button-14-med
+   Neutral/900; links indented 32, gap 16, Button/button-14-med Neutral/700,
+   active Primary/500-main.
+
+   NOTE: the changelog carries an identical copy of these rules inside its own
+   generated <style>, because that sheet has to stand up on its own when it is
+   opened straight out of preview/ with no shell. Both were written from the
+   same measurement — if you change one, change scripts/_changelog_sheet.py too.
+   ------------------------------------------------------------------------ */
+.idx {
+  position: sticky;
+  top: calc(60px + var(--gw-space-40));
+  align-self: start;
+  max-height: calc(100vh - 60px - 80px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  display: flex; flex-direction: column;
+  gap: var(--gw-space-16);
+}
+.idx__t {
+  display: flex; align-items: center;
+  gap: var(--gw-space-8);
+  font: var(--gw-text-button-14);
+  line-height: 20px;
+  color: var(--s-nav-label);
+  padding-bottom: var(--gw-space-8);
+  position: sticky; top: 0; z-index: 1;
+  background: var(--s-page-bg);
+}
+.idx__ico { width: 16px; height: 16px; flex: none; display: block; }
+.idx__col {
+  width: 22px; height: 22px; flex: none;
+  display: grid; place-items: center;
+  padding: var(--gw-space-4);
+  border-radius: var(--gw-radius-8);
+  background: var(--s-lock-bg);
+  border: 1px solid var(--s-field-border);
+  color: var(--s-body);
+  cursor: pointer;
+}
+.idx__col svg { width: 12px; height: 12px; display: block; transition: transform var(--gw-motion-fast); }
+.idx__col:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
+.idx__list {
+  display: flex; flex-direction: column;
+  gap: var(--gw-space-16);
+  padding-left: var(--gw-space-32);
+}
+.idx a {
+  font: var(--gw-text-button-14);
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--gw-color-neutral-700);
+  text-decoration: none;
+}
+:root[data-theme="dark"] .idx a { color: var(--s-body); }
+.idx a:hover { color: var(--s-nav-label); }
+.idx a:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
+/* Active entry is marked with colour alone — no tint, no weight change. */
+.idx a.now { color: var(--gw-color-primary-500); }
+.idx[data-collapsed="true"] .idx__list { display: none; }
+.idx[data-collapsed="true"] .idx__col svg { transform: rotate(90deg); }
+
+/* ---------------------------------------------------------------------------
+   Collapsed TOC — measured against frame 478:15652, which is this same page
+   with the rail collapsed. It is not just "hide the links":
+
+                     expanded (478:15070)   collapsed (478:15652)
+     main column     800                    1012
+     divider         800                    1012
+     rail            260                    48
+     caret pill      22x22, caret only      48x26, caret AND the List glyph
+     label + links   visible                hidden
+
+   The column rule is `minmax(0,1fr) auto`, so the RAIL'S OWN WIDTH drives the
+   split and both measured states fall out of one declaration:
+     1120 inner - 60 gutter - 260 = 800    1120 - 60 - 48 = 1012
+   ------------------------------------------------------------------------ */
+.idx{width:260px}
+.idx[data-collapsed="true"]{width:48px}
+
+/* Collapsed, the pill IS the header row: the List glyph moves inside it and
+   the button loses its own chrome, so the two read as one control. */
+.idx[data-collapsed="true"] .idx__t{
+  width:48px;height:26px;padding:var(--gw-space-4);
+  /* Figma measures this gap at 10, but the audit (§6) lists gap:10 as a
+     Figma default leftover rather than a decision, and there is no 10 in
+     the spacing scale. Snapped to the token either side. */
+  gap:var(--gw-space-8);justify-content:center;
+  border-radius:var(--gw-radius-8);background:var(--s-lock-bg);
+  padding-bottom:var(--gw-space-4)}
+.idx[data-collapsed="true"] .idx__col{
+  width:12px;height:12px;padding:0;background:none;border:0}
+.idx[data-collapsed="true"] .idx__t > span{display:none}
+
+
+/* ---------------------------------------------------------------------------
+   7. Holding state for routes that have no design yet
+   ------------------------------------------------------------------------ */
+.gw-soon {
+  padding: var(--gw-space-40);
+  border-radius: var(--gw-radius-16);
+  background: var(--s-card-bg);
+  border: 1px solid var(--s-card-border);
+  max-width: 820px;
+}
+.gw-soon h2 {
+  margin: 0 0 var(--gw-space-8);
+  font: var(--gw-text-h7);
+  letter-spacing: var(--gw-text-h7-tracking);
+  color: var(--s-heading);
+}
+.gw-soon p { margin: 0; font: var(--gw-text-body-14-reg); color: var(--s-body); }
+.gw-soon ul { margin: var(--gw-space-16) 0 0; padding-left: var(--gw-space-20); }
+.gw-soon li { font: var(--gw-text-body-14-reg); color: var(--s-body); margin-bottom: var(--gw-space-4); }
+.gw-soon a { color: var(--gw-color-primary-500); }
+
+/* ---------------------------------------------------------------------------
+   8. Fitting the generated sheets under the topbar
+
+   changelog-sheet, review-sheet, catalogue and install were all written
+   before this chrome existed. They are not restyled — they keep their own
+   layout — but two things break when a 60px fixed topbar appears above them.
+
+   a) Sticky rails. `position: sticky` resolves `top` against the viewport,
+      not against .gw-main's margin, so a rail written as top:20px now hides
+      under the topbar. Each known offset is pushed down by 60.
+   b) Anchor jumps. The changelog's 46-release index scrolls to #v1-39-0 and
+      friends; without scroll-padding the heading lands behind the topbar.
+   ------------------------------------------------------------------------ */
+:root.gw-shell-ready { scroll-padding-top: calc(60px + var(--gw-space-16)); }
+
+.gw-main .idx { top: calc(60px + var(--gw-space-40)); }  /* changelog index rail */
+.gw-main .nav { top: calc(60px + 20px); }                /* review sheet nav rail */
+.gw-main thead th { top: 60px; }                         /* sticky table headers */
+
+/* ---------------------------------------------------------------------------
+   9. Below 1440 — SCALE the canvas. Do not reflow. RULED.
+
+   exports/dashboard/build-rules.md, ruled by Utsav 7 Aug 2026 after three
+   attempts got it wrong: "1440 is the minimum width. Below it, SCALE the
+   canvas." Reflow is named there as a rejected attempt — it produces a layout
+   matching none of the drawn variants.
+
+   This page is a rail + content shell like `dashboard-build`, so the same
+   ruling governs: hold the 1440 layout at every viewport and scale it down to
+   fit. Every measured value survives — the 240 rail, the 1200 column, the 800
+   main and 260 TOC — and nothing is clipped or rearranged.
+
+   Unlike `dashboard-build` this page SCROLLS, so the factor comes from width
+   only and the height is left to grow. `--gw-fit` is set by shell.js as
+   min(1, innerWidth / 1440); it never scales up.
+
+   The trade-off, per the rule: below 1440 type paints smaller than the ramp.
+   That is the accepted price of a fixed-width canvas.
+   ------------------------------------------------------------------------ */
+:root { --gw-fit: 1; }
+
+.gw-shell {
+  zoom: var(--gw-fit, 1);
+  /* Give the layout back the width the zoom took away, so the 1440 canvas
+     still fills the real viewport once scaled. */
+  width: calc(100vw / var(--gw-fit, 1));
+  min-height: calc(100vh / var(--gw-fit, 1));
+}
+
+/* The chrome is fixed to the viewport. Inside a zoomed ancestor its own
+   offsets scale with everything else, which is what we want — but the width
+   has to be the unzoomed viewport divided back out, or the topbar stops short
+   of the right edge at any factor below 1. */
+.gw-shell .gw-topbar { width: calc(100vw / var(--gw-fit, 1)); }
+
+/* ---------------------------------------------------------------------------
+   10. Phone — reflow, not scale
+
+   The scale-to-fit ruling above is scoped to `dashboard-build`, and says so:
+   its numbers "are mutually dependent and hold ONLY at 1084". This site has no
+   such composition — prose, cards and a nav list all reflow without deforming.
+
+   So below the Breakpoint collection's own Phone threshold (767, already the
+   width at which tokens.css swaps the whole --gw-bp-* set) the page reflows to
+   the phone token set instead of scaling. At 375 the scaled canvas paints 14px
+   type at under 4px, which is a thumbnail rather than a phone view.
+
+   The nav follows the navbar component's Phone variants: `Collapsed` is
+   logo + hamburger at 60 tall, `Menu` is a full-screen overlay. Bar height
+   stays 60 — page-shell.md measures 60 at BOTH breakpoints, which contradicts
+   --gw-bp-navbar-h (56 on phone); that token is transcribed from the master
+   spec rather than read off the component, so the measured 60 wins.
+   ------------------------------------------------------------------------ */
+.gw-burger {
+  display: none;                     /* desktop: the rail is always visible */
+  width: 36px; height: 36px; flex: none;
+  place-items: center;
+  border: 0; border-radius: var(--gw-radius-8);
+  background: none; color: var(--s-nav-label); cursor: pointer;
+}
+.gw-burger svg { width: 16px; height: 16px; display: block; }
+.gw-burger:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
+
+@media (max-width: 767px) {
+  /* The zoom is neutralised by shell.js setting --gw-fit to 1 here, but pin
+     the box too so a stale inline value cannot shrink a reflowed layout. */
+  .gw-shell { zoom: 1; width: 100%; min-height: 100vh; }
+  .gw-shell .gw-topbar { width: 100%; }
+
+  .gw-topbar { padding: 0 var(--gw-bp-pad-page-h); }
+  .gw-burger { display: grid; }
+  /* Inert on desktop, and there is no room for it at 375. */
+  .gw-search { display: none; }
+
+  /* `Menu` — the rail becomes a full-screen overlay under the bar. */
+  .gw-sidebar {
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1.5px solid var(--s-chrome-border);
+    transform: translateX(-100%);
+    transition: transform var(--gw-motion-fast);
+    z-index: 50;
+  }
+  :root.gw-nav-open .gw-sidebar { transform: translateX(0); }
+  /* The rail is the whole screen on phone, so its bottom block does not need
+     to be pushed away from the nav. */
+  .gw-sidebar { justify-content: flex-start; }
+  .gw-navend { margin-top: auto; }
+
+  .gw-main { margin-left: 0; }
+
+  /* Page padding from the phone tokens: 16 sides, 60 vertical. */
+  .gw-col {
+    max-width: none;
+    padding: var(--gw-bp-pad-section-v) var(--gw-bp-pad-page-h);
+    gap: var(--gw-bp-section-gap);
+  }
+  .gw-section { padding: 0; }
+  .gw-prose { max-width: none; }
+
+  /* The hero is a fixed 200 at desktop; on phone the title wraps, so height
+     gives way and the type steps to --gw-bp-type-hero (44 in Phone mode). */
+  .gw-hero {
+    height: auto;
+    min-height: 0;
+    padding: var(--gw-bp-pad-card-v) var(--gw-bp-pad-card-h);
+    border-radius: var(--gw-bp-radius-large);
+  }
+  .gw-hero__title { font-size: var(--gw-bp-type-hero); }
+  /* The three grid cells are placed at desktop coordinates; off-canvas here. */
+  .gw-hero__cell { display: none; }
+
+  /* The "On this page" rail is a desktop affordance — there is no phone design
+     for it, and the sections are reachable by scrolling. */
+  .idx { display: none; }
+}
+
+/* The artifact carries this; motion tokens are the only place it can apply. */
+@media (prefers-reduced-motion: reduce) { :root { --gw-motion-fast: 0ms; } }
+
+/* ---------------------------------------------------------------------------
+   11. Phone dock — the theme toggle at phone width
+
+   From the postmortem artifact. Below the phone breakpoint the topbar cannot
+   hold the wordmark, the toggle AND the drawer trigger at 375, so the toggle
+   moves to a floating cluster fixed 20 from the left and bottom. It is a
+   duplicate node, not a moved one — CSS cannot reparent, and the theme JS
+   keeps every [data-theme-set] in sync.
+
+   Unlike the topbar copy, which has no fill, the docked one carries a fill,
+   a border and Shadows/S3 so it reads against scrolling content. Surface
+   aliases, so it still inverts in dark.
+   ------------------------------------------------------------------------ */
+.gw-phone-dock { display: none; }
+
+@media (max-width: 599px) {
+  .gw-phone-dock {
+    display: flex; align-items: center; gap: var(--gw-space-8);
+    position: fixed; left: 20px; bottom: 20px; z-index: 50;
+  }
+  .gw-phone-dock .gw-theme {
+    /* --s-card-bg, not the artifact's --s-card: same role, different name in
+       this codebase's alias layer. Copied verbatim it resolved to nothing and
+       the dock painted transparent. */
+    background: var(--s-card-bg);
+    box-shadow: inset 0 0 0 1px var(--s-field-border), var(--gw-shadow-s3);
+  }
+  /* The topbar copy stands down so only one is ever visible. */
+  .gw-topbar__right > .gw-theme { display: none; }
+
+  /* Topbar at phone: the logo tile is a scaled instance — 20x20 rendering the
+     32x32 tile, which is why its corner takes radius/4 rather than the /8 the
+     component is defined at. The wordmark steps to 16. */
+  .gw-brand__chip { width: 20px; height: 20px; border-radius: var(--gw-radius-4); }
+  .gw-brand__chip svg { width: 10px; height: 10px; }
+  .gw-brand__name { font-size: 16px; }
+  .gw-topbar { padding: 0 var(--gw-bp-pad-page-h); }
+}
+
+/* The drawer trigger is `controls/tab` 36x36, radius/8, 1px neutral/200 with a
+   16px List glyph — it had no border here before. */
+.gw-burger { border: 1px solid var(--s-field-border); }

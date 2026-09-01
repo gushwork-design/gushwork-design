@@ -199,17 +199,41 @@ echo "Staged $(find "$STAGE" -type f | wc -l | tr -d ' ') files · $(du -sh "$ST
 find "$STAGE" -type f | sed "s|$STAGE/||" | sort | sed 's/^/  /'
 
 # Say which door is open, because the answer changes what gets deployed.
+#
+# There is no compiled-in password any more — sitePassword() reads SITE_PASSWORD and nothing
+# else, because this repo is public and a committed default is a credential on the open
+# internet. So "neither is set" stopped being a soft fallback and became a hard outage:
+# middleware.js fails closed and serves 503 on every gated page, to everyone, including you.
+# A real deploy refuses rather than shipping that.
+#
+# `vercel env ls` prints names, never values, so a SITE_PASSWORD that exists but is empty —
+# the documented way to CLOSE the password door — is indistinguishable here from one that is
+# set. Anything below that turns on its presence says so rather than pretending to know.
 echo
-if ! vercel env ls production 2>/dev/null | grep -q GOOGLE_CLIENT_ID; then
-  echo "  NOTE: GOOGLE_CLIENT_ID is not set on this project (or could not be read),"
-  echo "        so the internal and admin pages are behind the SHARED PASSWORD."
-  echo "        One key for everyone, and it grants admin — it cannot tell an admin"
-  echo "        from anyone else. Set the Google variables, then blank SITE_PASSWORD."
-  echo "        See web/README-auth.md."
-elif ! vercel env ls production 2>/dev/null | grep -q SITE_PASSWORD; then
-  echo "  NOTE: Google sign-in is configured, but SITE_PASSWORD is not set — so the"
-  echo "        default password is STILL ACCEPTED alongside it, and it grants admin."
-  echo "        Set SITE_PASSWORD to an empty string to close that door."
+ENV_LS="$(vercel env ls production 2>/dev/null || true)"
+HAS_GOOGLE=0; HAS_PW=0
+printf '%s' "$ENV_LS" | grep -q GOOGLE_CLIENT_ID && HAS_GOOGLE=1
+printf '%s' "$ENV_LS" | grep -q SITE_PASSWORD    && HAS_PW=1
+
+if [ -z "$ENV_LS" ]; then
+  echo "  NOTE: this project's environment variables could not be read, so the state of"
+  echo "        the sign-in gate is unknown. Confirm it before trusting this deploy."
+elif [ "$HAS_GOOGLE" = 0 ] && [ "$HAS_PW" = 0 ]; then
+  echo "  ✘ NEITHER door is configured — no GOOGLE_CLIENT_ID, no SITE_PASSWORD." >&2
+  echo "    /internal/* and /admin/* would go up dead: the middleware fails closed and" >&2
+  echo "    serves 503 to everyone. Set one on the Vercel project first." >&2
+  echo "    See web/README-auth.md." >&2
+  [ "$MODE" = dry ] || exit 1
+elif [ "$HAS_GOOGLE" = 0 ]; then
+  echo "  NOTE: Google sign-in is not configured, so the internal and admin pages are"
+  echo "        behind the SHARED PASSWORD. One key for everyone, and it grants admin —"
+  echo "        it cannot tell an admin from anyone else. Set the Google variables, then"
+  echo "        blank SITE_PASSWORD. See web/README-auth.md."
+elif [ "$HAS_PW" = 1 ]; then
+  echo "  NOTE: Google sign-in is configured AND SITE_PASSWORD exists. If it holds a real"
+  echo "        value the shared password is accepted alongside Google, and it grants"
+  echo "        admin. Set it to an empty string to close that door — this cannot tell"
+  echo "        the two apart, because env values are not readable from here."
 fi
 
 if [ "$MODE" = dry ]; then
