@@ -22,242 +22,357 @@
 <link rel="stylesheet" href="../foundation/tokens.css">
 <style>
   /* ==========================================================================
-     Install page — hosted at /preview/install.html
+     Install page — hosted at /internal/claude-plugin (and /preview/install.html,
+     which redirects there).
 
-     Two sections: install, verify. Light surface only. Every colour, type
-     style, radius, shadow and spacing value is a token from tokens.css.
+     LAYOUT IS THE STYLE GUIDE'S. Measured off web/style-guide.html so the two
+     pages read as one document rather than two products: 1200 outer, the rail's
+     own width driving the split (1120 inner - 60 gutter - 260 rail = 800 column),
+     44px display title over a dotted rule, 60 between sections, 40 inside one.
+
+     DUPLICATED ON PURPOSE, same reasoning shell.css gives for the changelog's
+     copy of `.idx`: this sheet has to stand up on its own when opened straight
+     out of preview/ with no shell. Written from the same measurement — if you
+     change the style guide's page furniture, change this too.
+
+     THEMING WITHOUT DUPLICATION. Every colour is `var(--s-x, <light token>)`.
+     Published, the shell supplies --s-* and light/dark both work. Standalone,
+     the fallback resolves and the page is light — which is all it ever was.
 
      NEW ELEMENTS, pending library review — notices/2026-08-13-install-page.md:
        .code   a copyable command block with a copy control
-       .step   a numbered instruction row
        .or     an either/or divider between two routes to the same outcome
-
-     LAYOUT CHOICE (not from exports/): the 720px column follows
-     scripts/publish-index.html so the two hosted pages read as one site. It is
-     not the 1240 marketing column — this is a hosted utility page.
      ========================================================================== */
   *,*::before,*::after{box-sizing:border-box}
-  body{margin:0;background:var(--gw-color-neutral-100);
-       font:var(--gw-text-body-14-reg);letter-spacing:var(--gw-text-body-14-reg-tracking);
-       color:var(--gw-color-black);-webkit-font-smoothing:antialiased;
-       display:flex;justify-content:center;
-       padding:var(--gw-space-56) var(--gw-space-20) var(--gw-space-80)}
-  .wrap{width:100%;max-width:720px}
 
-  h1{margin:0 0 var(--gw-space-8);font:var(--gw-text-h5);
-     letter-spacing:var(--gw-text-h5-tracking);color:var(--gw-color-neutral-900)}
-  .sub{margin:0 0 var(--gw-space-16);font:var(--gw-text-body-16-reg);
-       color:var(--gw-color-neutral-600)}
-  .meta{margin:0 0 var(--gw-space-40);font:var(--gw-text-body-12-reg);
-        color:var(--gw-color-neutral-500)}
-  .meta strong{color:var(--gw-color-neutral-700);font-weight:600}
-  h2{margin:var(--gw-space-40) 0 var(--gw-space-16);font:var(--gw-text-h7);
-     letter-spacing:var(--gw-text-h7-tracking);color:var(--gw-color-neutral-900)}
-  a{color:var(--gw-color-primary-500)}
-  a:focus-visible,button:focus-visible{outline:var(--gw-focus-ring);
-       outline-offset:var(--gw-focus-offset)}
-  /* Two families only — the browser's default <code> face would be a third. */
-  code{font:var(--gw-text-body-14-med);color:var(--gw-color-neutral-900)}
-  strong{font-weight:600}
-
-  .card{background:var(--gw-color-white);border-radius:var(--gw-radius-12);
-        box-shadow:var(--gw-shadow-s2);padding:var(--gw-space-24);
-        margin-bottom:var(--gw-space-12)}
-  .card:last-child{margin-bottom:0}
-
-  /* NEW ELEMENT — .step */
-  .step{display:flex;gap:var(--gw-space-16);align-items:flex-start}
-  .step__n{width:26px;height:26px;flex:none;border-radius:var(--gw-radius-full);
-           background:var(--gw-color-primary-500);color:var(--gw-color-white);
-           font:var(--gw-text-body-12-sem);display:flex;align-items:center;
-           justify-content:center;margin-top:var(--gw-space-2)}
-  .step__b{min-width:0;flex:1}
-  .step__t{font:var(--gw-text-body-16-sem);color:var(--gw-color-neutral-900)}
-  .step__d{font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-600);
-           margin-top:var(--gw-space-8)}
-  .step__d:last-child{margin-bottom:0}
-  .step .code{margin-top:var(--gw-space-16)}
-
-  /* NEW ELEMENT — .code (light) */
-  /* padding-right clears the copy control, which is pinned over the first line.
-     The control is min-width 80 + 8 offset = 88; 100 leaves margin so a longer
-     label state ("Copied") still cannot sit on top of the command. */
-  .code{position:relative;background:var(--gw-color-neutral-25);
-        border:1px solid var(--gw-color-neutral-100);
-        border-radius:var(--gw-radius-10);padding:var(--gw-space-16);
-        padding-right:var(--gw-space-100)}
-  .code pre{margin:0;font:var(--gw-text-body-14-reg);color:var(--gw-color-neutral-900);
-            white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
-  /* --out is output to match, not input to run: no copy control, so no reserve */
-  .code--out{padding-right:var(--gw-space-16)}
-  /* min-width fixes the control's footprint so the label changing to "Copied"
-     does not reflow it over the command text. */
-  .code__btn{position:absolute;top:var(--gw-space-8);right:var(--gw-space-8);
-             display:flex;align-items:center;justify-content:center;
-             gap:var(--gw-space-4);min-width:var(--gw-space-80);
-             height:28px;padding:0 var(--gw-space-8);cursor:pointer;
-             border:1px solid var(--gw-color-neutral-200);
-             border-radius:var(--gw-radius-8);background:var(--gw-color-white);
-             color:var(--gw-color-neutral-600);font:var(--gw-text-body-12-med);
-             transition:color var(--gw-motion-fast),border-color var(--gw-motion-fast)}
-  .code__btn:hover{color:var(--gw-color-primary-500);
-                   border-color:var(--gw-color-primary-300)}
-  .code__btn svg{width:14px;height:14px;display:block;flex:none}
-  .code__btn[data-state="done"]{color:var(--gw-color-primary-500);
-                                border-color:var(--gw-color-primary-300)}
-
-  /* NEW ELEMENT — .or */
-  .or{display:flex;align-items:center;gap:var(--gw-space-12);
-      margin:var(--gw-space-16) 0}
-  .or::before,.or::after{content:"";flex:1;height:1px;
-      background:var(--gw-color-neutral-200)}
-  .or span{font:var(--gw-text-body-12-sem);color:var(--gw-color-neutral-500)}
-
-  @media (max-width:600px){
-    body{padding:var(--gw-space-32) var(--gw-space-16) var(--gw-space-56)}
-    .step{gap:var(--gw-space-12)}
+  body{
+    margin:0;
+    background:var(--s-page-bg, var(--gw-color-neutral-25));
+    color:var(--s-body, var(--gw-color-neutral-600));
+    font:var(--gw-text-body-18-med);
+    letter-spacing:var(--gw-text-body-18-med-tracking);
+    -webkit-font-smoothing:antialiased;
   }
-</style></head>
+
+  /* -- page frame ---------------------------------------------------------- */
+  .sg{
+    max-width:1200px;margin:0 auto;
+    padding:var(--gw-space-60) var(--gw-space-40) var(--gw-space-120);
+    display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--gw-space-60);
+  }
+  .sg__main{min-width:0;display:flex;flex-direction:column;gap:var(--gw-space-32)}
+
+  /* The dotted rule is a 2px radial repeated every 4.1px — a real hairline at
+     any zoom, where a 1px border rounds away. Straight from the guide. */
+  .sg__hd{
+    padding:0 var(--gw-space-40) var(--gw-space-32);
+    display:flex;flex-direction:column;gap:var(--gw-space-12);
+    background-image:radial-gradient(circle closest-side,
+      var(--s-rule, var(--gw-color-neutral-200)) 100%, transparent 100%);
+    background-size:4.1px 2px;background-position:bottom left;
+    background-repeat:repeat-x;
+  }
+  .sg__title{
+    margin:0;font:600 44px/1.2 var(--gw-font-display);letter-spacing:0;
+    color:var(--s-heading, var(--gw-color-black));
+  }
+  .sg__sub{
+    margin:0;max-width:60ch;
+    font:var(--gw-text-body-18-med);
+    letter-spacing:var(--gw-text-body-18-med-tracking);
+    color:var(--s-body, var(--gw-color-neutral-600));
+  }
+  /* `.meta` and nothing else: scripts/stamp-release.sh rewrites the version here by
+     matching `<p class="meta"><strong>v` literally, and raises if it cannot find it.
+     Adding a second class to this element breaks the release, silently until you cut one. */
+  .meta{
+    margin:0;font:var(--gw-text-body-14-med);
+    letter-spacing:var(--gw-text-body-14-med-tracking);
+    color:var(--gw-color-neutral-400);
+  }
+  .meta a{color:var(--gw-color-primary-500);text-decoration:none}
+  .meta a:hover{text-decoration:underline}
+
+  .sg__body{display:flex;flex-direction:column;gap:var(--gw-space-60)}
+  .sg-sec{
+    padding-left:var(--gw-space-40);
+    display:flex;flex-direction:column;gap:var(--gw-space-40);
+    scroll-margin-top:calc(60px + var(--gw-space-24));
+  }
+  .sg-sec > h2{
+    margin:0;font:600 28px/1.2 var(--gw-font-display);letter-spacing:0;
+    color:var(--s-heading, var(--gw-color-black));
+  }
+  /* A step is a heading and prose, not a card with a numbered disc. The order
+     is carried by the number in the heading, which is all it was ever doing. */
+  .sg-block{display:flex;flex-direction:column;gap:var(--gw-space-20)}
+  .sg-block > h3{
+    margin:0;font:var(--gw-text-body-18-sem);
+    letter-spacing:var(--gw-text-body-18-sem-tracking);
+    color:var(--s-heading, var(--gw-color-black));
+  }
+  .sg-block > h3 .n{
+    color:var(--gw-color-neutral-400);
+    font-variant-numeric:tabular-nums;
+  }
+  .sg-block > p{
+    margin:0;max-width:68ch;
+    font:var(--gw-text-body-18-med);
+    letter-spacing:var(--gw-text-body-18-med-tracking);
+    color:var(--s-body, var(--gw-color-neutral-600));
+  }
+  .sg-block code{
+    font:var(--gw-text-body-14-reg);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    background:var(--s-lock-bg, var(--gw-color-neutral-100));
+    border-radius:var(--gw-radius-4);padding:2px 6px;
+    color:var(--s-heading, var(--gw-color-black));
+  }
+
+  /* -- command block ------------------------------------------------------- */
+  .code{
+    position:relative;
+    background:var(--s-card-bg, var(--gw-color-white));
+    border:1px solid var(--s-card-border, var(--gw-color-neutral-100));
+    border-radius:var(--gw-radius-12);
+    padding:var(--gw-space-16) var(--gw-space-16);
+  }
+  .code pre{
+    margin:0;padding-right:96px;overflow-x:auto;
+    font:var(--gw-text-body-14-reg);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    line-height:22px;white-space:pre-wrap;word-break:break-word;
+    color:var(--s-heading, var(--gw-color-black));
+  }
+  /* Output, not input: nothing to copy, so it loses the button and the padding
+     that reserved room for one. Tinted so a reader can tell at a glance which
+     blocks they act on and which they only compare against. */
+  .code--out{background:var(--s-chrome-bg, var(--gw-color-neutral-50))}
+  .code--out pre{padding-right:0;color:var(--s-body, var(--gw-color-neutral-600))}
+
+  .code__btn{
+    position:absolute;top:var(--gw-space-12);right:var(--gw-space-12);
+    display:inline-flex;align-items:center;gap:var(--gw-space-4);
+    min-width:76px;justify-content:center;
+    height:28px;padding:0 var(--gw-space-8);
+    border-radius:var(--gw-radius-8);
+    border:1px solid var(--s-card-border, var(--gw-color-neutral-100));
+    background:var(--s-page-bg, var(--gw-color-neutral-25));
+    color:var(--s-body, var(--gw-color-neutral-600));
+    font:var(--gw-text-button-12);line-height:16px;cursor:pointer;
+    transition:color var(--gw-motion-fast),border-color var(--gw-motion-fast);
+  }
+  .code__btn svg{width:14px;height:14px;display:block}
+  .code__btn:hover{color:var(--gw-color-primary-500);border-color:var(--gw-color-primary-300)}
+  .code__btn[data-state="done"]{color:var(--gw-color-primary-500);border-color:var(--gw-color-primary-300)}
+  .code__btn:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
+
+  /* -- either/or ----------------------------------------------------------- */
+  .or{display:flex;align-items:center;gap:var(--gw-space-16);color:var(--gw-color-neutral-400)}
+  .or::before,.or::after{
+    content:"";flex:1;height:1px;
+    background:var(--s-card-border, var(--gw-color-neutral-100));
+  }
+  .or span{font:var(--gw-text-button-12);line-height:16px;letter-spacing:.04em}
+
+  /* -- "On this page" rail -------------------------------------------------
+     Measured off the styleguide TOC (478:15070 -> Frame 2147260252): 260 wide,
+     stack gap 16, a 22x22 r8 caret button, links indented 32. shell.css holds
+     the canonical copy; this one exists so the sheet stands alone.
+     --------------------------------------------------------------------- */
+  .idx{
+    position:sticky;top:var(--gw-space-40);align-self:start;
+    max-height:calc(100vh - 80px);overflow-y:auto;overscroll-behavior:contain;
+    scrollbar-gutter:stable;width:260px;
+    display:flex;flex-direction:column;gap:var(--gw-space-16);
+  }
+  .idx__t{
+    display:flex;align-items:center;gap:var(--gw-space-8);
+    font:var(--gw-text-button-14);line-height:20px;
+    color:var(--s-nav-label, var(--gw-color-neutral-900));
+    padding-bottom:var(--gw-space-8);
+    position:sticky;top:0;z-index:1;
+    background:var(--s-page-bg, var(--gw-color-neutral-25));
+  }
+  .idx__ico{width:16px;height:16px;flex:none;display:block}
+  .idx__col{
+    width:22px;height:22px;flex:none;display:grid;place-items:center;
+    padding:var(--gw-space-4);border-radius:var(--gw-radius-8);
+    background:var(--s-lock-bg, var(--gw-color-neutral-100));
+    border:1px solid var(--s-field-border, var(--gw-color-neutral-200));
+    color:var(--s-body, var(--gw-color-neutral-600));cursor:pointer;
+  }
+  .idx__col svg{width:12px;height:12px;display:block;transition:transform var(--gw-motion-fast)}
+  .idx__col:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
+  .idx__list{display:flex;flex-direction:column;gap:var(--gw-space-16);padding-left:var(--gw-space-32)}
+  .idx a{
+    font:var(--gw-text-button-14);line-height:20px;font-variant-numeric:tabular-nums;
+    color:var(--gw-color-neutral-700);text-decoration:none;
+  }
+  .idx a:hover{color:var(--s-nav-label, var(--gw-color-neutral-900))}
+  .idx a:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
+  /* Active entry is marked with colour alone — no tint, no weight change. */
+  .idx a.now{color:var(--gw-color-primary-500)}
+  .idx[data-collapsed="true"]{width:48px}
+  .idx[data-collapsed="true"] .idx__list{display:none}
+  .idx[data-collapsed="true"] .idx__col svg{transform:rotate(90deg)}
+  .idx[data-collapsed="true"] .idx__t{
+    width:48px;height:26px;padding:var(--gw-space-4);gap:var(--gw-space-8);
+    justify-content:center;border-radius:var(--gw-radius-8);
+    background:var(--s-lock-bg, var(--gw-color-neutral-100));
+    padding-bottom:var(--gw-space-4);
+  }
+  .idx[data-collapsed="true"] .idx__t > span{display:none}
+
+  /* The rail is a desktop affordance — there is no phone design for it, and the
+     three sections are reachable by scrolling. Same breakpoint as shell.css. */
+  @media (max-width:767px){
+    .idx{display:none}
+    .sg{grid-template-columns:minmax(0,1fr);padding:var(--gw-space-32) var(--gw-space-20) var(--gw-space-60)}
+    .sg__hd{padding-left:0;padding-right:0}
+    .sg-sec{padding-left:0}
+    .sg__title{font-size:32px}
+    .sg-sec > h2{font-size:24px}
+  }
+</style>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-copy" viewBox="0 0 256 256" fill="currentColor"><path d="M216,28H88A12,12,0,0,0,76,40V76H40A12,12,0,0,0,28,88V216a12,12,0,0,0,12,12H168a12,12,0,0,0,12-12V180h36a12,12,0,0,0,12-12V40A12,12,0,0,0,216,28ZM156,204H52V100H156Zm48-48H180V88a12,12,0,0,0-12-12H100V52H204Z"/></symbol>
   <symbol id="i-check" viewBox="0 0 256 256" fill="currentColor"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol>
 </svg>
 
-<div class="wrap">
-  <h1>Gushwork design system</h1>
-  <p class="sub">A Claude Code plugin. Install it once, and Claude builds Gushwork screens
-     using the real components and tokens instead of guessing at them.</p>
-  <p class="meta"><strong>v1.44.0</strong> · last updated 1 Sep 2026, 19:53 ·
-     <a href="changelog-sheet.html" target="_blank" rel="noopener noreferrer">changelog</a></p>
+<div class="sg">
+  <div class="sg__main">
 
-  <h2>Install</h2>
+    <header class="sg__hd">
+      <h1 class="sg__title">Gushwork design system</h1>
+      <p class="sg__sub">A Claude Code plugin. Install it once, and Claude builds Gushwork
+         screens using the real components and tokens instead of guessing at them.</p>
+      <p class="meta"><strong>v1.44.0</strong> · last updated 1 Sep 2026, 19:53 ·
+         <a href="changelog-sheet.html" target="_blank" rel="noopener noreferrer">changelog</a></p>
+    </header>
 
-  <div class="card">
-    <div class="step">
-      <span class="step__n">1</span>
-      <div class="step__b">
-        <div class="step__t">Install it</div>
-        <div class="step__d">One line, in any terminal. It adds the marketplace, installs the
-          plugin, and turns on auto-update — and it is safe to re-run, so it is also the fix if
-          you are not sure what state you are in.</div>
-        <div class="code">
+    <div class="sg__body">
+
+      <section class="sg-sec" id="install">
+        <h2>Install</h2>
+
+        <div class="sg-block">
+          <h3><span class="n">1</span> · Install it</h3>
+          <p>One line, in any terminal. It adds the marketplace, installs the plugin, and turns
+             on auto-update — and it is safe to re-run, so it is also the fix if you are not
+             sure what state you are in.</p>
+          <div class="code">
 <pre>curl -fsSL https://raw.githubusercontent.com/gushwork-design/gushwork-design/main/scripts/install.sh | bash</pre>
-          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
-        </div>
-        <div class="step__d">Needs Claude Code on your PATH and git able to reach the repo. It
-          checks both up front and tells you which one is missing rather than failing three
-          steps later.</div>
+            <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+          </div>
+          <p>Needs Claude Code on your PATH and git able to reach the repo. It checks both up
+             front and tells you which one is missing rather than failing three steps later.</p>
 
-        <div class="or"><span>OR</span></div>
+          <div class="or"><span>OR</span></div>
 
-        <div class="step__d" style="margin-top:0">Don't want to use a terminal? Paste this into
-          Claude Code instead and approve what it runs. Same result.</div>
-        <div class="code">
+          <p>Don't want to use a terminal? Paste this into Claude Code instead and approve what
+             it runs. Same result.</p>
+          <div class="code">
 <pre>Set up the Gushwork Design System plugin for me:
 
 1. Run: claude plugin marketplace add gushwork-design/gushwork-design
 2. Run: claude plugin install gushwork-design@gushwork
 
 Then tell me to restart Claude Code.</pre>
-          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+            <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="step">
-      <span class="step__n">2</span>
-      <div class="step__b">
-        <div class="step__t">Restart Claude Code</div>
-        <div class="step__d">The plugin does not take effect in the session you installed it
-          from. Quit and start it again — this is the step people miss.</div>
-      </div>
-    </div>
-  </div>
-
-  <h2>Verify</h2>
-
-  <div class="card">
-    <div class="step">
-      <span class="step__n">1</span>
-      <div class="step__b">
-        <div class="step__t">Check it's installed</div>
-        <div class="step__d">You should see <code>gushwork-design</code> in the list.</div>
-        <div class="code">
-          <pre>claude plugin list</pre>
-          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+        <div class="sg-block">
+          <h3><span class="n">2</span> · Restart Claude Code</h3>
+          <p>The plugin does not take effect in the session you installed it from. Quit and
+             start it again — this is the step people miss.</p>
         </div>
-      </div>
-    </div>
-  </div>
+      </section>
 
-  <div class="card">
-    <div class="step">
-      <span class="step__n">2</span>
-      <div class="step__b">
-        <div class="step__t">Check it fires</div>
-        <div class="step__d">Ask Claude to build something with the Gushwork design system —
-          a dashboard, a landing page, whatever you're working on. You don't have to name the
-          skill; it triggers on the work.</div>
-        <div class="step__d">The reply must open with one of these, depending on what you
-          asked for:</div>
-        <div class="code code--out">
+      <section class="sg-sec" id="verify">
+        <h2>Verify</h2>
+
+        <div class="sg-block">
+          <h3><span class="n">1</span> · Check it's installed</h3>
+          <p>You should see <code>gushwork-design</code> in the list.</p>
+          <div class="code">
+            <pre>claude plugin list</pre>
+            <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <h3><span class="n">2</span> · Check it fires</h3>
+          <p>Ask Claude to build something with the Gushwork design system — a dashboard, a
+             landing page, whatever you're working on. You don't have to name the skill; it
+             triggers on the work.</p>
+          <p>The reply must open with one of these, depending on what you asked for:</p>
+          <div class="code code--out">
 <pre>Using the Gushwork dashboard skill — v1.44.0, updated 1 Sep 2026.
 Using the Gushwork web skill — v1.44.0, updated 1 Sep 2026.
 Using the Gushwork lead-magnet skill — v1.44.0, updated 1 Sep 2026.</pre>
+          </div>
+          <p>If that line is missing it didn't fire — restart again, or ask for the skill by
+             name. The version in it is also how you catch a stale install: if
+             it reads anything below <strong>v1.44.0</strong>, you're behind and it's emitting
+             old values. It will ask two or three questions before building. That's
+             deliberate.</p>
         </div>
-        <div class="step__d">If that line is missing it didn't fire — restart again, or ask
-          for the skill by name. The version in it is also how you catch a stale install: if
-          it reads anything below <strong>v1.44.0</strong>, you're behind and it's emitting
-          old values. It will ask two or three questions before building. That's
-          deliberate.</div>
-      </div>
-    </div>
-  </div>
+      </section>
 
-  <h2>Staying current</h2>
+      <section class="sg-sec" id="staying-current">
+        <h2>Staying current</h2>
 
-  <div class="card">
-    <div class="step">
-      <span class="step__n">1</span>
-      <div class="step__b">
-        <div class="step__t">Your session tells you when you're behind</div>
-        <div class="step__d">You no longer have to check. At the start of a session the plugin
-          compares the copy you are running against the published one, and speaks up only if it
-          has moved — naming the components that changed and which of them break a screen built
-          on the old ones.</div>
-        <div class="code code--out">
+        <div class="sg-block">
+          <h3><span class="n">1</span> · Your session tells you when you're behind</h3>
+          <p>You no longer have to check. At the start of a session the plugin compares the copy
+             you are running against the published one, and speaks up only if it has moved —
+             naming the components that changed and which of them break a screen built on the
+             old ones.</p>
+          <div class="code code--out">
 <pre>Gushwork design system v&lt;latest&gt; is out — this session is on v&lt;yours&gt;.
 1 breaking: badge · 4 changed. Auto-update was off on this machine —
 it is on now, so the next start picks this up.</pre>
+          </div>
+          <p>Silence means you're current. The check is time-boxed and fails quietly, so a
+             flaky network costs you nothing.</p>
         </div>
-        <div class="step__d">Silence means you're current. The check is time-boxed and fails
-          quietly, so a flaky network costs you nothing.</div>
-      </div>
+
+        <div class="sg-block">
+          <h3><span class="n">2</span> · Auto-update turns itself on</h3>
+          <p>Keeping it on used to be a manual edit to a config file, which is exactly why it
+             got skipped — and a skipped flag means emitting last month's colours and spacing
+             with full confidence. No error, no warning. The same session check sets it for
+             you, once.</p>
+          <p>An update lands in the background and takes effect at your <em>next</em> start,
+             never the current one. To take one immediately:</p>
+          <div class="code">
+            <pre>claude plugin update gushwork-design@gushwork</pre>
+            <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+          </div>
+          <p>Restart afterwards either way.</p>
+        </div>
+      </section>
+
     </div>
   </div>
 
-  <div class="card">
-    <div class="step">
-      <span class="step__n">2</span>
-      <div class="step__b">
-        <div class="step__t">Auto-update turns itself on</div>
-        <div class="step__d">Keeping it on used to be a manual edit to a config file, which is
-          exactly why it got skipped — and a skipped flag means emitting last month's colours
-          and spacing with full confidence. No error, no warning. The same session check sets it
-          for you, once.</div>
-        <div class="step__d">An update lands in the background and takes effect at your
-          <em>next</em> start, never the current one. To take one immediately:</div>
-        <div class="code">
-          <pre>claude plugin update gushwork-design@gushwork</pre>
-          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
-        </div>
-        <div class="step__d">Restart afterwards either way.</div>
-      </div>
+  <nav class="idx" aria-label="On this page" data-collapsed="false">
+    <div class="idx__t">
+      <button class="idx__col" type="button" data-idx-collapse aria-expanded="true"
+              aria-controls="pg-toc" aria-label="Collapse the section list">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg>
+      </button>
+      <svg class="idx__ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></svg>
+      <span>On this page</span>
     </div>
-  </div>
+    <div class="idx__list" id="pg-toc">
+      <a href="#install">Install</a>
+      <a href="#verify">Verify</a>
+      <a href="#staying-current">Staying current</a>
+    </div>
+  </nav>
 </div>
 
 <script>
@@ -312,6 +427,38 @@ it is on now, so the next start picks this up.</pre>
       reset(btn);
     });
   });
+})();
+</script>
+<script>
+/* Rail: collapse + scroll spy. Same behaviour as the style guide's, so the two
+   pages feel identical to use. */
+(function () {
+  'use strict';
+  var idx = document.querySelector('.idx');
+  var col = document.querySelector('[data-idx-collapse]');
+  if (col && idx) {
+    col.addEventListener('click', function () {
+      var next = idx.getAttribute('data-collapsed') !== 'true';
+      idx.setAttribute('data-collapsed', next ? 'true' : 'false');
+      col.setAttribute('aria-expanded', next ? 'false' : 'true');
+      col.setAttribute('aria-label', next ? 'Expand the section list' : 'Collapse the section list');
+    });
+  }
+  var links = [].slice.call(document.querySelectorAll('.idx__list a'));
+  var secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  function spy() {
+    var best = 0;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 140) best = i;
+    }
+    links.forEach(function (a, i) { a.classList.toggle('now', i === best); });
+  }
+  var t = false;
+  addEventListener('scroll', function () {
+    if (t) return; t = true;
+    requestAnimationFrame(function () { t = false; spy(); });
+  }, { passive: true });
+  spy();
 })();
 </script>
 </body></html>
