@@ -30,11 +30,29 @@ REGISTRY_URL = "https://gushwork-design.vercel.app/exports/dashboard/component-r
 CHANGELOG_URL = "https://gushwork-design.vercel.app/preview/changelog-sheet.html"
 BUILD_CREATED_BY = "Utsav Singh"
 BUILD_CREATED_AT = "15 Aug 2026"
+
+# ── Compare: OFF, at Utsav's request, 1 Sep 2026 ────────────────────────────────────────────
+# The feature is BUILT and working — period-over-period deltas on every stat and metric card,
+# see delta_el(). It is switched off rather than deleted so it can come back in one line.
+#
+# ⚠ OFF means OMITTED, never hidden. R19 says a visible control must work; the inverse trap is
+# a control left in the markup under `display:none`, which passes a dead-control scan while
+# still shipping the affordance to anything that ignores CSS. When this is False the button,
+# its context note and every delta are absent from the output entirely.
+#
+# Turning it back on: set True. Before shipping it, settle the `Sample data` badge — the delta
+# figures are INVENTED and imply pipeline and ARR outcomes. See "Worth a decision" in the notice.
+SHOW_COMPARE = False
 USES_COMPONENTS = [
     "badge", "checkbox", "control", "date-range-picker", "dashboard-switcher", "divider",
     "empty-state", "icon-button", "input", "legend", "metric-card", "page-header", "pagination",
     "progress-bar", "ring", "section-header", "sidebar", "skeleton", "stat-card", "status-dot",
     "tab-group", "tab-item", "table-cell", "table-row", "tooltip", "topbar",
+    # ⚠ CANNOT BE DECLARED YET. The R17 pass added the phone dock, so this build now uses
+    # `icon-toggle-group` — but that component was registered in v1.40.0 and THIS REPO's
+    # component-registry.json is still at 1.39.0, so the verifier rightly rejects a stamp naming
+    # a component the registry has never heard of. Add it in the same commit that brings the
+    # repo up to v1.42.0; until then the dock is undeclared and check-drift is blind to it.
 ]
 
 # ─────────────────────────── tokens, read from tokens.css ───────────────────────────
@@ -77,7 +95,14 @@ NEEDED = ["--gw-color-white", "--gw-color-black",
           "--gw-text-body-12-med", "--gw-text-body-12-sem", "--gw-text-body-14-med",
           "--gw-text-body-16-sem", "--gw-text-body-16-reg", "--gw-text-body-10-sem",
           "--gw-text-button-10", "--gw-text-button-12", "--gw-text-button-14",
-          "--gw-focus-ring", "--gw-focus-offset", "--gw-motion-fast"]
+          # R17 / v2/phone.md — the phone chrome. body-14-reg is the ruled phone section-header
+          # qualifier; shadow-s3 is the dock toggle's measured effect, which binds exactly;
+          # motion-fast drives the drawer slide (DECISIONS.md: never a raw duration).
+          "--gw-text-body-14-reg", "--gw-shadow-s3", "--gw-motion-fast",
+          # R18's /600 step, for the compare delta's small light-mode label
+          "--gw-color-green-600", "--gw-color-red-600",
+          # the ruled focus tokens — main corrected :focus-visible to use them (26 Aug 2026)
+          "--gw-focus-ring", "--gw-focus-offset"]
 missing = [n for n in NEEDED if n not in _decl]
 if missing:
     sys.exit("missing tokens: " + ", ".join(missing))
@@ -194,19 +219,24 @@ CAL_FROM, CAL_TO = 15, 31
 CAL_FROM_LABEL, CAL_TO_LABEL = "Jul 15, 2026", "Jul 31, 2026"
 ACTIVE_TAB = "Last Month"
 
-STAT_CARDS = [  # label, value, sub, pct, tone  (pct/tone None => no bar, no percentage)
-    ("DEMOS BOOKED", "1,310", "of 1,472", "89%", "green"),
-    ("SHOW-UPS", "708", "of 720", "98%", "green"),
-    ("CLOSES", "70", "of 130", "54%", "red"),
-    ("DEMOS SCHEDULED", "1322", "in this period", None, None),
-    ("CLOSES", "70", "of 130", None, None)]
+# ⚠ THE `delta` FIELD IS INVENTED. The Figma frame carries no prior-period figures and there is
+# no second dataset behind this screen — these are plausible period-over-period changes written
+# to give the Compare state something true-to-shape to render. They imply business outcomes
+# (pipeline, closes, ARR), which is exactly the class the skill says must never ship unmarked.
+# See "Worth a decision" in the notice: this makes the `Sample data` badge question urgent.
+STAT_CARDS = [  # label, value, sub, pct, tone, delta   (pct/tone None => no bar, no percentage)
+    ("DEMOS BOOKED", "1,310", "of 1,472", "89%", "green", "+6.2%"),
+    ("SHOW-UPS", "708", "of 720", "98%", "green", "+4.8%"),
+    ("CLOSES", "70", "of 130", "54%", "red", "-11.4%"),
+    ("DEMOS SCHEDULED", "1322", "in this period", None, None, "+2.1%"),
+    ("CLOSES", "70", "of 130", None, None, "-11.4%")]
 
 # pct is attainment against the "need" figure — 59.5/66.9 etc. The design's ring sweeps are
 # approximate (Demos measures 92% against a computed 89%), so these are computed, not traced.
-RUN_RATE = [("Demos", "59.5", "need 66.9 / biz day", 89),
-            ("Show-ups", "32.2", "need 32.7 / biz day", 98),
-            ("Closes", "3.2", "need 5.9 / biz day", 54),
-            ("ARR", "$36772", "need $63257 / biz day", 58)]
+RUN_RATE = [("Demos", "59.5", "need 66.9 / biz day", 89, "+6.2%"),
+            ("Show-ups", "32.2", "need 32.7 / biz day", 98, "+4.8%"),
+            ("Closes", "3.2", "need 5.9 / biz day", 54, "-11.4%"),
+            ("ARR", "$36772", "need $63257 / biz day", 58, "-9.3%")]
 
 CHAN_COLS = ["channnel", "demos", "Show-ups", "Pending", "Closes", "ARR"]
 CHAN_ROWS = [  # channel, icon, badge, demos, showups, pending, closes, arr, spent, roi
@@ -538,21 +568,48 @@ def bar(pct, tone, size="md"):
     return (f'<span class="progress progress-{size}">'
             f'<i class="progress-fill fill-{tone}" style="width:{pct}"></i></span>')
 
-def stat_card(label, value, sub, pct, tone):
+def compare_control():
+    """The Compare control, or nothing at all. Gated by SHOW_COMPARE — see the flag for why
+    OFF must mean OMITTED rather than hidden."""
+    if not SHOW_COMPARE:
+        return ''
+    return ('<span class="cmp-note">vs prior month</span>'
+            '<button class="btn btn-outlined btn-compare" data-compare aria-pressed="false">'
+            f"{ico('selection-foreground','regular',16)}Compare</button>")
+
+def delta_el(d):
+    """⚠ CREATED ELEMENT — pending library review.
+
+    There is NO compare affordance anywhere in the Gushwork system: no `Compare` variant, no
+    delta pattern in `section-elements.md` or the v2 set, and no ruling. The button was drawn in
+    the frame and wired to nothing, which is the dead-control trap; ruled 1 Sep 2026 that a
+    drawn affordance must work, so the behaviour is built here and declared.
+
+    Composed from EXISTING values only — `body-12-med`, the `--tone-*-fg` aliases already
+    carrying attainment colour (theme-aware in both modes), `spacing/4`, and the measured
+    trend glyphs at 12. No new colour, radius, spacing or type value is introduced.
+    """
+    if not d or not SHOW_COMPARE:
+        return ''
+    up = d.startswith('+')
+    return (f'<span class="delta {"is-up" if up else "is-down"}" data-delta>'
+            f'{ico("trend-up" if up else "trend-down", "bold", 12)}<b>{d}</b></span>')
+
+def stat_card(label, value, sub, pct, tone, delta=None):
     right = f'<span class="sc-pct">{pct}</span>' if pct else ''
     prog = bar(pct, tone) if pct else ''
     return f'''<div class="card card-md stat-card">
 <div class="sc-body"><div class="sc-label">{label}</div>
 <div class="sc-value-block"><div class="sc-value-row">
-<div class="sc-value"><b>{value}</b><span>{sub}</span></div>{right}</div>{prog}</div></div></div>'''
+<div class="sc-value"><b>{value}</b><span class="sc-sub">{sub}{delta_el(delta)}</span></div>{right}</div>{prog}</div></div></div>'''
 
-def metric_card(label, value, sub, pct):
+def metric_card(label, value, sub, pct, delta=None):
     # measured: the sub-line is a row — text + a 20px ring, gap spacing/4, cross-centred.
     # Ring track here is neutral/100, NOT the /200 used by the page-header ring.
     return (f'<div class="card card-md metric-card"><div class="mc-body">'
             f'<div class="mc-label">{label}</div>'
             f'<div class="mc-value"><b>{value}</b>'
-            f'<span class="mc-sub">{sub}'
+            f'<span class="mc-sub">{sub}{delta_el(delta)}'
             f'{ring(pct, "var(--b-card)", "var(--d-good)")}</span>'
             f'</div></div></div>')
 
@@ -876,7 +933,7 @@ body = f'''<div class="page">
 {date_picker()}</div>
 <span class="ph-period" data-tip="Day 18 of 30 — 60% of the period elapsed.">Day 18 of 30
  {ring(60, 'var(--d-track)', 'var(--d-series)')}</span></div>
-<button class="btn btn-outlined btn-compare">{ico('selection-foreground','regular',16)}Compare</button>
+{compare_control()}
 </div></div>
 
 <section class="section">{section_header('Overall Performance','for last month',True)}
@@ -974,6 +1031,13 @@ CSS = f"""
   --d-series:{tok('--gw-color-primary-500')};
   --tone-good-bg:{tok('--gw-color-green-25')};   --tone-good-fg:{tok('--gw-color-green-500')};
   --tone-bad-bg:{tok('--gw-color-red-25')};      --tone-bad-fg:{tok('--gw-color-red-500')};
+  /* R19's compare delta is body-12-med, so R18 applies: the /500 step FAILS 4.5:1 at this
+     size — measured 3.3:1 for green-500 on the card. The delta takes /600 in light and
+     /300 in dark, the pattern R18 ruled for badge labels. Deliberately NOT --tone-*-fg:
+     that alias is /500 and repointing it would move the attainment percentages too.
+     ⚠ FINDING: --tone-good-fg fails the same test wherever it carries body-12-med. */
+  --tone-delta-up:{tok('--gw-color-green-600')};
+  --tone-delta-down:{tok('--gw-color-red-600')};
   --tone-bad-bg-md:{tok('--gw-color-red-50')};
   --tone-warn-bg:{tok('--gw-color-yellow-25')};  --tone-warn-fg:{tok('--gw-color-yellow-500')};
 }}
@@ -1042,6 +1106,8 @@ CSS = f"""
   --tone-bad-fg:{tok('--gw-color-red-300')};
   --tone-good-bg:{tok('--gw-color-green-alpha-10')};
   --tone-good-fg:{tok('--gw-color-green-300')};
+  --tone-delta-up:{tok('--gw-color-green-300')};
+  --tone-delta-down:{tok('--gw-color-red-300')};
   --tone-warn-bg:{tok('--gw-color-yellow-alpha-10')};
   --tone-warn-fg:{tok('--gw-color-yellow-300')};
 }}
@@ -1283,8 +1349,11 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
 .sc-value-block{{display:flex;flex-direction:column;gap:8px}}
 .sc-value-row{{display:flex;align-items:flex-end;justify-content:space-between;gap:8px}}
 .sc-value{{display:flex;flex-direction:column;gap:4px;min-width:0}}
-.sc-value b{{font:var(--dash-display-28-med);color:var(--t-display);font-weight:500}}
-.sc-value span,.sc-pct{{font:{tok('--gw-text-body-12-med')};
+/* `>` NOT a descendant selector: this rule leaked onto the compare delta's <b> and
+   painted a 12px Inter figure as 28px Vert Grotesk. Same class of bug as the theme
+   toggle's glyph — scope component internals to direct children. */
+.sc-value>b{{font:var(--dash-display-28-med);color:var(--t-display);font-weight:500}}
+.sc-value>span,.sc-pct{{font:{tok('--gw-text-body-12-med')};
  letter-spacing:var(--gw-text-body-12-med-tracking);color:var(--t-muted)}}
 .metric-row{{display:flex;gap:8px}}
 .metric-card{{flex:1 1 0;min-width:0;padding:16px;min-height:124px}}
@@ -1292,10 +1361,31 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
 .mc-label{{font:{tok('--gw-text-body-12-med')};letter-spacing:var(--gw-text-body-12-med-tracking);
  color:var(--t-label)}}
 .mc-value{{display:flex;flex-direction:column;gap:4px}}
-.mc-value b{{font:var(--dash-display-28-med);color:var(--t-display);font-weight:500}}
+.mc-value>b{{font:var(--dash-display-28-med);color:var(--t-display);font-weight:500}}
 .mc-value span{{font:{tok('--gw-text-body-12-med')};
  letter-spacing:var(--gw-text-body-12-med-tracking);color:var(--t-muted)}}
 .mc-sub{{display:flex;align-items:center;gap:4px}}
+
+/* ── Compare — CREATED ELEMENT, pending library review. See delta_el() for why. ──
+   Hidden until the Compare control is pressed; `.is-comparing` is set on the shell so one
+   class reveals every delta at once and the default state stays byte-identical to the
+   measured composition. */
+.sc-sub{{display:inline-flex;align-items:center;gap:8px;min-width:0}}
+.delta{{display:none;align-items:center;gap:4px;font:{tok('--gw-text-body-12-med')};
+ letter-spacing:var(--gw-text-body-12-med-tracking);white-space:nowrap}}
+.is-comparing .delta{{display:inline-flex}}
+.delta.is-up{{color:var(--tone-delta-up)}}
+.delta.is-down{{color:var(--tone-delta-down)}}
+/* the icon must INHERIT the delta's tone. `.sc-value span` also matches the wrapper that ico()
+   emits, and a rule applied directly to that element beats colour inherited from its parent —
+   the documented trap that painted the theme-toggle glyph invisible. Scoped explicitly. */
+.delta .ic{{color:inherit}}
+/* the compare control's own pressed state — measured Outline hover fill, reused because v2
+   defines no pressed state for `control Kind=button`. Flagged as a gap, not invented colour. */
+.btn-compare[aria-pressed="true"]{{background:var(--s-btn-hover)}}
+.cmp-note{{display:none;font:{tok('--gw-text-button-12')};color:var(--t-muted);
+ white-space:nowrap}}
+.is-comparing .cmp-note{{display:inline-flex;align-items:center}}
 
 /* progress + badge */
 .progress{{display:block;width:100%;border-radius:{tok('--gw-radius-40')};
@@ -1362,10 +1452,19 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
 .chan-badge{{border-radius:{tok('--gw-radius-4')};padding:4px;gap:2px;
  background:{tok('--gw-color-primary-alpha-10')};display:inline-flex;align-items:center;
  justify-content:center;color:{tok('--gw-color-primary-500')};flex:0 0 auto}}
-/* leave the first column unsized on the wide tables — build-rules.md: an explicit width on
-   every column makes the browser spread leftover space across all of them */
-.trow-daily{{display:grid;grid-template-columns:auto repeat(4,1fr);gap:32px}}
-.trow-onb{{display:grid;grid-template-columns:auto 2fr 1.4fr 1fr .8fr 1fr 1.2fr;gap:32px}}
+/* CORRECTED for table-row v1.40.0 (BREAKING) — build-rules.md. "Leave the first column
+   unsized" holds ONLY in a SHARED grid. Every .trow here is its OWN grid container, so an
+   `auto` first track resolves against THAT row's content and each row lands on a different
+   column boundary. Measured on the v1.39.0 build: 21.5px between the header row and its own
+   data rows (`DATE` renders 46.5, the dates 25–27.9), and 2.9px row to row. A `1fr` track is
+   `minmax(auto,1fr)` — its auto MINIMUM is content-derived too, which is the long-string case
+   the rule calls out — so every non-first track carries an explicit px floor.
+   CHOSEN, not measured (tier 3): the 56px first track and the per-column floors. The binding
+   constraint is the widest first-column content, the 46.5px uppercase `DATE` header; 56 clears
+   it on an 8-multiple. Floors are set below the rendered widths so they bind only under
+   compression. Verified by asserting 0px drift between rows, not by looking. */
+.trow-daily{{display:grid;grid-template-columns:56px repeat(4,minmax(96px,1fr));gap:32px}}
+.trow-onb{{display:grid;grid-template-columns:56px minmax(120px,2fr) minmax(96px,1.4fr) minmax(72px,1fr) minmax(64px,.8fr) minmax(72px,1fr) minmax(88px,1.2fr);gap:32px}}
 .pagination{{padding:12px;display:flex;align-items:center;justify-content:space-between;gap:16px}}
 .pg-left,.pg-right{{display:flex;align-items:center;gap:8px}}
 
@@ -1672,6 +1771,143 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
    geometry, wrong colour, and it bypassed the token entirely, so the reference was teaching the
    deviation. Corrected 26 Aug 2026. */
 :focus-visible{{outline:{tok('--gw-focus-ring')};outline-offset:{tok('--gw-focus-offset')}}}
+
+/* Phone-only chrome. Rendered at every width so the JS binds once and never rebinds, but
+   revealed only inside the <600 query. Trigger is the measured `controls/tab` 36x36, radius/8,
+   1px neutral/200, inner p-4 radius/4, List 16. */
+.tb-drawer{{display:none;width:36px;height:36px;padding:4px;
+ border-radius:{tok('--gw-radius-8')};border:1px solid var(--b-strong);background:none;
+ color:var(--t-body);align-items:center;justify-content:center;cursor:pointer}}
+.dock{{display:none}}
+.drawer-catch{{display:none}}
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════
+   R17 — RESPONSIVE REGIMES.  DECISIONS.md R17, ruled 26 Aug 2026; phone chrome MEASURED in
+   exports/dashboard/v2/phone.md the same day (frames 515:2176 / 515:2307, both 375x720).
+   This file was built 15 Aug at v1.39.0, when "1440 is the minimum width, below it SCALE,
+   never reflow" was still binding — so it scaled the whole canvas all the way down and painted
+   12px table text at 3.13px on a 375 viewport. R17 narrows that rule rather than withdrawing
+   it: SCALE to 1280, FLOW below.  Above 1280 nothing here changes the measured composition.
+   ═══════════════════════════════════════════════════════════════════════════════════════════ */
+
+/* ── >=2200 — specified in build-rules.md and never built until now. ── */
+@media (min-width:2200px){{.page{{padding-inline:clamp(40px,4vw,96px)}}}}
+/* build-rules.md also specifies an analytics-grid column change at >=1800 (3->6 at KPI cards=1).
+   NOT APPLIED, deliberately: that rule is scoped to `card-layout`, and this screen does not use
+   it — its supporting rows are a custom stat-row / metric-row composition that already fills.
+   Applying a card-layout rule to a composition it was never measured against would be inventing
+   behaviour. Reported as a gap instead. */
+
+/* ── FLOW, 600–1280.  R17: composition is no longer guaranteed below 1280; that is the price
+      the ruling knowingly pays so the dashboard works at all on a small screen. ── */
+@media (max-width:1279.98px){{
+ /* mandatory — R17: drop the 1440 floor "or the page scrolls sideways forever". zoom returns
+    to 1 here; layout() in the JS stops scaling at the same 1280 hinge. */
+ .shell{{zoom:1;width:100vw;height:100vh;min-width:0}}
+ /* The rail is pinned to the measured 64 collapsed state. layout() adds .is-collapsed rather
+    than this block restating its values — one measured treatment, not two that can drift. */
+ .sb-collapse{{display:none}}          /* it cannot be expanded in this regime — dead control */
+ /* Cards change COUNT, never size — build-rules.md. auto-fit derives the count from the
+    MEASURED floor: stat-card 217.6 -> 218, metric-card 274. */
+ .stat-row,.metric-row{{display:grid;gap:8px}}
+ .stat-row{{grid-template-columns:repeat(auto-fit,minmax(218px,1fr))}}
+ .metric-row{{grid-template-columns:repeat(auto-fit,minmax(274px,1fr))}}
+ .page-title{{font:var(--dash-display-36-med)}}   /* ramp steps DOWN one documented step 44->36 */
+ .page{{padding-inline:24px}}
+}}
+
+/* ── PHONE, <600.  Chrome MEASURED (v2/phone.md); content reflow RULED (R17). ── */
+@media (max-width:599.98px){{
+ /* topbar — measured 375x60, px-16, and a 1.5px neutral/100 bottom border. 1.5 is the phone
+    chrome weight throughout both frames; it is drawn 1:1 at 375, so NOT a scaling artefact. */
+ .topbar{{padding:0 16px;box-shadow:inset 0 -1.5px 0 var(--b-chrome)}}
+ /* the logo tile is the desktop 32x32 at 62.5% (20/32 = 5/8 = 10/16). Reproduce the DRAWN
+    20x20 around a 10px glyph. radius/4 is the nearest real token to the scaled 5 — never a raw
+    5px, and never radius/8, which is visibly rounder at this size. */
+ .tb-logo{{width:20px;height:20px;border-radius:{tok('--gw-radius-4')}}}
+ .tb-logo svg{{width:10px;height:10px}}
+ /* a SIXTH display size: Vert Grotesk Semibold 16 matches none of the five documented steps
+    (44/36/28/22/20). R15 — literal spec, and it HAS NO TOKEN. */
+ .tb-name{{font:600 16px/1 'Vert Grotesk Display'}}
+ [data-dash-toggle]{{width:20px;height:20px;padding:4px;
+  border-radius:{tok('--gw-radius-4')}}}                       /* measured 20x20 p-4 r4 tile */
+ [data-dash-toggle] svg{{width:12px;height:12px}}
+ /* measured: the drawer trigger sits ALONE at the far right (x 323 of 375). Sync Now and the
+    theme toggle are NOT in the phone topbar — they move to the dock. */
+ .tb-actions{{display:none}}
+ .tb-drawer{{display:inline-flex}}
+ /* sidebar as a DRAWER — measured 515:2343, 240x660 at x135 y60. 135+240 = 375, so it is
+    anchored RIGHT, and it starts BELOW the 60px topbar. Left border 1.5px, the mirror of the
+    desktop rail's right border at the phone weight. */
+ .sidebar{{position:fixed;top:60px;right:0;bottom:0;width:240px;z-index:40;
+  transform:translateX(100%);transition:transform {tok('--gw-motion-fast')};
+  box-shadow:inset 1.5px 0 0 var(--b-chrome)}}
+ .sidebar.is-open{{transform:translateX(0)}}
+ /* .is-collapsed is removed by layout() below 600 — the drawer is the full 240, not the rail. */
+ .nav-groups{{padding:12px;gap:24px}}                 /* measured 12 on phone; desktop is 20 */
+ /* measured: the phone drawer pins Settings/Admin at the bottom and carries NO user-card.
+    ⚠ v2/phone.md records that which of the two a phone build should carry is NOT SETTLED —
+    this follows the frame. The consequence is that sign-out has no phone affordance. */
+ .sb-footer{{display:none}}
+ /* ⚠ NO SCRIM. 515:2307 draws none and there is no scrim token in the system. The outside-tap
+    target is transparent — never add a dim the design does not have. */
+ .drawer-catch{{position:fixed;inset:60px 240px 0 0;z-index:39;display:none;background:none}}
+ .sidebar.is-open ~ .drawer-catch{{display:block}}
+ /* dock — measured 515:2183, left 20 bottom 20, flex, gap 8, cross-centred. THIS is where the
+    theme toggle lives on phone. */
+ .dock{{position:fixed;left:20px;bottom:20px;z-index:41;display:flex;align-items:center;gap:8px}}
+ /* refresh: list-item 36x36, white, 1px neutral/200, r12, drop-shadow 0 16px 16px #585c5f1a.
+    Its label is present but hidden — icon-only. */
+ /* ⚠ the measured white is the LIGHT frame's value, and v2/phone.md has no dark phone frame —
+    dark dock chrome is DERIVED, not measured. It binds to --s-menu, the alias every other
+    floating surface here uses, because an absolute fill does not invert: literal white put a
+    light icon on a white tile in dark and made the control invisible. */
+ .dock-refresh{{width:36px;height:36px;padding:8px 12px;border-radius:{tok('--gw-radius-12')};
+  background:var(--s-menu);border:1px solid var(--b-strong);color:var(--t-body);
+  display:inline-flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 16px 16px rgba(88,92,95,0.1))}}
+ /* ⚠ the PHONE toggle carries a fill, a border and a shadow; the desktop topbar toggle has
+    none of the three. Same component, different treatment by surface — measured, not carried
+    across. Shadows/S3 binds exactly. */
+ .dock .theme-toggle{{background:var(--s-menu);border:1px solid var(--b-strong);
+  box-shadow:{tok('--gw-shadow-s3')}}}
+ /* content reflow — RULED, R17, not measured: the frames contain no page content. */
+ .page{{padding-inline:16px}}
+ .page-title{{font:var(--dash-display-28-med)}}   /* second documented step down: 36 -> 28 */
+ .stat-row,.metric-row{{grid-template-columns:1fr}}
+ /* ⚠ RULED, v2/phone.md: on phone the `section-header` qualifier stacks UNDER the title at
+    body-14-reg, gap 4, rather than sitting inline beside it at 16 — the measured inline
+    treatment does not fit 375 under a 28px page title. Phone only; inline holds from 600 up. */
+ .sh-title{{flex-direction:column;align-items:flex-start;gap:4px}}
+ .sh-title span{{font:{tok('--gw-text-body-14-reg')}}}
+ /* Every row below is measured as a SINGLE LINE at 1440 and overflows 375. The slot is
+    overflow-x:hidden, so an overflowing row is CLIPPED — it hides content rather than showing
+    it, which is worse than the overflow. R17 makes content reflow below 600 a build decision;
+    these are that decision, and each is CHOSEN, not measured. */
+ .ph-row,.section-header{{flex-direction:column;align-items:flex-start;gap:12px}}
+ .ph-left{{flex-wrap:wrap;gap:8px}}
+ /* the 5 measured tabs total 411px and the pill is a measured 36h — wrapping would break the
+    component, so the group scrolls inside its own wrapper and the page still does not. */
+ .tab-wrap{{overflow-x:auto;scrollbar-width:none;max-width:100%}}
+ .tab-wrap::-webkit-scrollbar{{width:0;height:0}}
+ .tab-group{{width:max-content}}
+ .legend,.inset-rows{{flex-wrap:wrap;gap:12px}}
+ .pt-title{{flex-direction:column;align-items:flex-start;gap:4px}}
+ /* the tab strip takes a full row of its own, then scrolls within it; without min-width:0 a
+    flex item refuses to shrink below its content and drags .ph-left back over the edge. */
+ .ph-left{{width:100%}}
+ .tab-wrap{{flex:1 1 100%;min-width:0}}
+ /* the card-header action cluster and the pagination bar are both measured single lines that
+    do not fit 375. Wrapping keeps every control reachable; the measured components inside are
+    untouched — only the row that carries them changes. */
+ .pt-head,.pagination{{flex-wrap:wrap;gap:12px}}
+ .pt-right,.pc-left,.pc-right,.pg-left,.pg-right{{flex-wrap:wrap;min-width:0}}
+ .pt-right .input,.pt-right input{{min-width:0}}
+ /* the wide tables cannot reflow to 375 — they scroll inside their own card, which keeps the
+    ONE-page-scroller rule intact (build-rules.md). CHOSEN, not measured. */
+ .grid-wrap{{overflow-x:auto}}
+ .grid-wrap>*{{min-width:640px}}
+}}
 """
 
 
@@ -1694,15 +1930,71 @@ JS = r"""
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var SORT_ICONS = __SORT__, CHEVRONS = __CHEV__;
 
-  /* 1440 canvas scaled to fit. RULED, build-rules.md. Guard the zero viewport: a tab that has
-     not been laid out reports 0, which would collapse the shell to nothing. */
-  var DESIGN_W = 1440;
-  function fit() {
-    var w = window.innerWidth || DESIGN_W;
-    document.documentElement.style.setProperty('--fit', Math.min(1, w / DESIGN_W));
+  /* R17 (DECISIONS.md, 26 Aug 2026) — the 1440 canvas scales only down to the 1280 hinge;
+     below it the page FLOWS at zoom 1. Above 1280 this is the original ruled behaviour,
+     unchanged. Guard the zero viewport: a tab that has not been laid out reports 0, which
+     would collapse the shell to nothing. */
+  var DESIGN_W = 1440, FLOW_W = 1280, PHONE_W = 600;
+  var userCollapsed = false;      /* the user's OWN rail choice — only meaningful at >=1280 */
+
+  function closeDrawer() {
+    var el = $('.sidebar'), t = $('[data-drawer-toggle]');
+    if (el) el.classList.remove('is-open');
+    if (t) { t.setAttribute('aria-expanded', 'false'); t.setAttribute('aria-label', 'Open menu'); }
   }
-  fit();
-  window.addEventListener('resize', fit);
+  function openDrawer() {
+    var el = $('.sidebar'), t = $('[data-drawer-toggle]');
+    if (el) el.classList.add('is-open');
+    if (t) { t.setAttribute('aria-expanded', 'true'); t.setAttribute('aria-label', 'Close menu'); }
+  }
+
+  function layout() {
+    var w = window.innerWidth || DESIGN_W;
+    document.documentElement.style.setProperty('--fit',
+      w >= FLOW_W ? Math.min(1, w / DESIGN_W) : 1);
+    var el = $('.sidebar');
+    if (el) {
+      /* 600-1280 pins the rail to the MEASURED 64 collapsed state by reusing .is-collapsed,
+         so there is one measured treatment rather than two that can drift apart. Below 600
+         the rail is not a rail at all — it is the full 240 drawer — so the class comes off. */
+      if (w >= FLOW_W)       el.classList.toggle('is-collapsed', userCollapsed);
+      else if (w >= PHONE_W) el.classList.add('is-collapsed');
+      else                   el.classList.remove('is-collapsed');
+    }
+    if (w >= PHONE_W) closeDrawer();   /* leaving phone must not strand an open drawer */
+  }
+  layout();
+  window.addEventListener('resize', layout);
+
+  var drawerBtn = $('[data-drawer-toggle]');
+  if (drawerBtn) drawerBtn.addEventListener('click', function () {
+    var el = $('.sidebar');
+    if (el && el.classList.contains('is-open')) closeDrawer(); else openDrawer();
+  });
+  var drawerCatch = $('[data-drawer-close]');
+  if (drawerCatch) drawerCatch.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.key === 'Esc') closeDrawer();
+  });
+  /* choosing a destination closes the drawer — otherwise the page renders behind it */
+  $$('.sidebar .nav-item').forEach(function (n) { n.addEventListener('click', closeDrawer); });
+
+  /* the dock refresh DELEGATES to the wired Sync Now control instead of carrying a second
+     copy of its handler. Resolved at click time, so binding order does not matter. */
+  /* Compare — RULED 1 Sep 2026: a drawn affordance must work or not ship. This button was
+     drawn in the frame and bound to nothing. One class on the shell reveals every delta, so the
+     DEFAULT state remains exactly the measured composition and compare is a state on top of it. */
+  var cmpBtn = $('[data-compare]');
+  if (cmpBtn) cmpBtn.addEventListener('click', function () {
+    var on = $('.shell').classList.toggle('is-comparing');
+    cmpBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  var dockSync = $('[data-dock-sync]');
+  if (dockSync) dockSync.addEventListener('click', function () {
+    var b = $('[data-sync]');
+    if (b) b.click();
+  });
 
   /* theme — a measured token swap, not a filter. Persisted so a reload keeps it. */
   function setTheme(mode) {
@@ -1753,6 +2045,7 @@ JS = r"""
   if (collapseBtn) collapseBtn.addEventListener('click', function () {
     var sb = $('.sidebar');
     var collapsed = sb.classList.toggle('is-collapsed');
+    userCollapsed = collapsed;   /* remembered across a flow-mode round trip */
     collapseBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
     collapseBtn.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
     collapseBtn.innerHTML = collapsed ? CHEVRONS.collapsed : CHEVRONS.expanded;
@@ -2326,11 +2619,11 @@ JS = r"""
     btn.setAttribute('data-tip', 'Last synced ' + syncedAgo() + ' \u00b7 ' + hh + ':' + mm);
   }
   document.addEventListener('mouseover', function (e) {
-    var b = e.target.closest && e.target.closest('.topbar .btn');
+    var b = e.target.closest && e.target.closest('[data-sync]');
     if (b) refreshSyncTip(b);
   }, true);
 
-  var syncBtn = $('.topbar .btn');
+  var syncBtn = $('[data-sync]');
   if (syncBtn) refreshSyncTip(syncBtn);
   if (syncBtn && loadPage) syncBtn.addEventListener('click', function () {
     if (syncBtn.hasAttribute('disabled')) return;
@@ -2410,7 +2703,7 @@ HTML = f"""<!doctype html>
       {dashboard_switcher()}
     </div>
     <div class="tb-actions">
-      <button class="btn btn-outlined" aria-live="polite">{ico('arrows-clockwise','regular',16)}<span data-sync-label>Sync Now</span></button>
+      <button class="btn btn-outlined" data-sync aria-live="polite">{ico('arrows-clockwise','regular',16)}<span data-sync-label>Sync Now</span></button>
       <!-- Theme switcher is rendered as designed. Light/dark switching is OUT OF SCOPE for this
            build (scope: the light overview frame). Dark values are measured and documented in
            exports/dashboard/v2/ if it is wired up later. -->
@@ -2420,9 +2713,12 @@ HTML = f"""<!doctype html>
         <span data-theme-set="dark" role="button" tabindex="0"
          aria-label="Dark">{ico('moon','bold',12)}</span></div>
     </div>
+    <!-- phone only (v2/phone.md): the trigger sits ALONE at the far right, x 323 of 375. -->
+    <button class="tb-drawer" data-drawer-toggle aria-expanded="false" aria-controls="sb"
+     aria-label="Open menu">{ico('list','regular',16)}</button>
   </header>
   <div class="shell-body">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sb">
       <div class="sb-nav">
         <div class="sb-nav-top">
         <div class="sb-collapse">
@@ -2443,6 +2739,9 @@ HTML = f"""<!doctype html>
         </div>
       </div>
     </aside>
+    <!-- ⚠ NO SCRIM — 515:2307 draws none, and the system has no scrim token. Transparent
+         outside-tap target only. Must follow .sidebar: the CSS reveals it with `~`. -->
+    <div class="drawer-catch" data-drawer-close></div>
     <main class="slot">{body}
       <!-- build-rules.md: every nav destination needs a real page; an unbuilt one gets the
            empty state rather than leaving the previous page's content behind. Shown/hidden
@@ -2461,6 +2760,18 @@ HTML = f"""<!doctype html>
            measured from Figma so far.</p>
         <button class="btn btn-outlined" data-empty-back>Back to Overview</button>
       </div></div></main>
+  </div>
+  <!-- dock — measured 515:2183, left 20 bottom 20, flex gap 8. Phone only: THIS is where the
+       theme toggle lives, not the topbar. The refresh delegates to the wired Sync Now button
+       rather than duplicating its handler — an affordance with no function is a dead control,
+       and v2/phone.md says to omit refresh entirely when there is nothing to sync. -->
+  <div class="dock">
+    <button class="dock-refresh" data-dock-sync aria-label="Sync now">{ico('arrows-clockwise','regular',16)}</button>
+    <div class="theme-toggle" role="group" aria-label="Colour theme">
+      <span data-theme-set="light" class="is-on" role="button" tabindex="0"
+       aria-label="Light">{ico('sun-dim','bold',12)}</span>
+      <span data-theme-set="dark" role="button" tabindex="0"
+       aria-label="Dark">{ico('moon','bold',12)}</span></div>
   </div>
 </div>
 <div class="drift" role="status" aria-live="polite">

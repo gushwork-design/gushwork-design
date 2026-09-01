@@ -465,3 +465,104 @@ Two layouts now exist where there was one, and the measured composition is only 
 1280 and above. That is the price of the dashboards working on a phone at all. Below 600 the
 chrome is measured (`v2/phone.md`); the content reflow is ruled.
 
+## R18 — badge light labels are the `/600` step, not `/500`
+
+**A light badge pairs a `{Colour}/25` fill with a `{Colour}/600` label.** The previously
+documented `/500` label fails WCAG AA at the component's own `body-12-med`. **Ruled 27 Aug 2026
+by Utsav**, as a Promote on `notices/2026-08-27-backlog-board.md`.
+
+**Why.** Measured against the 4.5:1 threshold for small text:
+
+| Pair | Ratio | AA |
+|---|---|---|
+| `red-25` / `red-500` | 4.28:1 | fail |
+| `yellow-25` / `yellow-500` | 3.07:1 | fail |
+| `green-25` / `green-500` | 3.15:1 | fail |
+| `red-25` / `red-600` | 5.72:1 | pass |
+| `yellow-25` / `yellow-600` | 4.84:1 | pass |
+| `green-25` / `green-600` | 4.79:1 | pass |
+
+All three signal colours failed as documented — this was not a near miss on one hue. The fills
+are unchanged; only the label moves one step darker.
+
+**What this does not change.** `Neutral` (`neutral-50` / `neutral-700`, 6.24:1) and `Black`
+(`neutral-900` / white, 14.45:1) already passed and are untouched. The dark treatment is
+separate: it pairs `{Colour}/Alpha/10` with a `{Colour}/300` label and was not measured here —
+**that is still open.**
+
+**Still to land in Figma.** This is recorded ahead of the component. Until the `badge` set is
+updated, an instance pulled from Figma will still carry the `/500` label and disagree with this
+file. R0 says the measurement wins over the spec — that does not apply here, because this is a
+*defect* in the source rather than a conflict, and R0's own carve-out is for a measurement that
+is "wrong on its own terms".
+
+## R19 — a drawn affordance must work, or it does not ship
+
+> **Numbering reconciled 1 Sep 2026.** `main`'s R17 (responsive reflow) and this branch's R18
+> (badge labels) were written in parallel and never collided, so all three rulings kept their
+> numbers when the branches merged.
+
+**Ruled by Utsav, 1 Sep 2026,** after `Compare` shipped on the GTM Command Center drawn in full,
+styled `cursor: pointer`, and bound to nothing at all.
+
+### The rule
+
+**If a control is visible, it does something. If it does nothing, it is not in the build.**
+
+No inert buttons, no decorative menus, no toggles that toggle nothing. This holds even when the
+Figma frame draws the affordance — see the R14 boundary below.
+
+### Why this needed to become a ruling rather than stay advice
+
+**It was already advice and it was already broken.** The dashboard skill has carried a "dead
+controls" trap since 26 Aug 2026, written after three shipped at once, and it names the exact
+check that would have caught this: *every `<button>` must be reachable by a selector something
+binds to.* `Compare` shipped anyway, on a build that passed 206 assertions.
+
+**A rule that is not mechanically checked is a rule that gets ignored.** That is the whole
+finding. The remedy is not a more strongly worded paragraph.
+
+### The enforceable form
+
+Advice cannot be verified; a convention can. So:
+
+> **Every interactive control carries a `data-*` hook that the JavaScript references, or it
+> matches a documented delegated selector.**
+
+That makes deadness *detectable* rather than a matter of review attention, and it is asserted in
+`preview/_verify_gtm_command_center.py` as a **hard build failure**, not a warning. A warning
+nobody reads is how this shipped.
+
+Two checks cover the class:
+
+1. every `data-*` hook on an interactive element is referenced by the JS — literal,
+   `dataset.camelCase`, `getAttribute`, or an `[attr]` selector;
+2. every control with no hook matches a delegated selector named in the check.
+
+**Validate the check by breaking it on purpose.** A check that has never failed is not known to
+work. Stripping `Compare`'s hook must turn the build red — confirmed 1 Sep 2026.
+
+Two traps in writing that check, both hit on the first attempt:
+
+- **Strip `<style>` as well as `<script>` before scanning for controls.** A CSS comment reading
+  "It is an `<input>` so the range…" was parsed as a control and reported dead.
+- **A shared class is not evidence of a binding.** `.btn` matches every button on the page, so
+  `.topbar .btn` in the JS "proves" that any `.btn` anywhere is wired. Only a *specific* class
+  counts — and a control whose classes are all generic needs a real hook.
+
+### Where this sits against R14
+
+**R14 is unchanged. The frame still wins on APPEARANCE; this ruling governs FUNCTION.**
+
+Where a frame draws an affordance that nothing implements, there are two honest outcomes — build
+the function, or drop the control. Shipping it inert is not a third. On the GTM Command Center,
+`Compare` was **built**: period-over-period deltas on every stat and metric card, composed from
+existing tokens and declared as a created element, because no compare pattern exists anywhere in
+the system.
+
+### What this does NOT ban
+
+**A genuinely disabled control is fine** — when disabled-ness is the truth and it is drawn in the
+measured disabled treatment (`button.md`: `Primary` swaps to `neutral/200`; `Outline` and `Ghost`
+drop the label to `neutral/250`). A pagination arrow disabled at the end of a list is honest. An
+enabled-looking button that silently does nothing is not.

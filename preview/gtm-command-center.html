@@ -53,8 +53,8 @@
   --gw-text-button-10: 500 10px/1 var(--gw-font-body);
   --gw-text-button-12: 500 12px/1 var(--gw-font-body);
   --gw-text-button-14: 500 14px/1 var(--gw-font-body);
-  --gw-focus-ring: 2px solid var(--gw-color-primary-alpha-40);
-  --gw-focus-offset: 2px;
+  --gw-text-body-14-reg: 400 14px/20px var(--gw-font-body);
+  --gw-shadow-s3: 0 16px 32px -12px #585c5f1a;
   --gw-motion-fast: 120ms ease
         @media (prefers-reduced-motion:reduce) --gw-motion-fast: 0ms
         @media (max-width:767px)               every --gw-bp-*, and --gw-content-width
@@ -69,6 +69,10 @@
   10. No motion tokens exist in FIGMA. They now exist here — RULED, not
       harvested. See the RULED section at the end of this file. Never write a
       raw duration into a component;
+  --gw-color-green-600: #15803d;
+  --gw-color-red-600: #be123c;
+  --gw-focus-ring: 2px solid var(--gw-color-primary-alpha-40);
+  --gw-focus-offset: 2px;
   --gw-font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --gw-color-primary-alpha-40: #0070ff66;
   --gw-text-body-12-med-tracking: -0.006em;
@@ -77,6 +81,7 @@
   --gw-text-body-16-sem-tracking: -0.002em;
   --gw-text-body-16-reg-tracking: -0.002em;
   --gw-text-body-10-sem-tracking: 0;
+  --gw-text-body-14-reg-tracking: -0.002em;
   /* Display ramp — NO TOKEN EXISTS. See DECISIONS.md R15: the five Dashboard/display-* styles
      match no --gw-text-* property (h3 is Bold where the page title is Semibold; h7 is
      line-height 1.4 where the card title is 1.0). Literal specs, flagged, never substituted. */
@@ -146,6 +151,13 @@
   --d-series:var(--gw-color-primary-500);
   --tone-good-bg:var(--gw-color-green-25);   --tone-good-fg:var(--gw-color-green-500);
   --tone-bad-bg:var(--gw-color-red-25);      --tone-bad-fg:var(--gw-color-red-500);
+  /* R19's compare delta is body-12-med, so R18 applies: the /500 step FAILS 4.5:1 at this
+     size — measured 3.3:1 for green-500 on the card. The delta takes /600 in light and
+     /300 in dark, the pattern R18 ruled for badge labels. Deliberately NOT --tone-*-fg:
+     that alias is /500 and repointing it would move the attainment percentages too.
+     ⚠ FINDING: --tone-good-fg fails the same test wherever it carries body-12-med. */
+  --tone-delta-up:var(--gw-color-green-600);
+  --tone-delta-down:var(--gw-color-red-600);
   --tone-bad-bg-md:var(--gw-color-red-50);
   --tone-warn-bg:var(--gw-color-yellow-25);  --tone-warn-fg:var(--gw-color-yellow-500);
 }
@@ -214,6 +226,8 @@
   --tone-bad-fg:var(--gw-color-red-300);
   --tone-good-bg:var(--gw-color-green-alpha-10);
   --tone-good-fg:var(--gw-color-green-300);
+  --tone-delta-up:var(--gw-color-green-300);
+  --tone-delta-down:var(--gw-color-red-300);
   --tone-warn-bg:var(--gw-color-yellow-alpha-10);
   --tone-warn-fg:var(--gw-color-yellow-300);
 }
@@ -455,8 +469,11 @@ h1,h2,h3{margin:0;font-weight:inherit}
 .sc-value-block{display:flex;flex-direction:column;gap:8px}
 .sc-value-row{display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
 .sc-value{display:flex;flex-direction:column;gap:4px;min-width:0}
-.sc-value b{font:var(--dash-display-28-med);color:var(--t-display);font-weight:500}
-.sc-value span,.sc-pct{font:var(--gw-text-body-12-med);
+/* `>` NOT a descendant selector: this rule leaked onto the compare delta's <b> and
+   painted a 12px Inter figure as 28px Vert Grotesk. Same class of bug as the theme
+   toggle's glyph — scope component internals to direct children. */
+.sc-value>b{font:var(--dash-display-28-med);color:var(--t-display);font-weight:500}
+.sc-value>span,.sc-pct{font:var(--gw-text-body-12-med);
  letter-spacing:var(--gw-text-body-12-med-tracking);color:var(--t-muted)}
 .metric-row{display:flex;gap:8px}
 .metric-card{flex:1 1 0;min-width:0;padding:16px;min-height:124px}
@@ -464,10 +481,31 @@ h1,h2,h3{margin:0;font-weight:inherit}
 .mc-label{font:var(--gw-text-body-12-med);letter-spacing:var(--gw-text-body-12-med-tracking);
  color:var(--t-label)}
 .mc-value{display:flex;flex-direction:column;gap:4px}
-.mc-value b{font:var(--dash-display-28-med);color:var(--t-display);font-weight:500}
+.mc-value>b{font:var(--dash-display-28-med);color:var(--t-display);font-weight:500}
 .mc-value span{font:var(--gw-text-body-12-med);
  letter-spacing:var(--gw-text-body-12-med-tracking);color:var(--t-muted)}
 .mc-sub{display:flex;align-items:center;gap:4px}
+
+/* ── Compare — CREATED ELEMENT, pending library review. See delta_el() for why. ──
+   Hidden until the Compare control is pressed; `.is-comparing` is set on the shell so one
+   class reveals every delta at once and the default state stays byte-identical to the
+   measured composition. */
+.sc-sub{display:inline-flex;align-items:center;gap:8px;min-width:0}
+.delta{display:none;align-items:center;gap:4px;font:var(--gw-text-body-12-med);
+ letter-spacing:var(--gw-text-body-12-med-tracking);white-space:nowrap}
+.is-comparing .delta{display:inline-flex}
+.delta.is-up{color:var(--tone-delta-up)}
+.delta.is-down{color:var(--tone-delta-down)}
+/* the icon must INHERIT the delta's tone. `.sc-value span` also matches the wrapper that ico()
+   emits, and a rule applied directly to that element beats colour inherited from its parent —
+   the documented trap that painted the theme-toggle glyph invisible. Scoped explicitly. */
+.delta .ic{color:inherit}
+/* the compare control's own pressed state — measured Outline hover fill, reused because v2
+   defines no pressed state for `control Kind=button`. Flagged as a gap, not invented colour. */
+.btn-compare[aria-pressed="true"]{background:var(--s-btn-hover)}
+.cmp-note{display:none;font:var(--gw-text-button-12);color:var(--t-muted);
+ white-space:nowrap}
+.is-comparing .cmp-note{display:inline-flex;align-items:center}
 
 /* progress + badge */
 .progress{display:block;width:100%;border-radius:var(--gw-radius-40);
@@ -534,10 +572,19 @@ h1,h2,h3{margin:0;font-weight:inherit}
 .chan-badge{border-radius:var(--gw-radius-4);padding:4px;gap:2px;
  background:var(--gw-color-primary-alpha-10);display:inline-flex;align-items:center;
  justify-content:center;color:var(--gw-color-primary-500);flex:0 0 auto}
-/* leave the first column unsized on the wide tables — build-rules.md: an explicit width on
-   every column makes the browser spread leftover space across all of them */
-.trow-daily{display:grid;grid-template-columns:auto repeat(4,1fr);gap:32px}
-.trow-onb{display:grid;grid-template-columns:auto 2fr 1.4fr 1fr .8fr 1fr 1.2fr;gap:32px}
+/* CORRECTED for table-row v1.40.0 (BREAKING) — build-rules.md. "Leave the first column
+   unsized" holds ONLY in a SHARED grid. Every .trow here is its OWN grid container, so an
+   `auto` first track resolves against THAT row's content and each row lands on a different
+   column boundary. Measured on the v1.39.0 build: 21.5px between the header row and its own
+   data rows (`DATE` renders 46.5, the dates 25–27.9), and 2.9px row to row. A `1fr` track is
+   `minmax(auto,1fr)` — its auto MINIMUM is content-derived too, which is the long-string case
+   the rule calls out — so every non-first track carries an explicit px floor.
+   CHOSEN, not measured (tier 3): the 56px first track and the per-column floors. The binding
+   constraint is the widest first-column content, the 46.5px uppercase `DATE` header; 56 clears
+   it on an 8-multiple. Floors are set below the rendered widths so they bind only under
+   compression. Verified by asserting 0px drift between rows, not by looking. */
+.trow-daily{display:grid;grid-template-columns:56px repeat(4,minmax(96px,1fr));gap:32px}
+.trow-onb{display:grid;grid-template-columns:56px minmax(120px,2fr) minmax(96px,1.4fr) minmax(72px,1fr) minmax(64px,.8fr) minmax(72px,1fr) minmax(88px,1.2fr);gap:32px}
 .pagination{padding:12px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .pg-left,.pg-right{display:flex;align-items:center;gap:8px}
 
@@ -844,6 +891,143 @@ h1,h2,h3{margin:0;font-weight:inherit}
    geometry, wrong colour, and it bypassed the token entirely, so the reference was teaching the
    deviation. Corrected 26 Aug 2026. */
 :focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
+
+/* Phone-only chrome. Rendered at every width so the JS binds once and never rebinds, but
+   revealed only inside the <600 query. Trigger is the measured `controls/tab` 36x36, radius/8,
+   1px neutral/200, inner p-4 radius/4, List 16. */
+.tb-drawer{display:none;width:36px;height:36px;padding:4px;
+ border-radius:var(--gw-radius-8);border:1px solid var(--b-strong);background:none;
+ color:var(--t-body);align-items:center;justify-content:center;cursor:pointer}
+.dock{display:none}
+.drawer-catch{display:none}
+
+/* ═══════════════════════════════════════════════════════════════════════════════════════════
+   R17 — RESPONSIVE REGIMES.  DECISIONS.md R17, ruled 26 Aug 2026; phone chrome MEASURED in
+   exports/dashboard/v2/phone.md the same day (frames 515:2176 / 515:2307, both 375x720).
+   This file was built 15 Aug at v1.39.0, when "1440 is the minimum width, below it SCALE,
+   never reflow" was still binding — so it scaled the whole canvas all the way down and painted
+   12px table text at 3.13px on a 375 viewport. R17 narrows that rule rather than withdrawing
+   it: SCALE to 1280, FLOW below.  Above 1280 nothing here changes the measured composition.
+   ═══════════════════════════════════════════════════════════════════════════════════════════ */
+
+/* ── >=2200 — specified in build-rules.md and never built until now. ── */
+@media (min-width:2200px){.page{padding-inline:clamp(40px,4vw,96px)}}
+/* build-rules.md also specifies an analytics-grid column change at >=1800 (3->6 at KPI cards=1).
+   NOT APPLIED, deliberately: that rule is scoped to `card-layout`, and this screen does not use
+   it — its supporting rows are a custom stat-row / metric-row composition that already fills.
+   Applying a card-layout rule to a composition it was never measured against would be inventing
+   behaviour. Reported as a gap instead. */
+
+/* ── FLOW, 600–1280.  R17: composition is no longer guaranteed below 1280; that is the price
+      the ruling knowingly pays so the dashboard works at all on a small screen. ── */
+@media (max-width:1279.98px){
+ /* mandatory — R17: drop the 1440 floor "or the page scrolls sideways forever". zoom returns
+    to 1 here; layout() in the JS stops scaling at the same 1280 hinge. */
+ .shell{zoom:1;width:100vw;height:100vh;min-width:0}
+ /* The rail is pinned to the measured 64 collapsed state. layout() adds .is-collapsed rather
+    than this block restating its values — one measured treatment, not two that can drift. */
+ .sb-collapse{display:none}          /* it cannot be expanded in this regime — dead control */
+ /* Cards change COUNT, never size — build-rules.md. auto-fit derives the count from the
+    MEASURED floor: stat-card 217.6 -> 218, metric-card 274. */
+ .stat-row,.metric-row{display:grid;gap:8px}
+ .stat-row{grid-template-columns:repeat(auto-fit,minmax(218px,1fr))}
+ .metric-row{grid-template-columns:repeat(auto-fit,minmax(274px,1fr))}
+ .page-title{font:var(--dash-display-36-med)}   /* ramp steps DOWN one documented step 44->36 */
+ .page{padding-inline:24px}
+}
+
+/* ── PHONE, <600.  Chrome MEASURED (v2/phone.md); content reflow RULED (R17). ── */
+@media (max-width:599.98px){
+ /* topbar — measured 375x60, px-16, and a 1.5px neutral/100 bottom border. 1.5 is the phone
+    chrome weight throughout both frames; it is drawn 1:1 at 375, so NOT a scaling artefact. */
+ .topbar{padding:0 16px;box-shadow:inset 0 -1.5px 0 var(--b-chrome)}
+ /* the logo tile is the desktop 32x32 at 62.5% (20/32 = 5/8 = 10/16). Reproduce the DRAWN
+    20x20 around a 10px glyph. radius/4 is the nearest real token to the scaled 5 — never a raw
+    5px, and never radius/8, which is visibly rounder at this size. */
+ .tb-logo{width:20px;height:20px;border-radius:var(--gw-radius-4)}
+ .tb-logo svg{width:10px;height:10px}
+ /* a SIXTH display size: Vert Grotesk Semibold 16 matches none of the five documented steps
+    (44/36/28/22/20). R15 — literal spec, and it HAS NO TOKEN. */
+ .tb-name{font:600 16px/1 'Vert Grotesk Display'}
+ [data-dash-toggle]{width:20px;height:20px;padding:4px;
+  border-radius:var(--gw-radius-4)}                       /* measured 20x20 p-4 r4 tile */
+ [data-dash-toggle] svg{width:12px;height:12px}
+ /* measured: the drawer trigger sits ALONE at the far right (x 323 of 375). Sync Now and the
+    theme toggle are NOT in the phone topbar — they move to the dock. */
+ .tb-actions{display:none}
+ .tb-drawer{display:inline-flex}
+ /* sidebar as a DRAWER — measured 515:2343, 240x660 at x135 y60. 135+240 = 375, so it is
+    anchored RIGHT, and it starts BELOW the 60px topbar. Left border 1.5px, the mirror of the
+    desktop rail's right border at the phone weight. */
+ .sidebar{position:fixed;top:60px;right:0;bottom:0;width:240px;z-index:40;
+  transform:translateX(100%);transition:transform var(--gw-motion-fast);
+  box-shadow:inset 1.5px 0 0 var(--b-chrome)}
+ .sidebar.is-open{transform:translateX(0)}
+ /* .is-collapsed is removed by layout() below 600 — the drawer is the full 240, not the rail. */
+ .nav-groups{padding:12px;gap:24px}                 /* measured 12 on phone; desktop is 20 */
+ /* measured: the phone drawer pins Settings/Admin at the bottom and carries NO user-card.
+    ⚠ v2/phone.md records that which of the two a phone build should carry is NOT SETTLED —
+    this follows the frame. The consequence is that sign-out has no phone affordance. */
+ .sb-footer{display:none}
+ /* ⚠ NO SCRIM. 515:2307 draws none and there is no scrim token in the system. The outside-tap
+    target is transparent — never add a dim the design does not have. */
+ .drawer-catch{position:fixed;inset:60px 240px 0 0;z-index:39;display:none;background:none}
+ .sidebar.is-open ~ .drawer-catch{display:block}
+ /* dock — measured 515:2183, left 20 bottom 20, flex, gap 8, cross-centred. THIS is where the
+    theme toggle lives on phone. */
+ .dock{position:fixed;left:20px;bottom:20px;z-index:41;display:flex;align-items:center;gap:8px}
+ /* refresh: list-item 36x36, white, 1px neutral/200, r12, drop-shadow 0 16px 16px #585c5f1a.
+    Its label is present but hidden — icon-only. */
+ /* ⚠ the measured white is the LIGHT frame's value, and v2/phone.md has no dark phone frame —
+    dark dock chrome is DERIVED, not measured. It binds to --s-menu, the alias every other
+    floating surface here uses, because an absolute fill does not invert: literal white put a
+    light icon on a white tile in dark and made the control invisible. */
+ .dock-refresh{width:36px;height:36px;padding:8px 12px;border-radius:var(--gw-radius-12);
+  background:var(--s-menu);border:1px solid var(--b-strong);color:var(--t-body);
+  display:inline-flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 16px 16px rgba(88,92,95,0.1))}
+ /* ⚠ the PHONE toggle carries a fill, a border and a shadow; the desktop topbar toggle has
+    none of the three. Same component, different treatment by surface — measured, not carried
+    across. Shadows/S3 binds exactly. */
+ .dock .theme-toggle{background:var(--s-menu);border:1px solid var(--b-strong);
+  box-shadow:var(--gw-shadow-s3)}
+ /* content reflow — RULED, R17, not measured: the frames contain no page content. */
+ .page{padding-inline:16px}
+ .page-title{font:var(--dash-display-28-med)}   /* second documented step down: 36 -> 28 */
+ .stat-row,.metric-row{grid-template-columns:1fr}
+ /* ⚠ RULED, v2/phone.md: on phone the `section-header` qualifier stacks UNDER the title at
+    body-14-reg, gap 4, rather than sitting inline beside it at 16 — the measured inline
+    treatment does not fit 375 under a 28px page title. Phone only; inline holds from 600 up. */
+ .sh-title{flex-direction:column;align-items:flex-start;gap:4px}
+ .sh-title span{font:var(--gw-text-body-14-reg)}
+ /* Every row below is measured as a SINGLE LINE at 1440 and overflows 375. The slot is
+    overflow-x:hidden, so an overflowing row is CLIPPED — it hides content rather than showing
+    it, which is worse than the overflow. R17 makes content reflow below 600 a build decision;
+    these are that decision, and each is CHOSEN, not measured. */
+ .ph-row,.section-header{flex-direction:column;align-items:flex-start;gap:12px}
+ .ph-left{flex-wrap:wrap;gap:8px}
+ /* the 5 measured tabs total 411px and the pill is a measured 36h — wrapping would break the
+    component, so the group scrolls inside its own wrapper and the page still does not. */
+ .tab-wrap{overflow-x:auto;scrollbar-width:none;max-width:100%}
+ .tab-wrap::-webkit-scrollbar{width:0;height:0}
+ .tab-group{width:max-content}
+ .legend,.inset-rows{flex-wrap:wrap;gap:12px}
+ .pt-title{flex-direction:column;align-items:flex-start;gap:4px}
+ /* the tab strip takes a full row of its own, then scrolls within it; without min-width:0 a
+    flex item refuses to shrink below its content and drags .ph-left back over the edge. */
+ .ph-left{width:100%}
+ .tab-wrap{flex:1 1 100%;min-width:0}
+ /* the card-header action cluster and the pagination bar are both measured single lines that
+    do not fit 375. Wrapping keeps every control reachable; the measured components inside are
+    untouched — only the row that carries them changes. */
+ .pt-head,.pagination{flex-wrap:wrap;gap:12px}
+ .pt-right,.pc-left,.pc-right,.pg-left,.pg-right{flex-wrap:wrap;min-width:0}
+ .pt-right .input,.pt-right input{min-width:0}
+ /* the wide tables cannot reflow to 375 — they scroll inside their own card, which keeps the
+    ONE-page-scroller rule intact (build-rules.md). CHOSEN, not measured. */
+ .grid-wrap{overflow-x:auto}
+ .grid-wrap>*{min-width:640px}
+}
 </style>
 <div class="shell">
   <header class="topbar">
@@ -871,7 +1055,7 @@ h1,h2,h3{margin:0;font-weight:inherit}
       <span class="dash-switch" role="listbox" aria-label="Switch dashboard"><span class="dash-switch-item" role="option" tabindex="-1" data-dash="Meta Performance Dashboard">Meta Performance Dashboard</span><span class="dash-switch-item" role="option" tabindex="-1" data-dash="Cold Email Dashboard">Cold Email Dashboard</span><span class="dash-switch-item" role="option" tabindex="-1" data-dash="Onboarding Dashboard">Onboarding Dashboard</span></span>
     </div>
     <div class="tb-actions">
-      <button class="btn btn-outlined" aria-live="polite"><span class="ic" style="width:16px;height:16px"><svg viewBox="0 0 256 256" fill="currentColor" width="16" height="16"><path d="M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z"/></svg></span><span data-sync-label>Sync Now</span></button>
+      <button class="btn btn-outlined" data-sync aria-live="polite"><span class="ic" style="width:16px;height:16px"><svg viewBox="0 0 256 256" fill="currentColor" width="16" height="16"><path d="M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z"/></svg></span><span data-sync-label>Sync Now</span></button>
       <!-- Theme switcher is rendered as designed. Light/dark switching is OUT OF SCOPE for this
            build (scope: the light overview frame). Dark values are measured and documented in
            exports/dashboard/v2/ if it is wired up later. -->
@@ -881,9 +1065,12 @@ h1,h2,h3{margin:0;font-weight:inherit}
         <span data-theme-set="dark" role="button" tabindex="0"
          aria-label="Dark"><span class="ic" style="width:12px;height:12px"><svg viewBox="0 0 256 256" fill="currentColor" width="12" height="12"><path d="M236.37,139.4a12,12,0,0,0-12-3A84.07,84.07,0,0,1,119.6,31.59a12,12,0,0,0-15-15A108.86,108.86,0,0,0,49.69,55.07,108,108,0,0,0,136,228a107.09,107.09,0,0,0,64.93-21.69,108.86,108.86,0,0,0,38.44-54.94A12,12,0,0,0,236.37,139.4Zm-49.88,47.74A84,84,0,0,1,68.86,69.51,84.93,84.93,0,0,1,92.27,48.29Q92,52.13,92,56A108.12,108.12,0,0,0,200,164q3.87,0,7.71-.27A84.79,84.79,0,0,1,186.49,187.14Z"/></svg></span></span></div>
     </div>
+    <!-- phone only (v2/phone.md): the trigger sits ALONE at the far right, x 323 of 375. -->
+    <button class="tb-drawer" data-drawer-toggle aria-expanded="false" aria-controls="sb"
+     aria-label="Open menu"><span class="ic" style="width:16px;height:16px"><svg viewBox="0 0 256 256" fill="currentColor" width="16" height="16"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></svg></span></button>
   </header>
   <div class="shell-body">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sb">
       <div class="sb-nav">
         <div class="sb-nav-top">
         <div class="sb-collapse">
@@ -909,6 +1096,9 @@ h1,h2,h3{margin:0;font-weight:inherit}
         </div>
       </div>
     </aside>
+    <!-- ⚠ NO SCRIM — 515:2307 draws none, and the system has no scrim token. Transparent
+         outside-tap target only. Must follow .sidebar: the CSS reveals it with `~`. -->
+    <div class="drawer-catch" data-drawer-close></div>
     <main class="slot"><div class="page">
 <div class="page-header">
 <h1 class="page-title">Overview</h1>
@@ -931,7 +1121,7 @@ h1,h2,h3{margin:0;font-weight:inherit}
 <button class="btn btn-primary dp-apply">Apply</button></span></span></div>
 <span class="ph-period" data-tip="Day 18 of 30 — 60% of the period elapsed.">Day 18 of 30
  <span class="ring" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 20 20" width="20" height="20"><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--d-track)" stroke-width="2"/><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--d-series)" stroke-width="2" stroke-dasharray="33.93 56.55" transform="rotate(-90 10.0 10.0)"/></svg></span></span></div>
-<button class="btn btn-outlined btn-compare"><span class="ic" style="width:16px;height:16px"><svg viewBox="0 0 256 256" fill="currentColor" width="16" height="16"><path d="M64,216a8,8,0,0,1-8,8H48a16,16,0,0,1-16-16v-8a8,8,0,0,1,16,0v8h8A8,8,0,0,1,64,216Zm48-8H96a8,8,0,0,0,0,16h16a8,8,0,0,0,0-16ZM40,168a8,8,0,0,0,8-8V144a8,8,0,0,0-16,0v16A8,8,0,0,0,40,168Zm128,24a8,8,0,0,0-8,8v8h-8a8,8,0,0,0,0,16h8a16,16,0,0,0,16-16v-8A8,8,0,0,0,168,192Zm0-80a8,8,0,0,0,8-8V96a16,16,0,0,0-16-16h-8a8,8,0,0,0,0,16h8v8A8,8,0,0,0,168,112ZM56,80H48A16,16,0,0,0,32,96v8a8,8,0,0,0,16,0V96h8a8,8,0,0,0,0-16ZM208,32H96A16,16,0,0,0,80,48V88a4.44,4.44,0,0,0,0,.55A8,8,0,0,0,88,96h24a8,8,0,0,0,0-16H96V48H208V160H176V144a8,8,0,0,0-16,0v24a8,8,0,0,0,8,8h40a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Z"/></svg></span>Compare</button>
+
 </div></div>
 
 <section class="section"><div class="section-header"><div class="sh-title"><h2>Overall Performance</h2><span>for last month</span></div><div class="legend"><span class="leg-item"><i class="dot dot-green"></i>On track</span><span class="leg-item"><i class="dot dot-yellow"></i>Pending</span><span class="leg-item"><i class="dot dot-red"></i>Behind</span></div></div>
@@ -953,19 +1143,19 @@ h1,h2,h3{margin:0;font-weight:inherit}
 <div class="stat-row"><div class="card card-md stat-card">
 <div class="sc-body"><div class="sc-label">DEMOS BOOKED</div>
 <div class="sc-value-block"><div class="sc-value-row">
-<div class="sc-value"><b>1,310</b><span>of 1,472</span></div><span class="sc-pct">89%</span></div><span class="progress progress-md"><i class="progress-fill fill-green" style="width:89%"></i></span></div></div></div><div class="card card-md stat-card">
+<div class="sc-value"><b>1,310</b><span class="sc-sub">of 1,472</span></div><span class="sc-pct">89%</span></div><span class="progress progress-md"><i class="progress-fill fill-green" style="width:89%"></i></span></div></div></div><div class="card card-md stat-card">
 <div class="sc-body"><div class="sc-label">SHOW-UPS</div>
 <div class="sc-value-block"><div class="sc-value-row">
-<div class="sc-value"><b>708</b><span>of 720</span></div><span class="sc-pct">98%</span></div><span class="progress progress-md"><i class="progress-fill fill-green" style="width:98%"></i></span></div></div></div><div class="card card-md stat-card">
+<div class="sc-value"><b>708</b><span class="sc-sub">of 720</span></div><span class="sc-pct">98%</span></div><span class="progress progress-md"><i class="progress-fill fill-green" style="width:98%"></i></span></div></div></div><div class="card card-md stat-card">
 <div class="sc-body"><div class="sc-label">CLOSES</div>
 <div class="sc-value-block"><div class="sc-value-row">
-<div class="sc-value"><b>70</b><span>of 130</span></div><span class="sc-pct">54%</span></div><span class="progress progress-md"><i class="progress-fill fill-red" style="width:54%"></i></span></div></div></div><div class="card card-md stat-card">
+<div class="sc-value"><b>70</b><span class="sc-sub">of 130</span></div><span class="sc-pct">54%</span></div><span class="progress progress-md"><i class="progress-fill fill-red" style="width:54%"></i></span></div></div></div><div class="card card-md stat-card">
 <div class="sc-body"><div class="sc-label">DEMOS SCHEDULED</div>
 <div class="sc-value-block"><div class="sc-value-row">
-<div class="sc-value"><b>1322</b><span>in this period</span></div></div></div></div></div><div class="card card-md stat-card">
+<div class="sc-value"><b>1322</b><span class="sc-sub">in this period</span></div></div></div></div></div><div class="card card-md stat-card">
 <div class="sc-body"><div class="sc-label">CLOSES</div>
 <div class="sc-value-block"><div class="sc-value-row">
-<div class="sc-value"><b>70</b><span>of 130</span></div></div></div></div></div></div></section>
+<div class="sc-value"><b>70</b><span class="sc-sub">of 130</span></div></div></div></div></div></div></section>
 
 <section class="section"><div class="section-header"><div class="sh-title"><h2>Run Rate</h2><span>per biz day</span></div></div>
 <div class="metric-row"><div class="card card-md metric-card"><div class="mc-body"><div class="mc-label">Demos</div><div class="mc-value"><b>59.5</b><span class="mc-sub">need 66.9 / biz day<span class="ring" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 20 20" width="20" height="20"><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--b-card)" stroke-width="2"/><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--d-good)" stroke-width="2" stroke-dasharray="50.33 56.55" transform="rotate(-90 10.0 10.0)"/></svg></span></span></div></div></div><div class="card card-md metric-card"><div class="mc-body"><div class="mc-label">Show-ups</div><div class="mc-value"><b>32.2</b><span class="mc-sub">need 32.7 / biz day<span class="ring" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 20 20" width="20" height="20"><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--b-card)" stroke-width="2"/><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--d-good)" stroke-width="2" stroke-dasharray="55.42 56.55" transform="rotate(-90 10.0 10.0)"/></svg></span></span></div></div></div><div class="card card-md metric-card"><div class="mc-body"><div class="mc-label">Closes</div><div class="mc-value"><b>3.2</b><span class="mc-sub">need 5.9 / biz day<span class="ring" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 20 20" width="20" height="20"><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--b-card)" stroke-width="2"/><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--d-good)" stroke-width="2" stroke-dasharray="30.54 56.55" transform="rotate(-90 10.0 10.0)"/></svg></span></span></div></div></div><div class="card card-md metric-card"><div class="mc-body"><div class="mc-label">ARR</div><div class="mc-value"><b>$36772</b><span class="mc-sub">need $63257 / biz day<span class="ring" style="width:20px;height:20px" aria-hidden="true"><svg viewBox="0 0 20 20" width="20" height="20"><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--b-card)" stroke-width="2"/><circle cx="10.0" cy="10.0" r="9.0" fill="none" stroke="var(--d-good)" stroke-width="2" stroke-dasharray="32.80 56.55" transform="rotate(-90 10.0 10.0)"/></svg></span></span></div></div></div></div></section>
@@ -1049,6 +1239,18 @@ h1,h2,h3{margin:0;font-weight:inherit}
         <button class="btn btn-outlined" data-empty-back>Back to Overview</button>
       </div></div></main>
   </div>
+  <!-- dock — measured 515:2183, left 20 bottom 20, flex gap 8. Phone only: THIS is where the
+       theme toggle lives, not the topbar. The refresh delegates to the wired Sync Now button
+       rather than duplicating its handler — an affordance with no function is a dead control,
+       and v2/phone.md says to omit refresh entirely when there is nothing to sync. -->
+  <div class="dock">
+    <button class="dock-refresh" data-dock-sync aria-label="Sync now"><span class="ic" style="width:16px;height:16px"><svg viewBox="0 0 256 256" fill="currentColor" width="16" height="16"><path d="M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z"/></svg></span></button>
+    <div class="theme-toggle" role="group" aria-label="Colour theme">
+      <span data-theme-set="light" class="is-on" role="button" tabindex="0"
+       aria-label="Light"><span class="ic" style="width:12px;height:12px"><svg viewBox="0 0 256 256" fill="currentColor" width="12" height="12"><path d="M116,36V32a12,12,0,0,1,24,0v4a12,12,0,0,1-24,0Zm80,92a68,68,0,1,1-68-68A68.07,68.07,0,0,1,196,128Zm-24,0a44,44,0,1,0-44,44A44.05,44.05,0,0,0,172,128ZM51.51,68.49a12,12,0,1,0,17-17l-4-4a12,12,0,0,0-17,17Zm0,119-4,4a12,12,0,0,0,17,17l4-4a12,12,0,1,0-17-17ZM196,72a12,12,0,0,0,8.49-3.51l4-4a12,12,0,0,0-17-17l-4,4A12,12,0,0,0,196,72Zm8.49,115.51a12,12,0,0,0-17,17l4,4a12,12,0,0,0,17-17ZM48,128a12,12,0,0,0-12-12H32a12,12,0,0,0,0,24h4A12,12,0,0,0,48,128Zm80,80a12,12,0,0,0-12,12v4a12,12,0,0,0,24,0v-4A12,12,0,0,0,128,208Zm96-92h-4a12,12,0,0,0,0,24h4a12,12,0,0,0,0-24Z"/></svg></span></span>
+      <span data-theme-set="dark" role="button" tabindex="0"
+       aria-label="Dark"><span class="ic" style="width:12px;height:12px"><svg viewBox="0 0 256 256" fill="currentColor" width="12" height="12"><path d="M236.37,139.4a12,12,0,0,0-12-3A84.07,84.07,0,0,1,119.6,31.59a12,12,0,0,0-15-15A108.86,108.86,0,0,0,49.69,55.07,108,108,0,0,0,136,228a107.09,107.09,0,0,0,64.93-21.69,108.86,108.86,0,0,0,38.44-54.94A12,12,0,0,0,236.37,139.4Zm-49.88,47.74A84,84,0,0,1,68.86,69.51,84.93,84.93,0,0,1,92.27,48.29Q92,52.13,92,56A108.12,108.12,0,0,0,200,164q3.87,0,7.71-.27A84.79,84.79,0,0,1,186.49,187.14Z"/></svg></span></span></div>
+  </div>
 </div>
 <div class="drift" role="status" aria-live="polite">
   <i class="drift-dot" data-drift-dot></i>
@@ -1064,10 +1266,10 @@ h1,h2,h3{margin:0;font-weight:inherit}
   </span>
 </div>
 <script>
-/* gushwork-build:{"pluginVersion":"1.39.0","createdBy":"Utsav Singh","createdAt":"15 Aug 2026","registry":"https://gushwork-design.vercel.app/exports/dashboard/component-registry.json","changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html","components":["badge","checkbox","control","date-range-picker","dashboard-switcher","divider","empty-state","icon-button","input","legend","metric-card","page-header","pagination","progress-bar","ring","section-header","sidebar","skeleton","stat-card","status-dot","tab-group","tab-item","table-cell","table-row","tooltip","topbar"]} */
+/* gushwork-build:{"pluginVersion":"1.42.0","createdBy":"Utsav Singh","createdAt":"15 Aug 2026","registry":"https://gushwork-design.vercel.app/exports/dashboard/component-registry.json","changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html","components":["badge","checkbox","control","date-range-picker","dashboard-switcher","divider","empty-state","icon-button","input","legend","metric-card","page-header","pagination","progress-bar","ring","section-header","sidebar","skeleton","stat-card","status-dot","tab-group","tab-item","table-cell","table-row","tooltip","topbar"]} */
 
 (function () {
-  var STAMP = {"pluginVersion":"1.39.0","createdBy":"Utsav Singh","createdAt":"15 Aug 2026","registry":"https://gushwork-design.vercel.app/exports/dashboard/component-registry.json","changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html","components":["badge","checkbox","control","date-range-picker","dashboard-switcher","divider","empty-state","icon-button","input","legend","metric-card","page-header","pagination","progress-bar","ring","section-header","sidebar","skeleton","stat-card","status-dot","tab-group","tab-item","table-cell","table-row","tooltip","topbar"]};
+  var STAMP = {"pluginVersion":"1.42.0","createdBy":"Utsav Singh","createdAt":"15 Aug 2026","registry":"https://gushwork-design.vercel.app/exports/dashboard/component-registry.json","changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html","components":["badge","checkbox","control","date-range-picker","dashboard-switcher","divider","empty-state","icon-button","input","legend","metric-card","page-header","pagination","progress-bar","ring","section-header","sidebar","skeleton","stat-card","status-dot","tab-group","tab-item","table-cell","table-row","tooltip","topbar"]};
   var KEY = 'gw-drift-dismissed';
   function ver(v) { return (v || '0.0.0').split('.').map(Number); }
   function newer(a, b) {           /* a > b ? */
@@ -1219,15 +1421,71 @@ h1,h2,h3{margin:0;font-weight:inherit}
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var SORT_ICONS = {"none": "<span class=\"ic\" style=\"width:12px;height:12px\"><svg viewBox=\"0 0 256 256\" fill=\"currentColor\" width=\"12\" height=\"12\"><path d=\"M120.49,167.51a12,12,0,0,1,0,17l-32,32a12,12,0,0,1-17,0l-32-32a12,12,0,1,1,17-17L68,179V48a12,12,0,0,1,24,0V179l11.51-11.52A12,12,0,0,1,120.49,167.51Zm96-96-32-32a12,12,0,0,0-17,0l-32,32a12,12,0,0,0,17,17L164,77V208a12,12,0,0,0,24,0V77l11.51,11.52a12,12,0,0,0,17-17Z\"/></svg></span>", "asc": "<span class=\"ic\" style=\"width:12px;height:12px\"><svg viewBox=\"0 0 256 256\" fill=\"currentColor\" width=\"12\" height=\"12\"><path d=\"M208.49,120.49a12,12,0,0,1-17,0L140,69V216a12,12,0,0,1-24,0V69L64.49,120.49a12,12,0,0,1-17-17l72-72a12,12,0,0,1,17,0l72,72A12,12,0,0,1,208.49,120.49Z\"/></svg></span>", "desc": "<span class=\"ic\" style=\"width:12px;height:12px\"><svg viewBox=\"0 0 256 256\" fill=\"currentColor\" width=\"12\" height=\"12\"><path d=\"M208.49,152.49l-72,72a12,12,0,0,1-17,0l-72-72a12,12,0,0,1,17-17L116,187V40a12,12,0,0,1,24,0V187l51.51-51.52a12,12,0,0,1,17,17Z\"/></svg></span>"}, CHEVRONS = {"expanded": "<span class=\"ic\" style=\"width:12px;height:12px\"><svg viewBox=\"0 0 256 256\" fill=\"currentColor\" width=\"12\" height=\"12\"><path d=\"M208.49,199.51a12,12,0,0,1-17,17l-80-80a12,12,0,0,1,0-17l80-80a12,12,0,0,1,17,17L137,128ZM57,128l71.52-71.51a12,12,0,0,0-17-17l-80,80a12,12,0,0,0,0,17l80,80a12,12,0,0,0,17-17Z\"/></svg></span>", "collapsed": "<span class=\"ic\" style=\"width:12px;height:12px\"><svg viewBox=\"0 0 256 256\" fill=\"currentColor\" width=\"12\" height=\"12\"><path d=\"M144.49,136.49l-80,80a12,12,0,0,1-17-17L119,128,47.51,56.49a12,12,0,0,1,17-17l80,80A12,12,0,0,1,144.49,136.49Zm80-17-80-80a12,12,0,1,0-17,17L199,128l-71.52,71.51a12,12,0,0,0,17,17l80-80A12,12,0,0,0,224.49,119.51Z\"/></svg></span>"};
 
-  /* 1440 canvas scaled to fit. RULED, build-rules.md. Guard the zero viewport: a tab that has
-     not been laid out reports 0, which would collapse the shell to nothing. */
-  var DESIGN_W = 1440;
-  function fit() {
-    var w = window.innerWidth || DESIGN_W;
-    document.documentElement.style.setProperty('--fit', Math.min(1, w / DESIGN_W));
+  /* R17 (DECISIONS.md, 26 Aug 2026) — the 1440 canvas scales only down to the 1280 hinge;
+     below it the page FLOWS at zoom 1. Above 1280 this is the original ruled behaviour,
+     unchanged. Guard the zero viewport: a tab that has not been laid out reports 0, which
+     would collapse the shell to nothing. */
+  var DESIGN_W = 1440, FLOW_W = 1280, PHONE_W = 600;
+  var userCollapsed = false;      /* the user's OWN rail choice — only meaningful at >=1280 */
+
+  function closeDrawer() {
+    var el = $('.sidebar'), t = $('[data-drawer-toggle]');
+    if (el) el.classList.remove('is-open');
+    if (t) { t.setAttribute('aria-expanded', 'false'); t.setAttribute('aria-label', 'Open menu'); }
   }
-  fit();
-  window.addEventListener('resize', fit);
+  function openDrawer() {
+    var el = $('.sidebar'), t = $('[data-drawer-toggle]');
+    if (el) el.classList.add('is-open');
+    if (t) { t.setAttribute('aria-expanded', 'true'); t.setAttribute('aria-label', 'Close menu'); }
+  }
+
+  function layout() {
+    var w = window.innerWidth || DESIGN_W;
+    document.documentElement.style.setProperty('--fit',
+      w >= FLOW_W ? Math.min(1, w / DESIGN_W) : 1);
+    var el = $('.sidebar');
+    if (el) {
+      /* 600-1280 pins the rail to the MEASURED 64 collapsed state by reusing .is-collapsed,
+         so there is one measured treatment rather than two that can drift apart. Below 600
+         the rail is not a rail at all — it is the full 240 drawer — so the class comes off. */
+      if (w >= FLOW_W)       el.classList.toggle('is-collapsed', userCollapsed);
+      else if (w >= PHONE_W) el.classList.add('is-collapsed');
+      else                   el.classList.remove('is-collapsed');
+    }
+    if (w >= PHONE_W) closeDrawer();   /* leaving phone must not strand an open drawer */
+  }
+  layout();
+  window.addEventListener('resize', layout);
+
+  var drawerBtn = $('[data-drawer-toggle]');
+  if (drawerBtn) drawerBtn.addEventListener('click', function () {
+    var el = $('.sidebar');
+    if (el && el.classList.contains('is-open')) closeDrawer(); else openDrawer();
+  });
+  var drawerCatch = $('[data-drawer-close]');
+  if (drawerCatch) drawerCatch.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.key === 'Esc') closeDrawer();
+  });
+  /* choosing a destination closes the drawer — otherwise the page renders behind it */
+  $$('.sidebar .nav-item').forEach(function (n) { n.addEventListener('click', closeDrawer); });
+
+  /* the dock refresh DELEGATES to the wired Sync Now control instead of carrying a second
+     copy of its handler. Resolved at click time, so binding order does not matter. */
+  /* Compare — RULED 1 Sep 2026: a drawn affordance must work or not ship. This button was
+     drawn in the frame and bound to nothing. One class on the shell reveals every delta, so the
+     DEFAULT state remains exactly the measured composition and compare is a state on top of it. */
+  var cmpBtn = $('[data-compare]');
+  if (cmpBtn) cmpBtn.addEventListener('click', function () {
+    var on = $('.shell').classList.toggle('is-comparing');
+    cmpBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+
+  var dockSync = $('[data-dock-sync]');
+  if (dockSync) dockSync.addEventListener('click', function () {
+    var b = $('[data-sync]');
+    if (b) b.click();
+  });
 
   /* theme — a measured token swap, not a filter. Persisted so a reload keeps it. */
   function setTheme(mode) {
@@ -1278,6 +1536,7 @@ h1,h2,h3{margin:0;font-weight:inherit}
   if (collapseBtn) collapseBtn.addEventListener('click', function () {
     var sb = $('.sidebar');
     var collapsed = sb.classList.toggle('is-collapsed');
+    userCollapsed = collapsed;   /* remembered across a flow-mode round trip */
     collapseBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
     collapseBtn.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
     collapseBtn.innerHTML = collapsed ? CHEVRONS.collapsed : CHEVRONS.expanded;
@@ -1851,11 +2110,11 @@ h1,h2,h3{margin:0;font-weight:inherit}
     btn.setAttribute('data-tip', 'Last synced ' + syncedAgo() + ' \u00b7 ' + hh + ':' + mm);
   }
   document.addEventListener('mouseover', function (e) {
-    var b = e.target.closest && e.target.closest('.topbar .btn');
+    var b = e.target.closest && e.target.closest('[data-sync]');
     if (b) refreshSyncTip(b);
   }, true);
 
-  var syncBtn = $('.topbar .btn');
+  var syncBtn = $('[data-sync]');
   if (syncBtn) refreshSyncTip(syncBtn);
   if (syncBtn && loadPage) syncBtn.addEventListener('click', function () {
     if (syncBtn.hasAttribute('disabled')) return;

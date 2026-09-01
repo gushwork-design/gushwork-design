@@ -1,0 +1,186 @@
+{
+  "$comment": [
+    "Per-component versions for the marketing web surface. The plugin version tells someone the PLUGIN is",
+    "stale; this tells them which of the components THEY used actually changed, which is the only",
+    "thing that makes them act. Bump a component's version in the same commit that changes its spec",
+    "\u2014 scripts/check-drift.sh reads this file and a build's stamp, and reports the intersection.",
+    "",
+    "version = the plugin version in which that component's spec last changed.",
+    "breaking = true when a build using it will render WRONG until updated, as opposed to merely",
+    "missing an improvement. It is the difference between a red notice and an amber one.",
+    "",
+    "Seeded by deriving, for each spec doc, the first release that shipped its last change \u2014 not",
+    "by stamping everything at the current version, which would have told every existing build that",
+    "all of its components moved at once.",
+    "",
+    "Names come from the decision table in skills/gushwork-web/SKILL.md \u2014 the list a build actually",
+    "chooses from. Several share a doc, because the doc is the spec; a fold-level change therefore",
+    "moves every fold. That is coarser than the dashboard's per-component granularity and is the",
+    "honest starting point. Bump individually from here."
+  ],
+  "registryVersion": "1.43.0",
+  "components": {
+    "page-build": {
+      "version": "1.23.0",
+      "changed": "2026-08-08",
+      "breaking": false,
+      "doc": "page-shell.md"
+    },
+    "navbar": {
+      "version": "1.23.0",
+      "changed": "2026-08-08",
+      "breaking": false,
+      "doc": "page-shell.md"
+    },
+    "footer": {
+      "version": "1.23.0",
+      "changed": "2026-08-08",
+      "breaking": false,
+      "doc": "page-shell.md"
+    },
+    "hero": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "testimonial": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "cards-grid": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "cards-grid-small": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "faqs": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "with-image": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "timeline": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "comparison-table": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "video": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "ai-agents": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "cta": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "fold-other": {
+      "version": "1.10.0",
+      "changed": "2026-08-07",
+      "breaking": false,
+      "doc": "folds.md"
+    },
+    "button": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "button.md"
+    },
+    "card-information": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "cards.md"
+    },
+    "card-testimonial": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "cards.md"
+    },
+    "card-review": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "cards.md"
+    },
+    "card-case-study": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "cards.md"
+    },
+    "eyebrow": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "atoms.md"
+    },
+    "form": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "fold-elements.md"
+    },
+    "input-fields": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "atoms.md"
+    },
+    "inline-input": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "atoms.md"
+    },
+    "client-avatar": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "avatar.md"
+    },
+    "client-logos": {
+      "version": "1.1.0",
+      "changed": "2026-08-06",
+      "breaking": false,
+      "doc": "fold-elements.md"
+    },
+    "image": {
+      "version": "1.23.0",
+      "changed": "2026-08-08",
+      "breaking": false,
+      "doc": "images.md"
+    }
+  }
+}

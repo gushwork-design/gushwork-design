@@ -156,38 +156,51 @@ you approve in the GitHub UI.
 See the propagation table in [`README.md`](README.md). The short version:
 
 1. Change Figma **and** measure it into the repo in the same sitting. Figma alone ships nothing.
-2. **`bash scripts/stamp-release.sh 1.2.0`** — stamps the version and today's date into all four
-   places at once: both manifests and both skills' announce lines.
-3. **Commit with the subject as the one-line summary**, and name the chat in a trailer:
+2. **`bash scripts/release.sh 1.2.0 "what changed, in one line" --session "<uuid> <title>"`**
 
-   ```
-   v1.2.0 — what changed, in one line
+   One command, because the steps below were written down, were correct, and still got done
+   wrong. v1.40.0 moved `plugin.json` and both announce lines but not `marketplace.json` —
+   `stamp-release.sh` writes all of them, so it had simply not been run — and the marketplace
+   served 1.39.0 while the plugin called itself 1.40.0 for ten days. Nothing failed. Nothing
+   said anything.
 
-   ...body...
+   It stamps, makes the release commit, regenerates the logs as a **second** commit, then
+   checks the three things that have each been wrong at some point: the version fields agree,
+   the derived logs agree with their generator, and the new version really did become a
+   changelog row. It stops at the first disagreement. `--publish` deploys as well.
 
-   Session: 5a7c696b-5bbf-4aee-adf8-603e744f9018 Gushwork Design System plugin
-   ```
+   **It does not push.** `scripts/hooks/pre-push` makes a push to `main` a deliberate act on
+   purpose, and a release script that pushed would route around the guard this repo installed.
 
-   The subject is the *summary* in both release logs. The trailer is `<session-uuid> <title>`,
-   and becomes a `claude://resume/<uuid>` link in the `Session` column. Get the uuid from the
-   transcript filename in `~/.claude/projects/<project>/`.
-4. **`bash scripts/release-log.sh`**, then commit it **separately** —
-   `git commit -m "Regenerate the release logs after v1.2.0"`. Never amend: the logs record
-   the release commit's sha, and amending changes it. `bash scripts/release-log.sh --check`
-   exits non-zero if either is stale.
+   What it is doing, and what to know if you ever drive it by hand:
 
-   That one command regenerates **both** renderings — `CHANGELOG.md` and
-   `preview/changelog-sheet.html` — from one derivation in `scripts/_releases.sh`, so they
-   cannot disagree. Neither is ever edited by hand.
+   - `stamp-release.sh` writes the version and today's date into both manifests and every
+     skill's announce line at once.
+   - **The commit subject is the summary** in both release logs.
+   - The trailer is `<session-uuid> <title>` and becomes a `claude://resume/<uuid>` link in the
+     `Session` column. Get the uuid from the transcript filename in `~/.claude/projects/<project>/`.
+
+     It **must sit in the last paragraph of the message.** Git parses trailers only there, so a
+     `Session:` line with a blank line between it and a following `Co-Authored-By:` is not a
+     trailer at all: the column comes out blank and nothing says why. `release.sh` reads the
+     trailer back after committing and refuses to go on if it did not parse.
+   - `release-log.sh` regenerates **both** renderings — `CHANGELOG.md` and
+     `preview/changelog-sheet.html` — from one derivation in `scripts/_releases.sh`, so they
+     cannot disagree. Neither is ever edited by hand. `--check` exits non-zero if either is
+     stale.
+   - The log commit is **never an amend**: the logs record the release commit's sha, and
+     amending changes it.
 
    **A release is a commit that moves the `version` field in `.claude-plugin/plugin.json`** —
-   the field `plugin update` compares. It is *not* a commit whose subject starts `vX.Y.Z`.
-   That was the old rule, and because the subject convention only started at v1.19.0 it
-   dropped 23 of 34 releases, including **v1.20.0, the login screen**. Write the subject well
-   anyway: a release with a badly-formed subject now appears in the log with a bad summary
-   rather than not appearing at all.
-5. `claude plugin validate .` before you push.
-6. Push to `main`. Anyone with `autoUpdate` on gets it at their next start.
+   the field `plugin update` compares. It is *not* a commit whose subject starts `vX.Y.Z`. That
+   was the old rule, and because the subject convention only started at v1.19.0 it dropped 23 of
+   34 releases, including **v1.20.0, the login screen**. Write the subject well anyway: a
+   release with a badly-formed subject now appears in the log with a bad summary rather than not
+   appearing at all.
+3. **`claude plugin list`** before you push — not `claude plugin validate .`. Validate passes on
+   a `plugin.json` broken badly enough that the plugin never loads; `list` is what shows you it
+   actually resolved. v1.41.1 exists because of that gap.
+4. Push to `main`. Anyone with `autoUpdate` on gets it at their next start.
 
 **What the Session link is, and is not.** `Claude.app` registers a `claude://` scheme whose
 `resume` route reopens a CLI session by uuid. The link therefore **only resolves on the machine

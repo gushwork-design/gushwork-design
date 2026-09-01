@@ -1,0 +1,43 @@
+{
+  "$comment": [
+    "Per-component versions for the lead-magnet document surface. The plugin version tells someone the PLUGIN is",
+    "stale; this tells them which of the components THEY used actually changed, which is the only",
+    "thing that makes them act. Bump a component's version in the same commit that changes its spec",
+    "\u2014 scripts/check-drift.sh reads this file and a build's stamp, and reports the intersection.",
+    "",
+    "version = the plugin version in which that component's spec last changed.",
+    "breaking = true when a build using it will render WRONG until updated, as opposed to merely",
+    "missing an improvement. It is the difference between a red notice and an amber one.",
+    "",
+    "Seeded by deriving, for each spec doc, the first release that shipped its last change \u2014 not",
+    "by stamping everything at the current version, which would have told every existing build that",
+    "all of its components moved at once."
+  ],
+  "registryVersion": "1.43.0",
+  "components": {
+    "cover": {
+      "version": "1.43.0",
+      "changed": "2026-09-01",
+      "breaking": false,
+      "doc": "cover.md"
+    },
+    "interior": {
+      "version": "1.43.0",
+      "changed": "2026-09-01",
+      "breaking": false,
+      "doc": "interior.md"
+    },
+    "closer": {
+      "version": "1.43.0",
+      "changed": "2026-09-01",
+      "breaking": false,
+      "doc": "closer.md"
+    },
+    "document": {
+      "version": "1.43.0",
+      "changed": "2026-09-01",
+      "breaking": false,
+      "doc": "document.md"
+    }
+  }
+}

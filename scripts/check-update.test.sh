@@ -34,18 +34,34 @@ run() {                       # run <plugin-root> <payload-url>
 }
 
 bash scripts/version-json.sh > "$TMP/v.json"
-python3 - "$TMP/v.json" "$TMP/breaking.json" <<'PY'
-import json, sys
-d = json.load(open(sys.argv[1]))
-top = d["version"]
-d["components"]["badge"] = {"version": top, "breaking": True}
-d["components"]["data-table"] = {"version": top, "breaking": True}
-d["components"]["card-shell"] = {"version": top, "breaking": False}
-json.dump(d, open(sys.argv[2], "w"))
-PY
 CUR="$(python3 -c "import json;print(json.load(open('$TMP/v.json'))['version'])")"
 OLD="$(python3 -c "
 v=[int(x) for x in '$CUR'.split('.')]; v[1]-=1; print('.'.join(map(str,v)))")"
+
+# The ENVELOPE comes from the real generator, so a change to version.json's shape is caught.
+# The component MAP must not: a scenario named "nothing moved" has to actually have nothing
+# moving in it, whatever the live registry holds that day. Both fixtures below therefore pin
+# every real component at OLD and add only what the case is about.
+#
+# This is not hypothetical tidiness. Tests 2 and 3 were derived from the live registry and
+# passed until v1.42.0 moved metric-card and stat-card — after which "nothing moved" had two
+# components moving in it, and "1 changed" was three. Two tests went red without the hook
+# changing at all.
+python3 - "$TMP/v.json" "$OLD" "$CUR" "$TMP/quiet.json" "$TMP/breaking.json" <<'PY'
+import json, sys
+src, old, top, quiet_p, breaking_p = sys.argv[1:6]
+d = json.load(open(src))
+
+# nothing above OLD — the "the plugin moved but no component did" release
+d["components"] = {k: {"version": old, "breaking": False} for k in d["components"]}
+json.dump(d, open(quiet_p, "w"))
+
+# exactly two breaking and one not, all above OLD
+d["components"]["badge"] = {"version": top, "breaking": True}
+d["components"]["data-table"] = {"version": top, "breaking": True}
+d["components"]["card-shell"] = {"version": top, "breaking": False}
+json.dump(d, open(breaking_p, "w"))
+PY
 
 echo "current=$CUR  simulated-stale=$OLD"
 
@@ -61,7 +77,9 @@ assert d['additionalContext']
 " 2>/dev/null && ck ok "behind: names both versions in a valid envelope" \
                 || ck no "behind: envelope malformed"
 
-# 2 · no components moved → must not point at a list that is not there
+# 2 · the plugin moved but no component did → must not point at a list that is not
+#     there. Its own payload: the live registry normally DOES have components above OLD.
+out="$(run "$(fake "$OLD")" "file://$TMP/quiet.json")"
 printf '%s' "$out" | grep -q "components named above" \
   && ck no "behind, nothing moved: dangling 'components named above'" \
   || ck ok "behind, nothing moved: no dangling reference"

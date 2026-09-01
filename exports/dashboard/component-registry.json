@@ -9,15 +9,8 @@
     "breaking = true when a build using it will render WRONG until updated, as opposed to merely",
     "missing an improvement. Drift on a breaking change is reported as MUST, everything else as MAY."
   ],
-  "registryVersion": "1.40.0",
+  "registryVersion": "1.43.0",
   "components": {
-    "badge": {
-      "version": "1.40.0",
-      "changed": "2026-08-26",
-      "breaking": false,
-      "doc": "v2/primitives.md",
-      "note": "FINDING: light tints fail 4.5:1 at their own 12px label \u2014 success 3.15, warning 3.07, danger 4.28 composited. Dark passes. Reported, not changed."
-    },
     "card-shell": {
       "version": "1.38.0",
       "changed": "2026-08-13",

@@ -17,7 +17,7 @@ and a hard stop rather than an invented component when something genuinely doesn
 ```
 Set up the Gushwork Design System plugin for me:
 
-1. Run: claude plugin marketplace add utsav-gushwork/gushwork-design
+1. Run: claude plugin marketplace add gushwork-design/gushwork-design
 2. Run: claude plugin install gushwork-design@gushwork
 3. In ~/.claude/plugins/known_marketplaces.json, set "autoUpdate": true on the
    "gushwork" entry. Leave everything else in that file alone.
@@ -30,7 +30,7 @@ By hand, if you prefer: `claude plugin install` resolves a plugin **name from a 
 a git URL. This repo is its own single-plugin marketplace, so add it once, then install:
 
 ```bash
-claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin install gushwork-design@gushwork
+claude plugin marketplace add gushwork-design/gushwork-design && claude plugin install gushwork-design@gushwork
 ```
 
 `scripts/install.sh` does all three steps and is safe to re-run.
@@ -61,11 +61,10 @@ The chain, end to end:
 |---|---|---|
 | 1 | maintainer | change it in Figma |
 | 2 | maintainer | measure it into `exports/` or re-pull `tokens.css` — see [`CONTRIBUTING.md`](CONTRIBUTING.md) |
-| 3 | maintainer | `bash scripts/stamp-release.sh 1.2.0` — stamps version + date into both manifests and both skills |
-| 4 | maintainer | commit and push to `main` |
-| 5 | maintainer | `bash scripts/release-log.sh` — rebuilds [`CHANGELOG.md`](CHANGELOG.md) **and** `preview/changelog-sheet.html` from git; commit them separately |
-| 6 | maintainer | `bash scripts/release-notes.sh`, then post it in Slack — there is no push notification |
-| 7 | everyone | `claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork`, then **restart** |
+| 3 | maintainer | `bash scripts/release.sh 1.2.0 "<summary>" --session "<uuid> <title>"` — stamps version + date into both manifests and every skill's announce line, makes the release commit, rebuilds [`CHANGELOG.md`](CHANGELOG.md) **and** `preview/changelog-sheet.html` as a second commit, then verifies the three agree. Add `--publish` to deploy too |
+| 4 | maintainer | `GW_PUSH=1 git push origin main` — `release.sh` deliberately does not push |
+| 5 | maintainer | `bash scripts/release-notes.sh`, then post it in Slack — there is no push notification |
+| 6 | everyone | nothing, if `autoUpdate` is on — the session-start hook takes it at the next start and names what changed. Otherwise `claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork`, then **restart** |
 
 Three things worth knowing:
 

@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Style Guide — Gushwork Design</title>
+<meta name="description" content="The Gushwork style guide — the mark, the palette, the type scale, and the spacing and radius rules.">
+<script>try{var t=localStorage.getItem('gw-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2220%22%20fill%3D%22%230d0d0d%22%2F%3E%3Cg%20transform%3D%22translate%2819.2%2019.2%29%20scale%280.52%29%22%3E%3Cpath%20d%3D%22M76.6088%204.56344C77.5025%202.36058%2075.8495%200%2073.4723%200H9.14286C4.0934%200%200%204.0934%200%209.14286V66.7778C0%2072.018%205.17081%2075.6829%209.9603%2073.5568C40.8494%2059.8449%2064.3785%2034.7075%2076.6088%204.56344Z%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Cpath%20d%3D%22M32.5161%2080C31.4022%2080%2030.9357%2078.5531%2031.8259%2077.8835C54.9007%2060.5265%2071.4338%2035.8047%2078.7658%208.0522C78.9403%207.39154%2080%207.51618%2080%208.19951V70.8571C80%2075.9066%2075.9066%2080%2070.8571%2080H32.5161Z%22%20fill%3D%22%23FFFFFF%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<link rel="stylesheet" href="/foundation/tokens.css">
+<link rel="stylesheet" href="/shell.css">
+<script src="/shell.js" defer></script>
+<style>
+/* ============================================================================
+   Style Guide — built from Figma `Q9L6q38dEj3Qu1JkjiT13y` → page
+   `Gushwork Design` → frame `styleguide` (478:15070, the expanded-TOC state;
+   478:15652 is the same content with the rail collapsed).
+
+   Measured, not eyeballed:
+     column split   main 800 · gutter 60 · rail 260 · page pad 60/40
+     header         gap 20 · title VGD Semibold 44/120 black
+                    · meta Inter Medium 14/20 Neutral/400 · rule 2px Neutral/200
+     sections       gap 60 · pad-left 40 · inner gap 40 · blocks gap 20
+     section title  VGD Semibold 28/120 Neutral/black
+     sub-head       Inter Semi Bold 18 Neutral/black
+     body           Inter Medium 18/160 Neutral/600
+     cards          r20 Neutral/100 · inner cards r16
+   ========================================================================= */
+
+/* -- page frame: main + TOC, same split the changelog uses ---------------- */
+/* minmax(0,800px) — not a fixed 800 — so the main column gives way before the
+   TOC does. The content area here is the viewport minus the 240 rail, so a
+   hard 800 + 60 + 260 would overflow on anything under a 1440 screen. */
+.sg{
+  max-width:1200px;margin:0 auto;
+  padding:var(--gw-space-60) var(--gw-space-40) var(--gw-space-120);
+  /* `auto` for the rail, not a fixed 260 — collapsing it to 48 then widens
+     the main column to the measured 1012 with no extra rule. */
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--gw-space-60);
+}
+.sg__main{min-width:0;display:flex;flex-direction:column;gap:var(--gw-space-32)}
+
+/* -- header (Frame 2147260129): inset 40, rule runs the full column ------- */
+/* The rule under the header is DOTTED, not solid. Measured on Line 14
+   (478:15076): strokeWeight 2, strokeCap ROUND, dashPattern [0.1, 4] — a
+   dash of essentially zero length under a round cap is a dot, 2px across
+   (the weight), repeating every 4.1px.
+   Drawn as a gradient rather than `border-bottom: 2px dotted`, because the
+   dot size and spacing of a CSS dotted border are left to the UA and differ
+   between engines; this pins both to the measured numbers. `closest-side`
+   makes the radius min(4.1,2)/2 = 1px, so the dot is exactly 2px wide. */
+.sg__hd{padding:0 var(--gw-space-40) var(--gw-space-32);
+        border-bottom:0;
+        background-image:radial-gradient(circle closest-side,
+                         var(--s-rule) 100%, transparent 100%);
+        background-size:4.1px 2px;
+        background-position:left bottom;
+        background-repeat:repeat-x;
+        display:flex;flex-direction:column;gap:var(--gw-space-20)}
+.sg__title{margin:0;font:600 44px/1.2 var(--gw-font-display);letter-spacing:0;
+           color:var(--s-heading)}
+.sg__meta{margin:0;font:var(--gw-text-body-14-med);
+          letter-spacing:var(--gw-text-body-14-med-tracking);
+          color:var(--gw-color-neutral-400)}
+
+/* -- sections ------------------------------------------------------------- */
+.sg__body{display:flex;flex-direction:column;gap:var(--gw-space-60)}
+.sg-sec{padding-left:var(--gw-space-40);display:flex;flex-direction:column;
+        gap:var(--gw-space-40);scroll-margin-top:calc(60px + var(--gw-space-24))}
+.sg-block{display:flex;flex-direction:column;gap:var(--gw-space-20)}
+.sg-sec :where(h2){margin:0;font:600 28px/1.2 var(--gw-font-display);letter-spacing:0;
+           color:var(--s-heading)}
+.sg-sec :where(h3){margin:0;font:var(--gw-text-body-18-sem);
+           letter-spacing:var(--gw-text-body-18-sem-tracking);color:var(--s-heading)}
+/* :where() so this contributes ZERO specificity. As `.sg-sec p` it scored
+   0,1,1 and out-ranked every specimen class below (0,1,0) — which silently
+   rendered the 40px Vert Grotesk display specimen as 18px Inter body copy. */
+.sg-sec :where(p){margin:0;font:var(--gw-text-body-18-med);
+          letter-spacing:var(--gw-text-body-18-med-tracking);color:var(--s-body)}
+.sg-head{display:flex;flex-direction:column;gap:var(--gw-space-12)}
+
+/* -- the standard specimen card ------------------------------------------ */
+.sg-card{border-radius:var(--gw-radius-20);background:var(--s-specimen-bg);
+         border:1px solid var(--s-specimen-border)}
+.sg-card--pad{padding:var(--gw-space-32);display:flex;flex-direction:column;
+              gap:var(--gw-space-32)}
+
+/* -- logo treatments (Frame 2147260256, 760x360) -------------------------- */
+.sg-logo{position:relative;min-height:360px;display:grid;place-items:center;
+         overflow:hidden}
+.sg-logo img{width:210px;height:auto;display:block}
+/* controls/tab 194x36, pad 4, gap 4, r12, fill Neutral/50 */
+.sg-tabs{position:absolute;left:var(--gw-space-12);bottom:var(--gw-space-12);
+         display:flex;gap:var(--gw-space-4);padding:var(--gw-space-4);
+         border-radius:var(--gw-radius-12);background:var(--gw-color-neutral-50)}
+.sg-tab{border:0;cursor:pointer;padding:0 var(--gw-space-12);height:28px;
+        border-radius:var(--gw-radius-8);background:none;
+        font:var(--gw-text-button-12);line-height:16px;
+        color:var(--gw-color-neutral-700)}
+.sg-tab[aria-pressed="true"]{background:var(--gw-color-black);
+        color:var(--gw-color-white)}
+.sg-logo[data-bg="white"]{background:var(--gw-color-white)}
+.sg-logo[data-bg="dark"]{background:var(--gw-color-black)}
+.sg-logo[data-bg="blue"]{background:var(--gw-color-primary-500)}
+
+/* -- do / don't grid: GRID gap 8, cards 248x158 r16 ----------------------- */
+.sg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gw-space-8)}
+.sg-tile{border-radius:var(--gw-radius-16);background:var(--s-specimen-bg);
+         border:1px solid var(--s-specimen-border);
+         min-height:158px;display:flex;flex-direction:column;
+         align-items:center;justify-content:center;gap:var(--gw-space-12);
+         padding:var(--gw-space-20);text-align:center;overflow:hidden}
+.sg-tile__art{flex:1;display:grid;place-items:center;width:100%}
+.sg-tile__art img{width:120px;height:auto;display:block}
+.sg-tile__cap{font:var(--gw-text-button-10);line-height:14px;
+              color:var(--s-body)}
+.sg-tile--bad .sg-tile__art img{opacity:1}
+/* Each wrong treatment is drawn, not described — the point of the panel is
+   to show the thing you must not do. */
+.sg-tile--tilt   img{transform:rotate(-12deg)}
+.sg-tile--stretch img{transform:scaleX(1.6)}
+.sg-tile--shadow img{filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+.sg-tile--gradient{position:relative}
+.sg-tile--gradient .sg-tile__art{
+  background:linear-gradient(90deg,var(--gw-color-primary-500),#a855f7);
+  -webkit-mask:url('/assets/logo/gushwork-logo-dark.svg') center/120px no-repeat;
+  mask:url('/assets/logo/gushwork-logo-dark.svg') center/120px no-repeat;
+  min-height:60px}
+.sg-tile--bluefill .sg-tile__art{
+  background:var(--gw-color-primary-500);
+  -webkit-mask:url('/assets/logo/gushwork-logo-dark.svg') center/120px no-repeat;
+  mask:url('/assets/logo/gushwork-logo-dark.svg') center/120px no-repeat;
+  min-height:60px}
+.sg-tile--wrongtext .sg-tile__art{
+  background:#16a34a;
+  -webkit-mask:url('/assets/logo/gushwork-logo-dark.svg') center/120px no-repeat;
+  mask:url('/assets/logo/gushwork-logo-dark.svg') center/120px no-repeat;
+  min-height:60px}
+.sg-tile[data-bg="blue"]{background:var(--gw-color-primary-500);border-color:var(--gw-color-primary-600)}
+.sg-tile[data-bg="dark"]{background:var(--gw-color-black);border-color:var(--gw-color-neutral-800)}
+.sg-tile[data-bg="white"]{background:var(--gw-color-white)}
+.sg-tile[data-bg="blue"] .sg-tile__cap,
+.sg-tile[data-bg="dark"] .sg-tile__cap{color:var(--gw-color-neutral-alpha-60-white)}
+.sg-tile--grey .sg-tile__art{filter:grayscale(1) opacity(.45)}
+
+/* -- colour cards (Frame 2147260257: pad 4, gap 4, r20) ------------------- */
+.sg-colors{padding:var(--gw-space-4);border-radius:var(--gw-radius-20);
+           background:var(--s-specimen-bg);display:grid;
+           grid-template-columns:340px minmax(0,1fr);gap:var(--gw-space-4)}
+.sg-colcol{display:grid;grid-template-rows:1fr 1fr;gap:var(--gw-space-4)}
+.sg-col{border-radius:var(--gw-radius-16);padding:var(--gw-space-24);
+        display:flex;flex-direction:column;justify-content:space-between;
+        gap:var(--gw-space-24);min-height:193px}
+.sg-col--tall{min-height:390px}
+.sg-col__hd{display:flex;align-items:center;justify-content:space-between;
+            gap:var(--gw-space-16)}
+.sg-col__name{font:var(--gw-text-body-16-med);
+              letter-spacing:var(--gw-text-body-16-med-tracking)}
+.sg-col__role,.sg-col__k{font:var(--gw-text-button-10);line-height:14px}
+.sg-col__groups{display:flex;gap:var(--gw-space-40);flex-wrap:wrap}
+.sg-col__grp{display:flex;flex-direction:column;gap:var(--gw-space-8)}
+.sg-col__row{display:flex;gap:var(--gw-space-20)}
+.sg-col__row dt{margin:0;min-width:52px;font:var(--gw-text-button-10);line-height:14px}
+.sg-col__row dd{margin:0;font:var(--gw-text-button-10);line-height:14px}
+.sg-col--blue{background:var(--gw-color-primary-500)}
+.sg-col--blue .sg-col__name,.sg-col--blue dd{color:var(--gw-color-white)}
+.sg-col--blue .sg-col__role,.sg-col--blue .sg-col__k,.sg-col--blue dt{
+  color:var(--gw-color-neutral-alpha-50-white)}
+.sg-col--white{background:var(--gw-color-white)}
+.sg-col--white .sg-col__name,.sg-col--white dd{color:var(--gw-color-black)}
+.sg-col--white .sg-col__role,.sg-col--white .sg-col__k,.sg-col--white dt{
+  color:var(--gw-color-neutral-400)}
+.sg-col--black{background:var(--gw-color-black)}
+.sg-col--black .sg-col__name,.sg-col--black dd{color:var(--gw-color-white)}
+.sg-col--black .sg-col__role,.sg-col--black .sg-col__k,.sg-col--black dt{
+  color:var(--gw-color-neutral-alpha-50-white)}
+
+/* -- extended palette ----------------------------------------------------- */
+.sg-ramp{padding:var(--gw-space-4);border-radius:var(--gw-radius-20);
+         background:var(--s-card-bg);border:1px solid var(--s-specimen-border);
+         display:flex;flex-direction:column;gap:var(--gw-space-12)}
+.sg-ramp__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+               gap:var(--gw-space-4)}
+.sg-swatch{border-radius:var(--gw-radius-8);padding:var(--gw-space-8);
+           min-height:56px;display:flex;flex-direction:column;
+           justify-content:flex-end;gap:2px;
+           border:1px solid var(--s-specimen-border)}
+.sg-swatch b,.sg-swatch span{font:var(--gw-text-button-10);line-height:14px;
+                             font-weight:500}
+.sg-swatch--on-dark b,.sg-swatch--on-dark span{color:var(--gw-color-white)}
+.sg-swatch--on-dark span{color:var(--gw-color-neutral-alpha-60-white)}
+.sg-swatch--on-light b{color:var(--gw-color-black)}
+.sg-swatch--on-light span{color:var(--gw-color-neutral-600)}
+
+/* -- typography specimens ------------------------------------------------- */
+.sg-type__label{display:flex;flex-direction:column;gap:var(--gw-space-8)}
+.sg-type__kicker{font:var(--gw-text-button-10);line-height:14px;
+                 color:var(--gw-color-neutral-400)}
+.sg-type__face{font:var(--gw-text-body-14-med);
+               letter-spacing:var(--gw-text-body-14-med-tracking);
+               color:var(--s-heading)}
+.sg-type__display{margin:0;font:700 40px/1.2 var(--gw-font-display);
+                  letter-spacing:0;color:var(--s-heading)}
+.sg-type__para{margin:0;font:var(--gw-text-body-18-med);
+               letter-spacing:var(--gw-text-body-18-med-tracking);
+               color:var(--s-heading)}
+.sg-use{margin:0;font:var(--gw-text-body-16-med);
+        letter-spacing:var(--gw-text-body-16-med-tracking);color:var(--s-body)}
+
+/* -- spacing + radius scales ---------------------------------------------- */
+.sg-scale{padding:var(--gw-space-20);border-radius:var(--gw-radius-20);
+          background:var(--s-specimen-bg);border:1px solid var(--s-specimen-border);
+          display:flex;flex-wrap:wrap;gap:var(--gw-space-8)}
+/* Each chip: a Neutral/50 preview box over a white label strip (pad 6/8),
+   the geometry measured off the radius scale in the Figma. */
+.sg-chip{border-radius:var(--gw-radius-8);overflow:hidden;
+         background:var(--s-card-bg);border:1px solid var(--s-specimen-border)}
+.sg-chip__prev{height:64px;min-width:76px;padding:var(--gw-space-16);
+               background:var(--s-chrome-bg);display:grid;place-items:center}
+.sg-chip__bar{background:var(--gw-color-primary-500);height:100%;
+              border-radius:var(--gw-radius-2)}
+.sg-chip__box{width:48px;height:32px;background:var(--gw-color-primary-500)}
+.sg-chip__lbl{padding:6px var(--gw-space-8);display:flex;flex-direction:column;gap:1px}
+.sg-chip__lbl b{font:700 12px/16px var(--gw-font-body);color:var(--s-heading)}
+.sg-chip__lbl span{font:400 10px/14px var(--gw-font-body);color:var(--s-body)}
+
+/* -- elevation ------------------------------------------------------------ */
+.sg-elev{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gw-space-16)}
+.sg-elev__cell{background:var(--s-card-bg);border-radius:var(--gw-radius-12);
+               padding:var(--gw-space-20);min-height:96px;
+               display:flex;flex-direction:column;justify-content:flex-end;gap:2px}
+.sg-elev__cell b{font:700 12px/16px var(--gw-font-body);color:var(--s-heading)}
+.sg-elev__cell span{font:400 10px/14px var(--gw-font-body);color:var(--s-body)}
+
+/* -- the incomplete-section notice ---------------------------------------- */
+.sg-todo{padding:var(--gw-space-20);border-radius:var(--gw-radius-12);
+         background:var(--gw-color-primary-25);
+         border:1px solid var(--gw-color-primary-100)}
+.sg-todo p{font:var(--gw-text-body-14-reg);
+           letter-spacing:var(--gw-text-body-14-reg-tracking);
+           color:var(--gw-color-neutral-700)}
+:root[data-theme="dark"] .sg-todo{background:transparent;
+  border-color:var(--gw-color-primary-800)}
+
+/* Specimen surfaces. Neutral/100 on a Neutral/25 page is the measured light
+   pairing; in dark it would vanish against the chrome, so it steps to the
+   card surface with a visible border. */
+:root,:root[data-theme="light"]{
+  --s-specimen-bg:var(--gw-color-neutral-100);
+  --s-specimen-border:var(--gw-color-neutral-100);
+  --s-rule:var(--gw-color-neutral-200);   /* measured: Line 14 stroke */
+}
+:root[data-theme="dark"]{
+  --s-specimen-bg:var(--gw-color-neutral-900);
+  --s-specimen-border:var(--gw-color-neutral-800);
+  /* Neutral/200 is a light grey — on the dark page it would read as a bright
+     line. Steps to the border tone the rest of the chrome uses. */
+  --s-rule:var(--gw-color-neutral-800);
+}
+
+/* No narrow-viewport reflow here. exports/dashboard/build-rules.md rules that
+   below 1440 the canvas SCALES rather than rearranges — reflow is listed there
+   as a rejected attempt. shell.js sets --gw-fit and .gw-shell zooms the whole
+   1440 layout, so this page keeps its 800 / 60 / 260 split at every width. */
+
+/* Phone — reflow to one column. See shell.css §10 for why this page reflows
+   while `dashboard-build` scales. */
+@media (max-width:767px){
+  .sg{max-width:none;grid-template-columns:minmax(0,1fr);gap:0;
+      padding:var(--gw-bp-pad-section-v) var(--gw-bp-pad-page-h)}
+  .sg__main{gap:var(--gw-bp-content-gap)}
+  .sg__hd{padding-left:0;padding-right:0}
+  .sg__title{font-size:var(--gw-bp-type-h1)}
+  .sg__body{gap:var(--gw-bp-section-gap)}
+  .sg-sec{padding-left:0;gap:var(--gw-bp-content-gap)}
+  .sg-sec :where(h2){font-size:var(--gw-bp-type-h2)}
+  .sg-card--pad{padding:var(--gw-bp-pad-card-v) var(--gw-bp-pad-card-h)}
+  .sg-logo{min-height:220px}
+  .sg-logo img{width:150px}
+  /* One column of tiles at 343 content — two would put the caption on four
+     lines inside a 158 tile. */
+  .sg-grid{grid-template-columns:minmax(0,1fr)}
+  .sg-colors{grid-template-columns:minmax(0,1fr)}
+  .sg-col--tall{min-height:0}
+  .sg-col__groups{gap:var(--gw-bp-content-gap)}
+  .sg-elev{grid-template-columns:minmax(0,1fr)}
+  .sg-type__display{font-size:var(--gw-bp-type-h1)}
+  .sg-ramp__grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+}
+</style>
+</head>
+<body data-gw-page="style-guide">
+
+<div class="sg">
+  <div class="sg__main">
+
+    <header class="sg__hd">
+      <h1 class="sg__title">Gushwork Style Guide</h1>
+      <p class="sg__meta">Last updated 01st Sep, 2026</p>
+    </header>
+
+    <div class="sg__body">
+
+      <!-- intro (Frame 2147260245) -->
+      <section class="sg-sec">
+        <p>Everything you need to design on-brand for Gushwork lives here — the palette,
+           the type scale, the spacing and radius rules, and the components they compose
+           into. When a decision is already made, this guide is where it&rsquo;s written
+           down, so you can spend your time building instead of guessing.</p>
+      </section>
+
+      <!-- CONCEPT (Frame 2147260246) -->
+      <section class="sg-sec" id="concept">
+        <div class="sg-block">
+          <h2>Concept</h2>
+          <p>We&rsquo;re enablers of lean exponential growth. Our logo features an
+             exponential curve, a direct reminder &amp; leading indicator of this message.
+             The upward curve transitioning from thick to thin represents our core
+             mission, maximizing ARR per FTE.</p>
+          <div class="sg-card sg-logo" data-bg="blue">
+            <img src="/assets/logo/gushwork-logo-white.svg" alt="The Gushwork logo">
+          </div>
+          <p>We free businesses from bloated teams at a time where even one-person
+             unicorns can thrive and Gushwork is the gush behind that transformation.
+             Through our on-demand marketing services, we remove subjectivity and
+             productize workflows with humans in the loop, ensuring both quality and
+             quantity. That is faster growth with leaner teams.</p>
+          <p>This logo serves as a constant reminder of our promise: hockey stick growth
+             and limitless potential for businesses that partner with us.</p>
+        </div>
+      </section>
+
+      <!-- LOGO (Frame 2147260247) — three blocks at gap 40 -->
+      <section class="sg-sec" id="logo">
+        <div class="sg-block">
+          <h2>Logo</h2>
+          <p>The mark is the exponential curve. Keep it consistent — same shape, same
+             proportions — everywhere it appears: web, decks, dashboards, print. Give it
+             clear space, use one of the three approved treatments below, and never
+             redraw or restyle it.</p>
+          <!-- Frame 2147260256, 760x360, with controls/tab 194x36 bottom-left -->
+          <div class="sg-card sg-logo" id="logo-stage" data-bg="">
+            <img id="logo-art" src="/assets/logo/gushwork-logo-original.svg"
+                 alt="The Gushwork logo, original treatment">
+            <div class="sg-tabs" role="group" aria-label="Logo treatment">
+              <button class="sg-tab" type="button" data-logo="original" aria-pressed="true">Original</button>
+              <button class="sg-tab" type="button" data-logo="white" aria-pressed="false">White</button>
+              <button class="sg-tab" type="button" data-logo="dark" aria-pressed="false">Dark</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <div class="sg-head">
+            <h3>Incorrect usage</h3>
+            <p>The mark carries the brand, so protect it. Don&rsquo;t recolor it, tilt it,
+               stretch it, or add effects the system doesn&rsquo;t use. If you&rsquo;re
+               reaching for a gradient or a shadow, stop.</p>
+          </div>
+          <div class="sg-grid">
+            <div class="sg-tile sg-tile--bluefill"><div class="sg-tile__art"></div>
+              <span class="sg-tile__cap">Don&rsquo;t use in full blue color</span></div>
+            <div class="sg-tile sg-tile--tilt"><div class="sg-tile__art">
+              <img src="/assets/logo/gushwork-logo-dark.svg" alt=""></div>
+              <span class="sg-tile__cap">Don&rsquo;t tilt it</span></div>
+            <div class="sg-tile sg-tile--gradient"><div class="sg-tile__art"></div>
+              <span class="sg-tile__cap">Don&rsquo;t add any gradient</span></div>
+            <div class="sg-tile sg-tile--wrongtext"><div class="sg-tile__art"></div>
+              <span class="sg-tile__cap">Don&rsquo;t use any other color for text</span></div>
+            <div class="sg-tile sg-tile--shadow"><div class="sg-tile__art">
+              <img src="/assets/logo/gushwork-logo-dark.svg" alt=""></div>
+              <span class="sg-tile__cap">Don&rsquo;t add shadow</span></div>
+            <div class="sg-tile sg-tile--stretch"><div class="sg-tile__art">
+              <img src="/assets/logo/gushwork-logo-dark.svg" alt=""></div>
+              <span class="sg-tile__cap">Don&rsquo;t stretch it</span></div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <div class="sg-head">
+            <h3>Correct usage</h3>
+            <p>Pick the treatment by background, not by preference. These cover every
+               surface you&rsquo;ll build.</p>
+          </div>
+          <div class="sg-grid">
+            <div class="sg-tile" data-bg="white"><div class="sg-tile__art">
+              <img src="/assets/logo/gushwork-logo-original.svg" alt=""></div>
+              <span class="sg-tile__cap">Use it in original colors and form</span></div>
+            <div class="sg-tile" data-bg="white"><div class="sg-tile__art">
+              <img src="/assets/logo/gushwork-logo-dark.svg" alt=""></div>
+              <span class="sg-tile__cap">Use black version for monochrome designs</span></div>
+            <div class="sg-tile sg-tile--grey" data-bg="white"><div class="sg-tile__art">
+              <img src="/assets/logo/gushwork-logo-dark.svg" alt=""></div>
+              <span class="sg-tile__cap">Use greys to make the logo subtle</span></div>
+            <div class="sg-tile" data-bg="blue"><div class="sg-tile__art">
+              <img src="/assets/logo/gushwork-logo-white.svg" alt=""></div>
+              <span class="sg-tile__cap">Use white version on blue</span></div>
+            <div class="sg-tile" data-bg="dark"><div class="sg-tile__art">
+              <img src="/assets/logo/gushwork-logo-white.svg" alt=""></div>
+              <span class="sg-tile__cap">Use white version on dark backgrounds</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLORS (Frame 2147260248) -->
+      <section class="sg-sec" id="colors">
+        <div class="sg-block">
+          <h2>Colors</h2>
+          <p>The Brand color palette defines the visual identity, organized into Primary,
+             Neutral, and Feedback color groups with consistent scales from 25 to 900.</p>
+          <div class="sg-colors">
+            <div class="sg-col sg-col--blue sg-col--tall">
+              <div class="sg-col__hd">
+                <span class="sg-col__name">Brandeis Blue</span>
+                <span class="sg-col__role">Primary</span>
+              </div>
+              <div class="sg-col__groups">
+                <div class="sg-col__grp">
+                  <span class="sg-col__k">FOR SCREENS</span>
+                  <dl class="sg-col__row"><dt>HEX</dt><dd>#0070FF</dd></dl>
+                  <dl class="sg-col__row"><dt>RGB</dt><dd>0&nbsp; 112&nbsp; 255</dd></dl>
+                  <dl class="sg-col__row"><dt>HSB</dt><dd>214°&nbsp; 100%&nbsp; 100%</dd></dl>
+                </div>
+                <div class="sg-col__grp">
+                  <span class="sg-col__k">FOR PRINTS</span>
+                  <dl class="sg-col__row"><dt>CMYK</dt><dd>100&nbsp; 45&nbsp; 0&nbsp; 19</dd></dl>
+                  <dl class="sg-col__row"><dt>PANTONE</dt><dd>285 C</dd></dl>
+                </div>
+              </div>
+            </div>
+            <div class="sg-colcol">
+              <div class="sg-col sg-col--white">
+                <div class="sg-col__hd">
+                  <span class="sg-col__name">Full White</span>
+                  <span class="sg-col__role">Neutral</span>
+                </div>
+                <div class="sg-col__groups">
+                  <div class="sg-col__grp">
+                    <span class="sg-col__k">FOR SCREENS</span>
+                    <dl class="sg-col__row"><dt>HEX</dt><dd>FFFFFF</dd></dl>
+                    <dl class="sg-col__row"><dt>RGB</dt><dd>255&nbsp; 255&nbsp; 255</dd></dl>
+                    <dl class="sg-col__row"><dt>HSB</dt><dd>359°&nbsp; 0%&nbsp; 100%</dd></dl>
+                  </div>
+                  <div class="sg-col__grp">
+                    <span class="sg-col__k">FOR PRINTS</span>
+                    <dl class="sg-col__row"><dt>CMYK</dt><dd>0&nbsp; 0&nbsp; 0&nbsp; 0</dd></dl>
+                    <dl class="sg-col__row"><dt>PANTONE</dt><dd>000 C</dd></dl>
+                  </div>
+                </div>
+              </div>
+              <div class="sg-col sg-col--black">
+                <div class="sg-col__hd">
+                  <span class="sg-col__name">Flat Black</span>
+                  <span class="sg-col__role">Neutral</span>
+                </div>
+                <div class="sg-col__groups">
+                  <div class="sg-col__grp">
+                    <span class="sg-col__k">FOR SCREENS</span>
+                    <dl class="sg-col__row"><dt>HEX</dt><dd>#0D0D0D</dd></dl>
+                    <dl class="sg-col__row"><dt>RGB</dt><dd>13&nbsp; 13&nbsp; 13</dd></dl>
+                    <dl class="sg-col__row"><dt>HSB</dt><dd>359°&nbsp; 0%&nbsp; 5%</dd></dl>
+                  </div>
+                  <div class="sg-col__grp">
+                    <span class="sg-col__k">FOR PRINTS</span>
+                    <dl class="sg-col__row"><dt>CMYK</dt><dd>0&nbsp; 0&nbsp; 0&nbsp; 95</dd></dl>
+                    <dl class="sg-col__row"><dt>PANTONE</dt><dd>BLACK 6 C</dd></dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-block">
+          <div class="sg-head">
+            <h3>Extended Palette</h3>
+            <p>Primary and Neutral run the full 25&ndash;900 scale. Every value below is
+               read from <code>foundation/tokens.css</code>, which is what the plugin
+               builds with — so this panel and the code cannot drift apart.</p>
+          </div>
+          <div class="sg-ramp" id="ramp"></div>
+        </div>
+      </section>
+
+      <!-- TYPOGRAPHY (Frame 2147260249) -->
+      <section class="sg-sec" id="typography">
+        <div class="sg-block">
+          <h2>Typography</h2>
+          <p>Typography establishes visual hierarchy, guides the reader&rsquo;s eye, and
+             sets the tone for the entire design. A well-defined type system ensures
+             consistency across screens, improves readability, and reinforces brand
+             identity at every touchpoint.</p>
+
+          <div class="sg-card sg-card--pad">
+            <div class="sg-type__label">
+              <span class="sg-type__kicker">Primary Typeface</span>
+              <span class="sg-type__face">Vert Grotesk Display</span>
+            </div>
+            <p class="sg-type__display">AI Agents that Help Businesses Get More Qualified Leads</p>
+            <p class="sg-use">How to use: Used for titles and section headers, headings
+               establish hierarchy and draw attention to key content. They carry the most
+               visual weight and should be set in a bold or semi-bold weight for clear
+               distinction.</p>
+          </div>
+
+          <div class="sg-card sg-card--pad">
+            <div class="sg-type__label">
+              <span class="sg-type__kicker">Secondary Typeface</span>
+              <span class="sg-type__face">Inter Font Family</span>
+            </div>
+            <p class="sg-type__para">Gushwork&rsquo;s AI agents help your business get
+               discovered by your buyers, across AI search, Google, and paid channels,
+               then turn that interest into marketing-qualified leads.</p>
+            <p class="sg-use">How to use: The default style for paragraphs, descriptions,
+               and UI labels. Optimized for readability at smaller sizes with comfortable
+               line height and regular weight to support extended reading.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SPACING & RADIUS (Frame 2147260250) -->
+      <section class="sg-sec" id="spacing-radius">
+        <div class="sg-block">
+          <h2>Spacing &amp; Radius</h2>
+          <p>A consistent spacing scale brings rhythm and structure to layouts, ensuring
+             elements breathe and align predictably across every component.</p>
+          <div class="sg-scale" id="spacing-scale"></div>
+          <p>Consistent corner rounding creates visual harmony across components,
+             softening edges to convey approachability and modern aesthetics. Keep the
+             spacing in multiple of 4px but the smallest is 2px (making it an exception).</p>
+          <div class="sg-scale" id="radius-scale"></div>
+        </div>
+      </section>
+
+      <!-- ELEVATION (Frame 2147260251) -->
+      <section class="sg-sec" id="elevation">
+        <div class="sg-block">
+          <h2>Elevation</h2>
+          <p>Shadows separate a surface from the one behind it. The ramp is short on
+             purpose — s1 through s4 for stacking, plus two special cases.</p>
+          <div class="sg-card sg-card--pad">
+            <div class="sg-elev" id="elev-scale"></div>
+          </div>
+          <div class="sg-todo">
+            <p><strong>Note:</strong> the Elevation section in Figma has a title and a
+               placeholder card that repeats the Typography specimen, so there was no
+               design to build from. These six specimens are rendered from the real
+               <code>--gw-shadow-*</code> tokens instead of copying that placeholder.
+               Replace this once the section is designed.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PATTERNS (Frame 2147260252) -->
+      <section class="sg-sec" id="patterns">
+        <div class="sg-block">
+          <h2>Patterns</h2>
+          <div class="sg-todo">
+            <p><strong>Not designed yet.</strong> The Patterns section in Figma is a title
+               plus two cards that repeat the Typography specimen and its copy verbatim —
+               it is a placeholder, not a design. Nothing has been invented here. Tell me
+               what patterns belong in it and it gets built.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- On this page — the measured rail (Frame 2147260252) -->
+  <nav class="idx" aria-label="On this page" data-collapsed="false">
+    <div class="idx__t">
+      <button class="idx__col" type="button" data-idx-collapse aria-expanded="true"
+              aria-controls="sg-toc" aria-label="Collapse the section list">
+        <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg>
+      </button>
+      <svg class="idx__ico" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></svg>
+      <span>On this page</span>
+    </div>
+    <div class="idx__list" id="sg-toc">
+      <a href="#concept">Concept</a>
+      <a href="#logo">Logo</a>
+      <a href="#colors">Colors</a>
+      <a href="#typography">Typography</a>
+      <a href="#spacing-radius">Spacing &amp; Radius</a>
+      <a href="#elevation">Elevation</a>
+      <a href="#patterns">Patterns</a>
+    </div>
+  </nav>
+</div>
+
+<script>
+/* The rail and the scales are generated from tokens.css rather than typed out,
+   so the guide cannot disagree with what the plugin actually builds with. */
+(function () {
+  'use strict';
+  var root = getComputedStyle(document.documentElement);
+  function tok(n) { return root.getPropertyValue(n).trim(); }
+
+  /* -- extended palette ---------------------------------------------------- */
+  var RAMPS = [
+    { name: 'Primary', steps: ['25','50','100','200','300','400','500','600','700','800','900'] },
+    { name: 'Neutral', steps: ['white','25','35','50','100','200','250','300','400','500','600','700','800','850','900','black'] }
+  ];
+  /* Which steps need white text on them. Below these the fill is dark. */
+  var DARK_FROM = { Primary: 500, Neutral: 500 };
+  var ramp = document.getElementById('ramp');
+  RAMPS.forEach(function (r) {
+    var grid = document.createElement('div');
+    grid.className = 'sg-ramp__grid';
+    r.steps.forEach(function (s) {
+      var varName = '--gw-color-' + r.name.toLowerCase() + '-' + s;
+      if (s === 'white' || s === 'black') varName = '--gw-color-' + s;
+      var hex = tok(varName);
+      if (!hex) return;
+      var num = parseInt(s, 10);
+      var onDark = s === 'black' || (!isNaN(num) && num >= DARK_FROM[r.name]);
+      var el = document.createElement('div');
+      el.className = 'sg-swatch ' + (onDark ? 'sg-swatch--on-dark' : 'sg-swatch--on-light');
+      el.style.background = hex;
+      el.innerHTML = '<b>' + r.name + '/' + s + '</b><span>' + hex.toUpperCase() + '</span>';
+      grid.appendChild(el);
+    });
+    ramp.appendChild(grid);
+  });
+
+  /* -- spacing scale ------------------------------------------------------- */
+  var SPACE = [2,4,8,12,16,20,24,32,40,48,56,60,80,100,120,160];
+  var sp = document.getElementById('spacing-scale');
+  SPACE.forEach(function (n) {
+    var d = document.createElement('div');
+    d.className = 'sg-chip';
+    d.innerHTML =
+      '<div class="sg-chip__prev" style="min-width:' + Math.max(76, n + 32) + 'px">' +
+        '<div class="sg-chip__bar" style="width:' + n + 'px"></div></div>' +
+      '<div class="sg-chip__lbl"><b>Spacing/' + n + '</b><span>' + n + 'px</span></div>';
+    sp.appendChild(d);
+  });
+
+  /* -- radius scale -------------------------------------------------------- */
+  var RADII = [2,4,8,10,12,16,20,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80];
+  var rd = document.getElementById('radius-scale');
+  RADII.forEach(function (n) {
+    var d = document.createElement('div');
+    d.className = 'sg-chip';
+    d.innerHTML =
+      '<div class="sg-chip__prev">' +
+        '<div class="sg-chip__box" style="border-radius:' + n + 'px"></div></div>' +
+      '<div class="sg-chip__lbl"><b>Radius/' + n + '</b><span>' + n + 'px</span></div>';
+    rd.appendChild(d);
+  });
+
+  /* -- elevation ----------------------------------------------------------- */
+  ['s1','s2','s3','s4','card','button'].forEach(function (k) {
+    var v = tok('--gw-shadow-' + k);
+    if (!v) return;
+    var d = document.createElement('div');
+    d.className = 'sg-elev__cell';
+    d.style.boxShadow = v;
+    d.innerHTML = '<b>shadow/' + k + '</b><span>' + v + '</span>';
+    document.getElementById('elev-scale').appendChild(d);
+  });
+
+  /* -- logo treatment tabs -------------------------------------------------- */
+  var STAGE = { original: '', white: 'blue', dark: 'white' };
+  var ART = {
+    original: '/assets/logo/gushwork-logo-original.svg',
+    white:    '/assets/logo/gushwork-logo-white.svg',
+    dark:     '/assets/logo/gushwork-logo-dark.svg'
+  };
+  document.querySelectorAll('[data-logo]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var k = b.getAttribute('data-logo');
+      document.querySelectorAll('[data-logo]').forEach(function (o) {
+        o.setAttribute('aria-pressed', o === b ? 'true' : 'false');
+      });
+      document.getElementById('logo-art').src = ART[k];
+      /* White on white is invisible, so the stage takes the background the
+         treatment is meant for. */
+      document.getElementById('logo-stage').setAttribute('data-bg', STAGE[k]);
+    });
+  });
+
+  /* -- TOC: collapse + scroll spy ------------------------------------------ */
+  var idx = document.querySelector('.idx');
+  var col = document.querySelector('[data-idx-collapse]');
+  if (col && idx) {
+    col.addEventListener('click', function () {
+      var next = idx.getAttribute('data-collapsed') !== 'true';
+      idx.setAttribute('data-collapsed', next ? 'true' : 'false');
+      col.setAttribute('aria-expanded', next ? 'false' : 'true');
+      col.setAttribute('aria-label', next ? 'Expand the section list' : 'Collapse the section list');
+    });
+  }
+  var links = [].slice.call(document.querySelectorAll('.idx__list a'));
+  var secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  function spy() {
+    var best = 0;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 140) best = i;
+    }
+    links.forEach(function (a, i) { a.classList.toggle('now', i === best); });
+  }
+  var t = false;
+  addEventListener('scroll', function () {
+    if (t) return; t = true;
+    requestAnimationFrame(function () { t = false; spy(); });
+  }, { passive: true });
+  spy();
+})();
+</script>
+</body></html>

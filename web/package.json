@@ -1,0 +1,7 @@
+{
+  "name": "gushwork-design-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "gushwork-design.vercel.app — static pages plus the Google auth gate. No build step and no dependencies; this file exists only so Vercel treats api/*.js and middleware.js as ES modules."
+}

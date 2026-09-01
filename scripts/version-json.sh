@@ -15,8 +15,13 @@
 # component-registry.json, so a committed copy could only ever be a second thing to go stale.
 #
 # It carries a compact components map — name -> {version, breaking} — rather than making the
-# hook fetch the full registry as well. The reader needs one round trip, and only two fields of
-# it; the full registry stays where the dashboards already read it.
+# hook fetch the full registries too. The reader needs one round trip and only two fields of it;
+# the full registries stay where the builds already read them.
+#
+# The map is every surface's registry merged flat. That is safe for readers already deployed:
+# check-update.sh iterates whatever names it is handed and compares versions, so names from a new
+# surface simply appear in the notice. Renaming or reshaping existing keys would NOT be safe, and
+# is why nothing here is namespaced by surface.
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -29,7 +34,29 @@ import json, sys, subprocess
 mode = sys.argv[1]
 mk = json.load(open(".claude-plugin/marketplace.json"))
 pl = json.load(open(".claude-plugin/plugin.json"))
-reg = json.load(open("exports/dashboard/component-registry.json"))
+# Every surface's registry, merged flat. Names are unique across surfaces — the only one that
+# ever appeared twice was `badge`, and that was one shared component listed twice rather than a
+# collision, which is why it now lives in exports/shared/ alone. If two surfaces ever do want the
+# same NAME for different components, this merge is where it must be resolved, and the duplicate
+# check below is what will say so.
+SURFACES = ("shared", "dashboard", "web", "lead-magnet")
+components, seen_in = {}, {}
+for surface in SURFACES:
+    try:
+        part = json.load(open(f"exports/{surface}/component-registry.json"))
+    except FileNotFoundError:
+        continue
+    for name, c in (part.get("components") or {}).items():
+        if name in components:
+            print(f"component '{name}' is in both the {seen_in[name]} and {surface} registries — "
+                  f"a name must mean one thing across surfaces or a reader cannot tell them apart. "
+                  f"Move it to exports/shared/ if it is genuinely shared.", file=sys.stderr)
+            sys.exit(1)
+        components[name], seen_in[name] = c, surface
+
+reg = {"components": components,
+       "registryVersion": json.load(
+           open("exports/dashboard/component-registry.json")).get("registryVersion")}
 
 mk_meta = mk.get("metadata", {}).get("version")
 mk_entry = (mk.get("plugins") or [{}])[0].get("version")
@@ -95,7 +122,7 @@ print(json.dumps({
     "install": "https://gushwork-design.vercel.app/preview/install.html",
     "components": {
         name: {"version": c.get("version"), "breaking": bool(c.get("breaking"))}
-        for name, c in sorted((reg.get("components") or {}).items())
+        for name, c in sorted(components.items())
     },
 }, indent=2))
 PY

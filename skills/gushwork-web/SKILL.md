@@ -8,7 +8,7 @@ description: Builds Gushwork marketing and public-website pages on-brand — lan
 You are building a **public-facing marketing surface** for Gushwork. Spacious,
 white-on-black with a blue accent, numbers leading every claim. This is not the product UI.
 
-Announce at the start: **"Using the Gushwork web skill — v1.42.0, updated 28 Aug 2026."**
+Announce at the start: **"Using the Gushwork web skill — v1.44.0, updated 1 Sep 2026."**
 
 That version and date are stamped into this file, so **a stale copy reports its own stale date**
 rather than claiming to be current. If the user asks whether they are up to date, or the output
@@ -301,3 +301,39 @@ Figma — Gush Design System v2.0, file `VKcb4fgVyOHKfQonMgN772`, page
 The exports in `exports/web/` are transcribed from that page's annotations, with the
 inconsistencies flagged inline. Where a rule and the actual component disagree, the exports
 document **the component** and note the discrepancy — the component is what renders.
+
+## Stamp every page you build — it is how its owner finds out the design moved
+
+A landing page is a file that outlives the session that made it. There is no server and no record
+of who built what, so nothing can be *pushed* to its owner. The stamp is the substitute, and it is
+the same mechanism the dashboard surface uses.
+
+**Every page you build gets a `gushwork-build:{...}` comment** carrying the plugin version, the
+surface, who built it, when, and the components it used:
+
+```json
+{"pluginVersion":"1.43.0","surface":"web","createdBy":"...","createdAt":"2026-09-01",
+ "registry":"https://gushwork-design.vercel.app/exports/web/component-registry.json",
+ "changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html",
+ "components":["hero","cards-grid","faqs","cta","footer"]}
+```
+
+**`surface` is not optional.** It selects which registry the reader checks against, and a stamp
+without it is read as a dashboard — so a web page missing the field is silently diffed against the
+wrong component set. Component names come from the decision table above, and must match the keys
+in `exports/web/component-registry.json` exactly; a name that is not a key is reported as "no
+longer in the registry" rather than checked.
+
+`bash scripts/check-drift.sh <file-or-dir>` reads the stamp and reports only the intersection of
+*components this page uses* and *components that have changed* — split into MUST (renders wrong)
+and MAY (improved). Shared components — `badge`, the logo, the icon set — live in
+`exports/shared/component-registry.json` and are merged into every surface, so a change to one is
+reported once rather than per surface.
+
+**When you change a component's spec, bump it in the registry in the same commit.** A change that
+is not registered is a change nobody is told about. Set `breaking: true` only when an existing
+build renders *wrong* until updated, as opposed to merely missing an improvement.
+
+Several web components share a spec doc, so a fold-level change currently moves every fold. That
+is the honest starting point rather than a claim of precision the docs cannot support — split an
+entry out when its spec genuinely diverges.

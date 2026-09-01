@@ -1,35 +1,63 @@
 #!/usr/bin/env bash
 #
-# Tells the owner of a dashboard which of THEIR components have changed since they built it.
+# Tells whoever owns a build which of THEIR components have changed since they made it.
 #
-#   bash scripts/check-drift.sh path/to/dashboard.html
+#   bash scripts/check-drift.sh path/to/build.html
 #   bash scripts/check-drift.sh path/to/project/           # scans for stamped files
 #
 # There is no server and no registry of who built what, so nothing can be *pushed* to a person.
-# What this does instead: every build the skill produces carries a stamp listing the components it
-# used and the plugin version it used them at. This reads that stamp, diffs it against
-# exports/dashboard/component-registry.json, and reports only the intersection — the components
+# What this does instead: every build the skills produce carries a stamp listing the components it
+# used, the surface it came from, and the plugin version it used them at. This reads that stamp,
+# diffs it against that surface's registry, and reports only the intersection — the components
 # that build actually uses AND that have changed since.
 #
-# The skill runs this automatically whenever a stamped file is in play, so the notice arrives the
-# next time anyone opens the dashboard with Claude. That is the closest thing to a notification
-# that a plugin distributed as a git clone can honestly offer.
+# Every surface has its own registry, at exports/<surface>/component-registry.json, plus a shared
+# one merged into all of them for the components that genuinely are shared: badge, the logo, the
+# icon set. A stamp with no `surface` is treated as a dashboard, which every stamped build in
+# existence was when the field was introduced.
+#
+# The skills run this automatically whenever a stamped file is in play, so the notice arrives the
+# next time anyone opens the build with Claude. That is the closest thing to a notification that a
+# plugin distributed as a git clone can honestly offer.
 
 set -uo pipefail
 
 TARGET="${1:-.}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-REGISTRY="$ROOT/exports/dashboard/component-registry.json"
-
-[ -f "$REGISTRY" ] || { echo "✘ no component registry at $REGISTRY" >&2; exit 1; }
+# One registry per surface, plus a shared one. A build says which surface it came from in its
+# stamp; anything without a `surface` predates the split and is a dashboard, which is what every
+# stamped build in existence at the time actually was.
+[ -f "$ROOT/exports/dashboard/component-registry.json" ] \
+  || { echo "✘ no component registry under $ROOT/exports" >&2; exit 1; }
 command -v python3 >/dev/null 2>&1 || { echo "✘ python3 is required" >&2; exit 1; }
 
-python3 - "$TARGET" "$REGISTRY" <<'PY'
+python3 - "$TARGET" "$ROOT" <<'PY'
 import json, os, re, sys
 
-target, registry_path = sys.argv[1], sys.argv[2]
-reg = json.load(open(registry_path))
-comps = reg["components"]
+target, root = sys.argv[1], sys.argv[2]
+
+# Shared components (badge, the logo, icons) live once and are merged into every surface's view,
+# so a change to one is reported once rather than per surface — and so a dashboard stamped before
+# badge moved out of the dashboard registry still resolves it.
+def load(surface):
+    p = os.path.join(root, "exports", surface, "component-registry.json")
+    try:
+        return json.load(open(p))["components"]
+    except Exception:
+        return {}
+
+SHARED = load("shared")
+
+def has_registry(surface):
+    return os.path.isfile(os.path.join(root, "exports", surface, "component-registry.json"))
+
+_registries = {}
+def registry_for(surface):
+    if surface not in _registries:
+        merged = dict(SHARED)
+        merged.update(load(surface))          # a surface may override a shared entry
+        _registries[surface] = merged
+    return _registries[surface]
 
 STAMP = re.compile(r"gushwork-build:(\{.*?\})", re.S)
 
@@ -66,6 +94,12 @@ for f in stamped_files(target):
 
     built_at = stamp.get("pluginVersion", "0.0.0")
     used = stamp.get("components", [])
+    surface = stamp.get("surface", "dashboard")
+    if not has_registry(surface):
+        print(f"⚠ {os.path.relpath(f)}: stamped surface '{surface}' has no registry at "
+              f"exports/{surface}/component-registry.json — cannot check this build")
+        continue
+    comps = registry_for(surface)
     must, may, gone = [], [], []
     for name in used:
         c = comps.get(name)
@@ -100,14 +134,14 @@ for f in stamped_files(target):
 if not found:
     print("No stamped Gushwork builds found under " + target)
     print("A build carries its stamp as a `gushwork-build:{...}` comment. Older builds predate")
-    print("stamping and cannot be checked automatically — compare them against")
-    print("exports/dashboard/component-registry.json by hand.")
+    print("stamping and cannot be checked automatically — compare them against the registry")
+    print("for their surface under exports/<surface>/component-registry.json by hand.")
     sys.exit(0)
 
 print()
 if drifted_any:
-    print("To update: re-open the dashboard with Claude and ask it to bring the drifted")
-    print("components up to date. It reads the same registry and the docs each entry points at.")
+    print("To update: re-open the build with Claude and ask it to bring the drifted components")
+    print("up to date. It reads the same registry and the docs each entry points at.")
     sys.exit(2)
 print(f"✔ {found} stamped build(s), all current.")
 PY
