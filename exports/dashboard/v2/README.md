@@ -113,6 +113,7 @@ reference. Per `CONTRIBUTING.md` this is a gap to raise in Figma, not lines to a
 | `Dashboard/display-28-med` | 28/120% Medium 500 | — | no 28 step; h6 is 600 26px |
 | `Dashboard/display-22-med` | 22/**100%** Medium 500 | `--gw-text-h7` | h7 is line-height **1.4**, not 1.0 |
 | `Dashboard/display-20-sem` | 20/100% Semibold 600 | — | no 20 display step |
+| *(unnamed, phone topbar)* | **16**/100% Semibold 600 | — | **a SIXTH size, found 26 Aug 2026** — the phone `dashboard-title` in `515:2176`. Not one of the five styles above and bound to no style at all. See `phone.md` |
 
 Until this is closed: **use the literal spec from the table above and comment that it has no
 token.** Do not silently substitute `h3` or `h7` — the weight and line-height differences are

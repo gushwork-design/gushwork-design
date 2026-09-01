@@ -40,25 +40,37 @@ gh auth login && gh auth setup-git
 
 ## Then install the plugin
 
-**The easy way — paste this into Claude Code** and approve the commands it runs:
+**One line, in any terminal:**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/install.sh | bash
+```
+
+It adds the marketplace, installs the plugin, and turns on auto-update. Every step is idempotent,
+so re-running it is also the fix when you aren't sure what state you're in — and it checks both
+prerequisites up front, so a missing one is a sentence you can act on instead of a failure three
+steps later.
+
+**Or paste this into Claude Code** and approve what it runs:
 
 ```
 Set up the Gushwork Design System plugin for me:
 
 1. Run: claude plugin marketplace add utsav-gushwork/gushwork-design
 2. Run: claude plugin install gushwork-design@gushwork
-3. In ~/.claude/plugins/known_marketplaces.json, set "autoUpdate": true on the
-   "gushwork" entry. Leave everything else in that file alone.
-4. Verify with: claude plugin list
+3. Verify with: claude plugin list
 
 Then tell me to restart Claude Code, and give me three lines on how to use it.
 ```
 
-**Or run it yourself**, in any terminal:
+**Or by hand**, if you'd rather watch each step:
 
 ```bash
 claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin install gushwork-design@gushwork
 ```
+
+The step that used to be third — hand-editing `autoUpdate` into `known_marketplaces.json` — is
+gone. The plugin sets it itself now; see [Updates find you](#updates-find-you).
 
 This repo is its own single-plugin marketplace — that's why it's two steps. `claude plugin install`
 resolves a plugin *name from a marketplace*, not a git URL, so the marketplace has to be added
@@ -96,21 +108,30 @@ you're monitoring or acting. That's deliberate, not a stall.
 
 ---
 
-## Don't skip the auto-update flag
+## Updates find you
 
-Step 3 above sets `"autoUpdate": true`. It isn't required to make the plugin work, which is
-exactly why it gets skipped — and then **stale versions fail silently.** They emit last month's
-colours and spacing with full confidence. No error, no warning, just quietly wrong output.
+This used to be a chore with a footgun. `autoUpdate` isn't required to make the plugin work,
+which is exactly why it got skipped — and then **stale versions fail silently.** They emit last
+month's colours and spacing with full confidence. No error, no warning, just quietly wrong
+output.
 
-If you skipped it, update by hand whenever things look off:
+Two things handle it now, and both ship inside the plugin:
+
+- **A session check.** When a session starts, the plugin compares your copy against the published
+  one and speaks up only if it has moved — naming the components that changed and which of them
+  break a screen built on the old ones. Silence means you're current. It's time-boxed and fails
+  quietly, so a flaky network costs you nothing.
+- **It sets the flag itself.** The same check turns `autoUpdate` on once, so nobody has to edit
+  `known_marketplaces.json` by hand.
+
+To take an update the moment you hear about one:
 
 ```bash
-claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork
+claude plugin update gushwork-design@gushwork
 ```
 
-Restart after. Either way, a new version takes effect on the **next** start, not the current one.
-
----
+Restart after. Either way a new version takes effect on the **next** start, not the current one —
+which is exactly why the check speaks at the *start* of a session rather than the end.
 
 ## If something isn't working
 
@@ -122,7 +143,7 @@ Restart after. Either way, a new version takes effect on the **next** start, not
 | No "Using the Gushwork … skill" line | You didn't restart; or ask for the skill by name |
 | `marketplace add` fails | Most likely **you don't have repo access yet, or git isn't authenticated** — the repo is private. Run `git ls-remote https://github.com/utsav-gushwork/gushwork-design.git HEAD`: an error means ask Utsav to add you, then `gh auth login && gh auth setup-git`. Failing that, your work org may restrict marketplaces |
 | Output looks generic | You're in a scratch folder, not a real product repo |
-| Values don't match Figma | You're on a stale version — see auto-update above |
+| Values don't match Figma | You're on a stale version — see [Updates find you](#updates-find-you) |
 
 ---
 

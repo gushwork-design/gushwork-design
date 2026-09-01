@@ -24,6 +24,10 @@ reports its own stale date.**
 
 | Version | Date | What changed | Commit | Session |
 |---|---|---|---|---|
+| **v1.42.0** | 28 Aug 2026 14:04 | the unavailable state, and a doc that pointed at nothing | [`6aadb8b`](https://github.com/utsav-gushwork/gushwork-design/commit/6aadb8bf59783e607318cf349541eaa59c7beb34) | [Gushwork design plugin fails to load](claude://resume/59c33991-9d00-4350-80e6-a4ccfe4ff66b) |
+| **v1.41.1** | 28 Aug 2026 10:43 | the plugin loads again: drop the duplicate hooks declaration | [`3d44b20`](https://github.com/utsav-gushwork/gushwork-design/commit/3d44b207153d058832722cc146f30111d80100ff) | [Gushwork design plugin fails to load](claude://resume/59c33991-9d00-4350-80e6-a4ccfe4ff66b) |
+| **v1.41.0** | 26 Aug 2026 13:20 | updates that find you, a public version manifest, and a one-line install | [`f194df8`](https://github.com/utsav-gushwork/gushwork-design/commit/f194df864fa5b34c5eb37b0754fa2b43e2409aab) | [Learning from shadcn's install and update model](claude://resume/79ae8e54-cda3-4da9-9b12-c5875098cfcc) |
+| **v1.40.0** | 26 Aug 2026 12:23 | responsive dashboards, the phone shell, and three live bugs | [`7d4b9d6`](https://github.com/utsav-gushwork/gushwork-design/commit/7d4b9d63ba32067a4efd7db0a68c22cd707a58c9) | — |
 | **v1.39.0** | 15 Aug 2026 19:29 | the Figma comment pass, three new components, and drift notices | [`cb4b177`](https://github.com/utsav-gushwork/gushwork-design/commit/cb4b177e07a76e305df3798be3335d91ac863f0b) | [Gushwork dashboard component sheet and GTM build](claude://resume/1d76ea71-a078-4d02-a629-cbbfe1407b30) |
 | **v1.38.0** | 14 Aug 2026 14:40 | dashboard v2 component set, measured from the shipped screens | [`3b880f1`](https://github.com/utsav-gushwork/gushwork-design/commit/3b880f18a13f36db951026d1066710d654bb69a6) | — |
 | **v1.37.0** | 11 Aug 2026 18:39 | the brand badge is the library badge, Small | [`30203b9`](https://github.com/utsav-gushwork/gushwork-design/commit/30203b95ec01f739f1b93ca31b5b03d75dc869c2) | [Changelog sheet](claude://resume/bea0dbdb-01ec-4ba8-b87d-473775b0cec7) |

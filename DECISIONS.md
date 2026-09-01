@@ -411,6 +411,60 @@ obviously right:
 
 ---
 
+## R17 — Dashboards reflow below 1280. The scale rule is NARROWED, not withdrawn.
+
+**Ruled by Utsav, 26 Aug 2026.** Supersedes the "1440 is the minimum width, below it SCALE, never
+reflow" section of `build-rules.md` **for viewports under 1280 only**. Above 1280 that ruling is
+unchanged and still binding.
+
+### Why the old ruling existed, and why it still holds above 1280
+
+`card-layout` has no responsive specification and no slack anywhere in it. At `KPI cards=2` the
+580/496 split gives 2 KPIs at exactly the 286 floor and 6 analytics at exactly the 160 floor, and
+the section width only reaches 1084 at a 1440 viewport. Reflow, shrink and sideways-scroll were
+each tried in Aug 2026 and each broke something specific — a layout matching none of the three
+variants, cards measured at 242.9 under their floor, and clipped sections with a wrapping header
+toolbar. Scaling was the only option that deformed nothing.
+
+None of that changed. What changed is that the documented cost of scaling — type painting smaller
+than the ramp — becomes unacceptable before the viewport gets small enough to matter.
+
+### The regimes
+
+| Viewport | Mode |
+|---|---|
+| ≥ 2200 | scale · slot padding `clamp(40px, 4vw, 96px)` |
+| ≥ 1800 | scale · analytics 3 → 6 across, KPI area capped at 480 |
+| 1440 – 1800 | scale · the measured baseline, `--fit` = 1 |
+| **1280 – 1440** | **SCALE** — composition preserved exactly, type pays the documented cost |
+| **600 – 1280** | **FLOW** — `card-layout` stacks; rail pinned to the measured 64 collapsed state |
+| **< 600** | **FLOW** — nav becomes an off-canvas drawer; see `v2/phone.md` |
+
+The ≥1800 and ≥2200 rules were **already specified** in `build-rules.md` and had simply never
+been built. They are not new.
+
+### Why 1280 is the hinge
+
+At 1280 the scale factor is 1280/1440 = **0.889**, so 14px paints ~12.4px — the cost
+`build-rules.md` already documents, and still legible. Below that it falls under 12px, which is
+where scaling stops being acceptable and reflow is worth what it breaks.
+
+**1280 is a judgement call, not a measurement.** It is chosen because it is the widest common
+laptop viewport that still renders the measured composition intact.
+
+### What flow mode must do
+
+- Drop the shell's `min-width: 1440px`, or the page scrolls sideways forever.
+- Keep the measured **floors** as floors: 2-across analytics still clears 160 at 375.
+- Step the display ramp **down its documented steps** (44 → 36 → 28). Do not interpolate.
+- Keep exactly one scroller. The slot still scrolls; the page still does not.
+
+### The trade
+
+Two layouts now exist where there was one, and the measured composition is only guaranteed at
+1280 and above. That is the price of the dashboards working on a phone at all. Below 600 the
+chrome is measured (`v2/phone.md`); the content reflow is ruled.
+
 ## R18 — badge light labels are the `/600` step, not `/500`
 
 **A light badge pairs a `{Colour}/25` fill with a `{Colour}/600` label.** The previously
@@ -444,11 +498,9 @@ is "wrong on its own terms".
 
 ## R19 — a drawn affordance must work, or it does not ship
 
-> ⚠ **THE NUMBER IS PROVISIONAL.** `origin/main` carries an **R17** (responsive reflow) that this
-> branch does not have, and this branch carries an **R18** (badge labels) that main does not.
-> The sequence has already diverged. Whoever merges must renumber this ruling and reconcile the
-> other two — see the open backlog card "R17 is referenced by the plugin skill but absent from
-> DECISIONS.md".
+> **Numbering reconciled 1 Sep 2026.** `main`'s R17 (responsive reflow) and this branch's R18
+> (badge labels) were written in parallel and never collided, so all three rulings kept their
+> numbers when the branches merged.
 
 **Ruled by Utsav, 1 Sep 2026,** after `Compare` shipped on the GTM Command Center drawn in full,
 styled `cursor: pointer`, and bound to nothing at all.

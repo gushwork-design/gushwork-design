@@ -57,7 +57,12 @@ USES_COMPONENTS = [
 
 # ─────────────────────────── tokens, read from tokens.css ───────────────────────────
 _css = TOKENS.read_text()
-_decl = dict(re.findall(r'(--gw-[a-z0-9-]+)\s*:\s*([^;]+);', _css))
+# FIRST occurrence wins. tokens.css declares some names twice — see its note 11. dict() over
+# every match keeps the LAST, which emitted `--gw-motion-fast: 0ms` unconditionally: every
+# transition dead for every user, and the reduced-motion guard discarded. Fixed 26 Aug 2026.
+_decl = {}
+for _n, _v in re.findall(r'(--gw-[a-z0-9-]+)\s*:\s*([^;]+);', _css):
+    _decl.setdefault(_n, _v)
 
 def tok(name):
     """Return the custom-property NAME after asserting it exists. Never returns a literal."""
@@ -95,7 +100,9 @@ NEEDED = ["--gw-color-white", "--gw-color-black",
           # motion-fast drives the drawer slide (DECISIONS.md: never a raw duration).
           "--gw-text-body-14-reg", "--gw-shadow-s3", "--gw-motion-fast",
           # R18's /600 step, for the compare delta's small light-mode label
-          "--gw-color-green-600", "--gw-color-red-600"]
+          "--gw-color-green-600", "--gw-color-red-600",
+          # the ruled focus tokens — main corrected :focus-visible to use them (26 Aug 2026)
+          "--gw-focus-ring", "--gw-focus-offset"]
 missing = [n for n in NEEDED if n not in _decl]
 if missing:
     sys.exit("missing tokens: " + ", ".join(missing))
@@ -1104,6 +1111,9 @@ CSS = f"""
   --tone-warn-bg:{tok('--gw-color-yellow-alpha-10')};
   --tone-warn-fg:{tok('--gw-color-yellow-300')};
 }}
+/* AFTER :root, not before. A media query adds no specificity, so the guard must come later in
+   source order or the base 120ms wins and reduced-motion is silently ignored. */
+@media (prefers-reduced-motion:reduce){{:root{{--gw-motion-fast:0ms}}}}
 *,*::before,*::after{{box-sizing:border-box}}
 html,body{{margin:0;overflow:hidden;height:100%}}          /* exactly one region scrolls */
 body{{background:var(--s-canvas);font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
@@ -1757,7 +1767,10 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
 @media (prefers-reduced-motion:reduce){{*{{transition:none !important}}
  .btn.is-syncing .ic{{animation:none}}}}
 
-:focus-visible{{outline:2px solid {tok('--gw-color-primary-500')};outline-offset:2px}}
+/* The RULED token, not a hand-picked colour. This emitted `2px solid primary-500` — right
+   geometry, wrong colour, and it bypassed the token entirely, so the reference was teaching the
+   deviation. Corrected 26 Aug 2026. */
+:focus-visible{{outline:{tok('--gw-focus-ring')};outline-offset:{tok('--gw-focus-offset')}}}
 
 /* Phone-only chrome. Rendered at every width so the JS binds once and never rebinds, but
    revealed only inside the <600 query. Trigger is the measured `controls/tab` 36x36, radius/8,

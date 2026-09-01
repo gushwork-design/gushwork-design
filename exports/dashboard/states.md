@@ -1,4 +1,4 @@
-# States — focus, hover, empty, loading
+# States — focus, hover, empty, loading, unavailable
 
 > ## ⚠ PARTLY SUPERSEDED — 13 Aug 2026
 >
@@ -15,7 +15,7 @@
 was producing a different answer on every build. These are the answers. Use them; do not
 re-decide them.
 
-Ruled by Utsav, 7 Aug 2026.
+Ruled by Utsav, 7 Aug 2026. **Unavailable** ruled by Utsav, 28 Aug 2026.
 
 **Scope: dashboard / product.** The same focus rule applies on web.
 
@@ -116,6 +116,69 @@ layout is already known — hold its shape rather than covering it.
 number while data is in flight. A `0` that means "not loaded" reads as "we got no leads", and
 that misreading is expensive. This restates `output-targets.md`; it is repeated here because
 it is the failure that actually ships.
+
+## Unavailable state — RULED, pending Figma
+
+**Ruled by Utsav, 28 Aug 2026.** Empty and loading were ruled on 7 Aug; *failed* was not, and it
+is a third condition rather than a shade of either. **Empty** means we read the source and it
+held nothing. **Unavailable** means we could not read it at all. A page reading five stores can
+have one fail while the other four are fine, so the state belongs to **the card or section that
+failed**, never to the page.
+
+**The whole ruling in one line: an element that encodes a quantity is REMOVED, never zeroed.**
+A progress bar at 0%, a percentage reading `0%`, a sub-line reading `of 0`, a value of `—` —
+each of those is a measurement. Each says "we looked, and the answer is nothing." That is a
+different claim from "we could not look", and it is the one the reader will act on. This is the
+loading rule above, extended: a `0` that means *not loaded* and a `0` that means *not readable*
+mislead identically.
+
+**Scope: any data-bearing card or section** — `stat-card`, `metric-card`, `kpi-card`,
+`analytics-card`, `Graph`, `section/table`, and any `section/Container` holding a figure.
+
+### The card treatment
+
+The card keeps its surface, radius, padding, label and footprint. **The page must not change
+shape because a store went down** — the same reasoning that keeps the Section header on an empty
+state. Only the parts carrying a quantity change:
+
+| Part | Unavailable |
+|---|---|
+| Surface, radius, padding, label, footprint | **unchanged**, light and dark exactly as measured |
+| `status-dot` | `Status=behind` |
+| Value | drops from the display ramp to `--gw-text-body-14-med` · `--gw-color-neutral-500`. Display 28 announces a measurement; this is not one |
+| Sub-line, percentage | **removed** — not zeroed, not dashed |
+| `progress-bar` | **removed** — not drawn at 0%. The clearest case of a quantity that cannot be drawn honestly |
+| Source | one `Badge`, `Color=Red`, `Size=Small`, naming what failed |
+
+`Badge` has **no `Tone` property.** It is `Theme · Color · Icon · Size`, and the value here is
+`Color=Red`. On a dark card use the standard dark pairing from
+`foundation/shared-components.md` — `Red/Alpha/10` fill with a `Red/300` label — and do not
+carry the light `/25` + `/500` pair onto it.
+
+### Copy — name the source, not the symptom
+
+The reader can already see the number is missing. What they cannot see is **which** of five
+stores went down, and that is the only fact that tells them whether the rest of the page is
+trustworthy.
+
+- Value slot: `Unavailable`
+- Badge: the source that failed — `HubSpot`, `Postgres`, `Search Console`
+
+Never `Error`, never `—`, never a number. Avoid `Could not compute`: it names our failure rather
+than their problem, and it costs the same room as a source name that would actually help.
+
+### The retry does not go inside the card
+
+`stat-card` is 218 × 132 and every part of it is spoken for. A retry belongs on the
+`section/header`, where the refresh control already lives — and **only if it is wired**. Drawing
+a control that does nothing is the dead-control trap, and that has shipped three times. If one
+card in a section failed, the section's existing refresh **is** the retry.
+
+### Section level
+
+A section that cannot be read at all uses `empty-state` (`v2/feedback.md`) with the same copy
+rule, not the card treatment. **`empty-state` cannot be used inside a card** — it is 480 wide
+against a 218 card, and section-level by construction.
 
 ---
 

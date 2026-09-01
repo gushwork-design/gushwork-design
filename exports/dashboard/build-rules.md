@@ -30,12 +30,26 @@ change the **column count**, not the sizes.
 - Cards **fill** their section — the intrinsic 286 and 160 are floors, not fixed widths.
 - **`card-layout` splits:** `KPI cards=1` is 400/676 (36.9% / 62.5%), `=2` is 580/496
   (53.5% / 45.8%), `=3` is a full-width KPI row above a full-width analytics row.
-- **Tables: leave the first column unsized.** If every column has an explicit width the
-  browser spreads leftover space across all of them — a 16px action column measured 84px
-  on a 1600 display while data columns drifted past their measured widths. Unsized first
-  column absorbs the slack; pin the action column.
+- **Tables: leave the first column unsized — but ONLY in a shared grid.** If every column has
+  an explicit width the browser spreads leftover space across all of them: a 16px action column
+  measured 84px on a 1600 display while data columns drifted past their measured widths. An
+  unsized first column absorbs the slack.
+
+  **⚠ This only works when all rows share one grid.** If each `table-row` is its OWN grid
+  container — the usual shape when a row is a flex/grid div rather than a `<tr>` — a
+  content-sized `auto` track resolves against *that row's* content, so every row lands on a
+  different column boundary. It is invisible until one row's text is longer than its neighbours';
+  a single long location string exposed it on 26 Aug 2026. There, give every non-first track a
+  `minmax(<floor>px, 1fr)` and the first a fixed width: minmax floors resolve identically for
+  every row at any container width. Verify by asserting 0px drift between each row's column
+  offsets, not by looking.
 
 ### 1440 is the minimum width. Below it, SCALE the canvas. RULED.
+
+> **⚠ NARROWED by R17, 26 Aug 2026.** Everything in this section still holds **at 1280 and
+> above**. Below 1280 dashboards now REFLOW, and below 600 the nav becomes a drawer measured in
+> `v2/phone.md`. Read `DECISIONS.md` → R17 before building a responsive shell. The reasoning
+> below is why reflow is confined to the narrow end rather than applied everywhere.
 
 Ruled by Utsav, 7 Aug 2026, after three attempts got this wrong.
 

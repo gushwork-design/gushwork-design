@@ -55,10 +55,26 @@
   --gw-text-button-14: 500 14px/1 var(--gw-font-body);
   --gw-text-body-14-reg: 400 14px/20px var(--gw-font-body);
   --gw-shadow-s3: 0 16px 32px -12px #585c5f1a;
-  --gw-motion-fast: 0ms;
+  --gw-motion-fast: 120ms ease
+        @media (prefers-reduced-motion:reduce) --gw-motion-fast: 0ms
+        @media (max-width:767px)               every --gw-bp-*, and --gw-content-width
+
+      A generator that builds a lookup with "last match wins" — the obvious
+      `dict(re.findall(...))` — therefore emits --gw-motion-fast: 0ms UNCONDITIONALLY. Every
+      transition is dead for every user and the reduced-motion guard is silently discarded. It
+      renders plausibly and is completely wrong. Take the FIRST occurrence of each name and
+      re-emit the guards you need. Found 26 Aug 2026 in two separate builders, including the
+      reference one in preview/.
+
+  10. No motion tokens exist in FIGMA. They now exist here — RULED, not
+      harvested. See the RULED section at the end of this file. Never write a
+      raw duration into a component;
   --gw-color-green-600: #15803d;
   --gw-color-red-600: #be123c;
+  --gw-focus-ring: 2px solid var(--gw-color-primary-alpha-40);
+  --gw-focus-offset: 2px;
   --gw-font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --gw-color-primary-alpha-40: #0070ff66;
   --gw-text-body-12-med-tracking: -0.006em;
   --gw-text-body-12-sem-tracking: -0.006em;
   --gw-text-body-14-med-tracking: -0.002em;
@@ -215,6 +231,9 @@
   --tone-warn-bg:var(--gw-color-yellow-alpha-10);
   --tone-warn-fg:var(--gw-color-yellow-300);
 }
+/* AFTER :root, not before. A media query adds no specificity, so the guard must come later in
+   source order or the base 120ms wins and reduced-motion is silently ignored. */
+@media (prefers-reduced-motion:reduce){:root{--gw-motion-fast:0ms}}
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;overflow:hidden;height:100%}          /* exactly one region scrolls */
 body{background:var(--s-canvas);font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
@@ -868,7 +887,10 @@ h1,h2,h3{margin:0;font-weight:inherit}
 @media (prefers-reduced-motion:reduce){*{transition:none !important}
  .btn.is-syncing .ic{animation:none}}
 
-:focus-visible{outline:2px solid var(--gw-color-primary-500);outline-offset:2px}
+/* The RULED token, not a hand-picked colour. This emitted `2px solid primary-500` — right
+   geometry, wrong colour, and it bypassed the token entirely, so the reference was teaching the
+   deviation. Corrected 26 Aug 2026. */
+:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
 
 /* Phone-only chrome. Rendered at every width so the JS binds once and never rebinds, but
    revealed only inside the <600 query. Trigger is the measured `controls/tab` 36x36, radius/8,
@@ -1244,10 +1266,10 @@ h1,h2,h3{margin:0;font-weight:inherit}
   </span>
 </div>
 <script>
-/* gushwork-build:{"pluginVersion":"1.39.0","createdBy":"Utsav Singh","createdAt":"15 Aug 2026","registry":"https://gushwork-design.vercel.app/exports/dashboard/component-registry.json","changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html","components":["badge","checkbox","control","date-range-picker","dashboard-switcher","divider","empty-state","icon-button","input","legend","metric-card","page-header","pagination","progress-bar","ring","section-header","sidebar","skeleton","stat-card","status-dot","tab-group","tab-item","table-cell","table-row","tooltip","topbar"]} */
+/* gushwork-build:{"pluginVersion":"1.42.0","createdBy":"Utsav Singh","createdAt":"15 Aug 2026","registry":"https://gushwork-design.vercel.app/exports/dashboard/component-registry.json","changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html","components":["badge","checkbox","control","date-range-picker","dashboard-switcher","divider","empty-state","icon-button","input","legend","metric-card","page-header","pagination","progress-bar","ring","section-header","sidebar","skeleton","stat-card","status-dot","tab-group","tab-item","table-cell","table-row","tooltip","topbar"]} */
 
 (function () {
-  var STAMP = {"pluginVersion":"1.39.0","createdBy":"Utsav Singh","createdAt":"15 Aug 2026","registry":"https://gushwork-design.vercel.app/exports/dashboard/component-registry.json","changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html","components":["badge","checkbox","control","date-range-picker","dashboard-switcher","divider","empty-state","icon-button","input","legend","metric-card","page-header","pagination","progress-bar","ring","section-header","sidebar","skeleton","stat-card","status-dot","tab-group","tab-item","table-cell","table-row","tooltip","topbar"]};
+  var STAMP = {"pluginVersion":"1.42.0","createdBy":"Utsav Singh","createdAt":"15 Aug 2026","registry":"https://gushwork-design.vercel.app/exports/dashboard/component-registry.json","changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html","components":["badge","checkbox","control","date-range-picker","dashboard-switcher","divider","empty-state","icon-button","input","legend","metric-card","page-header","pagination","progress-bar","ring","section-header","sidebar","skeleton","stat-card","status-dot","tab-group","tab-item","table-cell","table-row","tooltip","topbar"]};
   var KEY = 'gw-drift-dismissed';
   function ver(v) { return (v || '0.0.0').split('.').map(Number); }
   function newer(a, b) {           /* a > b ? */

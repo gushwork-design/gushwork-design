@@ -128,7 +128,7 @@
   <h1>Gushwork design system</h1>
   <p class="sub">A Claude Code plugin. Install it once, and Claude builds Gushwork screens
      using the real components and tokens instead of guessing at them.</p>
-  <p class="meta"><strong>v1.39.0</strong> · last updated 15 Aug 2026, 19:40 ·
+  <p class="meta"><strong>v1.42.0</strong> · last updated 28 Aug 2026, 14:03 ·
      <a href="changelog-sheet.html" target="_blank" rel="noopener noreferrer">changelog</a></p>
 
   <h2>Install</h2>
@@ -138,14 +138,16 @@
       <span class="step__n">1</span>
       <div class="step__b">
         <div class="step__t">Install it</div>
-        <div class="step__d">Run this in a terminal. Both lines — the second turns on
-          auto-update, without which you stay on today's version forever, and stale versions
-          fail silently.</div>
+        <div class="step__d">One line, in any terminal. It adds the marketplace, installs the
+          plugin, and turns on auto-update — and it is safe to re-run, so it is also the fix if
+          you are not sure what state you are in.</div>
         <div class="code">
-<pre>claude plugin marketplace add utsav-gushwork/gushwork-design && claude plugin install gushwork-design@gushwork
-python3 -c "import json,os;f=os.path.expanduser('~/.claude/plugins/known_marketplaces.json');d=json.load(open(f));d['gushwork']['autoUpdate']=True;json.dump(d,open(f,'w'),indent=2)"</pre>
+<pre>curl -fsSL https://raw.githubusercontent.com/utsav-gushwork/gushwork-design/main/scripts/install.sh | bash</pre>
           <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
         </div>
+        <div class="step__d">Needs Claude Code on your PATH and git able to reach the repo. It
+          checks both up front and tells you which one is missing rather than failing three
+          steps later.</div>
 
         <div class="or"><span>OR</span></div>
 
@@ -156,8 +158,8 @@ python3 -c "import json,os;f=os.path.expanduser('~/.claude/plugins/known_marketp
 
 1. Run: claude plugin marketplace add utsav-gushwork/gushwork-design
 2. Run: claude plugin install gushwork-design@gushwork
-3. In ~/.claude/plugins/known_marketplaces.json, set "autoUpdate": true on the
-   "gushwork" entry. Leave everything else in that file alone.</pre>
+
+Then tell me to restart Claude Code.</pre>
           <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
         </div>
       </div>
@@ -202,14 +204,56 @@ python3 -c "import json,os;f=os.path.expanduser('~/.claude/plugins/known_marketp
         <div class="step__d">The reply must open with one of these, depending on what you
           asked for:</div>
         <div class="code code--out">
-<pre>Using the Gushwork dashboard skill — v1.39.0, updated 15 Aug 2026.
-Using the Gushwork web skill — v1.39.0, updated 15 Aug 2026.</pre>
+<pre>Using the Gushwork dashboard skill — v1.42.0, updated 28 Aug 2026.
+Using the Gushwork web skill — v1.42.0, updated 28 Aug 2026.</pre>
         </div>
         <div class="step__d">If that line is missing it didn't fire — restart again, or ask
           for the skill by name. The version in it is also how you catch a stale install: if
-          it reads anything below <strong>v1.39.0</strong>, you're behind and it's emitting
+          it reads anything below <strong>v1.42.0</strong>, you're behind and it's emitting
           old values. It will ask two or three questions before building. That's
           deliberate.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Staying current</h2>
+
+  <div class="card">
+    <div class="step">
+      <span class="step__n">1</span>
+      <div class="step__b">
+        <div class="step__t">Your session tells you when you're behind</div>
+        <div class="step__d">You no longer have to check. At the start of a session the plugin
+          compares the copy you are running against the published one, and speaks up only if it
+          has moved — naming the components that changed and which of them break a screen built
+          on the old ones.</div>
+        <div class="code code--out">
+<pre>Gushwork design system v&lt;latest&gt; is out — this session is on v&lt;yours&gt;.
+1 breaking: badge · 4 changed. Auto-update was off on this machine —
+it is on now, so the next start picks this up.</pre>
+        </div>
+        <div class="step__d">Silence means you're current. The check is time-boxed and fails
+          quietly, so a flaky network costs you nothing.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="step">
+      <span class="step__n">2</span>
+      <div class="step__b">
+        <div class="step__t">Auto-update turns itself on</div>
+        <div class="step__d">Keeping it on used to be a manual edit to a config file, which is
+          exactly why it got skipped — and a skipped flag means emitting last month's colours
+          and spacing with full confidence. No error, no warning. The same session check sets it
+          for you, once.</div>
+        <div class="step__d">An update lands in the background and takes effect at your
+          <em>next</em> start, never the current one. To take one immediately:</div>
+        <div class="code">
+          <pre>claude plugin update gushwork-design@gushwork</pre>
+          <button class="code__btn" type="button"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+        </div>
+        <div class="step__d">Restart afterwards either way.</div>
       </div>
     </div>
   </div>
