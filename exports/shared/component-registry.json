@@ -1,0 +1,43 @@
+{
+  "$comment": [
+    "Per-component versions for the shared surface. The plugin version tells someone the PLUGIN is",
+    "stale; this tells them which of the components THEY used actually changed, which is the only",
+    "thing that makes them act. Bump a component's version in the same commit that changes its spec",
+    "\u2014 scripts/check-drift.sh reads this file and a build's stamp, and reports the intersection.",
+    "",
+    "version = the plugin version in which that component's spec last changed.",
+    "breaking = true when a build using it will render WRONG until updated, as opposed to merely",
+    "missing an improvement. It is the difference between a red notice and an amber one.",
+    "",
+    "Seeded by deriving, for each spec doc, the first release that shipped its last change \u2014 not",
+    "by stamping everything at the current version, which would have told every existing build that",
+    "all of its components moved at once.",
+    "",
+    "SHARED, so it lives once. badge was in the dashboard registry and is used by both surfaces \u2014",
+    "duplicating it would have reported a single change twice. check-drift.sh merges this file into",
+    "every surface's view, so an existing dashboard stamp naming `badge` still resolves.",
+    "doc paths here are relative to foundation/, not exports/."
+  ],
+  "registryVersion": "1.43.0",
+  "components": {
+    "badge": {
+      "version": "1.40.0",
+      "changed": "2026-08-26",
+      "breaking": false,
+      "doc": "v2/primitives.md",
+      "note": "FINDING: light tints fail 4.5:1 at their own 12px label \u2014 success 3.15, warning 3.07, danger 4.28 composited. Dark passes. Reported, not changed."
+    },
+    "gushwork-logo": {
+      "version": "1.40.0",
+      "changed": "2026-08-27",
+      "breaking": false,
+      "doc": "shared-components.md"
+    },
+    "icons": {
+      "version": "1.40.0",
+      "changed": "2026-08-27",
+      "breaking": false,
+      "doc": "shared-components.md"
+    }
+  }
+}

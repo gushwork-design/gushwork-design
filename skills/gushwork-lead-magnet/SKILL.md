@@ -77,3 +77,30 @@ in `pt` and every number in the export docs is measured, not eyeballed. Do not r
 
 `CONTRIBUTING.md` applies in full: read the component set and not an instance, compare geometry
 numerically, and sample the render for colour.
+
+## Stamp every document you build — it is how its owner finds out the design moved
+
+A lead magnet is a PDF that outlives the session that made it, and it is the artefact most likely
+to still be in circulation months later behind an ad. There is no record of who built what, so
+nothing can be pushed to its owner; the stamp is the substitute.
+
+**Every document you build carries a `gushwork-build:{...}` comment in its HTML source** — the
+print template, not the exported PDF — with the plugin version, the surface, and what it used:
+
+```json
+{"pluginVersion":"1.43.0","surface":"lead-magnet","createdBy":"...","createdAt":"2026-09-01",
+ "registry":"https://gushwork-design.vercel.app/exports/lead-magnet/component-registry.json",
+ "changelog":"https://gushwork-design.vercel.app/preview/changelog-sheet.html",
+ "components":["cover","interior","closer","document"]}
+```
+
+**`surface` must read `lead-magnet`.** It selects the registry the reader checks against, and a
+stamp without it is treated as a dashboard and diffed against the wrong component set entirely.
+
+`bash scripts/check-drift.sh <file-or-dir>` reads it and reports only the components this document
+uses that have since changed. Shared components — `badge`, the logo, the icon set — come from
+`exports/shared/component-registry.json`, merged in automatically.
+
+The cover and closer are owned by Figma frames, so they drift when those frames move. Bump the
+matching registry entry in the same commit that re-measures them, and set `breaking: true` when an
+existing document would now print wrong rather than merely dated.

@@ -296,9 +296,15 @@ chk(stamp.get("registry", "").startswith("https://gushwork-design.vercel.app/"),
     "the registry is the PUBLIC deploy, so the check survives the repo going private",
     stamp.get("registry"))
 chk(stamp.get("changelog", "").endswith("changelog-sheet.html"), "the stamp carries the changelog")
-reg = json.load(open(pathlib.Path.home()
-    / "Downloads/gushwork-design/exports/dashboard/component-registry.json"))
-unknown = [c for c in stamp["components"] if c not in reg["components"]]
+# The dashboard registry PLUS the shared one, which is where badge, the logo and the icon set
+# now live — they were never dashboard-only, and listing them per surface would report a single
+# change once per surface. scripts/check-drift.sh merges the same two; this must agree with it,
+# or the verifier calls a component missing that the real reader resolves fine.
+_root = pathlib.Path.home() / "Downloads/gushwork-design"
+reg = json.load(open(_root / "exports/dashboard/component-registry.json"))
+_shared = json.load(open(_root / "exports/shared/component-registry.json"))
+_known = {**_shared["components"], **reg["components"]}
+unknown = [c for c in stamp["components"] if c not in _known]
 chk(not unknown, "every stamped component exists in the registry", str(unknown))
 chk('DRIFT_JS = r"""' in (pathlib.Path.home()
     / "Downloads/gushwork-design/preview/_build_gtm_command_center.py").read_text(),

@@ -130,7 +130,7 @@ PY
 # ---------------------------------------------------------------------------
 # 3. Shared assets.
 # ---------------------------------------------------------------------------
-mkdir -p "$STAGE/foundation" "$STAGE/fonts" "$STAGE/exports/dashboard"
+mkdir -p "$STAGE/foundation" "$STAGE/fonts"
 
 # The component registry goes up too, and it is the ONE file here that is not
 # for reading. Every dashboard the skill builds fetches it on load to see
@@ -143,9 +143,19 @@ mkdir -p "$STAGE/foundation" "$STAGE/fonts" "$STAGE/exports/dashboard"
 # IT MUST STAY UNGATED. middleware.js only matches /internal/* and /admin/*,
 # so it is public today. Widening that matcher would silently break every
 # dashboard's drift check.
-cp exports/dashboard/component-registry.json "$STAGE/exports/dashboard/"
-python3 -c "import json; json.load(open('exports/dashboard/component-registry.json'))" \
-  || { echo "  component-registry.json is not valid JSON — fix it before publishing" >&2; exit 1; }
+# One per surface now, plus the shared one every surface merges in. A registry that is not
+# deployed is a surface whose builds check against nothing and are told nothing — silently, since
+# the fetch fails quietly by design. Missing or malformed stops the publish rather than shipping
+# a deploy that half-answers.
+for surface in shared dashboard web lead-magnet; do
+  src="exports/$surface/component-registry.json"
+  [ -f "$src" ] || { echo "  MISSING registry: $src" >&2; exit 1; }
+  python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$src" \
+    || { echo "  $src is not valid JSON — fix it before publishing" >&2; exit 1; }
+  mkdir -p "$STAGE/exports/$surface"
+  cp "$src" "$STAGE/exports/$surface/"
+  echo "  registry -> exports/$surface/component-registry.json"
+done
 
 # version.json — the other file here that is not for reading. The SessionStart hook in
 # hooks/hooks.json fetches it to find out whether the copy someone is running has been
