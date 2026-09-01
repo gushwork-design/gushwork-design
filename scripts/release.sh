@@ -93,7 +93,11 @@ MSG="v$VERSION — $SUMMARY"
 
 Session: $SESSION"
 
-git add -A
+# -u, not -A: the preflight above only refuses on modified TRACKED files, so an untracked
+# scratch file sitting in the tree would sail past it and land in the release commit. Everything
+# a release legitimately touches — the manifests, the announce lines, the derived logs — is
+# already tracked.
+git add -u
 git commit -q -m "$MSG"
 
 if [ -n "$SESSION" ]; then
@@ -109,7 +113,7 @@ echo "  release commit         -> $(git log -1 --format=%h)"
 # ── 3 · the logs, as a SECOND commit ───────────────────────────────────────────────────────
 echo
 bash scripts/release-log.sh | sed 's/^/  /'
-git add -A
+git add -u
 git commit -q -m "Regenerate the release logs after v$VERSION"
 echo "  log commit             -> $(git log -1 --format=%h)"
 
