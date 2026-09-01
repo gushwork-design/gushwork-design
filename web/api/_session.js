@@ -127,6 +127,13 @@ export function allowedDomain() {
 
    Turning Google auth on does not switch this off — see authModes(). Set
    SITE_PASSWORD to an empty string to disable the password path entirely. */
+/* Whether the sign-in gate runs at all. OFF since 1 Sep 2026 — see the block in
+   middleware.js for why. It lives here rather than there because two things need the same
+   answer: the middleware, which enforces it, and /api/auth/me, which tells shell.js whether
+   to draw locks. Two switches would eventually disagree, and the visible symptom would be a
+   padlock on a page that opens fine. */
+export const GATE_ENABLED = false;
+
 export function sitePassword() {
   return process.env.SITE_PASSWORD || '';
 }

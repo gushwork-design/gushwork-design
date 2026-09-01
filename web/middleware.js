@@ -16,11 +16,29 @@
    function and stays public.
    ========================================================================= */
 
-import { COOKIE, verify, readCookie, sessionSecret, authModes } from './api/_session.js';
+import { COOKIE, verify, readCookie, sessionSecret, authModes, GATE_ENABLED }
+  from './api/_session.js';
 
 export const config = {
   matcher: ['/internal/:path*', '/admin/:path*']
 };
+
+/* ── THE GATE IS OFF, 1 Sep 2026 ─────────────────────────────────────────────
+   Ruled by Utsav. Set to true to put it back; nothing else has to change.
+
+   Why turning it off is not the exposure it sounds like: every page behind it
+   — install.html, changelog-sheet.html, review-sheet.html, catalogue.html — is
+   already tracked in this repo, and this repo is PUBLIC. The gate was asking
+   for a password to see files anyone can read on GitHub. What it was actually
+   costing was the install page: /preview/install.html redirects to
+   /internal/claude-plugin, so with no SITE_PASSWORD configured the first page
+   a new teammate opens would have answered 503.
+
+   What this does NOT make public is anything that was not already: there is no
+   private data on this deploy. If that ever stops being true — a real customer
+   list, an unreleased campaign — turn this back on BEFORE adding the page, not
+   after.
+   ────────────────────────────────────────────────────────────────────────── */
 
 function forbidden(email) {
   return new Response(
@@ -49,6 +67,9 @@ function toSignIn(url) {
 }
 
 export default async function middleware(request) {
+  /* Returning undefined continues to the next handler, which serves the file. */
+  if (!GATE_ENABLED) return undefined;
+
   const url = new URL(request.url);
   const modes = authModes();
 

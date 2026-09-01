@@ -101,7 +101,8 @@
      the site runs on a shared password, so the modal has to be able to render
      either form — or both, once Google is configured alongside it. */
   var session = { signedIn: false, admin: false, email: null, name: null,
-                  picture: null, modes: { google: false, password: true } };
+                  picture: null, modes: { google: false, password: true },
+                  gate: false };
 
   /* -- helpers ----------------------------------------------------------- */
   function el(html) {
@@ -155,8 +156,12 @@
   }
 
   function itemHTML(item, tier) {
-    var locked = (tier === 'internal' && !session.signedIn) ||
-                 (tier === 'admin'    && !session.admin);
+    /* No gate, no locks. Drawing a padlock on a page that opens fine is worse than drawing
+       nothing: the row becomes a button that pops a sign-in modal instead of a link that
+       goes where it says, so the chrome actively blocks a page the server is serving. */
+    var locked = session.gate &&
+                 ((tier === 'internal' && !session.signedIn) ||
+                  (tier === 'admin'    && !session.admin));
     var cur = isCurrent(item.href) ? ' aria-current="page"' : '';
     var inner = icon(item.icon) +
       '<span class="gw-navitem__text">' + esc(item.label) + '</span>' +
@@ -177,6 +182,8 @@
   }
 
   function footerHTML() {
+    /* Nothing to sign in to while the gate is off. */
+    if (!session.gate && !session.signedIn) return '';
     if (!session.signedIn) {
       return '<button class="gw-signin" type="button" data-open-modal>' +
         GOOGLE_G + '<span>Sign in</span></button>';

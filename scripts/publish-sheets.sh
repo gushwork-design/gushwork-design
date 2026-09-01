@@ -220,6 +220,17 @@ find "$STAGE" -type f | sed "s|$STAGE/||" | sort | sed 's/^/  /'
 # the documented way to CLOSE the password door — is indistinguishable here from one that is
 # set. Anything below that turns on its presence says so rather than pretending to know.
 echo
+# The gate can be switched off in code, in which case none of the environment variables below
+# decide anything and asking about them only sends someone looking for a problem they do not
+# have. web/api/_session.js is the single source of truth for both the middleware and
+# /api/auth/me, so it is the honest thing to read.
+if grep -q "^export const GATE_ENABLED = false" web/api/_session.js; then
+  echo "  NOTE: the sign-in gate is OFF (web/api/_session.js). /internal/* and /admin/* deploy"
+  echo "        PUBLIC, and no environment variable changes that. Every page behind it is"
+  echo "        already tracked in this public repo, which is why that is not an exposure —"
+  echo "        but do not add a genuinely private page without turning it back on first."
+  ENV_LS=""; HAS_GOOGLE=0; HAS_PW=0
+else
 ENV_LS="$(vercel env ls production 2>/dev/null || true)"
 HAS_GOOGLE=0; HAS_PW=0
 printf '%s' "$ENV_LS" | grep -q GOOGLE_CLIENT_ID && HAS_GOOGLE=1
@@ -244,6 +255,7 @@ elif [ "$HAS_PW" = 1 ]; then
   echo "        value the shared password is accepted alongside Google, and it grants"
   echo "        admin. Set it to an empty string to close that door — this cannot tell"
   echo "        the two apart, because env values are not readable from here."
+fi
 fi
 
 if [ "$MODE" = dry ]; then
