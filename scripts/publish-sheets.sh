@@ -1,42 +1,64 @@
 #!/usr/bin/env bash
-# Publish the review sheets to https://gushwork-design.vercel.app
+# Publish the site to https://gushwork-design.vercel.app
 #
-#   bash scripts/publish-sheets.sh            # deploy to production
-#   bash scripts/publish-sheets.sh --dry-run  # assemble and print the tree, deploy nothing
+#   bash scripts/publish-sheets.sh              # deploy to production
+#   bash scripts/publish-sheets.sh --preview    # deploy to a preview URL
+#   bash scripts/publish-sheets.sh --dry-run    # assemble and print the tree, deploy nothing
 #
 # WHAT THIS IS FOR
 # ----------------
-# The sheets are the one part of the system that only works if you clone the repo. Hosting
-# them turns `preview/` into a URL anyone at Gushwork can open, which is the distribution
-# half of the mandate. It is for READING and REVIEWING — the plugin is still how you build.
+# The sheets only work if you clone the repo. Hosting them turns preview/ into
+# a URL anyone at Gushwork can open, which is the distribution half of the
+# mandate. It is for READING and REVIEWING — the plugin is still how you build.
 #
-# THE PAGES ARE NEVER EDITED. This assembles a copy in a temp directory and deploys that,
-# preserving the repo's own layout, so the deployed URLs are /preview/<sheet>.html and not
-# one line of any sheet has to change. `scripts/publish-index.html` is the entry point —
-# a deploy needs one or the root 404s — and is the only page that exists solely to be
-# hosted.
+# WHAT CHANGED (Aug 2026)
+# -----------------------
+# This used to deploy four loose HTML files behind a card-list index. It now
+# deploys a site: a shared topbar and sidebar from web/, the Overview page
+# built from the Figma, and a real Google auth gate over the internal pages.
 #
-# WHY THE VERCEL MCP CANNOT DO THIS. `deploy_to_vercel` takes files inline in the tool
-# call. This tree is 2.4 MB — three font TTFs plus a 490 KB review sheet — so the CLI is
-# the only path. If `vercel whoami` fails, run `vercel login`; never pass a token on the
-# command line.
+#   /                       Overview            public
+#   /style-guide            holding page        public
+#   /downloads              holding page        public
+#   /internal/claude-plugin  = install.html     @gushwork.ai
+#   /internal/mini-tools     holding page       @gushwork.ai
+#   /internal/changelog      = changelog-sheet  @gushwork.ai
+#   /admin/review-sheet      = review-sheet     ADMIN_EMAILS only
+#   /admin/catalogue         = catalogue        ADMIN_EMAILS only
+#
+# THE SHEETS ARE STILL NEVER EDITED. They are generated, and release-log.sh
+# --check compares what is committed against what the generator produces.
+# The shell tags are injected into the STAGED COPIES by scripts/_add_shell.py,
+# so the repo's own files stay byte-identical to their generator output.
+#
+# WHY THE VERCEL MCP CANNOT DO THIS. `deploy_to_vercel` takes files inline in
+# the tool call. This tree is ~2.4 MB — three font TTFs plus a 664 KB review
+# sheet — so the CLI is the only path. If `vercel whoami` fails, run
+# `vercel login`; never pass a token on the command line.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-DRY=0
-[ "${1:-}" = "--dry-run" ] && DRY=1
+MODE=prod
+case "${1:-}" in
+  --dry-run) MODE=dry ;;
+  --preview) MODE=preview ;;
+  "")        MODE=prod ;;
+  *) echo "unknown flag: $1" >&2; exit 2 ;;
+esac
 
-# The sheets that go up. Add a line to publish another; keep the repo-relative path.
+# Sheets that go up, and where they land. "<repo path>|<staged path>".
+# The staged paths are one directory deep, exactly like preview/ was, so the
+# sheets' own ../foundation/tokens.css links keep resolving.
 SHEETS=(
-  preview/review-sheet.html
-  preview/catalogue.html
-  preview/changelog-sheet.html
-  preview/install.html
+  "preview/install.html|internal/claude-plugin.html"
+  "preview/changelog-sheet.html|internal/changelog.html"
+  "preview/review-sheet.html|admin/review-sheet.html"
+  "preview/catalogue.html|admin/catalogue.html"
 )
 
-# Social card images. A page's og:image must be an absolute URL for crawlers to
-# resolve it, so it never matches the ../assets/ grep further down. List it here
-# or the card 404s and the link unfurls blank.
+# Social card images. A page's og:image must be an absolute URL for crawlers
+# to resolve it, so it never matches the ../assets/ grep further down. List it
+# here or the card 404s and the link unfurls blank.
 SOCIAL=(
   assets/og/install.png
 )
@@ -44,55 +66,162 @@ SOCIAL=(
 # The changelog sheet is generated, so a publish must not ship a stale one.
 bash scripts/release-log.sh --check
 
+# And the version fields must agree before anything goes out, because version.json below
+# becomes the number every machine compares itself against. v1.40.0 shipped with
+# plugin.json at 1.40.0 and marketplace.json still at 1.39.0 — stamp-release.sh writes
+# both, so it had not been run — and the live install page advertised 1.39.0 for ten days.
+# This is the gate that catches it.
+bash scripts/version-json.sh --check
+
 command -v vercel >/dev/null || { echo "vercel CLI not installed — brew install vercel" >&2; exit 1; }
-if [ "$DRY" = 0 ] && ! vercel whoami >/dev/null 2>&1; then
+if [ "$MODE" != dry ] && ! vercel whoami >/dev/null 2>&1; then
   echo "Vercel CLI is not authenticated. Run:  vercel login" >&2
   exit 1
 fi
 
-# The directory name becomes the project name on first deploy, and the project name becomes
-# the URL. It must be `gushwork-design`.
+# The directory name becomes the project name on first deploy, and the project
+# name becomes the URL. It must be `gushwork-design`.
 STAGE="$(mktemp -d)/gushwork-design"
 trap 'rm -rf "$(dirname "$STAGE")"' EXIT
-mkdir -p "$STAGE/preview" "$STAGE/foundation" "$STAGE/fonts"
+mkdir -p "$STAGE"
 
-cp scripts/publish-index.html "$STAGE/index.html"
-for s in "${SHEETS[@]}"; do cp "$s" "$STAGE/preview/"; done
+# ---------------------------------------------------------------------------
+# 1. The site itself — pages, shell, auth functions, middleware, vercel.json.
+#    web/ mirrors the deploy root one-for-one, so this is a straight copy.
+# ---------------------------------------------------------------------------
+cp -R web/. "$STAGE/"
+# README-auth.md is documentation for us, not a page. Don't serve it.
+rm -f "$STAGE/README-auth.md"
 
-# The component registry goes up too, and it is the ONE file here that is not for reading.
-# Every dashboard the skill builds fetches it on load to see whether the components it was built
-# from have moved on, and shows its owner a notice if they have. That check has to keep working
-# after the repo goes private, which is exactly why it points at this public deploy and not at
-# raw.githubusercontent.com. Deploying without it does not break a dashboard — the fetch fails
-# silently — it just means nobody is ever told.
-mkdir -p "$STAGE/exports/dashboard"
+for required in index.html shell.css shell.js middleware.js vercel.json \
+                api/_session.js api/auth/login.js api/auth/callback.js \
+                api/auth/logout.js api/auth/me.js api/auth/password.js; do
+  [ -f "$STAGE/$required" ] || { echo "  MISSING from web/: $required" >&2; exit 1; }
+done
+
+# ---------------------------------------------------------------------------
+# 2. The generated sheets, renamed into their gated homes and given the shell.
+# ---------------------------------------------------------------------------
+echo "Staging sheets:"
+for pair in "${SHEETS[@]}"; do
+  src="${pair%%|*}"; dst="${pair##*|}"
+  [ -f "$src" ] || { echo "  MISSING sheet: $src" >&2; exit 1; }
+  mkdir -p "$STAGE/$(dirname "$dst")"
+  cp "$src" "$STAGE/$dst"
+done
+python3 scripts/_add_shell.py $(for p in "${SHEETS[@]}"; do echo "$STAGE/${p##*|}"; done)
+
+# install.html's social card still points at the old /preview/install.html.
+# Rewrite it in the staged copy so the unfurl lands on the live page. The old
+# URL still works — vercel.json redirects it — but a canonical og:url that
+# 302s is a smell, and some crawlers won't follow it.
+python3 - "$STAGE/internal/claude-plugin.html" <<'PY'
+import sys
+p = sys.argv[1]
+s = open(p, encoding="utf-8").read()
+before = s
+s = s.replace("https://gushwork-design.vercel.app/preview/install.html",
+              "https://gushwork-design.vercel.app/internal/claude-plugin")
+open(p, "w", encoding="utf-8").write(s)
+print("  rewrote og:url in claude-plugin.html" if s != before
+      else "  og:url in claude-plugin.html already current")
+PY
+
+# ---------------------------------------------------------------------------
+# 3. Shared assets.
+# ---------------------------------------------------------------------------
+mkdir -p "$STAGE/foundation" "$STAGE/fonts" "$STAGE/exports/dashboard"
+
+# The component registry goes up too, and it is the ONE file here that is not
+# for reading. Every dashboard the skill builds fetches it on load to see
+# whether the components it was built from have moved on, and shows its owner
+# a notice if they have. That check has to keep working after the repo goes
+# private, which is exactly why it points at this public deploy and not at
+# raw.githubusercontent.com. Deploying without it does not break a dashboard —
+# the fetch fails silently — it just means nobody is ever told.
+#
+# IT MUST STAY UNGATED. middleware.js only matches /internal/* and /admin/*,
+# so it is public today. Widening that matcher would silently break every
+# dashboard's drift check.
 cp exports/dashboard/component-registry.json "$STAGE/exports/dashboard/"
-python3 -c "import json,sys; json.load(open('exports/dashboard/component-registry.json'))" \
+python3 -c "import json; json.load(open('exports/dashboard/component-registry.json'))" \
   || { echo "  component-registry.json is not valid JSON — fix it before publishing" >&2; exit 1; }
+
+# version.json — the other file here that is not for reading. The SessionStart hook in
+# hooks/hooks.json fetches it to find out whether the copy someone is running has been
+# superseded, and which components broke on the way. It sits at the ROOT of the deploy, so
+# the URL stays https://gushwork-design.vercel.app/version.json for good. Generated, never
+# committed; scripts/version-json.sh is the only thing that writes it.
+#
+# UNGATED, for the same reason as the registry above: middleware.js matches only
+# /internal/* and /admin/*, and the root is outside both. A machine that is behind must be
+# able to find that out without the access being behind might have cost it.
+bash scripts/version-json.sh > "$STAGE/version.json"
+python3 - "$STAGE/version.json" <<'VJ'
+import json, sys
+d = json.load(open(sys.argv[1]))
+v, n = d["version"], len(d["components"])
+print(f"  version.json -> v{v}, {n} components")
+VJ
+
 cp foundation/tokens.css "$STAGE/foundation/"
 cp fonts/*.ttf "$STAGE/fonts/"
+
 for a in "${SOCIAL[@]}"; do
   [ -f "$a" ] || { echo "  MISSING social image: $a" >&2; exit 1; }
   mkdir -p "$STAGE/$(dirname "$a")" && cp "$a" "$STAGE/$a"
 done
 
-# Any page that links tokens.css needs the real fonts; review-sheet and catalogue inline
-# their own. Copy whatever else the sheets reference, so a new sheet with assets just works.
-for s in "${SHEETS[@]}"; do
-  grep -oE '(href|src)="\.\./assets/[^"]+"' "$s" 2>/dev/null | sed 's/.*="\.\.\///;s/"$//' || true
-done | sort -u | while read -r a; do
-  [ -f "$a" ] || { echo "  MISSING asset referenced by a sheet: $a" >&2; continue; }
+# Any page that links tokens.css needs the real fonts; review-sheet and
+# catalogue inline their own. Copy whatever else the pages reference, so a new
+# sheet with assets just works. Both ../assets/ (from a one-deep page) and
+# /assets/ (from the shell) are picked up.
+{
+  for pair in "${SHEETS[@]}"; do
+    grep -ohE '(href|src)="(\.\./|/)assets/[^"]+"' "$STAGE/${pair##*|}" 2>/dev/null || true
+  done
+  grep -rohE '(href|src)="/assets/[^"]+"' "$STAGE"/*.html "$STAGE"/internal/*.html 2>/dev/null || true
+  # CSS url() too — the style guide masks the logo through -webkit-mask to draw
+  # the "don't" panel, and those references carry no href= or src= to match.
+  grep -rohE "url\(['\"]?/assets/[^)'\"]+" "$STAGE"/*.html "$STAGE"/internal/*.html 2>/dev/null \
+    | sed "s|^url(['\"]\{0,1\}|src=\"|;s|$|\"|" || true
+} | sed 's/.*="//;s/"$//;s|^\.\./||;s|^/||' | sort -u | while read -r a; do
+  [ -n "$a" ] || continue
+  [ -f "$a" ] || { echo "  MISSING asset referenced by a page: $a" >&2; continue; }
   mkdir -p "$STAGE/$(dirname "$a")" && cp "$a" "$STAGE/$a"
 done
 
+# ---------------------------------------------------------------------------
+# 4. Report and deploy.
+# ---------------------------------------------------------------------------
+echo
 echo "Staged $(find "$STAGE" -type f | wc -l | tr -d ' ') files · $(du -sh "$STAGE" | cut -f1)"
 find "$STAGE" -type f | sed "s|$STAGE/||" | sort | sed 's/^/  /'
 
-if [ "$DRY" = 1 ]; then
+# Say which door is open, because the answer changes what gets deployed.
+echo
+if ! vercel env ls production 2>/dev/null | grep -q GOOGLE_CLIENT_ID; then
+  echo "  NOTE: GOOGLE_CLIENT_ID is not set on this project (or could not be read),"
+  echo "        so the internal and admin pages are behind the SHARED PASSWORD."
+  echo "        One key for everyone, and it grants admin — it cannot tell an admin"
+  echo "        from anyone else. Set the Google variables, then blank SITE_PASSWORD."
+  echo "        See web/README-auth.md."
+elif ! vercel env ls production 2>/dev/null | grep -q SITE_PASSWORD; then
+  echo "  NOTE: Google sign-in is configured, but SITE_PASSWORD is not set — so the"
+  echo "        default password is STILL ACCEPTED alongside it, and it grants admin."
+  echo "        Set SITE_PASSWORD to an empty string to close that door."
+fi
+
+if [ "$MODE" = dry ]; then
   echo
   echo "Dry run — nothing deployed."
   exit 0
 fi
 
 echo
-cd "$STAGE" && vercel deploy --prod --yes
+cd "$STAGE"
+if [ "$MODE" = preview ]; then
+  vercel deploy --yes
+else
+  vercel deploy --prod --yes
+fi

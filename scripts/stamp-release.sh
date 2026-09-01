@@ -93,6 +93,6 @@ echo "commit, never an amend, because amending rewrites the sha the newest row"
 echo "just recorded. One command does the markdown and the sheet together:"
 echo
 echo "    bash scripts/release-log.sh"
-echo "    git add CHANGELOG.md preview/changelog-sheet.html"
+echo "    git add CHANGELOG.md preview/changelog-sheet.html web/index.html web/style-guide.html"
 echo "    git commit -m \"Regenerate the release logs after v$VERSION\""
 echo "    git push"

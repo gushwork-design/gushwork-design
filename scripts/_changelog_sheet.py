@@ -151,21 +151,68 @@ CSS = """
        background:var(--gw-color-neutral-35);border-radius:var(--gw-radius-4);
        padding:0 var(--gw-space-4)}
 
-  .page{max-width:1140px;margin:0 auto;
-        padding:var(--gw-space-56) var(--gw-space-40) var(--gw-space-120);
-        display:grid;grid-template-columns:minmax(0,1fr) 168px;gap:var(--gw-space-56)}
+  /* Column split measured off the styleguide page (478:15070 → Frame
+     2147260130): 40 pad, main column 800, gutter 60, TOC rail 260, 40 pad —
+     1200 across, which is the content column beside the 240 sidebar. */
+  /* 60 top and 40 sides are the measured page padding; the 120 at the bottom
+     is deliberate and Utsav's call — a long scrolling page wants run-out room
+     under the last release. */
+  .page{max-width:1200px;margin:0 auto;
+        padding:var(--gw-space-60) var(--gw-space-40) var(--gw-space-120);
+        /* `auto` for the rail, not a fixed 260 — collapsing it to 48 widens the
+           main column to the measured 1012 with no second rule. */
+        display:grid;grid-template-columns:minmax(0,1fr) auto;
+        /* Column gap 60 is the measured gutter. Row gap is 32, NOT 60 — the
+           styleguide puts 32 between the header rule and the body
+           (header ends 93, line 125, body 157). */
+        column-gap:var(--gw-space-60);row-gap:var(--gw-space-32)}
 
-  /* ── header ── */
-  .hd{grid-column:1 / -1;padding-bottom:var(--gw-space-32);
-      border-bottom:1px solid var(--gw-color-neutral-100)}
+  /* ── header ──
+     Measured off the styleguide header (Frame 2147260129): the block is
+     inset 40 left and right while the rule below it runs the full column
+     width, stack gap 20, and the divider is 2px Neutral/200 — not the 1px
+     Neutral/100 this sheet used to draw. */
+  /* Column 1 only. `grid-column:1 / -1` was left over from the old layout,
+     where the header spanned a narrow 168px index — under the styleguide's
+     split it ran the rule 1120 wide, straight under the TOC. The measured
+     line (478:15076) is 800: the main column, and nothing past the gutter. */
+  .hd{grid-column:1;grid-row:1;
+      padding:0 var(--gw-space-40) var(--gw-space-32);
+      /* DOTTED, not solid. Line 14 (478:15076) measures strokeWeight 2,
+         strokeCap ROUND, dashPattern [0.1, 4] — a zero-length dash with a
+         round cap is a 2px dot, repeating every 4.1px. Drawn as a gradient
+         because a CSS `dotted` border leaves dot size and spacing to the UA.
+         The style guide carries the same rule; change both together. */
+      border-bottom:0;
+      background-image:radial-gradient(circle closest-side,
+                       var(--gw-color-neutral-200) 100%, transparent 100%);
+      background-size:4.1px 2px;
+      background-position:left bottom;
+      background-repeat:repeat-x}
+  main{grid-column:1;grid-row:2;min-width:0}
+  /* The rail top-aligns with the header, not with the body — in Figma both
+     the main column and the rail start at y=60. */
+  /* `1 / -1` does NOT work here: with no explicit rows, -1 resolves to the end
+     of the explicit grid (line 1), so the rail landed in row 1 alone and its
+     ~760px height forced that row open, shoving the body down to y=972.
+     `span 2` spans both rows for real, so its height is satisfied across them. */
+  .idx{grid-column:2;grid-row:1 / span 2;align-self:start}
   /* The badge sits BESIDE the title, not pushed to the far edge — it reads as part of the
      title line, naming which system this changelog belongs to. No `justify-content`: the
      gap holds them together, and flex-start lets the pair sit as one unit. h1 drops its
      margin so the two align on their centres rather than around the heading's spacing. */
   .hd__top{display:flex;align-items:center;gap:var(--gw-space-20);
-           flex-wrap:wrap;margin-bottom:var(--gw-space-12)}
-  h1{margin:0;font:var(--gw-text-h4);
-     letter-spacing:var(--gw-text-h4-tracking);color:var(--gw-color-neutral-900)}
+           flex-wrap:wrap;margin-bottom:var(--gw-space-20)}
+  /* Styleguide page title, measured: Vert Grotesk Display Semibold 44/120%,
+     ls 0, Neutral/black. No text style is bound in Figma, and --gw-text-h3 is
+     the wrong weight (700), so the ramp is spelled out. */
+  h1{margin:0;font:600 44px/1.2 var(--gw-font-display);
+     letter-spacing:0;color:var(--gw-color-black)}
+  /* The styleguide's "Last updated" line: Body/body-14-med, Neutral/400,
+     sitting 20 under the title. */
+  .hd__meta{margin:0 0 var(--gw-space-20);font:var(--gw-text-body-14-med);
+            letter-spacing:var(--gw-text-body-14-med-tracking);
+            color:var(--gw-color-neutral-400)}
   /* This is the library `badge`, not a lookalike: set 1582:628 at
      Theme=Light, Color=Blue, Icon=no, Size=Small. Every value is from the measured table in
      exports/web/component-library.md — height 24 and the 8px horizontal padding are its
@@ -260,29 +307,64 @@ CSS = """
      underneath the thumb — on macOS the scrollbar is an OVERLAY and floats above content,
      so it is not enough to let the classic scrollbar reserve its own width.
      `scrollbar-gutter:stable` keeps the column from shifting when the bar appears. */
+  /* ── on this page ──
+     Measured off the styleguide TOC rail (478:15070 → Frame 2147260252):
+     260 wide, stack gap 16; a 22x22 r8 caret button filled Neutral/100 with a
+     1px Neutral/200 stroke, then a 16px List icon and the label at
+     Button/button-14-med Neutral/900; the links indented 32, gap 16, at
+     Button/button-14-med Neutral/700, and the active one Primary/500-main.
+     Kept from the old rail: sticky, its own scroll, and the gutter — the
+     styleguide lists 7 sections and this lists 46 releases. */
   .idx{position:sticky;top:var(--gw-space-40);align-self:start;
        max-height:calc(100vh - 80px);overflow-y:auto;overscroll-behavior:contain;
-       scrollbar-gutter:stable;padding-right:var(--gw-space-12);
-       display:flex;flex-direction:column;gap:var(--gw-space-2)}
-  /* The label's background is what hides rows scrolling under it, so it has to reach the
-     gap below itself — otherwise a half-clipped version number shows through. */
-  .idx__t{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
-          color:var(--gw-color-neutral-500);
-          padding:var(--gw-space-4) var(--gw-space-8) var(--gw-space-8);
-          margin-bottom:calc(-1 * var(--gw-space-2));
+       scrollbar-gutter:stable;
+       display:flex;flex-direction:column;gap:var(--gw-space-16)}
+  .idx__t{display:flex;align-items:center;gap:var(--gw-space-8);
+          font:var(--gw-text-button-14);letter-spacing:0;
+          color:var(--gw-color-neutral-900);
+          padding-bottom:var(--gw-space-8);
           position:sticky;top:0;z-index:1;background:var(--gw-color-white)}
-  .idx a{padding:var(--gw-space-4) var(--gw-space-8);border-radius:var(--gw-radius-4);
-         font:var(--gw-text-body-12-med);font-variant-numeric:tabular-nums;
-         color:var(--gw-color-neutral-500);text-decoration:none}
-  .idx a:hover{background:var(--gw-color-neutral-25);color:var(--gw-color-neutral-900)}
+  .idx__ico{width:16px;height:16px;flex:none;display:block}
+  /* The caret button, measured 22x22 with 4 padding around a 12px glyph. It
+     collapses the rail; the styleguide draws it, so it is drawn here. */
+  .idx__col{width:22px;height:22px;flex:none;display:grid;place-items:center;
+            padding:var(--gw-space-4);border-radius:var(--gw-radius-8);
+            background:var(--gw-color-neutral-100);
+            border:1px solid var(--gw-color-neutral-200);
+            color:var(--gw-color-neutral-800);cursor:pointer}
+  .idx__col svg{width:12px;height:12px;display:block;
+                transition:transform var(--gw-motion-fast)}
+  .idx__col:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
+  /* The indented link list — pad-left 32 on the group, not on each row. */
+  .idx__list{display:flex;flex-direction:column;gap:var(--gw-space-16);
+             padding-left:var(--gw-space-32)}
+  .idx a{font:var(--gw-text-button-14);letter-spacing:0;
+         font-variant-numeric:tabular-nums;
+         color:var(--gw-color-neutral-700);text-decoration:none}
+  .idx a:hover{color:var(--gw-color-neutral-900)}
   .idx a:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
-  /* The release currently at the top of the page. Semibold is the signal; the tint only
-     supports it. `font-variant-numeric` is re-declared because the `font` shorthand
-     resets it, and losing tabular figures makes the whole column jitter. */
-  .idx a.now{font:var(--gw-text-body-12-sem);
-             letter-spacing:var(--gw-text-body-12-sem-tracking);
-             font-variant-numeric:tabular-nums;
-             color:var(--gw-color-primary-500);background:var(--gw-color-primary-alpha-10)}
+  /* The release currently at the top of the page. The styleguide marks its
+     active entry with colour alone — Primary/500-main, no tint, no weight
+     change. `font-variant-numeric` is re-declared because the `font`
+     shorthand resets it, and losing tabular figures makes the column jitter. */
+  .idx a.now{color:var(--gw-color-primary-500);font-variant-numeric:tabular-nums}
+  /* Collapsed state, measured against frame 478:15652 — the same page with the
+     rail collapsed. Not just "hide the links": the rail goes 260 -> 48, the
+     main column and its divider go 800 -> 1012, the label is hidden, and the
+     22x22 caret button becomes a 48x26 pill with the List glyph inside it.
+     The column rule above turns the rail's width into the split, so 1012 is
+     arithmetic rather than another declaration. */
+  .idx{width:260px}
+  .idx[data-collapsed="true"]{width:48px}
+  .idx[data-collapsed="true"] .idx__list{display:none}
+  .idx[data-collapsed="true"] .idx__col svg{transform:rotate(90deg)}
+  .idx[data-collapsed="true"] .idx__t{
+    width:48px;height:26px;padding:var(--gw-space-4);
+    gap:var(--gw-space-8);justify-content:center;
+    border-radius:var(--gw-radius-8);background:var(--gw-color-neutral-100)}
+  .idx[data-collapsed="true"] .idx__col{
+    width:12px;height:12px;padding:0;background:none;border:0}
+  .idx[data-collapsed="true"] .idx__t > span{display:none}
 
   /* Slim rounded scrollbar, thumb only — the default chrome is heavy next to 12px rows.
      Both properties are needed: `scrollbar-width`/`-color` is the standard and covers
@@ -298,9 +380,20 @@ CSS = """
   html::-webkit-scrollbar-thumb:hover,.idx::-webkit-scrollbar-thumb:hover{
     background:var(--gw-color-neutral-300);background-clip:content-box}
 
-  @media (max-width:1000px){
-    .page{grid-template-columns:minmax(0,1fr);gap:0;
-          padding:var(--gw-space-40) var(--gw-space-20) var(--gw-space-80)}
+  /* No narrow-viewport reflow here. exports/dashboard/build-rules.md rules that
+     below 1440 the canvas SCALES rather than rearranges — reflow is listed there
+     as a rejected attempt. shell.js sets --gw-fit and .gw-shell zooms the whole
+     1440 layout, so this page keeps its 800 / 60 / 260 split at every width. */
+
+  /* Phone — reflow to one column. See shell.css section 10 for why this page
+     reflows while `dashboard-build` scales. */
+  @media (max-width:767px){
+    .page{max-width:none;grid-template-columns:minmax(0,1fr);
+          column-gap:0;row-gap:var(--gw-bp-content-gap);
+          padding:var(--gw-bp-pad-section-v) var(--gw-bp-pad-page-h)}
+    .hd,main{grid-column:1;grid-row:auto}
+    .hd{padding-left:0;padding-right:0}
+    h1{font-size:var(--gw-bp-type-h1)}
     .idx{display:none}
     .rel{grid-template-columns:minmax(0,1fr);gap:var(--gw-space-12)}
     .rail{flex-direction:row;align-items:center;gap:var(--gw-space-12)}
@@ -315,6 +408,9 @@ SPRITE = """
   <symbol id="i-commit" viewBox="0 0 256 256" fill="currentColor"><path d="M248,120H183.42a56,56,0,0,0-110.84,0H8a8,8,0,0,0,0,16H72.58a56,56,0,0,0,110.84,0H248a8,8,0,0,0,0-16ZM128,168a40,40,0,1,1,40-40A40,40,0,0,1,128,168Z"/></symbol>
   <symbol id="i-chat" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></symbol>
   <symbol id="i-caret" viewBox="0 0 256 256" fill="currentColor"><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"/></symbol>
+  <!-- The styleguide TOC rail draws List at Regular 16 and CaretRight at Bold 12. -->
+  <symbol id="i-list" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></symbol>
+  <symbol id="i-caret-right" viewBox="0 0 256 256" fill="currentColor"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,1,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></symbol>
 </svg>
 """
 
@@ -377,6 +473,19 @@ SPY = """
   }, { passive: true });
   addEventListener('resize', update, { passive: true });
   update();
+
+  /* The styleguide draws a collapse caret on the rail, so it works here.
+     Collapsed, the rail keeps its header row and drops the 46 anchors. */
+  var col = document.querySelector('[data-idx-collapse]');
+  if (col && idx) {
+    col.addEventListener('click', function () {
+      var next = idx.getAttribute('data-collapsed') !== 'true';
+      idx.setAttribute('data-collapsed', next ? 'true' : 'false');
+      col.setAttribute('aria-expanded', next ? 'false' : 'true');
+      col.setAttribute('aria-label',
+        next ? 'Expand the release list' : 'Collapse the release list');
+    });
+  }
 })();
 </script>
 """
@@ -410,6 +519,9 @@ def main():
     w("      <h1>Changelog</h1>")
     w('      <span class="brand">Gushwork Design Plugin</span>')
     w("    </div>")
+    # The styleguide header is title → "Last updated" → rule. The lede and the
+    # housekeeping notes follow, because this page carries more than a title.
+    w('    <p class="hd__meta">Last updated %s</p>' % html.escape(last_date))
     w('    <p class="lede">Release notes for the Gushwork design system, including new')
     w("       components, corrected measurements, and rulings by version.</p>")
     w('    <p class="hd__note">This page is generated from')
@@ -473,13 +585,24 @@ def main():
         w("    </article>")
 
     w("  </main>")
-    w('  <nav class="idx" aria-label="Releases">')
-    w('    <span class="idx__t">Releases</span>')
+    # The styleguide's "On this page" rail: a collapse caret, the List glyph,
+    # the label, then the indented list of anchors.
+    w('  <nav class="idx" aria-label="Releases" data-collapsed="false">')
+    w('    <div class="idx__t">')
+    w('      <button class="idx__col" type="button" data-idx-collapse')
+    w('              aria-expanded="true" aria-controls="idx-list"')
+    w('              aria-label="Collapse the release list">')
+    w('        <svg><use href="#i-caret-right"/></svg></button>')
+    w('      <svg class="idx__ico"><use href="#i-list"/></svg>')
+    w("      <span>On this page</span>")
+    w("    </div>")
+    w('    <div class="idx__list" id="idx-list">')
     for i, r in enumerate(rows):
         w(
-            '    <a class="%s" href="#%s">v%s</a>'
+            '      <a class="%s" href="#%s">v%s</a>'
             % ("now" if i == 0 else "", anchor(r["version"]), html.escape(r["version"]))
         )
+    w("    </div>")
     w("  </nav>")
 
     # No footer note. It explained the sheet's own derivation to an audience that came here

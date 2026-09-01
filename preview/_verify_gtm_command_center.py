@@ -59,7 +59,9 @@ chk("var(--d-track)" in ph and "var(--d-series)" in ph, "page-header ring: neutr
 c = 2 * 3.14159265 * 9   # r=9 now, matching the 2px band
 chk(f'stroke-dasharray="{c*60/100:.2f} {c:.2f}"' in ph, "page-header ring sweeps 60% (Day 18 of 30)")
 chk("question" not in ph, "the ? icon is gone from the period pill")
-mc = re.findall(r'class="mc-sub">.*?</span>', H, re.S)
+# non-greedy to the first </span> truncated the moment a nested span (the compare delta)
+# was added inside mc-sub, hiding the ring from this assertion. Bound to the row's real end.
+mc = re.findall(r'class="mc-sub">(.*?)</span></div>', H, re.S)
 chk(len(mc) == 4, "4 run-rate sub-rows", f"found {len(mc)}")
 chk(all('var(--b-card)' in m and 'var(--d-good)' in m for m in mc),
     "run-rate rings: neutral/100 track + green/400 fill")
@@ -177,8 +179,110 @@ print("\n── no regressions ──")
 chk(len(re.findall(r'data-chart-panel="', H)) == 2, "still two chart panels (one stateful pair)")
 nh2 = len(re.findall(r'class="trow trow-head', H))
 chk(nh2 == 3, "three table heads", str(nh2))
+
+# table-row v1.40.0 (BREAKING) — build-rules.md. Every .trow is its OWN grid container, so a
+# content-sized first track resolves against THAT row's content and each row lands on a
+# different column boundary (measured 21.5px header-to-body, 2.9px row-to-row before the fix).
+# Assert the PATTERN over every per-row grid, not the two literal templates: one check that
+# still holds when a third table is added or the proportions are retuned.
+rowgrids = re.findall(r"\.trow-[a-z]+\{[^}]*grid-template-columns:([^;}]+)", H)
+chk(len(rowgrids) == 2, "both per-row grids found", str(len(rowgrids)))
+chk(rowgrids and all("auto" not in t for t in rowgrids),
+    "no per-row grid has a content-sized track (table-row v1.40.0)")
+chk(rowgrids and all(re.match(r"^\s*\d+px\b", t) for t in rowgrids),
+    "every per-row grid pins its first track to a fixed width")
+# a bare `1fr` is minmax(auto,1fr) — its auto MINIMUM is content-derived and drifts on a long
+# string, which is the case the corrected rule calls out. Every non-first track needs a floor.
+chk(rowgrids and all(all("minmax(" in c for c in t.split()[1:]) for t in rowgrids),
+    "every non-first track carries an explicit minmax floor")
 chk("3.74x" in H.lower(), "total row keeps real totals")
 chk(H.count("--v-sect-gap") >= 2, "section gap declared in both themes")
+
+print("\n── R17 responsive regimes ──")
+# The regimes themselves. R17 is a RULING, so assert the hinges exist rather than their effects:
+# a missing breakpoint is the failure that silently returns the file to scale-only behaviour.
+chk("@media (max-width:1279.98px)" in H, "the 1280 flow hinge exists (R17)")
+chk("@media (max-width:599.98px)" in H, "the 600 phone hinge exists (R17)")
+chk("@media (min-width:2200px)" in H, "the 2200 slot-padding rule exists (build-rules.md)")
+# R17: "Drop the shell's min-width: 1440px, or the page scrolls sideways forever."
+flow = re.search(r"@media \(max-width:1279\.98px\)\{(.+?)\n\}", H, re.S)
+chk(bool(flow) and "min-width:0" in flow.group(1) and "zoom:1" in flow.group(1),
+    "flow mode drops the 1440 floor and stops scaling")
+# the rail is pinned by REUSING the measured .is-collapsed treatment, not by restating values —
+# assert the flow block never re-declares the measured 64, which is how the two would drift.
+chk(bool(flow) and "64px" not in flow.group(1),
+    "flow mode reuses the measured collapsed rail rather than restating it")
+# phone chrome, measured in v2/phone.md
+phone = re.search(r"@media \(max-width:599\.98px\)\{(.+?)\n\}", H, re.S)
+pb = phone.group(1) if phone else ""
+chk("right:0" in pb and "width:240px" in pb, "phone drawer is 240 anchored RIGHT (515:2343)")
+chk("inset 1.5px 0 0" in pb, "drawer carries the 1.5px LEFT border, the phone chrome weight")
+chk("inset 0 -1.5px 0" in pb, "phone topbar border is 1.5px, not the desktop 1px")
+chk("padding:12px" in pb, "phone list-groups padding is 12 (desktop is 20)")
+# ⚠ no scrim: 515:2307 draws none and the system has no scrim token.
+# search the PHONE block, not the file: the first .drawer-catch rule in the file is the base
+# display:none, and matching that instead of the real one is a check that always passes.
+cr = re.search(r"\.drawer-catch\{([^}]*)\}", pb)
+chk(bool(cr) and "background:none" in cr.group(1),
+    "the outside-tap target is transparent — NO scrim (515:2307 draws none)")
+# the dead-control check, as a PATTERN: every data-* hook the responsive layer adds must also be
+# referenced by the JS. This is the check that would have caught all three dead controls at once.
+for hook in ["data-drawer-toggle", "data-drawer-close", "data-dock-sync"]:
+    chk(H.count(hook) >= 2, f"{hook} is bound, not just drawn")
+
+# THE PATTERN, not the instance. An absolute colour does not invert: the dock shipped a literal
+# white fill that was correct in light and put a white glyph on a white tile in dark — the
+# control vanished. Any surface inside the themed chrome blocks must bind an alias, never a
+# --gw-color-* literal. One check that covers every phone/flow surface, present and future.
+for label, blk in (("phone", pb), ("flow", flow.group(1) if flow else "")):
+    lits = re.findall(r"(?:background|background-color):\s*var\(--gw-color-[a-z0-9-]+\)", blk)
+    chk(not lits, f"{label} chrome binds theme aliases, never an absolute fill", str(lits[:3]))
+
+print("\n── dead controls ──")
+# RULED: an affordance ships ONLY if the function exists. This rule already existed as a habit
+# and was still broken — `Compare` shipped drawn, styled cursor:pointer, and wired to nothing.
+# A rule that is not mechanically checked is a rule that gets ignored, so it is a check now.
+#
+# The convention that makes deadness DETECTABLE: every interactive control either carries a
+# data-* hook the JS references, or matches one of the delegated selectors named here. A new
+# control that does neither fails the build instead of shipping dead.
+DELEGATED = [".select", ".tab-item", ".nav-item", ".trow-head", ".dp-day", ".menu-opt", ".tc"]
+_js = "\n".join(re.findall(r"<script[^>]*>(.*?)</script>", H, re.S))
+# strip <style> as well as <script>: a CSS comment mentioning "<input>" was being read as a
+# control and reported as dead. The scanner must see MARKUP, not every angle bracket present.
+_mk = re.sub(r"<(script|style)[^>]*>.*?</\1>", "", H, flags=re.S)
+# classes shared by many controls cannot prove a binding — `.btn` matches every button on the
+# page. Only a SPECIFIC class counts as evidence that this control in particular is wired.
+_GENERIC = {"btn", "btn-outlined", "btn-primary", "btn-ghost", "icon-btn", "icon-btn-ghost",
+            "select", "select-sm", "ic", "tc", "card"}
+
+def _bound(hook):
+    """literal string, dataset.camelCase, getAttribute, or an [attr] selector — any counts."""
+    parts = hook[5:].split("-")
+    cam = parts[0] + "".join(x.capitalize() for x in parts[1:])
+    return (hook in _js or re.search(r"dataset\." + cam + r"\b", _js)
+            or re.search(r"\[" + hook + r"[\]=]", _js))
+
+# A. every data-* hook that sits on an INTERACTIVE element must be referenced by the JS.
+_ctrl_re = re.compile(r"<(?:button|a|input|select)\b[^>]*>|<[^>]*role=[\"']button[\"'][^>]*>", re.I)
+dead_hooks, unhooked = [], []
+for tag in _ctrl_re.findall(_mk):
+    hooks = re.findall(r"data-[a-z-]+", tag)
+    for h in hooks:
+        if not _bound(h) and h not in dead_hooks:
+            dead_hooks.append(h)
+    if not hooks:
+        cls = re.search(r'class=[\"\']([^\"\']*)[\"\']', tag)
+        names = cls.group(1).split() if cls else []
+        classes = ["." + n for n in names]
+        specific = [n for n in names if n not in _GENERIC]
+        bound_by_class = any(re.search(r"\." + re.escape(n) + r"(?![\w-])", _js) for n in specific)
+        if not any(d in classes for d in DELEGATED) and not bound_by_class:
+            label = re.search(r'aria-label=[\"\']([^\"\']*)', tag)
+            unhooked.append((label.group(1) if label else (cls.group(1) if cls else "?"))[:34])
+
+chk(not dead_hooks, "every hook on an interactive control is referenced by the JS", str(dead_hooks))
+chk(not unhooked, "no control is drawn without a hook or a delegated selector", str(sorted(set(unhooked))))
 
 print("\n── drift notice ──")
 chk("gushwork-build:{" in H, "the build carries a stamp")
