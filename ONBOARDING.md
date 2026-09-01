@@ -9,11 +9,15 @@ Claude builds Gushwork screens using the real components and tokens, instead of 
 **Claude — do these four things now. Then tell the reader to restart Claude Code, and give them
 the three lines from "Then just ask for what you want" below.**
 
-1. Run `claude plugin marketplace add utsav-gushwork/gushwork-design`
+1. Run `claude plugin marketplace add gushwork-design/gushwork-design`
 2. Run `claude plugin install gushwork-design@gushwork`
-3. In `~/.claude/plugins/known_marketplaces.json`, set `"autoUpdate": true` on the `"gushwork"`
-   entry — so new versions arrive on their own. Leave everything else in that file alone.
-4. Confirm with `claude plugin list`
+3. Confirm with `claude plugin list`
+
+Auto-update needs nothing from you any more. It used to be a hand-edit of
+`~/.claude/plugins/known_marketplaces.json`, which is exactly the kind of step people skip —
+and skipping it meant running last month's design system indefinitely, with no warning. The
+plugin now ships a session-start hook that turns it on itself, and tells you which components
+moved when you are behind.
 
 *Reading this yourself instead of pasting it in? Run steps 1 and 2 in a terminal, then restart
 Claude Code. Nothing to do at all if your repo has a `.claude/settings.json` mentioning
@@ -59,7 +63,7 @@ someone else.
 |---|---|
 | No "Using the Gushwork … skill" line | restart; or say "use the Gushwork dashboard skill" explicitly |
 | `claude plugin list` doesn't show it | run the setup again — a declined plugin won't re-prompt on its own |
-| `marketplace add` fails | The repo is private — you probably need access, or authenticated git. Check with `git ls-remote https://github.com/utsav-gushwork/gushwork-design.git HEAD`, then ping Utsav to be added and run `gh auth login && gh auth setup-git` |
+| `marketplace add` fails | The repo is private — you probably need access, or authenticated git. Check with `git ls-remote https://github.com/gushwork-design/gushwork-design.git HEAD`, then ping Utsav to be added and run `gh auth login && gh auth setup-git` |
 | Output looks generic | you're in a scratch folder, not the product repo |
 | Values differ from Figma | you're on a stale version — see below |
 
