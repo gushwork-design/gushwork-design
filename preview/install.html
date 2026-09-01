@@ -67,8 +67,11 @@
   .sg__hd{
     padding:0 var(--gw-space-40) var(--gw-space-32);
     display:flex;flex-direction:column;gap:var(--gw-space-12);
+    /* --s-rule is defined page-locally in style-guide.html, so it does NOT reach here even
+       with the shell — falling straight to a light neutral put a bright hairline on a black
+       page. --s-card-border is in shell.css and themes (neutral-100 / neutral-800). */
     background-image:radial-gradient(circle closest-side,
-      var(--s-rule, var(--gw-color-neutral-200)) 100%, transparent 100%);
+      var(--s-rule, var(--s-card-border, var(--gw-color-neutral-200))) 100%, transparent 100%);
     background-size:4.1px 2px;background-position:bottom left;
     background-repeat:repeat-x;
   }
@@ -146,7 +149,11 @@
   /* Output, not input: nothing to copy, so it loses the button and the padding
      that reserved room for one. Tinted so a reader can tell at a glance which
      blocks they act on and which they only compare against. */
-  .code--out{background:var(--s-chrome-bg, var(--gw-color-neutral-50))}
+  /* Page-bg, not chrome-bg: in dark, --s-chrome-bg and --s-card-bg are BOTH neutral-900, so
+     the output block became indistinguishable from the command blocks and the whole
+     run-this / compare-against-this distinction disappeared. --s-page-bg sits one step back
+     from the card in both themes — neutral-25 against white, black against neutral-900. */
+  .code--out{background:var(--s-page-bg, var(--gw-color-neutral-25))}
   .code--out pre{padding-right:0;color:var(--s-body, var(--gw-color-neutral-600))}
 
   .code__btn{
