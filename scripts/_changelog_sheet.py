@@ -336,7 +336,9 @@ CSS = """
           font:var(--gw-text-button-14);letter-spacing:0;
           color:var(--s-heading, var(--gw-color-neutral-900));
           padding-bottom:var(--gw-space-8);
-          position:sticky;top:0;z-index:1;background:var(--s-card-bg, var(--gw-color-white))}
+          /* PAGE bg, not card: this is a sticky mask over the scrolling list, so it has to
+             be the colour it sits on. --s-card-bg is white, which showed as a slab. */
+          position:sticky;top:0;z-index:1;background:var(--s-page-bg, var(--gw-color-white))}
   .idx__ico{width:16px;height:16px;flex:none;display:block}
   /* The caret button, measured 22x22 with 4 padding around a 12px glyph. It
      collapses the rail; the styleguide draws it, so it is drawn here. */
@@ -535,14 +537,12 @@ def main():
     # The styleguide header is title → "Last updated" → rule. The lede and the
     # housekeeping notes follow, because this page carries more than a title.
     w('    <p class="hd__meta">Last updated %s</p>' % html.escape(last_date))
-    w('    <p class="lede">Release notes for the Gushwork design system, including new')
-    w("       components, corrected measurements, and rulings by version.</p>")
-    w('    <p class="hd__note">This page is generated from')
-    w('       <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md on GitHub</a>.</p>'
+    w('    <p class="lede">New components, corrected measurements and rulings, by version.')
+    w('       Generated from <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md</a>.</p>'
       % (REPO, NEWTAB))
-    w('    <p class="hd__note">Every skill announces its own version at the start of a session —')
-    w("       trust that line to check what you are running. <code>claude plugin list</code>")
-    w("       lags a marketplace refresh and will under-report.</p>")
+    # The one note that stops a wrong conclusion, so it stays — compressed, not cut.
+    w('    <p class="hd__note">Skills announce their version at the start of a session.')
+    w("       <code>claude plugin list</code> lags a marketplace refresh and under-reports.</p>")
     w('    <div class="facts">')
     for label, value in (
         ("Releases", str(total)),

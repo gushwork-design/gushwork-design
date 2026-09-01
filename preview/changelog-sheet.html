@@ -205,7 +205,9 @@
           font:var(--gw-text-button-14);letter-spacing:0;
           color:var(--s-heading, var(--gw-color-neutral-900));
           padding-bottom:var(--gw-space-8);
-          position:sticky;top:0;z-index:1;background:var(--s-card-bg, var(--gw-color-white))}
+          /* PAGE bg, not card: this is a sticky mask over the scrolling list, so it has to
+             be the colour it sits on. --s-card-bg is white, which showed as a slab. */
+          position:sticky;top:0;z-index:1;background:var(--s-page-bg, var(--gw-color-white))}
   .idx__ico{width:16px;height:16px;flex:none;display:block}
   /* The caret button, measured 22x22 with 4 padding around a 12px glyph. It
      collapses the rail; the styleguide draws it, so it is drawn here. */
@@ -300,13 +302,10 @@
       <span class="brand">Gushwork Design Plugin</span>
     </div>
     <p class="hd__meta">Last updated 01 Sep 2026</p>
-    <p class="lede">Release notes for the Gushwork design system, including new
-       components, corrected measurements, and rulings by version.</p>
-    <p class="hd__note">This page is generated from
-       <a class="lnk" href="https://github.com/gushwork-design/gushwork-design/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">CHANGELOG.md on GitHub</a>.</p>
-    <p class="hd__note">Every skill announces its own version at the start of a session —
-       trust that line to check what you are running. <code>claude plugin list</code>
-       lags a marketplace refresh and will under-report.</p>
+    <p class="lede">New components, corrected measurements and rulings, by version.
+       Generated from <a class="lnk" href="https://github.com/gushwork-design/gushwork-design/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">CHANGELOG.md</a>.</p>
+    <p class="hd__note">Skills announce their version at the start of a session.
+       <code>claude plugin list</code> lags a marketplace refresh and under-reports.</p>
     <div class="facts">
       <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">52</span></span>
       <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.44.0</span></span>
