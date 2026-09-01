@@ -45,7 +45,7 @@ for entry in m.get("plugins", []):
 p.write_text(json.dumps(m, indent=2) + "\n")
 print(f"  marketplace.json     -> {v}")
 
-pat = re.compile(r'(Using the Gushwork \w+ skill — v)[0-9.]+(, updated )[^."]+')
+pat = re.compile(r'(Using the Gushwork [\w-]+ skill — v)[0-9.]+(, updated )[^."]+')
 for name in ("gushwork-web", "gushwork-dashboard", "gushwork-lead-magnet"):
     p = root / "skills" / name / "SKILL.md"
     t = p.read_text()
