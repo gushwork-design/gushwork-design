@@ -61,11 +61,10 @@ The chain, end to end:
 |---|---|---|
 | 1 | maintainer | change it in Figma |
 | 2 | maintainer | measure it into `exports/` or re-pull `tokens.css` — see [`CONTRIBUTING.md`](CONTRIBUTING.md) |
-| 3 | maintainer | `bash scripts/stamp-release.sh 1.2.0` — stamps version + date into both manifests and both skills |
-| 4 | maintainer | commit and push to `main` |
-| 5 | maintainer | `bash scripts/release-log.sh` — rebuilds [`CHANGELOG.md`](CHANGELOG.md) **and** `preview/changelog-sheet.html` from git; commit them separately |
-| 6 | maintainer | `bash scripts/release-notes.sh`, then post it in Slack — there is no push notification |
-| 7 | everyone | `claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork`, then **restart** |
+| 3 | maintainer | `bash scripts/release.sh 1.2.0 "<summary>" --session "<uuid> <title>"` — stamps version + date into both manifests and every skill's announce line, makes the release commit, rebuilds [`CHANGELOG.md`](CHANGELOG.md) **and** `preview/changelog-sheet.html` as a second commit, then verifies the three agree. Add `--publish` to deploy too |
+| 4 | maintainer | `GW_PUSH=1 git push origin main` — `release.sh` deliberately does not push |
+| 5 | maintainer | `bash scripts/release-notes.sh`, then post it in Slack — there is no push notification |
+| 6 | everyone | nothing, if `autoUpdate` is on — the session-start hook takes it at the next start and names what changed. Otherwise `claude plugin marketplace update gushwork && claude plugin update gushwork-design@gushwork`, then **restart** |
 
 Three things worth knowing:
 

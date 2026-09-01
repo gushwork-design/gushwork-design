@@ -81,6 +81,11 @@ PY
 echo
 echo "Stamped v$VERSION · $DATE"
 echo
+echo "You are driving the release by hand. scripts/release.sh does everything below in"
+echo "one command and then verifies it — prefer it unless you have a reason not to:"
+echo
+echo "    bash scripts/release.sh $VERSION \"<summary>\" --session \"<uuid> <title>\""
+echo
 echo "The commit subject becomes the row in both release logs, so write it as the"
 echo "one-line summary — 'v$VERSION — what changed' — and name the chat in a trailer:"
 echo
