@@ -286,7 +286,7 @@
       <h1>Changelog</h1>
       <span class="brand">Gushwork Design Plugin</span>
     </div>
-    <p class="hd__meta">Last updated 28 Aug 2026</p>
+    <p class="hd__meta">Last updated 01 Sep 2026</p>
     <p class="lede">Release notes for the Gushwork design system, including new
        components, corrected measurements, and rulings by version.</p>
     <p class="hd__note">This page is generated from
@@ -295,19 +295,38 @@
        trust that line to check what you are running. <code>claude plugin list</code>
        lags a marketplace refresh and will under-report.</p>
     <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">50</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.42.0</span></span>
+      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">51</span></span>
+      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.43.0</span></span>
       <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
-      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">28 Aug 2026</span></span>
+      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">01 Sep 2026</span></span>
     </div>
   </header>
   <main>
+    <article class="rel" id="v1-43-0">
+      <div class="rail">
+        <span class="pill pill--now">v1.43.0</span>
+        <span class="when">01 Sep 2026</span>
+        <span class="when">14:55</span>
+        <span class="tag">current</span>
+      </div>
+      <div class="body">
+        <p class="body__sum">the lead-magnet skill, and a stamp that can see it</p>
+        <div class="prose"><p>Ships the third surface-scoped skill, gushwork-lead-magnet: the downloadable PDF behind an ad landing page, added in 91cca83 with its measured exports, its template and the cover and closer frames it is built from.</p></div>
+        <details>
+          <summary>Full notes<svg class="gl"><use href="#i-caret"/></svg></summary>
+          <div class="prose"><p>The stamp needed fixing before it could ship. scripts/stamp-release.sh hardcoded two skill names, and its announce-line regex was \w+, which cannot match a hyphen — so gushwork-lead-magnet was skipped and its announce line sat at v1.42.0 while both manifests read v1.43.0. That is the exact drift the announce line exists to expose, and a stale copy would have reported itself current. The loop now names all three and the pattern is [\w-]+.</p><p>The earlier stamp of this version aborted partway on that same skill, which is why preview/install.html was still on v1.42.0 in four places. Re-running the fixed script carried all six targets to v1.43.0 together.</p><p>Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</p></div>
+        </details>
+        <div class="meta">
+          <a class="meta__l" href="https://github.com/utsav-gushwork/gushwork-design/commit/2aaed30fc364ed536a23e2a6fefa032058795e6b" target="_blank" rel="noopener noreferrer"><svg class="gl"><use href="#i-commit"/></svg>2aaed30</a>
+          <a class="meta__l" href="claude://resume/3d40ae5b-83e5-4492-9851-6fa5fd6cd690"><svg class="gl"><use href="#i-chat"/></svg>Can AI find your business — lead magnet PDF</a>
+        </div>
+      </div>
+    </article>
     <article class="rel" id="v1-42-0">
       <div class="rail">
-        <span class="pill pill--now">v1.42.0</span>
+        <span class="pill">v1.42.0</span>
         <span class="when">28 Aug 2026</span>
         <span class="when">14:04</span>
-        <span class="tag">current</span>
       </div>
       <div class="body">
         <p class="body__sum">the unavailable state, and a doc that pointed at nothing</p>
@@ -1267,7 +1286,8 @@
       <span>On this page</span>
     </div>
     <div class="idx__list" id="idx-list">
-      <a class="now" href="#v1-42-0">v1.42.0</a>
+      <a class="now" href="#v1-43-0">v1.43.0</a>
+      <a class="" href="#v1-42-0">v1.42.0</a>
       <a class="" href="#v1-41-1">v1.41.1</a>
       <a class="" href="#v1-41-0">v1.41.0</a>
       <a class="" href="#v1-40-0">v1.40.0</a>
