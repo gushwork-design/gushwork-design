@@ -258,3 +258,42 @@ which the spec's structural claims could have been correct.
 eyebrow stroke, corrected the button radius, and surfaced the entire Breakpoint collection.
 Those are merged. Its per-component detail for Badge, tooltip, inputs and cards is a good
 lead for what to measure next, but is not itself authoritative.
+
+---
+
+## Lead-magnet document — Sep 2026
+
+The lead-magnet template was built against the installed plugin's older `colors_and_type.css`
+and then ported onto `foundation/tokens.css`. Colour and radius were mapped **by resolved hex**,
+not by name, because the two sheets are different palettes whose scales are offset — the old
+sheet's `neutral-500` is this repo's `neutral-400`. Four disagreements survived the mapping.
+
+**1. The hairline. Repo wins, and the old value was wrong.** The template used `#e1e3e8`; no
+token carries it. It is now `--gw-color-neutral-100` `#e7e8e9`. That is not merely the nearest
+match — it is the value the Figma cover chip uses for its own `0.5pt` border, so the port
+corrected a drift rather than approximating one. Nine uses.
+
+**2. The interior ground. Repo wins.** The template used `#fafbfb`, the old sheet's
+`neutral-25`. This repo's `neutral-25` is `#f7f8f9`, and the supplied page-layout reference
+matches `#f7f8f9`. Built as `--gw-color-neutral-25`.
+
+**3. The type ramp is not tokenised — measurement wins.** `--gw-text-*` is px-based for web.
+The cover and closer are laid out in `pt` to sit 1:1 on their Figma frames; `56pt` is not
+`56px`, and consuming the tokens there would shrink every heading by a quarter. Interior body
+also runs `16px/1.6` rather than the token's `16px/24px` because page fit is tuned to that
+leading. The template declares its print ramp as template-local `--lm-*`; everything `--gw-*`
+in it is a real system token.
+
+**4. The closer's blueprint grid is an override, not a measurement.** Frame `1769:3965` is flat
+`#0d0d0d` — sampled, zero hits on the grid lattice the cover lights up. The grid is carried onto
+the closer anyway, on Utsav's instruction, so the two dark pages match. Recorded here so it is
+not "corrected" back to the frame later.
+
+Two measured facts worth keeping with these:
+
+- The closer's button label **renders at ~18pt** though the frame binds `Body/body-16-med`.
+  Measured 13% wider than 16pt produces. Built at 18pt, which lands the button at exactly
+  246×44. Measurement wins over the variable list.
+- The bundled Inter renders **~3.7% narrower** than Figma at the same size — an `opsz`/version
+  difference, Inter-specific; Vert Grotesk matches at ratio 1.000. Left alone: it is invisible
+  in ragged-right copy, and compensating would break every other page.

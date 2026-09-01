@@ -4,3 +4,6 @@ __pycache__/
 # Private to this machine — the repo is public. See the note at the top of BACKLOG.md.
 BACKLOG.md
 preview/board.html
+
+# Rendered output of templates/*/render.sh — regenerate with ./render.sh
+templates/**/*.pdf

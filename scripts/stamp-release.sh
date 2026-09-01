@@ -10,6 +10,7 @@
 #   .claude-plugin/marketplace.json  version   <- the marketplace entry
 #   skills/gushwork-web/SKILL.md     announce line
 #   skills/gushwork-dashboard/SKILL.md
+#   skills/gushwork-lead-magnet/SKILL.md
 #
 # The announce line matters most: a teammate on a stale copy sees that copy's
 # own stale date, which is how drift becomes visible without anyone checking.
@@ -45,7 +46,7 @@ p.write_text(json.dumps(m, indent=2) + "\n")
 print(f"  marketplace.json     -> {v}")
 
 pat = re.compile(r'(Using the Gushwork \w+ skill — v)[0-9.]+(, updated )[^."]+')
-for name in ("gushwork-web", "gushwork-dashboard"):
+for name in ("gushwork-web", "gushwork-dashboard", "gushwork-lead-magnet"):
     p = root / "skills" / name / "SKILL.md"
     t = p.read_text()
     t2, n = pat.subn(lambda x: f"{x.group(1)}{v}{x.group(2)}{d}", t)
@@ -62,7 +63,7 @@ t = p.read_text()
 subs = [
     (re.compile(r'(<p class="meta"><strong>v)[0-9.]+(</strong> · last updated )[^·<]+'),
      lambda x: f"{x.group(1)}{v}{x.group(2)}{d}, {tm} "),
-    (re.compile(r'(Using the Gushwork \w+ skill — v)[0-9.]+(, updated )[^.\n]+'),
+    (re.compile(r'(Using the Gushwork [\w-]+ skill — v)[0-9.]+(, updated )[^.\n]+'),
      lambda x: f"{x.group(1)}{v}{x.group(2)}{d}"),
     (re.compile(r'(it reads anything below <strong>v)[0-9.]+(</strong>)'),
      lambda x: f"{x.group(1)}{v}{x.group(2)}"),
