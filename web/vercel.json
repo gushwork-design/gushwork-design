@@ -2,33 +2,88 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-
   "redirects": [
-    { "source": "/preview/install.html",         "destination": "/internal/claude-plugin", "permanent": false },
-    { "source": "/preview/changelog-sheet.html", "destination": "/internal/changelog",     "permanent": false },
-    { "source": "/preview/review-sheet.html",    "destination": "/admin/review-sheet",     "permanent": false },
-    { "source": "/preview/catalogue.html",       "destination": "/admin/catalogue",        "permanent": false },
-    { "source": "/preview/:path*",               "destination": "/",                       "permanent": false }
+    {
+      "source": "/preview/install",
+      "destination": "/internal/claude-plugin",
+      "permanent": false
+    },
+    {
+      "source": "/preview/install.html",
+      "destination": "/internal/claude-plugin",
+      "permanent": false
+    },
+    {
+      "source": "/preview/changelog-sheet",
+      "destination": "/internal/changelog",
+      "permanent": false
+    },
+    {
+      "source": "/preview/changelog-sheet.html",
+      "destination": "/internal/changelog",
+      "permanent": false
+    },
+    {
+      "source": "/preview/review-sheet",
+      "destination": "/admin/review-sheet",
+      "permanent": false
+    },
+    {
+      "source": "/preview/review-sheet.html",
+      "destination": "/admin/review-sheet",
+      "permanent": false
+    },
+    {
+      "source": "/preview/catalogue",
+      "destination": "/admin/catalogue",
+      "permanent": false
+    },
+    {
+      "source": "/preview/catalogue.html",
+      "destination": "/admin/catalogue",
+      "permanent": false
+    },
+    {
+      "source": "/preview/:path*",
+      "destination": "/",
+      "permanent": false
+    }
   ],
-
   "headers": [
     {
       "source": "/exports/dashboard/component-registry.json",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Cache-Control", "value": "public, max-age=300" }
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300"
+        }
       ]
     },
     {
       "source": "/fonts/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/api/auth/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "no-store, private" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, private"
+        }
+      ]
     }
   ]
 }
