@@ -119,13 +119,6 @@
             font:var(--gw-text-body-14-reg);
             letter-spacing:var(--gw-text-body-14-reg-tracking);
             color:var(--s-body, var(--gw-color-neutral-600))}
-  .facts{display:flex;flex-wrap:wrap;
-         gap:var(--gw-space-8) var(--gw-space-24)}
-  .fact{display:flex;align-items:baseline;gap:var(--gw-space-8)}
-  .fact__l{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
-           color:var(--gw-color-neutral-500)}
-  .fact__v{font:var(--gw-text-body-14-sem);color:var(--s-heading, var(--gw-color-neutral-900));
-           font-variant-numeric:tabular-nums}
 
   /* ── release list ── */
   .rel{display:grid;grid-template-columns:152px minmax(0,1fr);gap:var(--gw-space-40);
@@ -309,16 +302,12 @@
       <span class="brand">Gushwork Design Plugin</span>
     </div>
     <p class="hd__meta">Last updated 01 Sep 2026</p>
-    <p class="lede">New components, corrected measurements and rulings, by version.
-       Generated from <a class="lnk" href="https://github.com/gushwork-design/gushwork-design/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">CHANGELOG.md</a>.</p>
-    <p class="hd__note">Skills announce their version at the start of a session.
-       <code>claude plugin list</code> lags a marketplace refresh and under-reports.</p>
-    <div class="facts">
-      <span class="fact"><span class="fact__l">Releases</span><span class="fact__v">52</span></span>
-      <span class="fact"><span class="fact__l">Current</span><span class="fact__v">v1.44.0</span></span>
-      <span class="fact"><span class="fact__l">First shipped</span><span class="fact__v">06 Aug 2026</span></span>
-      <span class="fact"><span class="fact__l">Last release</span><span class="fact__v">01 Sep 2026</span></span>
-    </div>
+    <p class="lede">Release notes for the Gushwork design system, including new
+       components, corrected measurements, and rulings by version.</p>
+    <p class="hd__note">This page is generated from the
+       <a class="lnk" href="https://github.com/gushwork-design/gushwork-design/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">CHANGELOG.md on GitHub</a>.</p>
+    <p class="hd__note">Every skill prints its version at the start of a session — that
+       line is the check. <code>claude plugin list</code> lags a marketplace refresh.</p>
   </header>
   <main>
     <article class="rel" id="v1-44-0">

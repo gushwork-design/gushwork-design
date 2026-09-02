@@ -250,13 +250,6 @@ CSS = """
             font:var(--gw-text-body-14-reg);
             letter-spacing:var(--gw-text-body-14-reg-tracking);
             color:var(--s-body, var(--gw-color-neutral-600))}
-  .facts{display:flex;flex-wrap:wrap;
-         gap:var(--gw-space-8) var(--gw-space-24)}
-  .fact{display:flex;align-items:baseline;gap:var(--gw-space-8)}
-  .fact__l{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
-           color:var(--gw-color-neutral-500)}
-  .fact__v{font:var(--gw-text-body-14-sem);color:var(--s-heading, var(--gw-color-neutral-900));
-           font-variant-numeric:tabular-nums}
 
   /* ── release list ── */
   .rel{display:grid;grid-template-columns:152px minmax(0,1fr);gap:var(--gw-space-40);
@@ -518,9 +511,8 @@ def main():
     if not rows:
         sys.exit("no releases on stdin")
 
-    total = len(rows)
-    current = rows[0]["version"]
-    first_date = rows[-1]["date"].rsplit(" ", 1)[0]
+    # Only the newest date survives, for the "Last updated" line. total / current /
+    # first_date went with the facts strip they were computed for.
     last_date = rows[0]["date"].rsplit(" ", 1)[0]
 
     P = []
@@ -544,24 +536,19 @@ def main():
     # The styleguide header is title → "Last updated" → rule. The lede and the
     # housekeeping notes follow, because this page carries more than a title.
     w('    <p class="hd__meta">Last updated %s</p>' % html.escape(last_date))
-    w('    <p class="lede">New components, corrected measurements and rulings, by version.')
-    w('       Generated from <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md</a>.</p>'
+    # Three beats, after the Claude Code changelog: what the page is, where it comes from,
+    # how to check the version you are on. Each is its own line because each answers a
+    # different question, and a reader scanning for one should not have to read the others.
+    w('    <p class="lede">Release notes for the Gushwork design system, including new')
+    w("       components, corrected measurements, and rulings by version.</p>")
+    w('    <p class="hd__note">This page is generated from the')
+    w('       <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md on GitHub</a>.</p>'
       % (REPO, NEWTAB))
-    # The one note that stops a wrong conclusion, so it stays — compressed, not cut.
-    w('    <p class="hd__note">Skills announce their version at the start of a session.')
-    w("       <code>claude plugin list</code> lags a marketplace refresh and under-reports.</p>")
-    w('    <div class="facts">')
-    for label, value in (
-        ("Releases", str(total)),
-        ("Current", "v" + current),
-        ("First shipped", first_date),
-        ("Last release", last_date),
-    ):
-        w(
-            '      <span class="fact"><span class="fact__l">%s</span>'
-            '<span class="fact__v">%s</span></span>' % (label, html.escape(value))
-        )
-    w("    </div>")
+    # The version-check beat. Claude Code can say "run claude --version" and stop; ours cannot,
+    # because `claude plugin list` reads a cached marketplace and under-reports after a release.
+    # The announce line each skill prints is the reliable one, so that is what this points at.
+    w('    <p class="hd__note">Every skill prints its version at the start of a session — that')
+    w("       line is the check. <code>claude plugin list</code> lags a marketplace refresh.</p>")
     w("  </header>")
     w("  <main>")
 
