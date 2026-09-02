@@ -151,6 +151,35 @@
 }
 
 /* ---------------------------------------------------------------------------
+   1b. THE SITE TYPE SCALE — the rule every page on this site follows
+
+   Five roles, and nothing between them. A page that needs a size not on this
+   list is either inventing a role or using the wrong one.
+
+     page title       600 44px/1.2   Vert Grotesk Display   .sg__title / h1
+     section heading  600 28px/1.2   Vert Grotesk Display   .sg-sec > h2
+     sub-heading      --gw-text-body-18-sem   Inter         h3, entry titles
+     body and lede    --gw-text-body-18-med   Inter         paragraphs
+     meta, small print --gw-text-body-14-med  Inter         dates, notes
+
+   Chips, pills, rail links and micro-labels sit outside it — they are controls
+   and labels, not reading matter, and stay on the 12/14 button tokens.
+
+   WHY THIS IS WRITTEN DOWN. The changelog sheet drifted off it and nobody
+   noticed for weeks, because each page defines its own type and the sheets are
+   usually read one at a time. It shipped its body at 14/reg and its lede at
+   16/reg while the styleguide and the install page read at 18/med — two steps
+   smaller and a weight lighter for the text people actually read. Only the
+   title and the meta line matched, which is exactly why it looked almost right.
+
+   Pages set these from the tokens rather than inheriting them, because each
+   generated sheet has to stand up on its own when opened straight out of
+   preview/ with no shell. So this block is the contract, not the mechanism:
+   change it here, then change it in the pages that implement it —
+   web/style-guide.html, preview/install.html, scripts/_changelog_sheet.py.
+   ------------------------------------------------------------------------ */
+
+/* ---------------------------------------------------------------------------
    2. Page frame
    ------------------------------------------------------------------------ */
 .gw-shell-ready body { background: var(--s-page-bg); }

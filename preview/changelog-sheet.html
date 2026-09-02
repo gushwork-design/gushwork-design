@@ -8,6 +8,11 @@
   /* LIGHT THEME ONLY, by instruction — there is no prefers-color-scheme block below.
      Every value is a token. Lines marked ADDED are new rules, not new values.
 
+     TYPE. Follows the site type scale — see web/shell.css section 1b, which is the
+     contract. This sheet had drifted off it: body at 14/reg and the lede at 16/reg while
+     the styleguide and install page read at 18/med, so the page people read most was set
+     two steps smaller and a weight lighter than the rest of the site.
+
      THEMING. Colours are `var(--s-x, <the light token>)`. Served inside the shell, --s-*
      supplies light and dark; opened straight out of preview/ with no shell, the fallback
      resolves and the sheet is light — which is all it ever was.
@@ -23,7 +28,7 @@
   *,*::before,*::after{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{margin:0;background:var(--s-page-bg, var(--gw-color-white));
-       font:var(--gw-text-body-14-reg);letter-spacing:var(--gw-text-body-14-reg-tracking);
+       font:var(--gw-text-body-18-med);letter-spacing:var(--gw-text-body-18-med-tracking);
        color:var(--s-heading, var(--gw-color-neutral-900));-webkit-font-smoothing:antialiased}
   /* Two families only — the browser's default <code> face would be a third. Size and
      line-height are INHERITED rather than set: binding a 14px token here made every chip
@@ -113,11 +118,11 @@
   /* One sentence saying what this is, then the housekeeping as separate lines. They were
      one dense paragraph and nobody reads a description that also explains its own
      derivation. */
-  .lede{margin:0;max-width:64ch;font:var(--gw-text-body-16-reg);
-        letter-spacing:var(--gw-text-body-16-reg-tracking);color:var(--s-body, var(--gw-color-neutral-600))}
+  .lede{margin:0;max-width:64ch;font:var(--gw-text-body-18-med);
+        letter-spacing:var(--gw-text-body-18-med-tracking);color:var(--s-body, var(--gw-color-neutral-600))}
   .hd__note{margin:0;max-width:72ch;
-            font:var(--gw-text-body-14-reg);
-            letter-spacing:var(--gw-text-body-14-reg-tracking);
+            font:var(--gw-text-body-14-med);
+            letter-spacing:var(--gw-text-body-14-med-tracking);
             color:var(--s-body, var(--gw-color-neutral-600))}
 
   /* ── release list ── */
@@ -142,15 +147,15 @@
   .tag{margin-top:var(--gw-space-4);font:500 10px/1.6 var(--gw-font-body);
        text-transform:uppercase;color:var(--gw-color-neutral-400)}
 
-  .body__sum{margin:0;font:var(--gw-text-body-18-med);
-             letter-spacing:var(--gw-text-body-18-med-tracking);
+  .body__sum{margin:0;font:var(--gw-text-body-18-sem);
+             letter-spacing:var(--gw-text-body-18-sem-tracking);
              color:var(--s-heading, var(--gw-color-neutral-900));max-width:64ch}
   .prose{margin-top:var(--gw-space-12);color:var(--s-body, var(--gw-color-neutral-600))}
-  .prose p{margin:0 0 var(--gw-space-8);font:var(--gw-text-body-14-reg);
-           letter-spacing:var(--gw-text-body-14-reg-tracking);max-width:72ch}
+  .prose p{margin:0 0 var(--gw-space-8);font:var(--gw-text-body-18-med);
+           letter-spacing:var(--gw-text-body-18-med-tracking);max-width:72ch}
   .prose ul{margin:0 0 var(--gw-space-8);padding-left:var(--gw-space-20);max-width:72ch}
-  .prose li{margin-bottom:var(--gw-space-4);font:var(--gw-text-body-14-reg);
-            letter-spacing:var(--gw-text-body-14-reg-tracking)}
+  .prose li{margin-bottom:var(--gw-space-4);font:var(--gw-text-body-18-med);
+            letter-spacing:var(--gw-text-body-18-med-tracking)}
   .prose li::marker{color:var(--gw-color-neutral-300)}
   .prose > :last-child{margin-bottom:0}
   .prose strong{font-weight:600;color:var(--s-heading, var(--gw-color-neutral-800))}
