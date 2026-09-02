@@ -104,6 +104,18 @@
                   picture: null, modes: { google: false, password: true },
                   gate: false };
 
+  /* Mac reads ⌘K, everything else Ctrl K. navigator.platform is deprecated but is still the
+     only thing that answers this everywhere; userAgentData is Chromium-only, so it is tried
+     first and platform is the fallback rather than the other way round. */
+  var IS_MAC = (function () {
+    try {
+      var p = (navigator.userAgentData && navigator.userAgentData.platform) ||
+              navigator.platform || '';
+      return /mac|iphone|ipad/i.test(p);
+    } catch (e) { return false; }
+  })();
+  var SHORTCUT = IS_MAC ? '\u2318K' : 'Ctrl K';
+
   /* -- helpers ----------------------------------------------------------- */
   function el(html) {
     var t = document.createElement('template');
@@ -141,7 +153,19 @@
             icon('magnifying-glass') +
             '<input type="search" placeholder="Search any keyword..." tabindex="-1" ' +
                    'aria-hidden="true">' +
+            /* aria-hidden: the shortcut is a visual affordance, and the field already
+               announces itself. A screen reader reading "Command K" here would be
+               describing decoration. */
+            '<span class="gw-search__key" aria-hidden="true">' + esc(SHORTCUT) + '</span>' +
           '</div>' +
+          /* Phone: the 400px field does not fit at 375, so search collapses to the icon
+             the field already leads with. Same [data-search-open] hook, so it opens the
+             same palette — the affordance changes shape, not behaviour. Rendered at every
+             width and hidden by CSS, so a resize never leaves the bar without it. */
+          '<button class="gw-searchbtn" type="button" data-search-open ' +
+                  'aria-haspopup="dialog" aria-label="Search">' +
+            icon('magnifying-glass') +
+          '</button>' +
           '<div class="gw-theme" role="group" aria-label="Colour theme">' +
             '<button class="gw-theme__btn" data-theme-set="light" type="button" ' +
                     'aria-label="Light theme">' + icon('sun-dim') + '</button>' +

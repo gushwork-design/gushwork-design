@@ -300,10 +300,22 @@
 .gw-search input::placeholder { color: var(--s-placeholder); }
 .gw-search input:focus { outline: none; }
 .gw-search:focus-within { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
-/* Search is not wired up this pass — Utsav chose dark mode only. The control
-   renders as designed and is disabled so it cannot look broken. */
-.gw-search[data-inert="true"] { cursor: not-allowed; }
-.gw-search[data-inert="true"] input { pointer-events: none; }
+/* The field opens the ⌘K palette rather than accepting typing, so it behaves as a button:
+   pointer stays a text caret because that is what the shape promises, and the input inside
+   ignores the pointer so every click lands on the field itself. */
+.gw-search { cursor: text; }
+.gw-search input { pointer-events: none; }
+
+/* The shortcut, shown rather than hidden in a title attribute — a shortcut nobody can see is
+   a shortcut nobody uses. Filled by shell.js so it reads ⌘K on a Mac and Ctrl K elsewhere. */
+.gw-search__key {
+  flex: none; display: inline-flex; align-items: center; gap: 1px;
+  padding: 0 var(--gw-space-4); height: 20px;
+  border: 1px solid var(--s-field-border); border-radius: var(--gw-radius-4);
+  background: var(--s-lock-bg);
+  font: var(--gw-text-body-12-med); letter-spacing: 0;
+  color: var(--s-field-icon); white-space: nowrap;
+}
 
 /* theme toggle 478:14798 — controls/tab 66x36, pad 4, gap 2, r12,
    1px Neutral/200, no fill. Cells 28x28, pad 8, r8. */
@@ -864,10 +876,6 @@
   background: var(--s-lock-bg); font-weight: 500; color: var(--s-heading);
 }
 
-/* The field is a button now, so it has to look pressable rather than disabled. */
-.gw-search[data-inert="true"] { cursor: text; }
-.gw-search input { pointer-events: none; }
-
 @media (max-width: 767px) {
   .gw-pal__box { margin-top: var(--gw-space-40); max-height: calc(100vh - 80px); }
 }
@@ -974,6 +982,18 @@
   background: none; color: var(--s-nav-label); cursor: pointer;
 }
 .gw-burger svg { width: 16px; height: 16px; display: block; }
+
+/* The phone's search affordance — the same 36x36 icon button as the burger, because at 375
+   the 400px field cannot fit and an icon is what the field leads with anyway. */
+.gw-searchbtn {
+  display: none;
+  width: 36px; height: 36px; flex: none;
+  place-items: center;
+  border: 1px solid var(--s-field-border); border-radius: var(--gw-radius-12);
+  background: var(--s-field-bg); color: var(--s-field-icon); cursor: pointer;
+}
+.gw-searchbtn svg { width: 16px; height: 16px; display: block; }
+.gw-searchbtn:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
 .gw-burger:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
 
 @media (max-width: 767px) {
@@ -984,8 +1004,10 @@
 
   .gw-topbar { padding: 0 var(--gw-bp-pad-page-h); }
   .gw-burger { display: grid; }
-  /* Inert on desktop, and there is no room for it at 375. */
+  /* The 400px field cannot fit at 375, so it gives way to the icon button — which is the
+     same control, not a removal: search is reachable on a phone. */
   .gw-search { display: none; }
+  .gw-searchbtn { display: grid; }
 
   /* `Menu` — the rail becomes a full-screen overlay under the bar. */
   .gw-sidebar {
