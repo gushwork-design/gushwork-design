@@ -542,17 +542,18 @@ def main():
     w("      <h1>Changelog</h1>")
     w('      <span class="brand">Gushwork Design Plugin</span>')
     w("    </div>")
-    # Two beats: what the page is, and where it comes from. The Claude Code changelog has a
+    # One paragraph: what the page is and where it comes from — they are the same thought,
+    # and splitting them made the header a list of one-line paragraphs. The Claude Code changelog has a
     # third — "run claude --version to check your installed version" — and we dropped ours.
     # It needs that line because nothing tells you otherwise; since v1.41.0 the session-start
     # hook tells you when you are behind and names what changed, so a manual check is not the
     # reader's job any more. Verifying an install is the install page's subject, and it covers
     # it properly there; the `claude plugin list` caveat is in README.md.
     w('    <p class="lede">Release notes for the Gushwork design system, including new')
-    w("       components, corrected measurements, and rulings by version.</p>")
-    w('    <p class="hd__note">This page is generated from the')
-    w('       <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md on GitHub</a>.</p>'
+    w("       components, corrected measurements, and rulings by version. This page is")
+    w('       generated from the <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md'
       % (REPO, NEWTAB))
+    w("       on GitHub</a>.</p>")
     # "Last updated" sits LAST, above the rule — the install page's order: title, then the
     # prose, then the small print. On the styleguide it follows the title directly, but that
     # header is only a title and a date; here it would interrupt three lines that read as one.
