@@ -983,16 +983,22 @@
 }
 .gw-burger svg { width: 16px; height: 16px; display: block; }
 
-/* The phone's search affordance — the same 36x36 icon button as the burger, because at 375
-   the 400px field cannot fit and an icon is what the field leads with anyway. */
+/* The phone's search affordance. BARE — no box, no fill: on a phone bar the icon is the
+   control, and boxing it makes a header of competing chrome out of what should read as a row
+   of actions. It keeps the full 36x36 as a tap target; only the paint is gone.
+
+   The burger beside it keeps its box because it is measured — it follows the navbar
+   component's Phone `Collapsed` variant — and dropping that would be a deviation from the
+   source rather than a choice about a control this repo invented. */
 .gw-searchbtn {
   display: none;
   width: 36px; height: 36px; flex: none;
   place-items: center;
-  border: 1px solid var(--s-field-border); border-radius: var(--gw-radius-12);
-  background: var(--s-field-bg); color: var(--s-field-icon); cursor: pointer;
+  border: 0; background: none; padding: 0;
+  border-radius: var(--gw-radius-12);
+  color: var(--s-nav-label); cursor: pointer;
 }
-.gw-searchbtn svg { width: 16px; height: 16px; display: block; }
+.gw-searchbtn svg { width: 20px; height: 20px; display: block; }
 .gw-searchbtn:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
 .gw-burger:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
 
