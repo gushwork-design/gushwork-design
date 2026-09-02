@@ -550,10 +550,13 @@ def main():
     # reader's job any more. Verifying an install is the install page's subject, and it covers
     # it properly there; the `claude plugin list` caveat is in README.md.
     w('    <p class="lede">Release notes for the Gushwork design system, including new')
+    # Only the FILENAME is the link. "CHANGELOG.md on GitHub" as one anchor is a 234px
+    # unbreakable unit — it cannot split at the line end, so it was pushed onto a line of its
+    # own every time, which is the separate line folding it in was meant to remove.
     w("       components, corrected measurements, and rulings by version. This page is")
-    w('       generated from the <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md'
+    w('       generated from <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md</a>'
       % (REPO, NEWTAB))
-    w("       on GitHub</a>.</p>")
+    w("       on GitHub.</p>")
     # "Last updated" sits LAST, above the rule — the install page's order: title, then the
     # prose, then the small print. On the styleguide it follows the title directly, but that
     # header is only a title and a date; here it would interrupt three lines that read as one.
