@@ -1021,6 +1021,12 @@
   .gw-search { display: none; }
   .gw-searchbtn { display: grid; }
 
+  /* The measured gap 16 (Frame 2147260244) separates the FIELD from the theme toggle. At
+     this width neither is there: it is a bare icon beside the burger, and a bare icon has no
+     box edge, so 16 reads as a bigger hole than it measures. 8 here is a decision about a
+     composition that only exists on phone — the desktop frame keeps its measured 16. */
+  .gw-topbar__right { gap: var(--gw-space-8); }
+
   /* `Menu` — the rail becomes a full-screen overlay under the bar. */
   .gw-sidebar {
     width: 100%;
