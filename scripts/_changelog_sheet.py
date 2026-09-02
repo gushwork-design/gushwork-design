@@ -260,7 +260,8 @@ CSS = """
 
   /* ── release list ── */
   .rel{display:grid;grid-template-columns:152px minmax(0,1fr);gap:var(--gw-space-40);
-       padding:0 0 var(--gw-space-32);scroll-margin-top:var(--gw-space-24)}
+       padding:0 var(--gw-space-40) var(--gw-space-32);
+       scroll-margin-top:var(--gw-space-24)}
   /* Top padding travels WITH the border, because it exists to sit below one. On .rel it left
      the first release padded away from the header rule with nothing in between — 64px from
      the rule to the first title where the styleguide has 20. */
@@ -415,7 +416,8 @@ CSS = """
     .hd{padding-left:0;padding-right:0}
     h1{font-size:var(--gw-bp-type-h1)}
     .idx{display:none}
-    .rel{grid-template-columns:minmax(0,1fr);gap:var(--gw-space-12)}
+    .rel{grid-template-columns:minmax(0,1fr);gap:var(--gw-space-12);
+         padding-left:0;padding-right:0}
     .rail{flex-direction:row;align-items:center;gap:var(--gw-space-12)}
     .pill,.tag{margin:0}
   }
