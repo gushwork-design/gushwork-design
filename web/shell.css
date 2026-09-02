@@ -784,6 +784,95 @@
 
 
 /* ---------------------------------------------------------------------------
+   6c. Search — the ⌘K palette
+
+   The topbar field is the affordance; it does not accept typing. Focusing or
+   clicking it opens this, which is where the typing happens. One input to
+   manage, one place results can be, and the field keeps its measured 400x36
+   without having to grow a results list underneath it.
+
+   Every result is an anchor a reader can land on — a heading, or a release on
+   the changelog. Built from the deploy at publish time: scripts/_search_index.py.
+   ------------------------------------------------------------------------ */
+.gw-pal { position: fixed; inset: 0; z-index: 90; display: none; }
+.gw-pal[data-open="true"] { display: block; }
+.gw-pal__scrim { position: absolute; inset: 0; background: rgba(13,13,13,.44); }
+
+.gw-pal__box {
+  position: relative; margin: 96px auto 0; width: min(640px, calc(100vw - 32px));
+  max-height: calc(100vh - 160px); display: flex; flex-direction: column;
+  background: var(--s-card-bg); border: 1px solid var(--s-card-border);
+  border-radius: var(--gw-radius-16); box-shadow: var(--gw-shadow-s3);
+  overflow: hidden;
+}
+.gw-pal__top {
+  display: flex; align-items: center; gap: var(--gw-space-12);
+  padding: var(--gw-space-16) var(--gw-space-20);
+  border-bottom: 1px solid var(--s-card-border); flex: none;
+}
+.gw-pal__top svg { width: 20px; height: 20px; flex: none; color: var(--s-field-icon); }
+.gw-pal__top input {
+  flex: 1; min-width: 0; border: 0; background: none; outline: none; padding: 0;
+  font: var(--gw-text-body-18-med); letter-spacing: var(--gw-text-body-18-med-tracking);
+  color: var(--s-heading);
+}
+.gw-pal__top input::placeholder { color: var(--s-placeholder); }
+
+.gw-pal__list { overflow-y: auto; padding: var(--gw-space-8); flex: 1 1 auto; }
+.gw-pal__row {
+  display: block; width: 100%; text-align: left; border: 0; background: none;
+  cursor: pointer; padding: var(--gw-space-12); border-radius: var(--gw-radius-12);
+  display: grid; grid-template-columns: 20px minmax(0,1fr); gap: var(--gw-space-12);
+  align-items: start; text-decoration: none;
+}
+/* Selection is a surface, not a colour change — the row still has to read as text. */
+.gw-pal__row[aria-selected="true"] { background: var(--s-nav-hover); }
+.gw-pal__hash {
+  font: var(--gw-text-body-18-med); color: var(--s-placeholder);
+  line-height: 24px; text-align: center;
+}
+/* BLOCK, both of them. As inline spans they ran onto one line — the breadcrumb butted
+   straight against the heading — and `text-overflow: ellipsis` silently does nothing on an
+   inline box, so neither truncated either. */
+.gw-pal__t {
+  display: block;
+  font: var(--gw-text-body-18-sem); letter-spacing: var(--gw-text-body-18-sem-tracking);
+  color: var(--s-heading); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.gw-pal__crumb {
+  display: block;
+  margin-top: 2px; font: var(--gw-text-body-14-med);
+  letter-spacing: var(--gw-text-body-14-med-tracking); color: var(--s-body);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.gw-pal__row mark { background: none; color: var(--gw-color-primary-500); font-weight: 600; }
+
+.gw-pal__empty {
+  padding: var(--gw-space-32) var(--gw-space-20); text-align: center;
+  font: var(--gw-text-body-18-med); color: var(--s-body);
+}
+.gw-pal__foot {
+  display: flex; align-items: center; gap: var(--gw-space-20); flex: none;
+  padding: var(--gw-space-12) var(--gw-space-20);
+  border-top: 1px solid var(--s-card-border); background: var(--s-chrome-bg);
+  font: var(--gw-text-body-14-med); color: var(--s-body);
+}
+.gw-pal__foot b {
+  display: inline-block; min-width: 20px; padding: 0 var(--gw-space-4);
+  margin-right: var(--gw-space-8); text-align: center;
+  border: 1px solid var(--s-field-border); border-radius: var(--gw-radius-4);
+  background: var(--s-lock-bg); font-weight: 500; color: var(--s-heading);
+}
+
+/* The field is a button now, so it has to look pressable rather than disabled. */
+.gw-search[data-inert="true"] { cursor: text; }
+.gw-search input { pointer-events: none; }
+
+@media (max-width: 767px) {
+  .gw-pal__box { margin-top: var(--gw-space-40); max-height: calc(100vh - 80px); }
+}
+
+/* ---------------------------------------------------------------------------
    7. Holding state for routes that have no design yet
    ------------------------------------------------------------------------ */
 .gw-soon {
