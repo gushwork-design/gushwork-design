@@ -59,6 +59,7 @@
      split it ran the rule 1120 wide, straight under the TOC. The measured
      line (478:15076) is 800: the main column, and nothing past the gutter. */
   .hd{grid-column:1;grid-row:1;
+      display:flex;flex-direction:column;gap:var(--gw-space-20);
       padding:0 var(--gw-space-40) var(--gw-space-32);
       /* DOTTED, not solid. Line 14 (478:15076) measures strokeWeight 2,
          strokeCap ROUND, dashPattern [0.1, 4] — a zero-length dash with a
@@ -84,7 +85,7 @@
      gap holds them together, and flex-start lets the pair sit as one unit. h1 drops its
      margin so the two align on their centres rather than around the heading's spacing. */
   .hd__top{display:flex;align-items:center;gap:var(--gw-space-20);
-           flex-wrap:wrap;margin-bottom:var(--gw-space-20)}
+           flex-wrap:wrap}
   /* Styleguide page title, measured: Vert Grotesk Display Semibold 44/120%,
      ls 0, Neutral/black. No text style is bound in Figma, and --gw-text-h3 is
      the wrong weight (700), so the ramp is spelled out. */
@@ -92,7 +93,7 @@
      letter-spacing:0;color:var(--s-heading, var(--gw-color-black))}
   /* The styleguide's "Last updated" line: Body/body-14-med, Neutral/400,
      sitting 20 under the title. */
-  .hd__meta{margin:0 0 var(--gw-space-20);font:var(--gw-text-body-14-med);
+  .hd__meta{margin:0;font:var(--gw-text-body-14-med);
             letter-spacing:var(--gw-text-body-14-med-tracking);
             color:var(--gw-color-neutral-400)}
   /* This is the library `badge`, not a lookalike: set 1582:628 at
@@ -114,11 +115,11 @@
      derivation. */
   .lede{margin:0;max-width:64ch;font:var(--gw-text-body-16-reg);
         letter-spacing:var(--gw-text-body-16-reg-tracking);color:var(--s-body, var(--gw-color-neutral-600))}
-  .hd__note{margin:var(--gw-space-16) 0 0;max-width:72ch;
+  .hd__note{margin:0;max-width:72ch;
             font:var(--gw-text-body-14-reg);
             letter-spacing:var(--gw-text-body-14-reg-tracking);
             color:var(--s-body, var(--gw-color-neutral-600))}
-  .facts{margin-top:var(--gw-space-20);display:flex;flex-wrap:wrap;
+  .facts{display:flex;flex-wrap:wrap;
          gap:var(--gw-space-8) var(--gw-space-24)}
   .fact{display:flex;align-items:baseline;gap:var(--gw-space-8)}
   .fact__l{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
@@ -128,8 +129,12 @@
 
   /* ── release list ── */
   .rel{display:grid;grid-template-columns:152px minmax(0,1fr);gap:var(--gw-space-40);
-       padding:var(--gw-space-32) 0;scroll-margin-top:var(--gw-space-24)}
-  .rel + .rel{border-top:1px solid var(--s-card-border, var(--gw-color-neutral-50))}
+       padding:0 0 var(--gw-space-32);scroll-margin-top:var(--gw-space-24)}
+  /* Top padding travels WITH the border, because it exists to sit below one. On .rel it left
+     the first release padded away from the header rule with nothing in between — 64px from
+     the rule to the first title where the styleguide has 20. */
+  .rel + .rel{border-top:1px solid var(--s-card-border, var(--gw-color-neutral-50));
+              padding-top:var(--gw-space-32)}
   .rail{display:flex;flex-direction:column;align-items:flex-start;gap:var(--gw-space-4)}
   .pill{display:inline-flex;align-items:center;padding:var(--gw-space-4) var(--gw-space-8);
         border-radius:var(--gw-radius-4);font:var(--gw-text-body-12-med);
