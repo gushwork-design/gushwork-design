@@ -996,9 +996,15 @@
   place-items: center;
   border: 0; background: none; padding: 0;
   border-radius: var(--gw-radius-12);
-  color: var(--s-nav-label); cursor: pointer;
+  /* --s-field-icon, not --s-nav-label: it is documented as "measured: MagnifyingGlass
+     vector", so it is the token for this exact glyph, and it is the lighter of the two in
+     both themes (neutral-600 / neutral-300 against neutral-900 / white). */
+  color: var(--s-field-icon); cursor: pointer;
 }
-.gw-searchbtn svg { width: 20px; height: 20px; display: block; }
+/* 16, matching the burger. The burger's size is the measured one, so search moves to it
+   rather than the other way round — the two sit next to each other and should read as one
+   row of actions, not two sizes of icon. */
+.gw-searchbtn svg { width: 16px; height: 16px; display: block; }
 .gw-searchbtn:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
 .gw-burger:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
 
