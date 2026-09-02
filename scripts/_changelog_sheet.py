@@ -533,9 +533,6 @@ def main():
     w("      <h1>Changelog</h1>")
     w('      <span class="brand">Gushwork Design Plugin</span>')
     w("    </div>")
-    # The styleguide header is title → "Last updated" → rule. The lede and the
-    # housekeeping notes follow, because this page carries more than a title.
-    w('    <p class="hd__meta">Last updated %s</p>' % html.escape(last_date))
     # Three beats, after the Claude Code changelog: what the page is, where it comes from,
     # how to check the version you are on. Each is its own line because each answers a
     # different question, and a reader scanning for one should not have to read the others.
@@ -549,6 +546,10 @@ def main():
     # The announce line each skill prints is the reliable one, so that is what this points at.
     w('    <p class="hd__note">Every skill prints its version at the start of a session — that')
     w("       line is the check. <code>claude plugin list</code> lags a marketplace refresh.</p>")
+    # "Last updated" sits LAST, above the rule — the install page's order: title, then the
+    # prose, then the small print. On the styleguide it follows the title directly, but that
+    # header is only a title and a date; here it would interrupt three lines that read as one.
+    w('    <p class="hd__meta">Last updated %s</p>' % html.escape(last_date))
     w("  </header>")
     w("  <main>")
 
