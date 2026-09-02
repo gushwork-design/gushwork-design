@@ -452,6 +452,12 @@
         '<div class="gw-pal__top">' + icon('magnifying-glass') +
           '<input type="search" placeholder="Search the design system\u2026" ' +
                  'aria-label="Search" autocomplete="off" spellcheck="false">' +
+          /* Phone only. Desktop closes with esc and the footer says so; on a phone the
+             footer is hidden and the scrim narrows to a 40px strip with a full result
+             list — under the 44 the system asks of a hit target, and unlabelled. */
+          '<button class="gw-pal__x" type="button" data-pal-close aria-label="Close search">' +
+            icon('x') +
+          '</button>' +
         '</div>' +
         '<div class="gw-pal__list" role="listbox"></div>' +
         '<div class="gw-pal__foot">' +

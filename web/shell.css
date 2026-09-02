@@ -829,6 +829,15 @@
   color: var(--s-heading);
 }
 .gw-pal__top input::placeholder { color: var(--s-placeholder); }
+/* Desktop closes with esc, and the footer legend says so — so this is phone only. */
+.gw-pal__x {
+  display: none;
+  width: 36px; height: 36px; flex: none; place-items: center;
+  border: 0; background: none; padding: 0; border-radius: var(--gw-radius-8);
+  color: var(--s-field-icon); cursor: pointer;
+}
+.gw-pal__x svg { width: 16px; height: 16px; display: block; }
+.gw-pal__x:focus-visible { outline: var(--gw-focus-ring); outline-offset: var(--gw-focus-offset); }
 
 .gw-pal__list { overflow-y: auto; padding: var(--gw-space-8); flex: 1 1 auto; }
 .gw-pal__row {
@@ -878,6 +887,14 @@
 
 @media (max-width: 767px) {
   .gw-pal__box { margin-top: var(--gw-space-40); max-height: calc(100vh - 80px); }
+  /* The footer is a keyboard legend, and a phone has no arrow keys, no return and no esc to
+     legend. Keeping it would spend a fifth of a 812-tall screen telling a thumb about keys it
+     does not have — and push results below the fold to do it. Tapping a result and tapping
+     outside already do what it describes. */
+  .gw-pal__foot { display: none; }
+  /* ...which leaves the scrim as the only way out, and with a full result list that is a
+     40px strip top and bottom. An explicit, labelled control instead. */
+  .gw-pal__x { display: grid; }
 }
 
 /* ---------------------------------------------------------------------------
