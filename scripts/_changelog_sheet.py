@@ -516,9 +516,13 @@ def main():
     if not rows:
         sys.exit("no releases on stdin")
 
-    # Only the newest date survives, for the "Last updated" line. total / current /
-    # first_date went with the facts strip they were computed for.
-    last_date = rows[0]["date"].rsplit(" ", 1)[0]
+    # The meta line, in the install page's shape: version, then when it shipped, to the
+    # minute. `date` arrives as "01 Sep 2026 19:53" (scripts/_releases.sh formats it), so the
+    # comma is inserted rather than the time re-derived. total / first_date went with the
+    # facts strip they were computed for.
+    current = rows[0]["version"]
+    _d, _t = rows[0]["date"].rsplit(" ", 1)
+    last_stamp = "%s, %s" % (_d, _t)
 
     P = []
     w = P.append
@@ -538,23 +542,22 @@ def main():
     w("      <h1>Changelog</h1>")
     w('      <span class="brand">Gushwork Design Plugin</span>')
     w("    </div>")
-    # Three beats, after the Claude Code changelog: what the page is, where it comes from,
-    # how to check the version you are on. Each is its own line because each answers a
-    # different question, and a reader scanning for one should not have to read the others.
+    # Two beats: what the page is, and where it comes from. The Claude Code changelog has a
+    # third — "run claude --version to check your installed version" — and we dropped ours.
+    # It needs that line because nothing tells you otherwise; since v1.41.0 the session-start
+    # hook tells you when you are behind and names what changed, so a manual check is not the
+    # reader's job any more. Verifying an install is the install page's subject, and it covers
+    # it properly there; the `claude plugin list` caveat is in README.md.
     w('    <p class="lede">Release notes for the Gushwork design system, including new')
     w("       components, corrected measurements, and rulings by version.</p>")
     w('    <p class="hd__note">This page is generated from the')
     w('       <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md on GitHub</a>.</p>'
       % (REPO, NEWTAB))
-    # The version-check beat. Claude Code can say "run claude --version" and stop; ours cannot,
-    # because `claude plugin list` reads a cached marketplace and under-reports after a release.
-    # The announce line each skill prints is the reliable one, so that is what this points at.
-    w('    <p class="hd__note">Every skill prints its version at the start of a session — that')
-    w("       line is the check. <code>claude plugin list</code> lags a marketplace refresh.</p>")
     # "Last updated" sits LAST, above the rule — the install page's order: title, then the
     # prose, then the small print. On the styleguide it follows the title directly, but that
     # header is only a title and a date; here it would interrupt three lines that read as one.
-    w('    <p class="hd__meta">Last updated %s</p>' % html.escape(last_date))
+    w('    <p class="hd__meta"><strong>v%s</strong> · last updated %s</p>'
+      % (html.escape(current), html.escape(last_stamp)))
     w("  </header>")
     w("  <main>")
 
