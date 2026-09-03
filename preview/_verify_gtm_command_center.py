@@ -185,7 +185,11 @@ chk(nh2 == 3, "three table heads", str(nh2))
 # different column boundary (measured 21.5px header-to-body, 2.9px row-to-row before the fix).
 # Assert the PATTERN over every per-row grid, not the two literal templates: one check that
 # still holds when a third table is added or the proportions are retuned.
-rowgrids = re.findall(r"\.trow-[a-z]+\{[^}]*grid-template-columns:([^;}]+)", H)
+# scope to the BASE stylesheet: the shared-grid rule governs the multi-column desktop table.
+# Below 600 the rows stack to a single column, where "every non-first track" has no meaning —
+# counting those rules made this assertion fail on a layout that is correct.
+_base = re.sub(r"@media[^{]*\{(?:[^{}]|\{[^{}]*\})*\}", "", H, flags=re.S)
+rowgrids = re.findall(r"\.trow-[a-z]+\{[^}]*grid-template-columns:([^;}]+)", _base)
 chk(len(rowgrids) == 2, "both per-row grids found", str(len(rowgrids)))
 chk(rowgrids and all("auto" not in t for t in rowgrids),
     "no per-row grid has a content-sized track (table-row v1.40.0)")
@@ -237,6 +241,32 @@ for hook in ["data-drawer-toggle", "data-drawer-close", "data-dock-sync"]:
 for label, blk in (("phone", pb), ("flow", flow.group(1) if flow else "")):
     lits = re.findall(r"(?:background|background-color):\s*var\(--gw-color-[a-z0-9-]+\)", blk)
     chk(not lits, f"{label} chrome binds theme aliases, never an absolute fill", str(lits[:3]))
+
+print("\n── states are still the page ──")
+# RULED after the loading screen shipped edge-to-edge at 375: a state REPLACES the page, so it
+# must carry the page's own horizontal padding, and its measured DESKTOP widths must cap
+# themselves below 1280 where R17 says the page flows. Three separate elements had this bug —
+# the loading box, the empty state and the date picker, the last hanging 201px off-screen.
+_css = "\n".join(re.findall(r"<style[^>]*>(.*?)</style>", H, re.S))
+# strip comments BEFORE parsing rules: a /* … */ block sitting above a rule is captured as part
+# of that rule's selector, so an exact selector match silently never fires. This check reported
+# .loading-page as unpadded when the padding was right there.
+_css = re.sub(r"/\*.*?\*/", "", _css, flags=re.S)
+_rules = [(m.group(1).strip().replace("\n", " "), m.group(2))
+          for m in re.finditer(r"([^{}]+)\{([^}]*)\}", _css)]
+
+# A. THE PATTERN, not the three instances: any fixed width wider than the narrowest viewport
+# must cap itself, or it overflows there. One check that covers every element added later.
+_uncapped = [f"{sel[:30]}={w.group(1)}px" for sel, body in _rules
+             if (w := re.search(r"(?<![-\w])width:\s*(\d+)px", body))
+             and int(w.group(1)) > 375 and "max-width" not in body]
+chk(not _uncapped, "no fixed width exceeds the narrowest viewport uncapped", str(_uncapped))
+
+# B. every full-page state carries horizontal padding — the page's content never touches the bezel
+for _state in [".loading-page", ".empty-page"]:
+    _r = [b for sel, b in _rules if sel.split(",")[0].strip() == _state]
+    _has = any(re.search(r"padding(-inline)?:", b) for b in _r)
+    chk(_has, f"{_state} declares horizontal padding, like the page it replaces")
 
 print("\n── dead controls ──")
 # RULED: an affordance ships ONLY if the function exists. This rule already existed as a habit
@@ -298,8 +328,8 @@ chk(stamp.get("registry", "").startswith("https://gushwork-design.vercel.app/"),
 chk(stamp.get("changelog", "").endswith("changelog-sheet.html"), "the stamp carries the changelog")
 # The dashboard registry PLUS the shared one, which is where badge, the logo and the icon set
 # now live — they were never dashboard-only, and listing them per surface would report a single
-# change once per surface. scripts/check-drift.sh merges the same two; this must agree with it,
-# or the verifier calls a component missing that the real reader resolves fine.
+# change once per surface. scripts/check-drift.sh merges the same two; this must agree with it or
+# the verifier calls a component missing that the real reader resolves fine.
 _root = pathlib.Path.home() / "Downloads/gushwork-design"
 reg = json.load(open(_root / "exports/dashboard/component-registry.json"))
 _shared = json.load(open(_root / "exports/shared/component-registry.json"))

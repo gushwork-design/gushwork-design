@@ -475,22 +475,26 @@ def chan_table():
             + "".join(sortable(c, 5 + i) for i, c in enumerate(("Spent", "roi")))
             + '</span></div>')
 
-    def metric(v):
-        return (f'<span class="tc tc-metric" data-sort="{v[1]}"><b>' + v[0] + '</b>'
+    # data-label carries the column name onto every cell. On phone the header row is hidden and
+    # each cell renders its own label, so a 6-column table reads as a stack instead of scrolling
+    # sideways. Costs one attribute; the desktop table ignores it entirely.
+    def metric(v, lbl):
+        return (f'<span class="tc tc-metric" data-label="{lbl}" data-sort="{v[1]}"><b>' + v[0] + '</b>'
                 + bar(f"{v[1]*100:.0f}%", "green", "sm") + '</span>')
 
     def group_demos(demos, shows, pend, clos, arr):
+        c = CHAN_COLS
         return ('<span class="tcells" data-col-group="demos">'
-                + metric(demos) + metric(shows)
-                + f'<span class="tc" data-sort="{pend}">{pend}</span>'
-                f'<span class="tc" data-sort="{clos}">{clos}</span>'
-                f'<span class="tc" data-sort="{arr}">{arr}</span></span>')
+                + metric(demos, c[1]) + metric(shows, c[2])
+                + f'<span class="tc" data-label="{c[3]}" data-sort="{pend}">{pend}</span>'
+                f'<span class="tc" data-label="{c[4]}" data-sort="{clos}">{clos}</span>'
+                f'<span class="tc" data-label="{c[5]}" data-sort="{arr}">{arr}</span></span>')
 
     def group_spend(spent, roi):
         return ('<i class="tdiv is-hidden" data-col-group="spend"></i>'
                 '<span class="tcells tcells-trail is-hidden" data-col-group="spend">'
-                f'<span class="tc" data-sort="{spent}">{spent}</span>'
-                f'<span class="tc" data-sort="{roi}">{roi}</span></span>')
+                f'<span class="tc" data-label="Spent" data-sort="{spent}">{spent}</span>'
+                f'<span class="tc" data-label="roi" data-sort="{roi}">{roi}</span></span>')
 
     rows = []
     for ch, icn, badge, demos, shows, pend, clos, arr, spent, roi in CHAN_ROWS:
@@ -661,12 +665,12 @@ def daily_table():
     for d, bk, su, ba, bap, sa, sap in DAILY_SET:
         day = int(d.split()[1])
         rows.append(f'<div class="trow trow-daily" data-row>'
-                    f'<span class="tc tc-strong" data-sort="{day}">{d}</span>'
-                    f'<span class="tc" data-sort="{bk}">{bk}</span>'
-                    f'<span class="tc" data-sort="{su}">{su}</span>'
-                    f'<span class="tc tc-pair" data-sort="{bap}">{ba}'
+                    f'<span class="tc tc-strong" data-label="{cols[0]}" data-sort="{day}">{d}</span>'
+                    f'<span class="tc" data-label="{cols[1]}" data-sort="{bk}">{bk}</span>'
+                    f'<span class="tc" data-label="{cols[2]}" data-sort="{su}">{su}</span>'
+                    f'<span class="tc tc-pair" data-label="{cols[3]}" data-sort="{bap}">{ba}'
                     f'<span class="badge badge-sm badge-{"red" if bap < 90 else "green"}">{bap}%</span></span>'
-                    f'<span class="tc tc-pair" data-sort="{sap}">{sa}'
+                    f'<span class="tc tc-pair" data-label="{cols[4]}" data-sort="{sap}">{sa}'
                     f'<span class="badge badge-sm badge-{"red" if sap < 90 else "green"}">{sap}%</span></span>'
                     f'</div>')
     sorts = [("Date", 0), ("Bookings", 1), ("Show-ups", 2),
@@ -692,13 +696,13 @@ def onb_table():
         money = int(mo.replace("$", "").replace(",", ""))
         rows.append(f'<div class="trow trow-onb" data-row '
                     f'data-text="{dom.lower()} {ae.lower()} {chn.lower()}">'
-                    f'<span class="tc tc-strong" data-sort="{day}">{d}</span>'
-                    f'<span class="tc" data-sort="{dom}">{dom}</span>'
-                    f'<span class="tc" data-sort="{ae}">{ae}</span>'
-                    f'<span class="tc" data-sort="{chn}">{chn}</span>'
-                    f'<span class="tc" data-sort="{money}">{mo}</span>'
-                    f'<span class="tc tc-ink" data-sort="{money*12}">{arr}</span>'
-                    f'<span class="tc" data-sort="{st}">'
+                    f'<span class="tc tc-strong" data-label="{cols[0]}" data-sort="{day}">{d}</span>'
+                    f'<span class="tc" data-label="{cols[1]}" data-sort="{dom}">{dom}</span>'
+                    f'<span class="tc" data-label="{cols[2]}" data-sort="{ae}">{ae}</span>'
+                    f'<span class="tc" data-label="{cols[3]}" data-sort="{chn}">{chn}</span>'
+                    f'<span class="tc" data-label="{cols[4]}" data-sort="{money}">{mo}</span>'
+                    f'<span class="tc tc-ink" data-label="{cols[5]}" data-sort="{money*12}">{arr}</span>'
+                    f'<span class="tc" data-label="{cols[6]}" data-sort="{st}">'
                     f'<span class="badge badge-sm badge-{tone}">{st}</span></span></div>')
     sorts = [(sort_label(c), i) for i, c in enumerate(cols)]
     toolbar = ('<div class="panel-toolbar panel-toolbar-titled">'
@@ -1618,7 +1622,12 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
 
 /* ══ date-range picker — measured `date-range-dropdown` 560x420 (409:11644) ══ */
 .tab-wrap{{position:relative}}
-.dp{{position:absolute;top:calc(100% + 8px);left:0;z-index:40;width:560px;display:none;
+/* the measured 560 (228 + 332 panes) is a DESKTOP width and this panel is absolutely
+   positioned, so `100%` would resolve against the trigger, not the viewport. Capped against
+   the viewport less the phone padding: exact at every width with room for it, contained at
+   375, where it was hanging 201px off-screen. */
+.dp{{position:absolute;top:calc(100% + 8px);left:0;z-index:40;width:560px;
+ max-width:calc(100vw - 32px);display:none;
  flex-direction:column;border-radius:{tok('--gw-radius-12')};background:var(--s-menu);
  box-shadow:inset 0 0 0 1px var(--b-menu),0 8px 24px #1b1c1d24;overflow:hidden}}
 .dp.is-open{{display:flex}}
@@ -1734,13 +1743,22 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
 /* loading screen — measured from frame `lodaing` (236:35282). The chrome stays; only the
    content column is replaced, centred on both axes. Bar is 400x12 r40 with a BLACK fill,
    which is unlike every data bar in the system (2/4px, semantic colour). */
-.loading-page{{display:none;height:100%;align-items:center;justify-content:center}}
+/* ⚠ A STATE IS STILL THE PAGE. `.page` carries the measured 40px side padding, and these
+   states REPLACE it — so they must carry it too, or the content runs to the bezel. The
+   measured widths below (442 / 400 / 480) are DESKTOP values that flow mode never revisited:
+   at 375 the box was 67px wider than the viewport and the title, bar and `40%` were all
+   clipped. `max-width:100%` keeps the measured value exact wherever there is room for it —
+   which is every width the exactness rule still applies to — and lets it shrink below 1280,
+   where R17 says the page flows. Padding is stepped in the regime queries, same as `.page`. */
+.loading-page{{display:none;height:100%;align-items:center;justify-content:center;
+ padding-inline:40px}}
 .loading-page.is-on{{display:flex}}
-.load-box{{width:442px;display:flex;flex-direction:column;align-items:center;gap:24px}}
+.load-box{{width:442px;max-width:100%;display:flex;flex-direction:column;align-items:center;
+ gap:24px}}
 .load-title{{font:var(--dash-display-32-reg);color:var(--t-display);text-align:center}}
-.load-row{{display:flex;align-items:center;gap:12px}}
+.load-row{{display:flex;align-items:center;gap:12px;width:100%;justify-content:center}}
 .load-track{{width:400px;height:12px;border-radius:{tok('--gw-radius-40')};
- background:var(--d-track);overflow:hidden}}
+ background:var(--d-track);overflow:hidden;flex:0 1 400px;min-width:0;max-width:100%}}
 /* display:block is load-bearing — .load-track is only blockified because .load-row is a flex
    container; its own child is not, so an inline span would ignore width/height entirely. */
 .load-fill{{display:block;height:100%;border-radius:{tok('--gw-radius-40')};
@@ -1749,11 +1767,11 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
  letter-spacing:var(--gw-text-body-14-med-tracking);color:var(--t-display);min-width:34px}}
 
 /* empty state for nav destinations with no page built — build-rules.md requires this */
-.empty-page{{display:none;padding:80px 0;justify-content:center}}
+.empty-page{{display:none;padding:80px 40px;justify-content:center}}
 .empty-page.is-on{{display:flex}}
 .page.is-off{{display:none}}
-.es{{width:480px;padding:40px;display:flex;flex-direction:column;align-items:center;gap:16px;
- text-align:center}}
+.es{{width:480px;max-width:100%;padding:40px;display:flex;flex-direction:column;
+ align-items:center;gap:16px;text-align:center}}
 .es-circle{{width:40px;height:40px;border-radius:999px;background:var(--s-chrome);display:flex;
  align-items:center;justify-content:center;color:var(--t-faint)}}
 .es h2{{font:{tok('--gw-text-body-16-sem')};letter-spacing:var(--gw-text-body-16-sem-tracking);
@@ -1813,7 +1831,9 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
  .stat-row{{grid-template-columns:repeat(auto-fit,minmax(218px,1fr))}}
  .metric-row{{grid-template-columns:repeat(auto-fit,minmax(274px,1fr))}}
  .page-title{{font:var(--dash-display-36-med)}}   /* ramp steps DOWN one documented step 44->36 */
- .page{{padding-inline:24px}}
+ /* the states step WITH the page — they replace it, so they inherit its margins, not zero */
+ .page,.loading-page{{padding-inline:24px}}
+ .empty-page{{padding:80px 24px}}
 }}
 
 /* ── PHONE, <600.  Chrome MEASURED (v2/phone.md); content reflow RULED (R17). ── */
@@ -1872,7 +1892,13 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
  .dock .theme-toggle{{background:var(--s-menu);border:1px solid var(--b-strong);
   box-shadow:{tok('--gw-shadow-s3')}}}
  /* content reflow — RULED, R17, not measured: the frames contain no page content. */
- .page{{padding-inline:16px}}
+ .page,.loading-page{{padding-inline:16px}}
+ /* the dock is position:fixed at bottom 20 and is 36 tall, so the last rows of any scrolled
+    section pass UNDERNEATH it. Reserve its height plus both margins as end padding, or the
+    final row of every table is permanently covered. */
+ .page{{padding-bottom:96px}}
+ .empty-page{{padding:80px 16px}}
+ .load-title{{font:var(--dash-display-22-med)}}   /* 32 has no room at 375; next step down */
  .page-title{{font:var(--dash-display-28-med)}}   /* second documented step down: 36 -> 28 */
  .stat-row,.metric-row{{grid-template-columns:1fr}}
  /* ⚠ RULED, v2/phone.md: on phone the `section-header` qualifier stacks UNDER the title at
@@ -1903,10 +1929,102 @@ h1,h2,h3{{margin:0;font-weight:inherit}}
  .pt-head,.pagination{{flex-wrap:wrap;gap:12px}}
  .pt-right,.pc-left,.pc-right,.pg-left,.pg-right{{flex-wrap:wrap;min-width:0}}
  .pt-right .input,.pt-right input{{min-width:0}}
- /* the wide tables cannot reflow to 375 — they scroll inside their own card, which keeps the
-    ONE-page-scroller rule intact (build-rules.md). CHOSEN, not measured. */
- .grid-wrap{{overflow-x:auto}}
- .grid-wrap>*{{min-width:640px}}
+ /* ══ PHONE USABILITY PASS — audited at 375, 1 Sep 2026 ══
+    The earlier regime work made the page FIT; it did not make it usable. Auditing at 375 found
+    four horizontal scrollers, twelve touch targets under 44px, 10px type, and words breaking
+    mid-string. Sideways scroll inside a vertical page is the worst of these: it hides data
+    behind a gesture nobody discovers. Everything below removes a scroll axis or a reach
+    problem. CHOSEN, not measured — v2/phone.md specifies chrome only, so phone CONTENT is a
+    build decision (R17 says so explicitly). */
+
+ /* 1. TABLES STACK. 5, 5 and 7 columns cannot fit 315px of content width — they were 640, 640
+    and 808 wide, scrolling sideways and breaking domains mid-word. Each row becomes a labelled
+    block: every column visible, no second scroll axis, no truncation. */
+ .grid-wrap{{overflow-x:visible}}
+ .grid-wrap>*{{min-width:0}}                 /* undoes the 640px floor the scroll fix needed */
+ .trow-head{{display:none}}                  /* the labels move onto the cells */
+ .trow{{padding:12px 16px}}
+ .trow-daily,.trow-onb{{grid-template-columns:1fr;gap:6px;min-height:0}}
+ /* break-word, NOT anywhere: `anywhere` breaks mid-token whenever the box is tight, and on a
+    squeezed flex item it rendered "681/706" one CHARACTER per line. break-word only breaks a
+    word that genuinely cannot fit, which after stacking none of them do. */
+ .trow .tc,.tcells>.tc{{display:flex;align-items:baseline;gap:12px;min-width:0;
+  white-space:normal;overflow-wrap:break-word}}
+ /* margin-right:auto on the label, NOT space-between: with three children (label, value,
+    badge) space-between would spread all three and float the badge away from its number. */
+ .trow .tc[data-label]::before,.tcells>.tc[data-label]::before{{content:attr(data-label);
+  margin-right:auto;flex:0 0 auto;text-transform:uppercase;color:var(--t-label);
+  font:{tok('--gw-text-body-12-med')};letter-spacing:var(--gw-text-body-12-med-tracking)}}
+ /* the channel table is a different shape — name, divider, then grouped cells */
+ /* :not(.trow-head) is load-bearing — a `.trow:has(...)` selector out-specifies the plain
+    .trow-head display-none rule, and was putting the hidden header row back on screen.
+    (Braces are deliberately absent from this comment: the CSS block is an f-string, so a
+    literal brace here is read as an expression and the build dies with a NameError.) */
+ .trow:has(.tc-chan):not(.trow-head){{display:flex;flex-direction:column;align-items:stretch;
+  gap:6px}}
+ .tc-chan{{width:auto;flex:none;font:{tok('--gw-text-body-14-med')}}}
+ .tdiv{{display:none}}
+ /* align-items must be reset to stretch: the desktop rule centres children for a horizontal
+    row, and once this becomes a column that centring shrink-wraps every label/value pair to
+    its content and floats it mid-row instead of spanning the width. */
+ .tcells,.tcells-trail{{flex:none;width:100%;flex-direction:column;gap:6px;
+  align-items:stretch}}
+ /* the metric cell carries a value AND a progress bar. Side by side in a stacked row the
+    value gets crushed; the bar takes its own full-width line instead. */
+ .tc-metric{{flex-direction:row;align-items:center;flex-wrap:wrap;gap:8px}}
+ .tc-metric b{{flex:0 0 auto;white-space:nowrap}}
+ .tc-metric .progress{{flex:1 1 100%}}
+ .trow-total{{flex-wrap:wrap}}
+
+ /* 2. TOGGLES WRAP instead of scrolling. Five measured tabs total 411px; wrapping to two rows
+    keeps every option visible at once, which a scroller does not. */
+ .tab-wrap{{overflow-x:visible;flex:1 1 100%}}
+ /* height:auto is REQUIRED, not cosmetic: the measured 36 is a fixed height, so the wrapped
+    second row overflowed the box and painted on top of the period pill below it. The measured
+    value survives as the floor. */
+ .tab-group{{width:auto;flex-wrap:wrap;height:auto;min-height:36px}}
+ .dp-presets{{flex-wrap:wrap;overflow-x:visible}}
+
+ /* 3. TOUCH TARGETS. 44px is the platform floor; the measured desktop rows are 32 and the
+    drawer trigger 36. ⚠ DELIBERATE DEVIATION from v2/phone.md — a target you cannot reliably
+    hit is not a faithful reproduction of anything. Visual size is preserved where it matters;
+    the extra area is padding. */
+ .nav-item{{height:44px}}                       /* desktop list-item is 32 */
+ [data-dash-toggle]{{width:44px;height:44px;padding:12px}}   /* 20px glyph, 44px hit area */
+ .icon-btn{{min-width:44px;min-height:44px}}
+ .sb-collapse .icon-btn{{min-width:0;min-height:0}}          /* hidden here anyway */
+ .select{{height:44px}} .select-sm{{height:40px}}
+ .tab-item{{height:40px}}                       /* desktop tab-item is 28 */
+ /* ⚠ NOT raised: `.tb-drawer` (36) and the dock's refresh and toggle (36) are measured on the
+    PHONE frames in v2/phone.md — the designer chose those sizes for touch, so they are not a
+    desktop value leaking in. They sit under the 44px platform floor, which is a FINDING for
+    the design system to rule on, not something to silently override here. */
+
+ /* 4. TYPE FLOOR. 10px is unreadable at arm's length; the ramp's next step up is 12. */
+ .ph-period,.tip-date,.tip-red,.tip-green{{font:{tok('--gw-text-body-12-med')};
+  letter-spacing:var(--gw-text-body-12-med-tracking)}}
+
+ /* 5. the two column-group checkboxes were sharing a 185px nowrap row, so "Demos & Show-ups"
+    broke across lines inside a 47px box. */
+ .pt-left{{flex-wrap:wrap;gap:12px}}
+ .chk-wrap{{flex:none}}
+ .chk-label{{white-space:nowrap}}
+
+ /* the date-range panel is a measured 228 + 332 row and neither pane shrinks (both flex:none),
+    so capping the panel alone left its children hanging off-screen. On phone the two panes
+    STACK, and the presets become a horizontal chip row — that keeps every preset reachable
+    (dropping them would be a control lost, not a control reflowed) and costs one row of height
+    instead of 360. overflow-x, deliberately: a fourth overflow-y would break the measured
+    three-scroller invariant that build-rules.md and this file's own assertion protect. */
+ .dp-split{{flex-direction:column;height:auto}}
+ .dp-presets{{width:100%;flex-direction:row;overflow-x:auto;scrollbar-width:none;
+  padding:8px;gap:4px;box-shadow:inset 0 -1px 0 var(--b-menu)}}
+ .dp-presets::-webkit-scrollbar{{width:0;height:0}}
+ .dp-preset{{flex:none;white-space:nowrap}}
+ .dp-cal{{width:100%}}
+ /* the two 136px fields plus the `to` label overrun 343 — they share the row instead */
+ .dp-field{{width:auto;flex:1 1 0;min-width:0}}
+
 }}
 """
 
