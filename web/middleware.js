@@ -59,9 +59,14 @@ function forbidden(email) {
   );
 }
 
+/* Bounced off a gated URL with no session → the dedicated login page
+   (488:21730), not the index with ?signin=required. There is no page underneath
+   to overlay here: you asked for a URL you cannot have, so the sign-in IS the
+   page. The modal stays exactly as it was and is still what a locked sidebar
+   row opens, and /?signin=required still pops it for anyone holding that link —
+   this only changes where the middleware sends you. */
 function toSignIn(url) {
-  const to = new URL('/', url);
-  to.searchParams.set('signin', 'required');
+  const to = new URL('/login', url);
   to.searchParams.set('next', url.pathname + url.search);
   return new Response(null, { status: 302, headers: { Location: to.toString() } });
 }

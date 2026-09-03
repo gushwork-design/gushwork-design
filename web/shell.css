@@ -811,7 +811,9 @@
 .gw-pal__scrim { position: absolute; inset: 0; background: rgba(13,13,13,.44); }
 
 .gw-pal__box {
-  position: relative; margin: 96px auto 0; width: min(640px, calc(100vw - 32px));
+  position: relative; margin: 96px auto 0;
+  /* 100% of .gw-pal (fixed, inset 0) = the content box, gutter excluded. */
+  width: min(640px, calc(100% - 32px));
   max-height: calc(100vh - 160px); display: flex; flex-direction: column;
   background: var(--s-card-bg); border: 1px solid var(--s-card-border);
   border-radius: var(--gw-radius-16); box-shadow: var(--gw-shadow-s3);
@@ -898,6 +900,250 @@
 }
 
 /* ---------------------------------------------------------------------------
+   6b. Login page — measured 488:21730 `login`
+
+   The modal above is the in-place affordance: you are on a page, you click a
+   locked row, it opens over the top. This is the other door — where the
+   middleware sends you when you asked for a gated URL and have no session, so
+   there is no page underneath to overlay. Both start the same Google flow.
+   ------------------------------------------------------------------------ */
+.gw-login {
+  position: relative;
+  overflow: hidden;
+  /* Fills the content region exactly: .gw-main already offsets the 60 topbar
+     and the 240 sidebar, so this is the drawn 1200x828 at 1440x888. */
+  min-height: calc(100vh - 60px);
+  display: grid;
+  place-items: center;
+  padding: var(--gw-space-60) var(--gw-space-40);
+}
+
+/* The brand grid, from the same two-gradient recipe as .gw-hero — one source
+   for the pattern. This is the neutral colourway, so instead of a second theme
+   block the lines take --s-chrome-border and the cells --s-chrome-bg: both
+   already step correctly in BOTH dark paths, the attribute and OS-dark. */
+.gw-login__grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--s-chrome-border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--s-chrome-border) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+/* 30% in dark. Ruled by Utsav 3 Sep 2026: the same neutral grid reads heavier
+   against black than it does against Neutral/25, so it is stepped back rather
+   than re-toned — the opacity carries the filled cells with it, which keeps the
+   pattern one piece. Two selectors because the theme has two dark paths: the
+   explicit attribute, and OS-dark with no attribute set. */
+:root[data-theme="dark"] .gw-login__grid { opacity: .3; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .gw-login__grid { opacity: .3; }
+}
+
+/* A few filled cells break the regularity, the same job they do on the hero.
+   Placed to suit this frame rather than measured at these coordinates. */
+.gw-login__cell {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: var(--s-chrome-bg);
+}
+
+/* Card 480 wide, pad 40/32, radius 24, S4. Measured off 621:5092. */
+.gw-login__card {
+  position: relative;   /* lifts it off the grid */
+  width: 480px;
+  max-width: 100%;
+  padding: var(--gw-space-40) var(--gw-space-32);
+  background: var(--s-card-bg);
+  border: 1px solid var(--s-card-border);
+  border-radius: var(--gw-radius-24);
+  box-shadow: var(--gw-shadow-s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gw-space-40);   /* 621:5094 container gap */
+}
+
+.gw-login__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gw-space-20);   /* 621:5095 */
+}
+/* 60x60 at radius 15 holding a 30 mark. Those are not tokens by accident: the
+   tile is the topbar's Spacing/8 + Radius/8 logo chip placed at 1.875x, so the
+   drawn values land between steps. Reproduced as measured rather than rounded
+   to Radius/16, which is the nearer token. */
+.gw-login__chip {
+  flex: none;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: var(--gw-color-primary-500);
+  color: var(--gw-color-white);
+}
+.gw-login__chip svg { width: 30px; height: 30px; display: block; }
+
+.gw-login__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;                 /* 621:5097 — drawn 10, not a spacing step */
+  text-align: center;
+}
+.gw-login__copy h1 {
+  margin: 0;
+  font: var(--gw-text-h5);
+  letter-spacing: var(--gw-text-h5-tracking);
+  color: var(--s-heading);
+}
+.gw-login__copy p {
+  margin: 0;
+  font: var(--gw-text-body-16-med);
+  letter-spacing: var(--gw-text-body-16-med-tracking);
+  color: var(--s-body);
+}
+
+/* Button 628:5272. Google's own button, so it is deliberately NOT themed: hard
+   white with a black label in BOTH modes, exactly as .gw-modal__btn is and for
+   the same reason — Google's mark keeps its own presentation and the surface it
+   sits on has to stay neutral. The border is hard-coded for the same reason: a
+   themed one would go Neutral/800 in dark and ring a white button.
+
+   Drawn at a 0.81px border, which is a scaled instance rather than an intent;
+   built at 1, the value the component holds unscaled. */
+.gw-login__google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gw-space-8);
+  width: 100%;
+  height: 64px;
+  padding: var(--gw-space-16) var(--gw-space-20) var(--gw-space-16) var(--gw-space-24);
+  border: 1px solid var(--gw-color-neutral-200);
+  border-radius: var(--gw-radius-16);
+  background: var(--gw-color-white);
+  color: var(--gw-color-black);
+  font: var(--gw-text-button-16);
+  text-decoration: none;
+  box-shadow: var(--gw-shadow-s3);
+  transition: box-shadow var(--gw-motion-fast);
+}
+.gw-login__google:hover { box-shadow: var(--gw-shadow-s4); }
+.gw-login__google:focus-visible {
+  outline: var(--gw-focus-ring);
+  outline-offset: var(--gw-focus-offset);
+}
+/* Both marks are drawn 18. Sized separately rather than by one descendant rule:
+   the G is four-colour brand artwork and the arrow inherits currentColor, so
+   they are unlike assets that happen to share a dimension. */
+.gw-login__g     { width: 18px; height: 18px; flex: none; display: block; }
+.gw-login__arrow { width: 18px; height: 18px; flex: none; display: block; }
+
+/* -- the password stopgap on this page -----------------------------------
+   488:21730 draws the finished Google-only card, so none of this is measured
+   off it. The field and the blue submit are lifted from the SAME node's
+   previous revision — a Neutral/50 well at 56/r8 and a Primary/500 button at
+   r12 — rather than inventing a second idiom for one temporary door. It all
+   disappears the moment SITE_PASSWORD is blanked, which README-auth.md §4
+   says to do once Google works. */
+.gw-login__or {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-space-12);
+  font: var(--gw-text-body-12-reg);
+  color: var(--s-group-label);
+}
+.gw-login__or::before, .gw-login__or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--s-card-border);
+}
+.gw-login__or[hidden], .gw-login__pw[hidden], .gw-login__google[hidden] { display: none; }
+
+.gw-login__pw {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gw-space-8);
+  text-align: left;
+}
+.gw-login__label {
+  font: var(--gw-text-body-12-sem);
+  letter-spacing: var(--gw-text-body-12-sem-tracking);
+  color: var(--s-nav-label);
+}
+/* --s-field-bg, not the drawn Neutral/50: in dark that token and the card both
+   land on Neutral/900 and the well vanishes into the card. This one is
+   Neutral/25 in light and black in dark, so it reads as an inset either way —
+   the same reason .gw-search uses it. */
+.gw-login__field {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 var(--gw-space-16);
+  border-radius: var(--gw-radius-8);
+  background: var(--s-field-bg);
+  overflow: hidden;
+}
+.gw-login__field:focus-within {
+  outline: var(--gw-focus-ring);
+  outline-offset: var(--gw-focus-offset);
+}
+.gw-login__input {
+  flex: 1 0 0;
+  min-width: 0;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: var(--gw-text-button-14);
+  color: var(--s-heading);
+}
+.gw-login__input:focus { outline: none; }
+.gw-login__input::placeholder { color: var(--s-placeholder); }
+
+.gw-login__err {
+  margin: 0;
+  font: var(--gw-text-body-12-reg);
+  color: var(--s-danger);
+}
+.gw-login__err[hidden] { display: none; }
+
+.gw-login__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gw-space-8);
+  width: 100%;
+  margin-top: var(--gw-space-4);
+  padding: var(--gw-space-16) var(--gw-space-20) var(--gw-space-16) var(--gw-space-24);
+  border: 0;
+  border-radius: var(--gw-radius-12);
+  background: var(--gw-color-primary-500);
+  color: var(--gw-color-white);
+  font: var(--gw-text-button-16);
+  cursor: pointer;
+  box-shadow: var(--gw-shadow-s3);
+}
+.gw-login__submit:hover { background: var(--gw-color-primary-600); }
+.gw-login__submit:disabled { opacity: .6; cursor: progress; }
+.gw-login__submit:focus-visible {
+  outline: var(--gw-focus-ring);
+  outline-offset: var(--gw-focus-offset);
+}
+
+.gw-login__note {
+  margin: 0;
+  text-align: center;
+  font: var(--gw-text-body-14-med);
+  letter-spacing: var(--gw-text-body-14-med-tracking);
+  color: var(--s-body);
+}
+
+/* ---------------------------------------------------------------------------
    7. Holding state for routes that have no design yet
    ------------------------------------------------------------------------ */
 .gw-soon {
@@ -961,17 +1207,41 @@
 
 .gw-shell {
   zoom: var(--gw-fit, 1);
-  /* Give the layout back the width the zoom took away, so the 1440 canvas
-     still fills the real viewport once scaled. */
-  width: calc(100vw / var(--gw-fit, 1));
+  /* The 1440 canvas has to fill the real viewport once scaled.
+
+     `100%`, NOT `100vw`. Two different reasons, and they happen to agree:
+
+     a) `100vw` counts the classic-scrollbar gutter and the content box does
+        not. Measured at 1512x950 with a 15px always-on scrollbar:
+        100vw = 1512 but documentElement.clientWidth = 1497, so the shell laid
+        out 15px wider than the space it had — the topbar ran under the
+        scrollbar and the page grew a phantom horizontal scrollbar of exactly
+        that 15px. A percentage resolves against the content box, so it never
+        counts the gutter. Under macOS overlay scrollbars the gutter is 0,
+        which is why this only showed up with "Show scroll bars: Always".
+
+     b) `zoom` already divides the containing block back out when it resolves
+        a percentage, so `100%` needs NO `/ var(--gw-fit)`. Dividing as well
+        double-compensates: measured at 1200 wide / fit .8333, `100% / fit`
+        computed 1706.4px and rendered 1422 against a 1185 content box —
+        237px of overflow. Plain `100%` renders exactly 1185.
+
+     Viewport units are absolute and are NOT divided back out, so anything
+     still written in vh below keeps its `/ var(--gw-fit)`. */
+  width: 100%;
   min-height: calc(100vh / var(--gw-fit, 1));
 }
 
 /* The chrome is fixed to the viewport. Inside a zoomed ancestor its own
-   offsets scale with everything else, which is what we want — but the width
-   has to be the unzoomed viewport divided back out, or the topbar stops short
-   of the right edge at any factor below 1. */
-.gw-shell .gw-topbar { width: calc(100vw / var(--gw-fit, 1)); }
+   offsets scale with everything else, which is what we want — but it still
+   needs an explicit width, or it stops short of the right edge below fit 1.
+
+   The base rule is `inset: 0 0 auto 0`, which already stops at the content
+   edge; an explicit width overrides that `right: 0` (over-constrained in LTR),
+   and the old `100vw` width is what pushed the bar under the scrollbar. `100%`
+   on a fixed element resolves against the viewport's content box — gutter
+   excluded — and, as above, zoom needs no division on a percentage. */
+.gw-shell .gw-topbar { width: 100%; }
 
 /* ---------------------------------------------------------------------------
    10. Phone — reflow, not scale
@@ -1060,6 +1330,12 @@
   .gw-navend { margin-top: auto; }
 
   .gw-main { margin-left: 0; }
+
+  /* The login card is a fixed 480 on desktop, which overflows a 375 phone.
+     max-width already reins the card in; these bring its padding onto the
+     phone token set so the copy is not pressed against the edges. */
+  .gw-login { padding: var(--gw-bp-pad-section-v) var(--gw-bp-pad-page-h); }
+  .gw-login__card { padding: var(--gw-space-32) var(--gw-space-20); }
 
   /* Page padding from the phone tokens: 16 sides, 60 vertical. */
   .gw-col {
