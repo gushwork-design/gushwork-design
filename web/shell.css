@@ -818,17 +818,41 @@
 
 .gw-shell {
   zoom: var(--gw-fit, 1);
-  /* Give the layout back the width the zoom took away, so the 1440 canvas
-     still fills the real viewport once scaled. */
-  width: calc(100vw / var(--gw-fit, 1));
+  /* The 1440 canvas has to fill the real viewport once scaled.
+
+     `100%`, NOT `100vw`. Two different reasons, and they happen to agree:
+
+     a) `100vw` counts the classic-scrollbar gutter and the content box does
+        not. Measured at 1512x950 with a 15px always-on scrollbar:
+        100vw = 1512 but documentElement.clientWidth = 1497, so the shell laid
+        out 15px wider than the space it had — the topbar ran UNDER the
+        scrollbar and the page grew a phantom horizontal scrollbar of exactly
+        that 15px. A percentage resolves against the content box, so it never
+        counts the gutter. Under macOS overlay scrollbars the gutter is 0,
+        which is why this only showed up with "Show scroll bars: Always".
+
+     b) `zoom` already divides the containing block back out when it resolves
+        a percentage, so `100%` needs NO `/ var(--gw-fit)`. Dividing as well
+        double-compensates: measured at 1200 wide / fit .8333, `100% / fit`
+        computed 1706.4px and rendered 1422 against a 1185 content box —
+        237px of overflow. Plain `100%` renders exactly 1185.
+
+     Viewport units are absolute and are NOT divided back out, so the vh below
+     keeps its `/ var(--gw-fit)`. */
+  width: 100%;
   min-height: calc(100vh / var(--gw-fit, 1));
 }
 
 /* The chrome is fixed to the viewport. Inside a zoomed ancestor its own
    offsets scale with everything else, which is what we want — but the width
-   has to be the unzoomed viewport divided back out, or the topbar stops short
-   of the right edge at any factor below 1. */
-.gw-shell .gw-topbar { width: calc(100vw / var(--gw-fit, 1)); }
+   needs an explicit width, or it stops short of the right edge below fit 1.
+
+   The base rule is `inset: 0 0 auto 0`, which already stops at the content
+   edge; an explicit width overrides that `right: 0` (over-constrained in LTR),
+   and the old `100vw` width is what pushed the bar under the scrollbar. `100%`
+   on a fixed element resolves against the viewport's content box — gutter
+   excluded — and, as above, zoom needs no division on a percentage. */
+.gw-shell .gw-topbar { width: 100%; }
 
 /* ---------------------------------------------------------------------------
    10. Phone — reflow, not scale
