@@ -154,41 +154,98 @@
             gap:var(--gw-space-16)}
 .sg-col__name{font:var(--gw-text-body-16-med);
               letter-spacing:var(--gw-text-body-16-med-tracking)}
-.sg-col__role,.sg-col__k{font:var(--gw-text-button-10);line-height:14px}
+.sg-col__role,.sg-col__k{font:var(--gw-text-button-10)}
+/* Row rhythm — measured off 478:15219 (FOR SCREENS) and 478:15230 (FOR PRINTS).
+   Every text node in those groups is 10 tall and they sit at y 0/18/36/54, so
+   the pitch is 18 = the token's own 10px line box + an 8 gap, which makes the
+   two groups exactly 64 and 46 tall and the blue card's specs block 134.
+
+   Two overrides had broken that and are now gone:
+     - <dl> keeps the UA's 1em block margin, and 1em here is the section's
+       inherited 18px prose size, not the 10px label — 18 above and 18 below
+       every row. Neither `dt{margin:0}` nor `dd{margin:0}` touches the <dl>.
+     - `line-height:14px` overrode --gw-text-button-10's own `10px/1`.
+   Measured together: a 58px row pitch against Figma's 18 (3.2x too loose) and
+   a 358px specs block against Figma's 134. */
 .sg-col__groups{display:flex;gap:var(--gw-space-40);flex-wrap:wrap}
+/* The tall blue card STACKS its two groups — 478:15218 puts FOR SCREENS at y0
+   (64 tall) and FOR PRINTS at y88, a 24 gap. White and black sit them side by
+   side. This was left to flex-wrap, which reused the 40 column gap as the row
+   gap and dropped FOR PRINTS 228px below FOR SCREENS. */
+.sg-col--tall .sg-col__groups{flex-direction:column;gap:var(--gw-space-24)}
+/* The three cards do NOT share one gap. Measured: white puts FOR PRINTS at
+   x=195 against a 155-wide FOR SCREENS (478:15245/15256) — a 40, which the
+   base rule above already gives. Black puts it at x=168 against a 144-wide
+   group (478:15269/15280) — a 24. Ruled by Utsav 2 Sep 2026: reproduce both
+   per card rather than unify, even though the two disagree. */
+.sg-col--black .sg-col__groups{gap:var(--gw-space-24)}
 .sg-col__grp{display:flex;flex-direction:column;gap:var(--gw-space-8)}
-.sg-col__row{display:flex;gap:var(--gw-space-20)}
-.sg-col__row dt{margin:0;min-width:52px;font:var(--gw-text-button-10);line-height:14px}
-.sg-col__row dd{margin:0;font:var(--gw-text-button-10);line-height:14px}
+.sg-col__row{display:flex;gap:var(--gw-space-20);margin:0}
+/* 60, not 52 — every row is a 60-wide label box with its value at x=80
+   (478:15221 and siblings), i.e. the 60 box plus the 20 gap. At 52 the values
+   landed at 72 and any label wider than 52 would have shunted its own value
+   out of the column. */
+.sg-col__row dt{margin:0;min-width:60px;font:var(--gw-text-button-10)}
+.sg-col__row dd{margin:0;font:var(--gw-text-button-10)}
+/* The row LABEL takes the same colour as its value — HEX reads as bright as
+   #0070FF. Ruled by Utsav 2 Sep 2026; Figma has the label on the dim tone
+   (Alpha/50-white on the dark cards, Neutral/400 on white), so the file and
+   this panel now differ on purpose. Only the group keys (FOR SCREENS / FOR
+   PRINTS) and the role chip (Primary / Neutral) stay dim. */
 .sg-col--blue{background:var(--gw-color-primary-500)}
-.sg-col--blue .sg-col__name,.sg-col--blue dd{color:var(--gw-color-white)}
-.sg-col--blue .sg-col__role,.sg-col--blue .sg-col__k,.sg-col--blue dt{
+.sg-col--blue .sg-col__name,.sg-col--blue dd,.sg-col--blue dt{
+  color:var(--gw-color-white)}
+.sg-col--blue .sg-col__role,.sg-col--blue .sg-col__k{
   color:var(--gw-color-neutral-alpha-50-white)}
 .sg-col--white{background:var(--gw-color-white)}
-.sg-col--white .sg-col__name,.sg-col--white dd{color:var(--gw-color-black)}
-.sg-col--white .sg-col__role,.sg-col--white .sg-col__k,.sg-col--white dt{
+.sg-col--white .sg-col__name,.sg-col--white dd,.sg-col--white dt{
+  color:var(--gw-color-black)}
+.sg-col--white .sg-col__role,.sg-col--white .sg-col__k{
   color:var(--gw-color-neutral-400)}
 .sg-col--black{background:var(--gw-color-black)}
-.sg-col--black .sg-col__name,.sg-col--black dd{color:var(--gw-color-white)}
-.sg-col--black .sg-col__role,.sg-col--black .sg-col__k,.sg-col--black dt{
+.sg-col--black .sg-col__name,.sg-col--black dd,.sg-col--black dt{
+  color:var(--gw-color-white)}
+.sg-col--black .sg-col__role,.sg-col--black .sg-col__k{
   color:var(--gw-color-neutral-alpha-50-white)}
 
 /* -- extended palette ----------------------------------------------------- */
+/* Composition read off 478:15292. Each group is a 226-wide hero column plus a
+   5x2 block of 100x100 tiles at gap 4 — columns sit at x 4/234/338/442/546/650
+   and rows at y 4/108, so 226 + 5x100 + 5x4 gaps. Radius/16 everywhere,
+   Spacing/12 inside a tile, Spacing/16 inside a hero: all bound variables on
+   478:15294 and 478:15301, not eyeballed. */
 .sg-ramp{padding:var(--gw-space-4);border-radius:var(--gw-radius-20);
          background:var(--s-card-bg);border:1px solid var(--s-specimen-border);
          display:flex;flex-direction:column;gap:var(--gw-space-12)}
-.sg-ramp__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-               gap:var(--gw-space-4)}
-.sg-swatch{border-radius:var(--gw-radius-8);padding:var(--gw-space-8);
-           min-height:56px;display:flex;flex-direction:column;
-           justify-content:flex-end;gap:2px;
+.sg-ramp__grid{display:grid;gap:var(--gw-space-4);
+               grid-template-columns:226px repeat(5,minmax(0,1fr));
+               grid-auto-rows:100px}
+.sg-swatch{border-radius:var(--gw-radius-16);padding:var(--gw-space-12);
+           display:flex;flex-direction:column;
            border:1px solid var(--s-specimen-border)}
-.sg-swatch b,.sg-swatch span{font:var(--gw-text-button-10);line-height:14px;
-                             font-weight:500}
-.sg-swatch--on-dark b,.sg-swatch--on-dark span{color:var(--gw-color-white)}
-.sg-swatch--on-dark span{color:var(--gw-color-neutral-alpha-60-white)}
-.sg-swatch--on-light b{color:var(--gw-color-black)}
-.sg-swatch--on-light span{color:var(--gw-color-neutral-600)}
+/* Primary tiles carry the label at the foot, Neutral tiles at the head — that
+   is how the two groups are drawn (label frames at y=60 in 478:15293 against
+   y=12 in 478:15341). The one neutral tile drawn at y=60 (478:15378) is
+   normalised to the head with its row; a lone dropped label reads as a bug. */
+.sg-ramp__grid--foot .sg-swatch{justify-content:flex-end}
+.sg-ramp__grid--head .sg-swatch{justify-content:flex-start}
+.sg-swatch__lbl,.sg-hero__lbl,.sg-hero__hd{display:flex;flex-direction:column;
+                                            gap:var(--gw-space-8)}
+.sg-hero{grid-column:1;border-radius:var(--gw-radius-16);
+         padding:var(--gw-space-16);display:flex;flex-direction:column;
+         justify-content:flex-end;border:1px solid var(--s-specimen-border)}
+/* the row itself is pinned inline by the builder; this stays so the phone
+   block below has something to reset. */
+.sg-hero--split{justify-content:space-between}
+.sg-hero__name{font:var(--gw-text-button-16)}
+/* label takes the value's colour, same ruling as the colour cards above */
+.sg-swatch b,.sg-swatch span,.sg-hero b,.sg-hero span{
+  font:var(--gw-text-button-10);display:block}
+.sg-hero__name{font:var(--gw-text-button-16)}
+.sg-on-dark,.sg-on-dark b,.sg-on-dark span{color:var(--gw-color-white)}
+.sg-on-light,.sg-on-light b,.sg-on-light span{color:var(--gw-color-black)}
+.sg-on-dark .sg-hero__role{color:var(--gw-color-neutral-alpha-50-white)}
+.sg-on-light .sg-hero__role{color:var(--gw-color-neutral-400)}
 
 /* -- typography specimens ------------------------------------------------- */
 .sg-type__label{display:flex;flex-direction:column;gap:var(--gw-space-8)}
@@ -206,39 +263,140 @@
         letter-spacing:var(--gw-text-body-16-med-tracking);color:var(--s-body)}
 
 /* -- spacing + radius scales ---------------------------------------------- */
-.sg-scale{padding:var(--gw-space-20);border-radius:var(--gw-radius-20);
+/* 80 top/bottom, 20 sides. The spacing specimen is one 400 card centred in a
+   760 container, so at an even 20 it sat with ~180 of air each side and 20
+   above — the asymmetry read as a mistake. Radius takes the same block padding
+   so the two specimens in this section stay siblings. */
+.sg-scale{padding:var(--gw-space-80) var(--gw-space-20);
+          border-radius:var(--gw-radius-20);justify-content:center;
           background:var(--s-specimen-bg);border:1px solid var(--s-specimen-border);
           display:flex;flex-wrap:wrap;gap:var(--gw-space-8)}
-/* Each chip: a Neutral/50 preview box over a white label strip (pad 6/8),
-   the geometry measured off the radius scale in the Figma. */
-.sg-chip{border-radius:var(--gw-radius-8);overflow:hidden;
+/* -- scale specimens: ONE box each, arrow-driven -------------------------- */
+/* 478:15418 draws only the two endpoints — Spacing/2 and Spacing/160 — floating
+   centred in a 760x240 frame, so one box moving between them is closer to the
+   drawing than the sixteen chips were. Ruled by Utsav 2 Sep 2026.
+
+   Card is 192 = 160 + the chip's 16/16 padding, so the largest step renders at
+   1:1 and exactly fills the preview; nothing is approximated. Height and label
+   strip stay on the drawn chip's 64 + 43 so it still reads as a sibling of the
+   radius chips below. Primary/400 is what 478:15419 binds its swatch to — the
+   old chips used Primary/500. */
+/* One specimen component, two scales. Card 400 (capped so it gives way inside
+   the 343 phone column), radius 16 — the same 20 -> 16 nesting the colour cards
+   use inside their own container.
+
+   The artwork is 1:1 with the token in both: the card grows by padding, never
+   by scaling the art, or the specimen would misreport the number it exists to
+   document. */
+.sg-spec{width:400px;max-width:100%;position:relative;
+         border-radius:var(--gw-radius-16);overflow:hidden;
          background:var(--s-card-bg);border:1px solid var(--s-specimen-border)}
-.sg-chip__prev{height:64px;min-width:76px;padding:var(--gw-space-16);
-               background:var(--s-chrome-bg);display:grid;place-items:center}
-.sg-chip__bar{background:var(--gw-color-primary-500);height:100%;
-              border-radius:var(--gw-radius-2)}
-.sg-chip__box{width:48px;height:32px;background:var(--gw-color-primary-500)}
-.sg-chip__lbl{padding:6px var(--gw-space-8);display:flex;flex-direction:column;gap:1px}
-.sg-chip__lbl b{font:700 12px/16px var(--gw-font-body);color:var(--s-heading)}
-.sg-chip__lbl span{font:400 10px/14px var(--gw-font-body);color:var(--s-body)}
+.sg-spec__stage{padding:var(--gw-space-24);background:var(--s-chrome-bg);
+                display:flex;align-items:center;justify-content:center}
+.sg-spec__stage--space{height:160px}
+/* 208 = a 160 square plus 24/24. 160 is the SMALLEST square that renders every
+   radius step truthfully, because a corner clamps at half the shorter side and
+   80 therefore needs 160. The chips this replaces were 48x32, clamping at 16:
+   steps 16 through 80 — seventeen of the twenty-two — all drew one shape. */
+.sg-spec__stage--radius{height:208px}
+/* 48 of stage padding, because --gw-shadow-card's 50px blur reaches ~25px past
+   the surface on every side and a clipped shadow is a wrong shadow. */
+.sg-spec__stage--elev{height:216px;padding:var(--gw-space-48)}
+/* spacing: the gap between the two dots IS the token */
+.sg-spec__gap{height:48px;flex:none;width:2px;
+              background:var(--gw-color-primary-400);
+              border-radius:var(--gw-radius-2);
+              transition:width 520ms cubic-bezier(.22,.61,.36,1)}
+/* The two `dot` ellipses of 478:15420 — round, 16x16, centred on the swatch as
+   drawn. Figma binds them to Primary/Alpha/10; at 10% over Neutral/50 the dot
+   does not survive rendering, and a dot you cannot see cannot show what the gap
+   is between, so this takes the next bound step up. */
+.sg-spec__mark{width:16px;height:16px;flex:none;border-radius:50%;
+               background:var(--gw-color-primary-alpha-40)}
+/* radius: the corner of one square IS the token */
+.sg-spec__box{width:160px;height:160px;flex:none;
+              background:var(--gw-color-primary-400);
+              transition:border-radius 520ms cubic-bezier(.22,.61,.36,1)}
+/* elevation: the shadow under one surface IS the token. White on the Neutral/50
+   stage — the same pairing the shadow cells used, and the one the shadows were
+   sampled against. */
+.sg-spec__card{width:240px;height:120px;flex:none;
+               background:var(--gw-color-white);
+               border-radius:var(--gw-radius-12);
+               transition:box-shadow 520ms cubic-bezier(.22,.61,.36,1)}
+/* control strip — arrows bottom left, the reading right */
+.sg-spec__ctl{padding:var(--gw-space-12) var(--gw-space-16);display:flex;
+              align-items:center;justify-content:space-between;
+              gap:var(--gw-space-16)}
+.sg-spec__nav{display:flex;gap:var(--gw-space-8)}
+/* same box as .gw-burger, so these read as page-native chrome */
+.sg-spec__btn{width:36px;height:36px;flex:none;padding:0;display:grid;
+              place-items:center;cursor:pointer;background:none;
+              border:1px solid var(--s-field-border);
+              border-radius:var(--gw-radius-8);color:var(--s-nav-label)}
+.sg-spec__btn svg{width:16px;height:16px;display:block}
+.sg-spec__btn:hover{background:var(--s-chrome-bg)}
+.sg-spec__btn:focus-visible{outline:var(--gw-focus-ring);
+                            outline-offset:var(--gw-focus-offset)}
+.sg-spec__lbl{display:flex;flex-direction:column;gap:1px;text-align:right}
+.sg-spec__lbl b{font:700 12px/16px var(--gw-font-body);color:var(--s-heading)}
+.sg-spec__lbl span{font:400 10px/14px var(--gw-font-body);color:var(--s-body)}
+/* shadow/button is two layers and wraps; reserve the second line always, or the
+   card jumps height as you step onto it. */
+.sg-spec__lbl--tall span{display:block;min-height:28px}
+.sg-spec__sr{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;
+             clip-path:inset(50%);white-space:nowrap}
+@media (prefers-reduced-motion: reduce){
+  .sg-spec__gap,.sg-spec__box,.sg-spec__card{transition:none}
+}
 
 /* -- elevation ------------------------------------------------------------ */
-.sg-elev{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gw-space-16)}
-.sg-elev__cell{background:var(--s-card-bg);border-radius:var(--gw-radius-12);
-               padding:var(--gw-space-20);min-height:96px;
-               display:flex;flex-direction:column;justify-content:flex-end;gap:2px}
-.sg-elev__cell b{font:700 12px/16px var(--gw-font-body);color:var(--s-heading)}
-.sg-elev__cell span{font:400 10px/14px var(--gw-font-body);color:var(--s-body)}
+/* -- visual elements ------------------------------------------------------ */
+/* The colourway card (478:15446) ships as an exported SVG. Three of its four
+   tiles are vector crops of much larger artworks — the OG union is 1200x675
+   windowed into 254 — and the fourth, the Primary tile, is a fill-based
+   construction with no vector layer to export at all. Rebuilding that one in
+   CSS would mean inventing its cell positions, so the whole card is exported
+   instead. Figma's canvas rect and page-background rect were stripped from it;
+   they sit behind the card and would paint a hard rectangle on any surface. */
+.sg-ve{display:block;width:100%;height:auto;border-radius:var(--gw-radius-20)}
+/* The shape studies (599:4385) ARE rebuilt, because the exported SVG handed over
+   exact geometry: card 760x386 at radius 20 in Neutral/100; both shapes 242 tall
+   from y=72 in Neutral/400; the left one 522 wide starting at x=-55, so it runs
+   off the card edge; the right one 211.75 at x=476.075. Corners are 15.125,
+   except the right shape's bottom-right, which sweeps at 136.125 — the curve
+   that echoes the mark. None of those sit on the radius scale: they are artwork
+   proportions, not UI radii, which is exactly why they are hard-coded here. */
+.sg-shapes{position:relative;overflow:hidden;height:386px;
+           border-radius:var(--gw-radius-20);
+           background:var(--gw-color-neutral-100)}
+.sg-shapes__a,.sg-shapes__b{position:absolute;top:72px;height:242px;
+                            background:var(--gw-color-neutral-400)}
+.sg-shapes__a{left:-55px;width:522px;border-radius:15.125px}
+.sg-shapes__b{left:476.075px;width:211.75px;
+              border-radius:15.125px 15.125px 136.125px 15.125px}
 
-/* -- the incomplete-section notice ---------------------------------------- */
-.sg-todo{padding:var(--gw-space-20);border-radius:var(--gw-radius-12);
-         background:var(--gw-color-primary-25);
-         border:1px solid var(--gw-color-primary-100)}
-.sg-todo p{font:var(--gw-text-body-14-reg);
-           letter-spacing:var(--gw-text-body-14-reg-tracking);
-           color:var(--gw-color-neutral-700)}
-:root[data-theme="dark"] .sg-todo{background:transparent;
-  border-color:var(--gw-color-primary-800)}
+/* -- the grid, as live CSS ------------------------------------------------- */
+/* The same grid the page hero wears, measured off 478:14833
+   `the-playbook-cover/default`: 40x40 cells, each a 1px Primary/600 stroke over
+   a Primary/500-main fill, inside a 2px Primary/600 edge at radius 20. Figma
+   draws it as 224 discrete cells; this is two repeating gradients, the identical
+   recipe shell.css uses for .gw-hero — one source for the pattern, not two. */
+.sg-pat{position:relative;overflow:hidden;height:240px;
+        border-radius:var(--gw-radius-20);
+        background:var(--gw-color-primary-500);
+        border:2px solid var(--gw-color-primary-600)}
+.sg-pat::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(to right, var(--gw-color-primary-600) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--gw-color-primary-600) 1px, transparent 1px);
+  background-size:40px 40px}
+/* Filled cells break the regularity. The hero's measured trio steps -40x/+40y
+   and lets the last one clip on the frame edge; these keep that relationship,
+   placed to suit a 240-tall frame rather than measured at these coordinates. */
+.sg-pat__cell{position:absolute;width:40px;height:40px;
+              background:var(--gw-color-primary-600);pointer-events:none}
+
 
 /* Specimen surfaces. Neutral/100 on a Neutral/25 page is the measured light
    pairing; in dark it would vanish against the chrome, so it steps to the
@@ -281,9 +439,14 @@
   .sg-colors{grid-template-columns:minmax(0,1fr)}
   .sg-col--tall{min-height:0}
   .sg-col__groups{gap:var(--gw-bp-content-gap)}
-  .sg-elev{grid-template-columns:minmax(0,1fr)}
+  /* the per-card rules above are more specific, so restate the bp gap */
+  .sg-col--tall .sg-col__groups,
+  .sg-col--black .sg-col__groups{gap:var(--gw-bp-content-gap)}
   .sg-type__display{font-size:var(--gw-bp-type-h1)}
-  .sg-ramp__grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+  /* the 226 hero + 5 tiles needs 746; at 343 content it becomes two columns
+     and the hero stops spanning. */
+  .sg-ramp__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sg-hero{grid-column:auto;grid-row:auto !important;min-height:100px}
 }
 </style>
 </head>
@@ -472,9 +635,12 @@
         <div class="sg-block">
           <div class="sg-head">
             <h3>Extended Palette</h3>
-            <p>Primary and Neutral run the full 25&ndash;900 scale. Every value below is
-               read from <code>foundation/tokens.css</code>, which is what the plugin
-               builds with — so this panel and the code cannot drift apart.</p>
+            <p>Every value here is read from <code>foundation/tokens.css</code>, which
+               is what the plugin builds with — so this panel and the code cannot drift
+               apart. It mirrors the Figma palette, which leaves
+               <code>Neutral/35</code>, <code>/250</code>, <code>/500</code> and
+               <code>/850</code> undrawn; those steps exist in the tokens all the
+               same.</p>
           </div>
           <div class="sg-ramp" id="ramp"></div>
         </div>
@@ -521,11 +687,13 @@
         <div class="sg-block">
           <h2>Spacing &amp; Radius</h2>
           <p>A consistent spacing scale brings rhythm and structure to layouts, ensuring
-             elements breathe and align predictably across every component.</p>
+             elements breathe and align predictably across every component.
+             <span data-range="space"></span></p>
           <div class="sg-scale" id="spacing-scale"></div>
           <p>Consistent corner rounding creates visual harmony across components,
-             softening edges to convey approachability and modern aesthetics. Keep the
-             spacing in multiple of 4px but the smallest is 2px (making it an exception).</p>
+             softening edges to convey approachability and modern aesthetics.
+             <span data-range="radius"></span> Every step is a multiple of 4 except
+             2px and 10px.</p>
           <div class="sg-scale" id="radius-scale"></div>
         </div>
       </section>
@@ -536,28 +704,60 @@
           <h2>Elevation</h2>
           <p>Shadows separate a surface from the one behind it. The ramp is short on
              purpose — s1 through s4 for stacking, plus two special cases.</p>
-          <div class="sg-card sg-card--pad">
-            <div class="sg-elev" id="elev-scale"></div>
-          </div>
-          <div class="sg-todo">
-            <p><strong>Note:</strong> the Elevation section in Figma has a title and a
-               placeholder card that repeats the Typography specimen, so there was no
-               design to build from. These six specimens are rendered from the real
-               <code>--gw-shadow-*</code> tokens instead of copying that placeholder.
-               Replace this once the section is designed.</p>
-          </div>
+          <!-- NOT DESIGNED IN FIGMA. 478:15440 is a title plus a placeholder card
+               that repeats the Typography specimen, so there was nothing to build
+               from. This specimen is driven by the real --gw-shadow-* tokens
+               instead of copying that placeholder. Revisit if the section is
+               ever drawn. -->
+          <div class="sg-scale" id="elev-scale"></div>
         </div>
       </section>
 
-      <!-- PATTERNS (Frame 2147260252) -->
-      <section class="sg-sec" id="patterns">
+      <!-- VISUAL ELEMENTS (Frame 2147260252) -->
+      <section class="sg-sec" id="visual-elements">
         <div class="sg-block">
-          <h2>Patterns</h2>
-          <div class="sg-todo">
-            <p><strong>Not designed yet.</strong> The Patterns section in Figma is a title
-               plus two cards that repeat the Typography specimen and its copy verbatim —
-               it is a placeholder, not a design. Nothing has been invented here. Tell me
-               what patterns belong in it and it gets built.</p>
+          <h2>Visual elements</h2>
+          <!-- Renamed from "Patterns": 478:15445 is now titled "Visual elements" and the
+               section holds four crops of the grid in different colourways plus two shape
+               studies. Only the Primary colourway is built here, as the page hero's grid.
+               The other three (Flat Black, Neutral/25, white) and the two shape frames
+               (599:4387, 599:4421) are drawn but not implemented.
+               PITCH IS PER-CANVAS, not a token: .gw-hero runs 40, and
+               assets/og/pattern.svg runs ~111.22 with a radial grey-to-black fade on the
+               stroke at 0.4 opacity — which is why that one ships as an exported vector
+               rather than as CSS, per assets/og/_source.html. -->
+          <!-- The Neutral/25 tile carries a cursor in Figma (596:4374) that is NOT in
+               this export and cannot be: it is a Figma WIDGET, not a vector layer, so
+               the exporter has nothing to emit for it. If the cursor is meant to be
+               part of the artwork it needs redrawing as a vector. -->
+          <img class="sg-ve" src="/assets/visual-elements/grid-colourways.svg"
+               width="760" height="480" alt="The grid in four colourways: Flat Black,
+               Primary blue with cells stacked into rising columns, Neutral/25, and
+               near-white.">
+          <p>The grid is the brand&rsquo;s visual element, and it runs in four
+             colourways &mdash; Flat Black, Primary, Neutral/25 and near-white. The
+             construction holds everywhere: square cells, a one-pixel line, a few cells
+             filled to break the regularity. The pitch does not: it is set per surface,
+             so the page hero runs 40px cells in Primary/600 while the OG card runs
+             roughly 111px cells whose line carries a radial grey-to-black fade &mdash;
+             which is why that one ships as an exported vector rather than CSS. The
+             filled cells carry the meaning: step them diagonally for movement, or
+             stack them into rising columns for growth.</p>
+          <div class="sg-shapes">
+            <span class="sg-shapes__a"></span>
+            <span class="sg-shapes__b"></span>
+          </div>
+          <p>The shape studies pair a plain rounded slab with one whose bottom-right
+             corner sweeps open at 136px against 15px elsewhere &mdash; the mark&rsquo;s
+             curve, abstracted. Both run in Neutral/400, and the left slab deliberately
+             bleeds off its frame. Use them as crops that run past the edge, never
+             centred and complete.</p>
+          <p>Below is the Primary colourway as live CSS rather than artwork &mdash; the
+             same two-gradient recipe the page hero wears, at its real 40px pitch.</p>
+          <div class="sg-pat">
+            <span class="sg-pat__cell" style="left:560px;top:40px"></span>
+            <span class="sg-pat__cell" style="left:520px;top:80px"></span>
+            <span class="sg-pat__cell" style="left:640px;top:200px"></span>
           </div>
         </div>
       </section>
@@ -582,7 +782,7 @@
       <a href="#typography">Typography</a>
       <a href="#spacing-radius">Spacing &amp; Radius</a>
       <a href="#elevation">Elevation</a>
-      <a href="#patterns">Patterns</a>
+      <a href="#visual-elements">Visual elements</a>
     </div>
   </nav>
 </div>
@@ -596,67 +796,246 @@
   function tok(n) { return root.getPropertyValue(n).trim(); }
 
   /* -- extended palette ---------------------------------------------------- */
+  /* Names and hexes come from tokens.css, NOT from the labels typed into the
+     Figma tiles. Those labels are stale, and the file itself proves it: the
+     tile reading "Primary-50 / #F2F8FF" (478:15301) has its fill bound to the
+     variable Colors/Primary/25, and the one reading "Primary-900 / #003475"
+     (478:15378) is bound to Colors/Neutral/900. The panel also contradicts
+     itself, calling #0070FF "Primary/500-main" on the hero while calling
+     #338CFF "Primary-500" on a tile. Ruled by Utsav 2 Sep 2026: tokens.css is
+     the source of truth and the Figma panel needs re-labelling. */
   var RAMPS = [
-    { name: 'Primary', steps: ['25','50','100','200','300','400','500','600','700','800','900'] },
-    { name: 'Neutral', steps: ['white','25','35','50','100','200','250','300','400','500','600','700','800','850','900','black'] }
+    { name: 'Primary', labels: 'foot',
+      heroes: [{ step: '500', title: 'Brandeis Blue', role: 'Primary',
+                 name: 'Primary/500-main', tall: true, onDark: true }],
+      top:    ['25','50','100','200','300'],
+      bottom: ['900','800','700','600','400'] },
+    { name: 'Neutral', labels: 'head',
+      heroes: [{ step: 'white', name: 'neutral/white' },
+               { step: 'black', name: 'neutral/black' }],
+      top:    ['25','50','100','200','300'],
+      bottom: ['900','800','700','600','400'] }
   ];
-  /* Which steps need white text on them. Below these the fill is dark. */
-  var DARK_FROM = { Primary: 500, Neutral: 500 };
+  /* White text from 600 up, NOT from 400 as drawn. Measured on the built grid,
+     white on the 400/500 fills fails WCAG AA for 10px text: Neutral/400
+     (#959BA4) came out 2.8:1 — under even the 3:1 large-text floor —
+     Primary/400 3.31:1 and Neutral/500 3.41:1. Black takes the same three to
+     7.5, 6.3 and 6.2:1. Ruled by Utsav 2 Sep 2026: fix the contrast and let
+     the guide differ from the drawing on those tiles, since treatments get
+     copied out of this page. The Brandeis Blue hero keeps white by brand
+     convention (4.41:1), same as the colour card above it. */
+  var DARK_FROM = 600;
+
+  function rampVar(name, step) {
+    return (step === 'white' || step === 'black')
+      ? '--gw-color-' + step
+      : '--gw-color-' + name.toLowerCase() + '-' + step;
+  }
+  function tone(step) {
+    if (step === 'black') return 'sg-on-dark';
+    if (step === 'white') return 'sg-on-light';
+    var n = parseInt(step, 10);
+    return (!isNaN(n) && n >= DARK_FROM) ? 'sg-on-dark' : 'sg-on-light';
+  }
+  function swatch(name, step) {
+    var hex = tok(rampVar(name, step));
+    if (!hex) return null;
+    var el = document.createElement('div');
+    el.className = 'sg-swatch ' + tone(step);
+    el.style.background = hex;
+    el.innerHTML = '<div class="sg-swatch__lbl"><b>' + name + '/' + step +
+                   '</b><span>' + hex.toUpperCase() + '</span></div>';
+    return el;
+  }
+
   var ramp = document.getElementById('ramp');
   RAMPS.forEach(function (r) {
     var grid = document.createElement('div');
-    grid.className = 'sg-ramp__grid';
-    r.steps.forEach(function (s) {
-      var varName = '--gw-color-' + r.name.toLowerCase() + '-' + s;
-      if (s === 'white' || s === 'black') varName = '--gw-color-' + s;
-      var hex = tok(varName);
+    grid.className = 'sg-ramp__grid sg-ramp__grid--' + r.labels;
+
+    r.heroes.forEach(function (h, i) {
+      var hex = tok(rampVar(r.name, h.step));
       if (!hex) return;
-      var num = parseInt(s, 10);
-      var onDark = s === 'black' || (!isNaN(num) && num >= DARK_FROM[r.name]);
       var el = document.createElement('div');
-      el.className = 'sg-swatch ' + (onDark ? 'sg-swatch--on-dark' : 'sg-swatch--on-light');
+      el.className = 'sg-hero ' + (h.onDark ? 'sg-on-dark' : tone(h.step)) +
+                     (h.tall ? ' sg-hero--tall' : '') +
+                     (h.title ? ' sg-hero--split' : '');
+      /* Pin the row. A hero with a definite column but an auto row still
+         advances the auto-placement cursor, so the two Neutral heroes pushed
+         every tile down a row and left row 1 empty from column 2 on. */
+      el.style.gridRow = h.tall ? '1 / span 2' : String(i + 1);
       el.style.background = hex;
-      el.innerHTML = '<b>' + r.name + '/' + s + '</b><span>' + hex.toUpperCase() + '</span>';
+      el.innerHTML =
+        (h.title
+          ? '<div class="sg-hero__hd"><b class="sg-hero__name">' + h.title +
+            '</b><span class="sg-hero__role">' + h.role + '</span></div>'
+          : '') +
+        '<div class="sg-hero__lbl"><b>' + h.name + '</b>' +
+        '<span>' + hex.toUpperCase() + '</span></div>';
       grid.appendChild(el);
+    });
+
+    r.top.concat(r.bottom).forEach(function (step) {
+      var el = swatch(r.name, step);
+      if (el) grid.appendChild(el);
     });
     ramp.appendChild(grid);
   });
 
-  /* -- spacing scale ------------------------------------------------------- */
+  /* -- scale specimens: one box each, arrow-driven ------------------------- */
   var SPACE = [2,4,8,12,16,20,24,32,40,48,56,60,80,100,120,160];
-  var sp = document.getElementById('spacing-scale');
-  SPACE.forEach(function (n) {
-    var d = document.createElement('div');
-    d.className = 'sg-chip';
-    d.innerHTML =
-      '<div class="sg-chip__prev" style="min-width:' + Math.max(76, n + 32) + 'px">' +
-        '<div class="sg-chip__bar" style="width:' + n + 'px"></div></div>' +
-      '<div class="sg-chip__lbl"><b>Spacing/' + n + '</b><span>' + n + 'px</span></div>';
-    sp.appendChild(d);
-  });
-
-  /* -- radius scale -------------------------------------------------------- */
   var RADII = [2,4,8,10,12,16,20,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80];
-  var rd = document.getElementById('radius-scale');
-  RADII.forEach(function (n) {
-    var d = document.createElement('div');
-    d.className = 'sg-chip';
-    d.innerHTML =
-      '<div class="sg-chip__prev">' +
-        '<div class="sg-chip__box" style="border-radius:' + n + 'px"></div></div>' +
-      '<div class="sg-chip__lbl"><b>Radius/' + n + '</b><span>' + n + 'px</span></div>';
-    rd.appendChild(d);
+
+  function chevron(dir) {
+    return '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="' +
+      (dir < 0 ? 'M10 3.5 5.5 8l4.5 4.5' : 'M6 3.5 10.5 8 6 12.5') +
+      '" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" ' +
+      'stroke-linejoin="round"/></svg>';
+  }
+
+  /* cfg: mount, token, noun, kind, values, art, apply */
+  function buildSpecimen(cfg) {
+    var mount = document.getElementById(cfg.mount);
+    if (!mount) return;
+    var last = cfg.values[cfg.values.length - 1];
+    /* Numeric scales can label themselves. Elevation cannot — a shadow's name
+       and its value are not derivable from one another — so it passes its own. */
+    var label = cfg.label || function (v) {
+      return { name: cfg.token + '/' + v, detail: v + 'px' };
+    };
+    var sr = cfg.sr || (cfg.token + ' scale, ' + cfg.values.length +
+      ' steps from ' + cfg.values[0] + ' to ' + last + ' pixels: ' +
+      cfg.values.join(', ') + '.');
+
+    var card = document.createElement('div');
+    card.className = 'sg-spec';
+    /* No role="img" on the card — that would make the buttons presentational
+       and unreachable. Only the stage is decorative. The scale is also written
+       out once, hidden, so it stays readable in full rather than one step at a
+       time, which is what the grid of chips used to give for free. */
+    card.innerHTML =
+      '<div class="sg-spec__stage sg-spec__stage--' + cfg.kind + '" aria-hidden="true">' +
+        cfg.art +
+      '</div>' +
+      '<div class="sg-spec__ctl">' +
+        '<div class="sg-spec__nav">' +
+          '<button type="button" class="sg-spec__btn" data-step="-1" ' +
+                  'aria-label="Previous ' + cfg.noun + ' step">' + chevron(-1) + '</button>' +
+          '<button type="button" class="sg-spec__btn" data-step="1" ' +
+                  'aria-label="Next ' + cfg.noun + ' step">' + chevron(1) + '</button>' +
+        '</div>' +
+        '<div class="sg-spec__lbl' + (cfg.tall ? ' sg-spec__lbl--tall' : '') +
+             '"><b></b><span></span></div>' +
+      '</div>' +
+      '<p class="sg-spec__sr">' + sr + '</p>';
+    mount.appendChild(card);
+
+    var art   = card.querySelector('[data-art]');
+    var lbl   = card.querySelector('.sg-spec__lbl');
+    var bName = lbl.querySelector('b');
+    var bPx   = lbl.querySelector('span');
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var at = 0, timer = null, held = false, manual = false;
+
+    function show(v) {
+      cfg.apply(art, v);
+      var read = label(v);
+      bName.textContent = read.name;
+      bPx.textContent = read.detail;
+    }
+    function go(d) {
+      at = (at + d + cfg.values.length) % cfg.values.length;   /* wraps both ways */
+      show(cfg.values[at]);
+    }
+    function halt() { if (timer) { clearInterval(timer); timer = null; } }
+    function run() {
+      if (timer || manual || still.matches) return;
+      timer = setInterval(function () { if (!held) go(1); }, 900);
+    }
+    /* First arrow press hands control over for good — a box that keeps moving
+       under someone who just took the wheel is hostile. From then on the
+       reading is announced, which would have been a loop while it autoplayed. */
+    function takeOver() {
+      if (manual) return;
+      manual = true;
+      halt();
+      lbl.setAttribute('aria-live', 'polite');
+    }
+
+    card.querySelectorAll('.sg-spec__btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        takeOver();
+        go(parseInt(b.getAttribute('data-step'), 10));
+      });
+    });
+    /* Arrow keys work wherever focus sits inside the specimen. */
+    card.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowRight' ? 1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      takeOver();
+      go(d);
+    });
+
+    if (still.matches) {
+      /* No travel. Hold at the top of the scale; the arrows still step. */
+      at = cfg.values.length - 1;
+      show(last);
+    } else {
+      show(cfg.values[0]);
+      card.addEventListener('mouseenter', function () { held = true; });
+      card.addEventListener('mouseleave', function () { held = false; });
+      if (window.IntersectionObserver) {
+        new IntersectionObserver(function (entries) {
+          if (entries[0].isIntersecting) { run(); } else { halt(); }
+        }, { threshold: 0.2 }).observe(card);
+      } else {
+        run();
+      }
+    }
+    if (still.addEventListener) {
+      still.addEventListener('change', function (e) {
+        if (e.matches) { halt(); } else { run(); }
+      });
+    }
+  }
+
+  buildSpecimen({
+    mount: 'spacing-scale', token: 'Spacing', noun: 'spacing', kind: 'space',
+    values: SPACE,
+    art: '<span class="sg-spec__mark"></span>' +
+         '<span class="sg-spec__gap" data-art></span>' +
+         '<span class="sg-spec__mark"></span>',
+    apply: function (el, n) { el.style.width = n + 'px'; }
+  });
+  buildSpecimen({
+    mount: 'radius-scale', token: 'Radius', noun: 'radius', kind: 'radius',
+    values: RADII,
+    art: '<span class="sg-spec__box" data-art></span>',
+    apply: function (el, n) { el.style.borderRadius = n + 'px'; }
   });
 
-  /* -- elevation ----------------------------------------------------------- */
-  ['s1','s2','s3','s4','card','button'].forEach(function (k) {
-    var v = tok('--gw-shadow-' + k);
-    if (!v) return;
-    var d = document.createElement('div');
-    d.className = 'sg-elev__cell';
-    d.style.boxShadow = v;
-    d.innerHTML = '<b>shadow/' + k + '</b><span>' + v + '</span>';
-    document.getElementById('elev-scale').appendChild(d);
+  /* -- ranges in the prose ------------------------------------------------- */
+  /* Written from the same arrays that build the scales, so the sentence cannot
+     claim a range the panel under it does not show. Matters more than usual for
+     spacing, where the specimen is one box showing a single step at a time. */
+  [['space', SPACE], ['radius', RADII]].forEach(function (pair) {
+    var slot = document.querySelector('[data-range="' + pair[0] + '"]');
+    if (!slot) return;
+    var v = pair[1];
+    slot.textContent = v.length + ' steps, from ' + v[0] + 'px to ' +
+                       v[v.length - 1] + 'px.';
+  });
+
+  buildSpecimen({
+    mount: 'elev-scale', token: 'shadow', noun: 'elevation', kind: 'elev',
+    values: ['s1', 's2', 's3', 's4', 'card', 'button'], tall: true,
+    art: '<span class="sg-spec__card" data-art></span>',
+    label: function (k) {
+      return { name: 'shadow/' + k, detail: tok('--gw-shadow-' + k) };
+    },
+    sr: 'Elevation scale, 6 steps: s1, s2, s3, s4, card, button.',
+    apply: function (el, k) { el.style.boxShadow = tok('--gw-shadow-' + k); }
   });
 
   /* -- logo treatment tabs -------------------------------------------------- */
