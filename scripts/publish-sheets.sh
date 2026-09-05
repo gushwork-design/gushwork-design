@@ -174,6 +174,12 @@ v, n = d["version"], len(d["components"])
 print(f"  version.json -> v{v}, {n} components")
 VJ
 
+# search-index.json — what the topbar's palette searches. Built from the STAGED copies, after
+# the shell has been injected and the sheets renamed to their routes, so every result links to
+# a URL that exists on this deploy. Building it from the repo instead would index files whose
+# routes do not exist, miss the renames, and drift the first time a route changed.
+python3 scripts/_search_index.py "$STAGE" > "$STAGE/search-index.json"
+
 cp foundation/tokens.css "$STAGE/foundation/"
 cp fonts/*.ttf "$STAGE/fonts/"
 

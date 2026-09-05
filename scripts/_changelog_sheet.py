@@ -137,18 +137,36 @@ def session_cell(raw):
 # ── page ──────────────────────────────────────────────────────────────────────────────
 CSS = """
   /* LIGHT THEME ONLY, by instruction — there is no prefers-color-scheme block below.
-     Every value is a token. Lines marked ADDED are new rules, not new values. */
+     Every value is a token. Lines marked ADDED are new rules, not new values.
+
+     TYPE. Follows the site type scale — see web/shell.css section 1b, which is the
+     contract. This sheet had drifted off it: body at 14/reg and the lede at 16/reg while
+     the styleguide and install page read at 18/med, so the page people read most was set
+     two steps smaller and a weight lighter than the rest of the site.
+
+     THEMING. Colours are `var(--s-x, <the light token>)`. Served inside the shell, --s-*
+     supplies light and dark; opened straight out of preview/ with no shell, the fallback
+     resolves and the sheet is light — which is all it ever was.
+
+     It was NOT all it ever was on the deploy. This sheet had no theming at all: 43 raw
+     colour tokens and no dark handling, while the shell it is served in has a dark toggle.
+     In dark the h1 rendered neutral-900 on the shell's near-black page — a luminance gap of
+     ZERO, an invisible title — and every release title sat at 28. The page was unreadable
+     and nothing said so, because the sheet renders perfectly on its own.
+
+     Muted greys (neutral-300..500) and the brand blue are left raw on purpose: they read on
+     either ground, and routing them through semantics would flatten them into body text. */
   *,*::before,*::after{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;background:var(--gw-color-white);
-       font:var(--gw-text-body-14-reg);letter-spacing:var(--gw-text-body-14-reg-tracking);
-       color:var(--gw-color-neutral-900);-webkit-font-smoothing:antialiased}
+  body{margin:0;background:var(--s-page-bg, var(--gw-color-white));
+       font:var(--gw-text-body-18-med);letter-spacing:var(--gw-text-body-18-med-tracking);
+       color:var(--s-heading, var(--gw-color-neutral-900));-webkit-font-smoothing:antialiased}
   /* Two families only — the browser's default <code> face would be a third. Size and
      line-height are INHERITED rather than set: binding a 14px token here made every chip
      render small inside the 16px lede and knocked the line off its baseline. Weight and
      family are the only type properties a chip owns. */
-  code{font-family:var(--gw-font-body);font-weight:500;color:var(--gw-color-neutral-900);
-       background:var(--gw-color-neutral-35);border-radius:var(--gw-radius-4);
+  code{font-family:var(--gw-font-body);font-weight:500;color:var(--s-heading, var(--gw-color-neutral-900));
+       background:var(--s-chrome-bg, var(--gw-color-neutral-35));border-radius:var(--gw-radius-4);
        padding:0 var(--gw-space-4)}
 
   /* Column split measured off the styleguide page (478:15070 → Frame
@@ -177,6 +195,7 @@ CSS = """
      split it ran the rule 1120 wide, straight under the TOC. The measured
      line (478:15076) is 800: the main column, and nothing past the gutter. */
   .hd{grid-column:1;grid-row:1;
+      display:flex;flex-direction:column;gap:var(--gw-space-20);
       padding:0 var(--gw-space-40) var(--gw-space-32);
       /* DOTTED, not solid. Line 14 (478:15076) measures strokeWeight 2,
          strokeCap ROUND, dashPattern [0.1, 4] — a zero-length dash with a
@@ -185,7 +204,7 @@ CSS = """
          The style guide carries the same rule; change both together. */
       border-bottom:0;
       background-image:radial-gradient(circle closest-side,
-                       var(--gw-color-neutral-200) 100%, transparent 100%);
+                       var(--s-card-border, var(--gw-color-neutral-200)) 100%, transparent 100%);
       background-size:4.1px 2px;
       background-position:left bottom;
       background-repeat:repeat-x}
@@ -202,15 +221,15 @@ CSS = """
      gap holds them together, and flex-start lets the pair sit as one unit. h1 drops its
      margin so the two align on their centres rather than around the heading's spacing. */
   .hd__top{display:flex;align-items:center;gap:var(--gw-space-20);
-           flex-wrap:wrap;margin-bottom:var(--gw-space-20)}
+           flex-wrap:wrap}
   /* Styleguide page title, measured: Vert Grotesk Display Semibold 44/120%,
      ls 0, Neutral/black. No text style is bound in Figma, and --gw-text-h3 is
      the wrong weight (700), so the ramp is spelled out. */
   h1{margin:0;font:600 44px/1.2 var(--gw-font-display);
-     letter-spacing:0;color:var(--gw-color-black)}
+     letter-spacing:0;color:var(--s-heading, var(--gw-color-black))}
   /* The styleguide's "Last updated" line: Body/body-14-med, Neutral/400,
      sitting 20 under the title. */
-  .hd__meta{margin:0 0 var(--gw-space-20);font:var(--gw-text-body-14-med);
+  .hd__meta{margin:0;font:var(--gw-text-body-14-med);
             letter-spacing:var(--gw-text-body-14-med-tracking);
             color:var(--gw-color-neutral-400)}
   /* This is the library `badge`, not a lookalike: set 1582:628 at
@@ -230,29 +249,27 @@ CSS = """
   /* One sentence saying what this is, then the housekeeping as separate lines. They were
      one dense paragraph and nobody reads a description that also explains its own
      derivation. */
-  .lede{margin:0;max-width:64ch;font:var(--gw-text-body-16-reg);
-        letter-spacing:var(--gw-text-body-16-reg-tracking);color:var(--gw-color-neutral-600)}
-  .hd__note{margin:var(--gw-space-16) 0 0;max-width:72ch;
-            font:var(--gw-text-body-14-reg);
-            letter-spacing:var(--gw-text-body-14-reg-tracking);
-            color:var(--gw-color-neutral-600)}
-  .facts{margin-top:var(--gw-space-20);display:flex;flex-wrap:wrap;
-         gap:var(--gw-space-8) var(--gw-space-24)}
-  .fact{display:flex;align-items:baseline;gap:var(--gw-space-8)}
-  .fact__l{font:500 10px/1.6 var(--gw-font-body);text-transform:uppercase;
-           color:var(--gw-color-neutral-500)}
-  .fact__v{font:var(--gw-text-body-14-sem);color:var(--gw-color-neutral-900);
-           font-variant-numeric:tabular-nums}
+  .lede{margin:0;max-width:64ch;font:var(--gw-text-body-18-med);
+        letter-spacing:var(--gw-text-body-18-med-tracking);color:var(--s-body, var(--gw-color-neutral-600))}
+  .hd__note{margin:0;max-width:72ch;
+            font:var(--gw-text-body-14-med);
+            letter-spacing:var(--gw-text-body-14-med-tracking);
+            color:var(--s-body, var(--gw-color-neutral-600))}
 
   /* ── release list ── */
   .rel{display:grid;grid-template-columns:152px minmax(0,1fr);gap:var(--gw-space-40);
-       padding:var(--gw-space-32) 0;scroll-margin-top:var(--gw-space-24)}
-  .rel + .rel{border-top:1px solid var(--gw-color-neutral-50)}
+       padding:0 var(--gw-space-40) var(--gw-space-32);
+       scroll-margin-top:var(--gw-space-24)}
+  /* Top padding travels WITH the border, because it exists to sit below one. On .rel it left
+     the first release padded away from the header rule with nothing in between — 64px from
+     the rule to the first title where the styleguide has 20. */
+  .rel + .rel{border-top:1px solid var(--s-card-border, var(--gw-color-neutral-50));
+              padding-top:var(--gw-space-32)}
   .rail{display:flex;flex-direction:column;align-items:flex-start;gap:var(--gw-space-4)}
   .pill{display:inline-flex;align-items:center;padding:var(--gw-space-4) var(--gw-space-8);
         border-radius:var(--gw-radius-4);font:var(--gw-text-body-12-med);
-        font-variant-numeric:tabular-nums;background:var(--gw-color-neutral-50);
-        color:var(--gw-color-neutral-900);white-space:nowrap;margin-bottom:var(--gw-space-4)}
+        font-variant-numeric:tabular-nums;background:var(--s-chrome-bg, var(--gw-color-neutral-50));
+        color:var(--s-heading, var(--gw-color-neutral-900));white-space:nowrap;margin-bottom:var(--gw-space-4)}
   /* ADDED: a primary pill. New rule, no new colour — the primary-alpha-10 /
      primary-500 pairing the section icon tile already uses. */
   .pill--now{background:var(--gw-color-primary-alpha-10);color:var(--gw-color-primary-500)}
@@ -261,18 +278,18 @@ CSS = """
   .tag{margin-top:var(--gw-space-4);font:500 10px/1.6 var(--gw-font-body);
        text-transform:uppercase;color:var(--gw-color-neutral-400)}
 
-  .body__sum{margin:0;font:var(--gw-text-body-18-med);
-             letter-spacing:var(--gw-text-body-18-med-tracking);
-             color:var(--gw-color-neutral-900);max-width:64ch}
-  .prose{margin-top:var(--gw-space-12);color:var(--gw-color-neutral-600)}
-  .prose p{margin:0 0 var(--gw-space-8);font:var(--gw-text-body-14-reg);
-           letter-spacing:var(--gw-text-body-14-reg-tracking);max-width:72ch}
+  .body__sum{margin:0;font:var(--gw-text-body-18-sem);
+             letter-spacing:var(--gw-text-body-18-sem-tracking);
+             color:var(--s-heading, var(--gw-color-neutral-900));max-width:64ch}
+  .prose{margin-top:var(--gw-space-12);color:var(--s-body, var(--gw-color-neutral-600))}
+  .prose p{margin:0 0 var(--gw-space-8);font:var(--gw-text-body-18-med);
+           letter-spacing:var(--gw-text-body-18-med-tracking);max-width:72ch}
   .prose ul{margin:0 0 var(--gw-space-8);padding-left:var(--gw-space-20);max-width:72ch}
-  .prose li{margin-bottom:var(--gw-space-4);font:var(--gw-text-body-14-reg);
-            letter-spacing:var(--gw-text-body-14-reg-tracking)}
+  .prose li{margin-bottom:var(--gw-space-4);font:var(--gw-text-body-18-med);
+            letter-spacing:var(--gw-text-body-18-med-tracking)}
   .prose li::marker{color:var(--gw-color-neutral-300)}
   .prose > :last-child{margin-bottom:0}
-  .prose strong{font-weight:600;color:var(--gw-color-neutral-800)}
+  .prose strong{font-weight:600;color:var(--s-heading, var(--gw-color-neutral-800))}
 
   /* disclosure — bodies run past twenty lines, so only the lede is open by default.
      The caret follows the label and points DOWN at rest, flipping to up when open:
@@ -321,17 +338,19 @@ CSS = """
        display:flex;flex-direction:column;gap:var(--gw-space-16)}
   .idx__t{display:flex;align-items:center;gap:var(--gw-space-8);
           font:var(--gw-text-button-14);letter-spacing:0;
-          color:var(--gw-color-neutral-900);
+          color:var(--s-heading, var(--gw-color-neutral-900));
           padding-bottom:var(--gw-space-8);
-          position:sticky;top:0;z-index:1;background:var(--gw-color-white)}
+          /* PAGE bg, not card: this is a sticky mask over the scrolling list, so it has to
+             be the colour it sits on. --s-card-bg is white, which showed as a slab. */
+          position:sticky;top:0;z-index:1;background:var(--s-page-bg, var(--gw-color-white))}
   .idx__ico{width:16px;height:16px;flex:none;display:block}
   /* The caret button, measured 22x22 with 4 padding around a 12px glyph. It
      collapses the rail; the styleguide draws it, so it is drawn here. */
   .idx__col{width:22px;height:22px;flex:none;display:grid;place-items:center;
             padding:var(--gw-space-4);border-radius:var(--gw-radius-8);
-            background:var(--gw-color-neutral-100);
-            border:1px solid var(--gw-color-neutral-200);
-            color:var(--gw-color-neutral-800);cursor:pointer}
+            background:var(--s-lock-bg, var(--gw-color-neutral-100));
+            border:1px solid var(--s-card-border, var(--gw-color-neutral-200));
+            color:var(--s-heading, var(--gw-color-neutral-800));cursor:pointer}
   .idx__col svg{width:12px;height:12px;display:block;
                 transition:transform var(--gw-motion-fast)}
   .idx__col:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
@@ -340,8 +359,8 @@ CSS = """
              padding-left:var(--gw-space-32)}
   .idx a{font:var(--gw-text-button-14);letter-spacing:0;
          font-variant-numeric:tabular-nums;
-         color:var(--gw-color-neutral-700);text-decoration:none}
-  .idx a:hover{color:var(--gw-color-neutral-900)}
+         color:var(--s-body, var(--gw-color-neutral-700));text-decoration:none}
+  .idx a:hover{color:var(--s-nav-label, var(--gw-color-neutral-900))}
   .idx a:focus-visible{outline:var(--gw-focus-ring);outline-offset:var(--gw-focus-offset)}
   /* The release currently at the top of the page. The styleguide marks its
      active entry with colour alone — Primary/500-main, no tint, no weight
@@ -361,7 +380,7 @@ CSS = """
   .idx[data-collapsed="true"] .idx__t{
     width:48px;height:26px;padding:var(--gw-space-4);
     gap:var(--gw-space-8);justify-content:center;
-    border-radius:var(--gw-radius-8);background:var(--gw-color-neutral-100)}
+    border-radius:var(--gw-radius-8);background:var(--s-lock-bg, var(--gw-color-neutral-100))}
   .idx[data-collapsed="true"] .idx__col{
     width:12px;height:12px;padding:0;background:none;border:0}
   .idx[data-collapsed="true"] .idx__t > span{display:none}
@@ -375,10 +394,10 @@ CSS = """
   html::-webkit-scrollbar,.idx::-webkit-scrollbar{width:8px;height:8px}
   html::-webkit-scrollbar-track,.idx::-webkit-scrollbar-track{background:transparent}
   html::-webkit-scrollbar-thumb,.idx::-webkit-scrollbar-thumb{
-    background:var(--gw-color-neutral-200);border-radius:var(--gw-radius-full);
+    background:var(--s-card-border, var(--gw-color-neutral-200));border-radius:var(--gw-radius-full);
     border:2px solid transparent;background-clip:content-box}
   html::-webkit-scrollbar-thumb:hover,.idx::-webkit-scrollbar-thumb:hover{
-    background:var(--gw-color-neutral-300);background-clip:content-box}
+    background:var(--s-card-border, var(--gw-color-neutral-300));background-clip:content-box}
 
   /* No narrow-viewport reflow here. exports/dashboard/build-rules.md rules that
      below 1440 the canvas SCALES rather than rearranges — reflow is listed there
@@ -395,7 +414,8 @@ CSS = """
     .hd{padding-left:0;padding-right:0}
     h1{font-size:var(--gw-bp-type-h1)}
     .idx{display:none}
-    .rel{grid-template-columns:minmax(0,1fr);gap:var(--gw-space-12)}
+    .rel{grid-template-columns:minmax(0,1fr);gap:var(--gw-space-12);
+         padding-left:0;padding-right:0}
     .rail{flex-direction:row;align-items:center;gap:var(--gw-space-12)}
     .pill,.tag{margin:0}
   }
@@ -496,10 +516,13 @@ def main():
     if not rows:
         sys.exit("no releases on stdin")
 
-    total = len(rows)
+    # The meta line, in the install page's shape: version, then when it shipped, to the
+    # minute. `date` arrives as "01 Sep 2026 19:53" (scripts/_releases.sh formats it), so the
+    # comma is inserted rather than the time re-derived. total / first_date went with the
+    # facts strip they were computed for.
     current = rows[0]["version"]
-    first_date = rows[-1]["date"].rsplit(" ", 1)[0]
-    last_date = rows[0]["date"].rsplit(" ", 1)[0]
+    _d, _t = rows[0]["date"].rsplit(" ", 1)
+    last_stamp = "%s, %s" % (_d, _t)
 
     P = []
     w = P.append
@@ -519,29 +542,26 @@ def main():
     w("      <h1>Changelog</h1>")
     w('      <span class="brand">Gushwork Design Plugin</span>')
     w("    </div>")
-    # The styleguide header is title → "Last updated" → rule. The lede and the
-    # housekeeping notes follow, because this page carries more than a title.
-    w('    <p class="hd__meta">Last updated %s</p>' % html.escape(last_date))
+    # One paragraph: what the page is and where it comes from — they are the same thought,
+    # and splitting them made the header a list of one-line paragraphs. The Claude Code changelog has a
+    # third — "run claude --version to check your installed version" — and we dropped ours.
+    # It needs that line because nothing tells you otherwise; since v1.41.0 the session-start
+    # hook tells you when you are behind and names what changed, so a manual check is not the
+    # reader's job any more. Verifying an install is the install page's subject, and it covers
+    # it properly there; the `claude plugin list` caveat is in README.md.
     w('    <p class="lede">Release notes for the Gushwork design system, including new')
-    w("       components, corrected measurements, and rulings by version.</p>")
-    w('    <p class="hd__note">This page is generated from')
-    w('       <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md on GitHub</a>.</p>'
+    # Only the FILENAME is the link. "CHANGELOG.md on GitHub" as one anchor is a 234px
+    # unbreakable unit — it cannot split at the line end, so it was pushed onto a line of its
+    # own every time, which is the separate line folding it in was meant to remove.
+    w("       components, corrected measurements, and rulings by version. This page is")
+    w('       generated from <a class="lnk" href="%s/blob/main/CHANGELOG.md"%s>CHANGELOG.md</a>'
       % (REPO, NEWTAB))
-    w('    <p class="hd__note">Every skill announces its own version at the start of a session —')
-    w("       trust that line to check what you are running. <code>claude plugin list</code>")
-    w("       lags a marketplace refresh and will under-report.</p>")
-    w('    <div class="facts">')
-    for label, value in (
-        ("Releases", str(total)),
-        ("Current", "v" + current),
-        ("First shipped", first_date),
-        ("Last release", last_date),
-    ):
-        w(
-            '      <span class="fact"><span class="fact__l">%s</span>'
-            '<span class="fact__v">%s</span></span>' % (label, html.escape(value))
-        )
-    w("    </div>")
+    w("       on GitHub.</p>")
+    # "Last updated" sits LAST, above the rule — the install page's order: title, then the
+    # prose, then the small print. On the styleguide it follows the title directly, but that
+    # header is only a title and a date; here it would interrupt three lines that read as one.
+    w('    <p class="hd__meta"><strong>v%s</strong> · last updated %s</p>'
+      % (html.escape(current), html.escape(last_stamp)))
     w("  </header>")
     w("  <main>")
 

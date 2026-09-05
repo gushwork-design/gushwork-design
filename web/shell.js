@@ -104,6 +104,18 @@
                   picture: null, modes: { google: false, password: true },
                   gate: false };
 
+  /* Mac reads ⌘K, everything else Ctrl K. navigator.platform is deprecated but is still the
+     only thing that answers this everywhere; userAgentData is Chromium-only, so it is tried
+     first and platform is the fallback rather than the other way round. */
+  var IS_MAC = (function () {
+    try {
+      var p = (navigator.userAgentData && navigator.userAgentData.platform) ||
+              navigator.platform || '';
+      return /mac|iphone|ipad/i.test(p);
+    } catch (e) { return false; }
+  })();
+  var SHORTCUT = IS_MAC ? '\u2318K' : 'Ctrl K';
+
   /* -- helpers ----------------------------------------------------------- */
   function el(html) {
     var t = document.createElement('template');
@@ -133,12 +145,27 @@
           '<span class="gw-brand__name">Gushwork Design</span>' +
         '</a>' +
         '<div class="gw-topbar__right">' +
-          /* Search renders exactly as designed but is not wired up this pass. */
-          '<div class="gw-search" data-inert="true" title="Search is not wired up yet">' +
+          /* The field is the affordance; the palette is where typing happens. Keeping the
+             input non-interactive means one input to manage and one place results can be,
+             and the field keeps its measured 400x36 without growing a list underneath. */
+          '<div class="gw-search" data-search-open role="button" tabindex="0" ' +
+               'aria-haspopup="dialog" title="Search  ⌘K">' +
             icon('magnifying-glass') +
-            '<input type="search" placeholder="Search any keyword..." disabled ' +
-                   'aria-label="Search (not available yet)">' +
+            '<input type="search" placeholder="Search any keyword..." tabindex="-1" ' +
+                   'aria-hidden="true">' +
+            /* aria-hidden: the shortcut is a visual affordance, and the field already
+               announces itself. A screen reader reading "Command K" here would be
+               describing decoration. */
+            '<span class="gw-search__key" aria-hidden="true">' + esc(SHORTCUT) + '</span>' +
           '</div>' +
+          /* Phone: the 400px field does not fit at 375, so search collapses to the icon
+             the field already leads with. Same [data-search-open] hook, so it opens the
+             same palette — the affordance changes shape, not behaviour. Rendered at every
+             width and hidden by CSS, so a resize never leaves the bar without it. */
+          '<button class="gw-searchbtn" type="button" data-search-open ' +
+                  'aria-haspopup="dialog" aria-label="Search">' +
+            icon('magnifying-glass') +
+          '</button>' +
           '<div class="gw-theme" role="group" aria-label="Colour theme">' +
             '<button class="gw-theme__btn" data-theme-set="light" type="button" ' +
                     'aria-label="Light theme">' + icon('sun-dim') + '</button>' +
@@ -411,6 +438,169 @@
     if (old) old.replaceWith(next); else document.body.appendChild(next);
   }
 
+  /* -- search palette ------------------------------------------------------
+     The index is fetched once, on first open, and only then: it is 36KB and most
+     visits never search. Every failure path leaves the palette usable and silent —
+     a search box that cannot reach its index says so rather than hanging. */
+  var palIndex = null, palState = { rows: [], sel: 0, loading: false };
+
+  function palHTML() {
+    return '<div class="gw-pal" data-open="false" role="dialog" aria-modal="true" ' +
+                'aria-label="Search">' +
+      '<div class="gw-pal__scrim" data-pal-close></div>' +
+      '<div class="gw-pal__box">' +
+        '<div class="gw-pal__top">' + icon('magnifying-glass') +
+          '<input type="search" placeholder="Search the design system\u2026" ' +
+                 'aria-label="Search" autocomplete="off" spellcheck="false">' +
+          /* Phone only. Desktop closes with esc and the footer says so; on a phone the
+             footer is hidden and the scrim narrows to a 40px strip with a full result
+             list — under the 44 the system asks of a hit target, and unlabelled. */
+          '<button class="gw-pal__x" type="button" data-pal-close aria-label="Close search">' +
+            icon('x') +
+          '</button>' +
+        '</div>' +
+        '<div class="gw-pal__list" role="listbox"></div>' +
+        '<div class="gw-pal__foot">' +
+          '<span><b>\u2191</b><b>\u2193</b> Select</span>' +
+          '<span><b>\u21a9</b> Open</span>' +
+          '<span><b>esc</b> Close</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function palOpen(open) {
+    var pal = document.querySelector('.gw-pal');
+    if (!pal) return;
+    pal.setAttribute('data-open', open ? 'true' : 'false');
+    if (!open) return;
+    var input = pal.querySelector('.gw-pal__top input');
+    input.value = ''; palRender('');
+    input.focus();
+    if (!palIndex && !palState.loading) {
+      palState.loading = true;
+      fetch('/search-index.json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { palIndex = j || []; palState.loading = false; palRender(input.value); })
+        .catch(function () { palIndex = []; palState.loading = false; palRender(input.value); });
+    }
+  }
+
+  /* EVERY term has to appear somewhere, or "dark mode" only matches that exact phrase and
+     finds nothing — which is what it did. Terms are scored independently and summed, so a
+     heading match still outranks a body match without needing the words adjacent. */
+  function palScore(e, terms) {
+    var t = e.t.toLowerCase(), s = (e.s || '').toLowerCase(), total = 0;
+    for (var k = 0; k < terms.length; k++) {
+      var q = terms[k], i = t.indexOf(q), n = 0;
+      if (i === 0) n = 100;
+      else if (i > 0) n = 70;
+      else if (s.indexOf(q) >= 0) n = 30;
+      if (!n) return 0;               /* a term nobody has disqualifies the entry */
+      total += n;
+    }
+    return total;
+  }
+
+  function palMark(text, q) {
+    var i = text.toLowerCase().indexOf(q);
+    if (i < 0) return esc(text);
+    return esc(text.slice(0, i)) + '<mark>' + esc(text.slice(i, i + q.length)) +
+           '</mark>' + esc(text.slice(i + q.length));
+  }
+
+  /* Show the sentence the match is IN, not the first sentence of the section. A snippet
+     that does not contain the query reads as a wrong result. */
+  function palSnippet(e, q) {
+    var s = e.s || '';
+    var i = s.toLowerCase().indexOf(q);
+    if (i < 0) return esc(e.p);
+    var from = Math.max(0, i - 40);
+    return esc(e.p) + ' \u203a \u2026' + palMark(s.slice(from, from + 110), q) + '\u2026';
+  }
+
+  function palRender(qRaw) {
+    var pal = document.querySelector('.gw-pal');
+    var list = pal.querySelector('.gw-pal__list');
+    var q = (qRaw || '').trim().toLowerCase();
+
+    if (!q) {
+      palState.rows = [];
+      list.innerHTML = '<div class="gw-pal__empty">' +
+        (palState.loading ? 'Loading\u2026' : 'Type to search pages, sections and releases.') +
+        '</div>';
+      return;
+    }
+    var terms = q.split(/\s+/).filter(Boolean);
+    var hits = (palIndex || []).map(function (e) { return { e: e, n: palScore(e, terms) }; })
+      .filter(function (x) { return x.n > 0; })
+      .sort(function (a, b) { return b.n - a.n; })
+      .slice(0, 12);
+
+    palState.rows = hits.map(function (x) { return x.e; });
+    palState.sel = 0;
+    if (!hits.length) {
+      list.innerHTML = '<div class="gw-pal__empty">No matches for \u201c' + esc(qRaw) + '\u201d</div>';
+      return;
+    }
+    list.innerHTML = hits.map(function (x, i) {
+      var e = x.e, tl = e.t.toLowerCase(), sl = (e.s || '').toLowerCase();
+      /* mark whichever term this row actually matched on, per field */
+      var inT = terms.filter(function (w) { return tl.indexOf(w) >= 0; })[0] || terms[0];
+      var inS = terms.filter(function (w) { return sl.indexOf(w) >= 0; })[0] || terms[0];
+      return '<a class="gw-pal__row" role="option" aria-selected="' + (i === 0) + '" ' +
+                'href="' + esc(e.u + (e.a || '')) + '">' +
+        '<span class="gw-pal__hash">#</span>' +
+        '<span><span class="gw-pal__t">' + palMark(e.t, inT) + '</span>' +
+        '<span class="gw-pal__crumb">' + palSnippet(e, inS) + '</span></span>' +
+      '</a>';
+    }).join('');
+  }
+
+  function palMove(d) {
+    var pal = document.querySelector('.gw-pal');
+    var rows = pal.querySelectorAll('.gw-pal__row');
+    if (!rows.length) return;
+    palState.sel = (palState.sel + d + rows.length) % rows.length;
+    rows.forEach(function (r, i) { r.setAttribute('aria-selected', i === palState.sel); });
+    rows[palState.sel].scrollIntoView({ block: 'nearest' });
+  }
+
+  function palWire() {
+    document.body.appendChild(el(palHTML()));
+    var pal = document.querySelector('.gw-pal');
+    var input = pal.querySelector('.gw-pal__top input');
+
+    input.addEventListener('input', function () { palRender(input.value); });
+    pal.addEventListener('click', function (ev) {
+      if (ev.target.closest('[data-pal-close]')) palOpen(false);
+    });
+    document.addEventListener('click', function (ev) {
+      if (ev.target.closest('[data-search-open]')) { ev.preventDefault(); palOpen(true); }
+    });
+    document.addEventListener('keydown', function (ev) {
+      var open = pal.getAttribute('data-open') === 'true';
+      if ((ev.metaKey || ev.ctrlKey) && ev.key.toLowerCase() === 'k') {
+        ev.preventDefault(); palOpen(!open); return;
+      }
+      if (!open) {
+        /* The field is a button, so it has to answer to the keyboard like one. */
+        if ((ev.key === 'Enter' || ev.key === ' ') &&
+            document.activeElement && document.activeElement.closest('[data-search-open]')) {
+          ev.preventDefault(); palOpen(true);
+        }
+        return;
+      }
+      if (ev.key === 'Escape') { ev.preventDefault(); palOpen(false); }
+      else if (ev.key === 'ArrowDown') { ev.preventDefault(); palMove(1); }
+      else if (ev.key === 'ArrowUp') { ev.preventDefault(); palMove(-1); }
+      else if (ev.key === 'Enter') {
+        var row = pal.querySelectorAll('.gw-pal__row')[palState.sel];
+        if (row) { ev.preventDefault(); row.click(); }
+      }
+    });
+  }
+
   function mount() {
     document.documentElement.classList.add('gw-shell-ready');
 
@@ -522,6 +712,8 @@
       var params = new URLSearchParams(location.search);
       openModal(params.get('next') || '/');
     }
+
+    palWire();
   }
 
   if (document.readyState === 'loading') {
