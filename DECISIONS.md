@@ -566,3 +566,62 @@ the system.
 measured disabled treatment (`button.md`: `Primary` swaps to `neutral/200`; `Outline` and `Ghost`
 drop the label to `neutral/250`). A pagination arrow disabled at the end of a list is honest. An
 enabled-looking button that silently does nothing is not.
+
+## R20 — a state is still the page
+
+> ⚠ **PROVISIONAL NUMBER**, for the same reason as R19 — the sequence has diverged between this
+> branch and `origin/main`. Renumber both on merge.
+
+**Ruled by Utsav, 1 Sep 2026,** on seeing the loading screen at 375: the title clipped at both
+edges, the progress bar running bezel to bezel, and `40%` cut off the right side.
+
+### The rule
+
+**A state that replaces page content carries the page's own layout — its horizontal padding, and
+its behaviour in every responsive regime.** A measured desktop width caps itself below 1280,
+where R17 says the page flows.
+
+### The finding underneath it
+
+**Reflowing the default view is not reflowing the page.** The R17 pass reflowed the shell, the
+cards, the tables and the chrome, verified all three regimes, and passed 221 assertions — while
+three separate elements kept desktop-only fixed widths and zero horizontal padding, because none
+of them is *visible* in the default view:
+
+| Element | Fixed width | At 375 |
+|---|---|---|
+| `.load-box` | 442 | 67px wider than the viewport, clipped both sides |
+| `.es` (empty state) | 480 | 105px wider |
+| `.dp` (date range panel) | 560 | **hung 201px off-screen** |
+
+A state is invisible until something triggers it, so it is invisible to a review that scrolls the
+page. **Check every state in every regime, not the default view in every regime.**
+
+### The enforceable form
+
+Asserted in `preview/_verify_gtm_command_center.py` as a **hard failure**, per R19's principle
+that an unchecked rule is an ignored rule:
+
+1. **No fixed width greater than the narrowest supported viewport ships without `max-width`.**
+   Written as the pattern rather than the three known elements, so anything added later is
+   covered too.
+2. **Every full-page state declares horizontal padding**, like the page it replaces.
+
+### Three traps, all hit while fixing this
+
+- **Capping the container is not reflowing the layout.** `max-width` on `.dp` made the *panel*
+  fit while its two measured panes (228 + 332, both `flex:none`) still hung off-screen. Measure
+  the CHILDREN, not just the box.
+- **Reflow a control; never drop it.** The picker's preset pane became a horizontal scrolling
+  chip row rather than being hidden on phone — hiding is a control lost, which is R19 in the
+  other direction. Its `overflow-x` is also deliberate: a fourth `overflow-y` would break the
+  measured three-scroller invariant.
+- **Strip CSS comments before parsing rules.** A `/* … */` block above a rule is captured as part
+  of that rule's selector, so an exact-match check silently never fires. This one reported
+  `.loading-page` as unpadded while the padding sat two lines below it.
+
+### Where the measured value still governs
+
+**Unchanged above 1280.** `max-width:100%` costs nothing wherever there is room for the measured
+width, so 442, 480 and 560 still render exactly as drawn at every width the exactness rule in
+`build-rules.md` applies to. This governs only the flow regimes R17 opened.
